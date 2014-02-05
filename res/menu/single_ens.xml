@@ -1,0 +1,6 @@
+ <menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:id="@+id/answer" android:title="@string/ens_answer" android:showAsAction="always|withText" android:icon="@drawable/ic_action_ens_new"></item>
+    <item android:id="@+id/answer_quote" android:title="@string/ens_answer_quote" android:showAsAction="never"></item>
+    <item android:id="@+id/forward" android:title="@string/ens_forward" android:showAsAction="never"></item>
+
+</menu>

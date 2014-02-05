@@ -1,0 +1,26 @@
+<resources>
+
+    <color name="animexx_blue_light">#E8E8FF</color>
+    <color name="animexx_blue">#5858FF</color>
+    <color name="bg_red">#CC3333</color>
+    <color name="bg_lightred">#DD4477</color>
+    <color name="bg_purple">#994499</color>
+    <color name="bg_blue">#3366CC</color>
+    <color name="bg_blue2">#336699</color>
+    <color name="bg_green">#329262</color>
+    <color name="bg_green2">#109618</color>
+    <color name="bg_lightgreen">#66AA00</color>
+    <color name="bg_light">#C3C3FF</color>
+
+    <style name="AppBaseTheme" parent="android:Theme.Holo.Light">
+        <!-- API 14 theme customizations can go here. -->
+    </style>
+
+    <!-- Application theme. -->
+    <style name="AnimexxTheme" parent="AppBaseTheme">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+        <item name="android:windowBackground">@color/animexx_blue_light</item>
+        <item name="android:colorBackground">@color/animexx_blue_light</item>
+    </style>
+
+</resources>

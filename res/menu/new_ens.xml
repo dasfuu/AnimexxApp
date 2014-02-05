@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/send"
+        android:icon="@drawable/ic_action_ens_new"
+        android:showAsAction="always|withText"
+        android:title="@string/ens_send">
+    </item>
+
+</menu>
