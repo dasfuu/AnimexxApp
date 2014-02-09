@@ -3,6 +3,8 @@ package de.meisterfuu.animexx.notification;
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.R.drawable;
 import de.meisterfuu.animexx.R.string;
+import de.meisterfuu.animexx.utils.imageloader.BitmapLoaderCustom;
+import de.meisterfuu.animexx.utils.imageloader.ImageSaveObject;
 import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -41,18 +43,18 @@ public class ENSNotification {
 	 * 
 	 * @see #cancel(Context)
 	 */
-	public static void notify(final Context context, final String exampleString, final int number) {
-		final Resources res = context.getResources();
+	public static void notify(final Context pContext, final String pTitle, final String pUserName, final String pUserId, final String pId, final String pFrom, final int pNumber) {
+		final Resources res = pContext.getResources();
 
 		// This image is used as the notification's large icon (thumbnail).
 		// TODO: Remove this if your notification has no relevant thumbnail.
-		final Bitmap picture = BitmapFactory.decodeResource(res, R.drawable.example_picture);
+		final Bitmap picture = BitmapLoaderCustom.getUserBitmap(pUserId, pContext);
 
-		final String ticker = exampleString;
-		final String title = res.getString(R.string.ens_notification_title_template, exampleString);
-		final String text = res.getString(R.string.ens_notification_placeholder_text_template, exampleString);
+		final String ticker = "Neue ENS";
+		final String title =  pTitle;
+		final String text = "ENS von "+pUserName;
 
-		final NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
+		final NotificationCompat.Builder builder = new NotificationCompat.Builder(pContext)
 
 		// Set appropriate defaults for the notification light, sound,
 		// and vibration.
@@ -66,18 +68,14 @@ public class ENSNotification {
 
 				// Use a default priority (recognized on devices running Android
 				// 4.1 or later)
-				.setPriority(NotificationCompat.PRIORITY_DEFAULT)
-
-				// Provide a large icon, shown with the notification in the
-				// notification drawer on devices running Android 3.0 or later.
-				.setLargeIcon(picture)
+				.setPriority(NotificationCompat.PRIORITY_HIGH)
 
 				// Set ticker text (preview) information for this notification.
 				.setTicker(ticker)
 
 				// Show a number. This is useful when stacking notifications of
 				// a single type.
-				.setNumber(number)
+				.setNumber(pNumber)
 
 				// If this notification relates to a past or upcoming event, you
 				// should set the relevant time information using the setWhen
@@ -86,11 +84,12 @@ public class ENSNotification {
 				// TODO: Call setWhen if this notification relates to a past or
 				// upcoming event. The sole argument to this method should be
 				// the notification timestamp in milliseconds.
-				// .setWhen(...)
+				
+				.setWhen(Long.valueOf(pFrom))
 
 				// Set the pending intent to be initiated when the user touches
 				// the notification.
-				.setContentIntent(PendingIntent.getActivity(context, 0, new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com")), PendingIntent.FLAG_UPDATE_CURRENT))
+				.setContentIntent(PendingIntent.getActivity(pContext, 0, new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com")), PendingIntent.FLAG_UPDATE_CURRENT))
 
 				// Example additional actions for this notification. These will
 				// only show on devices running Android 4.1 or later, so you
@@ -100,22 +99,28 @@ public class ENSNotification {
 				.addAction(
 						R.drawable.ic_action_stat_share,
 						res.getString(R.string.action_share),
-						PendingIntent.getActivity(context, 0,
+						PendingIntent.getActivity(pContext, 0,
 								Intent.createChooser(new Intent(Intent.ACTION_SEND).setType("text/plain").putExtra(Intent.EXTRA_TEXT, "Dummy text"), "Dummy title"),
-								PendingIntent.FLAG_UPDATE_CURRENT)).addAction(R.drawable.ic_action_stat_reply, res.getString(R.string.action_reply), null)
+								PendingIntent.FLAG_UPDATE_CURRENT))
+				
+				.addAction(R.drawable.ic_action_stat_reply, res.getString(R.string.action_reply), null)
 
 				// Automatically dismiss the notification when it is touched.
 				.setAutoCancel(true);
-
-		notify(context, builder.build());
+		
+		// Provide a large icon, shown with the notification in the
+		// notification drawer on devices running Android 3.0 or later.
+		if(picture != null)builder.setLargeIcon(picture);
+		
+		notify(pContext, pId.hashCode(),builder.build());
 	}
 
 
 	@TargetApi(Build.VERSION_CODES.ECLAIR)
-	private static void notify(final Context context, final Notification notification) {
+	private static void notify(final Context context, final int id, final Notification notification) {
 		final NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR) {
-			nm.notify(NOTIFICATION_TAG, 0, notification);
+			nm.notify(NOTIFICATION_TAG, id, notification);
 		} else {
 			nm.notify(NOTIFICATION_TAG.hashCode(), notification);
 		}

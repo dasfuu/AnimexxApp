@@ -36,7 +36,8 @@
             android:ellipsize="end"
             android:singleLine="true"
             android:text="Subtitle"
-            android:textColor="#FFFFFF" />
+            android:textColor="#FFFFFF"
+            android:visibility="gone" />
 
     </LinearLayout>
  

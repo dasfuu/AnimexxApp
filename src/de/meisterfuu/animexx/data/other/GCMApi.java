@@ -19,6 +19,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Handler;
+import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -115,28 +116,39 @@ public class GCMApi {
 		}).start();
 	}
 	
-	public void registerGCM(){	
-		new Thread(new Runnable() {
+	public void registerGCM(final APICallback pCallback){	
+		final Handler hand = new Handler();	
+		final Thread t = new Thread(new Runnable() {
+
 			public void run() {
+				Looper.prepare();
 				GoogleCloudMessaging gcm =  GoogleCloudMessaging.getInstance(mContext);
 				try {
 					String reg_id = gcm.register(KEYS.GCM_SENDER_ID);
+					Log.e("Animexx GCM", "NEW ID: "+reg_id);
+					saveGCM(reg_id);
+
+
 					setGCMID(reg_id, new APICallback() {
 						
 						@Override
-						public void onCallback(APIException pError, Object pObject) {
-							// TODO Auto-generated method stub
-							
+						public void onCallback(final APIException pError, final Object pObject) {
+							hand.post(new Runnable() {			
+								public void run() {
+									if(pCallback != null) pCallback.onCallback(pError, pObject);
+								}
+							});
 						}
 					});
-					saveGCM(reg_id);
-					
+
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				Looper.loop();
 			}
-		}).start();
+		});
+		t.start();
 	}
 	
 	/**
@@ -145,13 +157,18 @@ public class GCMApi {
 	public String getRegistrationId(Context context) {
 		    final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 		    String registrationId = prefs.getString("gcm_reg_id", "");
+		    
+		    Log.e("Animexx GCM", "getRegistrationId()");
+			Log.e("Animexx GCM", "GCM ID: "+registrationId);
 		    if (registrationId.isEmpty()) {
+				Log.e("Animexx GCM", "EMTPY ID");
 		        return null;
 		    }
 
 		    int registeredVersion = prefs.getInt("gcm_app_ver", Integer.MIN_VALUE);
 		    int currentVersion = getAppVersion(context);
 		    if (registeredVersion != currentVersion) {
+				Log.e("Animexx GCM", "WRONG VERSION");
 		        return null;
 		    }
 		    return registrationId;
@@ -231,7 +248,7 @@ public class GCMApi {
 	//Persist Config
 	
 	private void saveGCM(String reg_id) {
-		Log.i("Animexx GCM","Saving GCM ID: "+reg_id.hashCode());
+		Log.e("Animexx GCM","Saving GCM ID: "+reg_id.hashCode());
 		PreferenceManager.getDefaultSharedPreferences(mContext).edit().putString("gcm_reg_id", reg_id).commit();
 		int appVersion = getAppVersion(mContext);
 		PreferenceManager.getDefaultSharedPreferences(mContext).edit().putInt("gcm_app_ver", appVersion).commit();

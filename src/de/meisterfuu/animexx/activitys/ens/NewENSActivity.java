@@ -1,9 +1,12 @@
 package de.meisterfuu.animexx.activitys.ens;
 
+import java.util.ArrayList;
+
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.data.APICallback;
 import de.meisterfuu.animexx.data.ens.ENSApi;
 import de.meisterfuu.animexx.objects.ENSDraftObject;
+import de.meisterfuu.animexx.objects.UserObject;
 import de.meisterfuu.animexx.utils.APIException;
 import android.os.Bundle;
 import android.app.Activity;
@@ -14,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 public class NewENSActivity extends Activity {
 	
@@ -36,6 +40,7 @@ public class NewENSActivity extends Activity {
 	EditText mMessage, mSubject, mRecipient;
 	FrameLayout mHeader, mBody;
 	ENSDraftObject mENSDraft;
+	ArrayList<UserObject> mRecipients = new ArrayList<UserObject>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +98,8 @@ public class NewENSActivity extends Activity {
 		switch(item.getItemId()){ 
 		case R.id.send:
 			send();
+
+
 			break;
 		}
 		
@@ -100,7 +107,31 @@ public class NewENSActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
+
+
 	private void send() {
+		String[] names = mRecipient.getText().toString().split(",");
+		ArrayList<String> names_ = new ArrayList<String>();
+		for(String s: names){
+			s = s.trim();
+			names_.add(s);
+		}
+		mAPI.checkUserName(names_, new APICallback() {
+			
+			@Override
+			public void onCallback(APIException pError, Object pObject) {
+				ENSApi.anCheckObject ret = (ENSApi.anCheckObject)pObject;
+				if(ret.errors.size()> 0){
+					Toast.makeText(NewENSActivity.this, ret.errors.toString(), Toast.LENGTH_SHORT).show();
+				} else {
+					mENSDraft.setRecipients(ret.IDs);
+					send_();
+				}
+			}
+		});
+	}
+	
+	public void send_(){
 		mENSDraft.setMessage(mMessage.getText().toString());
 		mAPI.saveENSDraft(mENSDraft, null);
 		mAPI.sendENS(mENSDraft, new APICallback() {

@@ -4,10 +4,8 @@ import java.io.Serializable;
 
 import com.google.gson.annotations.SerializedName;
 import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
 
-@DatabaseTable
-public class UserObject implements Serializable {
+public class UserSearchResultObject implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -17,12 +15,12 @@ public class UserObject implements Serializable {
 	@SerializedName("id")
 	@DatabaseField(id = true)
 	long id;
-	@SerializedName("avatar")
-	AvatarObject avatar;
-	@SerializedName("steckbrief_freigabe")
+	@SerializedName("foto_url")
+	String avatar;
+	@SerializedName("steckbrief_frei")
 	boolean profileShared;
 	
-	public UserObject(){
+	public UserSearchResultObject(){
 		this.username = "Abgemeldet";
 		this.id = -1;
 		this.avatar = null;
@@ -54,12 +52,12 @@ public class UserObject implements Serializable {
 	}
 
 	
-	public AvatarObject getAvatar() {
+	public String getAvatar() {
 		return avatar;
 	}
 
 	
-	public void setAvatar(AvatarObject avatar) {
+	public void setAvatar(String avatar) {
 		this.avatar = avatar;
 	}
 	

@@ -11,6 +11,7 @@ import org.json.JSONObject;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
@@ -20,6 +21,7 @@ import de.meisterfuu.animexx.data.APICallback;
 import de.meisterfuu.animexx.objects.ENSFolderObject;
 import de.meisterfuu.animexx.objects.ENSObject;
 import de.meisterfuu.animexx.objects.ENSDraftObject;
+import de.meisterfuu.animexx.objects.UserObject;
 import de.meisterfuu.animexx.utils.APIException;
 import de.meisterfuu.animexx.utils.Request;
 
@@ -54,7 +56,7 @@ public class ENSApi {
 		final Handler hand = new Handler();		
 		new Thread(new Runnable() {
 			public void run() {
-				int id = -1;
+				long id = -1;
 				APIException error = null;				
 
 				try {
@@ -66,7 +68,7 @@ public class ENSApi {
 				//if(id != -1) saveDB(temp);
 	
 				
-				final Integer retu = id;
+				final Long retu = id;
 				final APIException ferror = error;
 				
 				hand.post(new Runnable() {			
@@ -241,10 +243,78 @@ public class ENSApi {
 		}).start();
 	}
 	
+	// /ens/an_check/
+	/**
+	 * @param pCallback (ENSApi.anCheckObject.class)
+	 */
+	public void checkUserName(final ArrayList<String> pUserName, final APICallback pCallback){
+		final Handler hand = new Handler();		
+		new Thread(new Runnable() {
+			public void run() {
+				APIException error = null;				
+				anCheckObject list = null;
+				
+				try {
+					list = checkUserNameWeb(pUserName);
+				} catch (APIException e) {
+					error = e;
+				}			
+				
+				final anCheckObject retu = list;
+				final APIException ferror = error;
+				
+				hand.post(new Runnable() {			
+					public void run() {
+						if(pCallback != null) pCallback.onCallback(ferror, retu);
+					}
+				});
+			}
+		}).start();
+	}
 	
 	
 	//Web-Api Access
 	
+	private anCheckObject checkUserNameWeb(ArrayList<String> pUserName) throws APIException {
+		String names = "";
+		for(String id: pUserName){
+			names += "&users%5B%5D="+id;
+		}
+		
+		try {
+			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/ens/an_check/?api=2"+names);
+			JSONObject resultObj = new JSONObject(result);
+			if(resultObj.getBoolean("success")){
+				anCheckObject arr = gson.fromJson(resultObj.getString("return"), ENSApi.anCheckObject.class);
+				return arr;
+			} else {
+				throw new APIException("Error", APIException.OTHER);
+			}		
+	
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new APIException("Request Failed", APIException.REQUEST_FAILED);
+		}	
+	}
+	
+	public static class anCheckObject{
+		
+		@SerializedName("user_ids")
+		public ArrayList<Long> IDs;
+		
+		@SerializedName("errors")
+		public ArrayList<String> errors;
+		
+		@SerializedName("warnings")
+		public ArrayList<String> warnings;
+		
+		public anCheckObject(){
+			
+		}
+		
+	}
+
+
 	private ENSObject getENSfromWeb(long pID) throws APIException{
 
 		try {
@@ -314,7 +384,7 @@ public class ENSApi {
 	}
 	
 	
-	private int sendENStoWeb(ENSDraftObject pENS)  throws APIException {
+	private long sendENStoWeb(ENSDraftObject pENS)  throws APIException {
 		try {
 			String url = "https://ws.animexx.de/json/ens/ens_senden/?api=2";
 			HttpPost request = new HttpPost(url);
@@ -342,7 +412,7 @@ public class ENSApi {
 			
 			JSONObject resultObj = new JSONObject(result);
 			if(resultObj.getBoolean("success")){
-				return resultObj.getJSONObject("return").getInt("id");
+				return Long.valueOf(resultObj.getJSONObject("return").getString("id"));
 			} else {
 				throw new APIException("Error", APIException.OTHER);
 			}		

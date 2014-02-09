@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.activitys.ens.ENSFolderFragment;
+import de.meisterfuu.animexx.adapter.ENSFolderSpinnerAdapter;
 import de.meisterfuu.animexx.adapter.MainDrawerAdapter;
 import de.meisterfuu.animexx.data.APICallback;
 import de.meisterfuu.animexx.data.ens.ENSApi;
@@ -107,7 +108,7 @@ public class MainActivity extends Activity {
 	protected void onPause() {
 		// TODO Auto-generated method stub
 		super.onPause();
-		System.out.println("PAUS");
+		System.out.println("PAUSE");
 	}
 
 
@@ -190,10 +191,10 @@ public class MainActivity extends Activity {
 
 	private void selectItem(int pPosition) {
 		if(mLastPosition == pPosition) return;
+		mLastPosition = pPosition;
 		if (pPosition == 0) {
 			selectENS();
 		}
-		mLastPosition = pPosition;
 	}
 
 
@@ -211,7 +212,7 @@ public class MainActivity extends Activity {
 			public void onCallback(APIException pError, Object pObject) {
 
 				@SuppressWarnings("unchecked")
-				final ArrayAdapter<ENSFolderObject> spinnerAdapter = new ArrayAdapter<ENSFolderObject>(MainActivity.this, android.R.layout.simple_spinner_dropdown_item, (ArrayList<ENSFolderObject>) pObject);
+				final ENSFolderSpinnerAdapter spinnerAdapter = new ENSFolderSpinnerAdapter((ArrayList<ENSFolderObject>) pObject, MainActivity.this);
 				OnNavigationListener listener = new OnNavigationListener() {
 
 					@Override

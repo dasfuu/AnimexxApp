@@ -5,6 +5,7 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.R.drawable;
 import de.meisterfuu.animexx.activitys.main.MainActivity;
+import de.meisterfuu.animexx.notification.ENSNotification;
 import de.meisterfuu.animexx.receiver.GcmBroadcastReceiver;
 
 import android.app.IntentService;
@@ -54,9 +55,15 @@ public class GcmIntentService extends IntentService {
 
 			// If it's a regular GCM message, do some work.
 			} else if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
-				// Post notification of received message.
-				sendNotification("Received: " + extras.toString());
-				Log.i(TAG, "Received: " + extras.toString());
+				if(extras.getString("type").equalsIgnoreCase("XXEventENS")){
+					ENSNotification.notify(this, extras.getString("title"), extras.getString("from_username"), extras.getString("from_id"), extras.getString("id"), extras.getString("from"), 1);
+				} else {
+					// Post notification of unknown received message.
+					sendNotification("Received: " + extras.toString());
+					Log.i(TAG, "Received: " + extras.toString());
+				}
+
+
 			}
 		}
 		// Release the wake lock provided by the WakefulBroadcastReceiver.

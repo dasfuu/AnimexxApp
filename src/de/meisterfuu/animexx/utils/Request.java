@@ -53,7 +53,7 @@ public class Request {
 
 	public static String doHTTPGetRequest(String url) throws Exception {
 		HttpGet request = new HttpGet(url);
-		Log.i("Animexx", "Requesting URL : " + url);
+		//Log.i("Animexx", "Requesting URL : " + url);
 		return SignSend(request);
 	}
 
@@ -153,11 +153,10 @@ public class Request {
 			responseBuilder.append(responeLine );
 		}
 		
-		Log.i("Animexx", "Response : " + responseBuilder.toString());
-		
-		String s = responseBuilder.toString();
+		String erg = responseBuilder.toString();
+		Log.i("Animexx", "Response : " +  erg.substring(0, Math.min(60, erg.length()-1)));
 
-		return s;
+		return erg;
 	}
 
 	// HttpPost request = new HttpPost(url);

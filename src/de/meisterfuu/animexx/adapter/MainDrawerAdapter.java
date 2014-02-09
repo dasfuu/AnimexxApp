@@ -26,7 +26,7 @@ public class MainDrawerAdapter extends BaseAdapter {
 		mItems = new ArrayList<DrawerObject>();
 		
 		DrawerObject temp = new DrawerObject();
-		temp.setIconId(R.drawable.action_search);
+		temp.setIconId(R.drawable.ic_stat_ens);
 		temp.setTitle("ENS");
 		temp.setSubtitle("");
 		this.addItem(temp);

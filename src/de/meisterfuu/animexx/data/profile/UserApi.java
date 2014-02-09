@@ -2,6 +2,11 @@ package de.meisterfuu.animexx.data.profile;
 
 
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+
+import oauth.signpost.OAuth;
+
 import org.json.JSONObject;
 
 import android.content.Context;
@@ -9,9 +14,12 @@ import android.os.Handler;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import de.meisterfuu.animexx.data.APICallback;
 import de.meisterfuu.animexx.objects.ENSObject;
+import de.meisterfuu.animexx.objects.UserObject;
+import de.meisterfuu.animexx.objects.UserSearchResultObject;
 import de.meisterfuu.animexx.utils.APIException;
 import de.meisterfuu.animexx.utils.Request;
 
@@ -63,6 +71,37 @@ public class UserApi {
 	}
 	
 	
+	/**
+	 * @param pSearchString
+	 * @param pCallback (ArrayList<UserSearchResultObject>)
+	 */
+	@Deprecated
+	public void SearchUserByName(final String pSearchString, final APICallback pCallback) {
+		final Handler hand = new Handler();		
+		new Thread(new Runnable() {
+			public void run() {
+				APIException error = null;
+				ArrayList<UserSearchResultObject> temp = null;
+				try {
+					temp = searchUserByNameWeb(pSearchString);
+				} catch (APIException e) {
+					error = e;
+				}
+				
+				final ArrayList<UserSearchResultObject> retu = temp;
+				final APIException ferror = error;
+				
+				hand.post(new Runnable() {			
+					public void run() {
+						if(pCallback != null) pCallback.onCallback(ferror, retu);
+					}
+				});
+			}
+
+		}).start();
+	}
+	
+	
 	
 	
 	//Web-Api Access
@@ -86,6 +125,25 @@ public class UserApi {
 
 	}
 	
+	@Deprecated
+	private ArrayList<UserSearchResultObject> searchUserByNameWeb(String pUsername) throws APIException {
+		try {
+			
+			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/mitglieder/suche/?such_marams=" + OAuth.percentEncode("{\"username\":\""+pUsername+"\"}")  +"&api=2");
+			JSONObject resultObj = new JSONObject(result);
+			if(resultObj.getBoolean("success")){				 
+					Type collectionType = new TypeToken<ArrayList<UserSearchResultObject>>(){}.getType();
+					ArrayList<UserSearchResultObject> list = gson.fromJson(resultObj.getJSONObject("return").getString("mitglieder"), collectionType);	
+					return list;
+			} else {
+				throw new APIException("Error", APIException.OTHER);
+			}		
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new APIException("Request Failed", APIException.REQUEST_FAILED);
+		}	
+	}
+	
 	private JSONObject getMefromWeb() throws APIException{
 
 		try {
@@ -104,6 +162,9 @@ public class UserApi {
 		}	
 
 	}
+
+
+
 		
 
 	//DB Access

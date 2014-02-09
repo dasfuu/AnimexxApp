@@ -69,7 +69,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 		if(gcm.getRegistrationId(this) == null){
 			Log.e("Animexx Init", "GCM REG ID IS NULL");
 			//No? Get one and activate.
-			gcm.activateGCMEvents(new APICallback() {
+			gcm.registerGCM(new APICallback() {
 				
 				@Override
 				public void onCallback(APIException pError, Object pObject) {
@@ -89,6 +89,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		startActivity(new Intent().setClass(v.getContext(), RequestTokenActivity.class));
+		LoginActivity.this.finish();
 	}
 
 
