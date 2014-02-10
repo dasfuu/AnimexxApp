@@ -59,7 +59,7 @@
         </activity>
         <activity
             android:name="de.meisterfuu.animexx.activitys.ens.SingleENSActivity"
-            android:label="@string/title_activity_single_ens" 
+            android:label="@string/title_activity_single_ens"
             android:parentActivityName="de.meisterfuu.animexx.activitys.main.MainActivity" >
         </activity>
         <activity
@@ -79,6 +79,15 @@
         </receiver>
 
         <service android:name="de.meisterfuu.animexx.services.GcmIntentService" />
+
+        <activity
+            android:name="de.meisterfuu.animexx.activitys.main.SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName="de.meisterfuu.animexx.activitys.main.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.meisterfuu.animexx.activitys.main.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

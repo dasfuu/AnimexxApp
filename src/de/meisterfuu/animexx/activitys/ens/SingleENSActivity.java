@@ -7,6 +7,7 @@ import java.util.Locale;
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.data.APICallback;
 import de.meisterfuu.animexx.data.ens.ENSApi;
+import de.meisterfuu.animexx.notification.ENSNotification;
 import de.meisterfuu.animexx.objects.ENSObject;
 import de.meisterfuu.animexx.objects.ENSDraftObject;
 import de.meisterfuu.animexx.objects.UserObject;
@@ -14,6 +15,7 @@ import de.meisterfuu.animexx.utils.APIException;
 import de.meisterfuu.animexx.utils.Helper;
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.text.Html;
@@ -33,6 +35,7 @@ public class SingleENSActivity extends Activity {
 	TextView mSubject, mUserLabel, mUser, mDate, mMessage;
 	FrameLayout mHeader, mBody;
 	ENSApi mAPI;
+	Boolean mLoaded = false;
 	
 	SimpleDateFormat sdf = new SimpleDateFormat("'Datum: 'HH:mm dd.MM.yyyy", Locale.getDefault());
 	
@@ -42,6 +45,14 @@ public class SingleENSActivity extends Activity {
 	     args.putLong("id", pID);
 	     i.putExtras(args);
 	     pContext.startActivity(i);
+	}
+	
+	public static PendingIntent getPendingIntent(Context pContext,long pID){    
+	     Intent intent = new Intent(pContext, SingleENSActivity.class);
+	     Bundle args = new Bundle();
+	     args.putLong("id", pID);
+	     intent.putExtras(args);
+	     return PendingIntent.getActivity(pContext, 0, intent, 0);
 	}
 	
 	@Override
@@ -74,6 +85,8 @@ public class SingleENSActivity extends Activity {
 		Bundle extras = this.getIntent().getExtras();
 		mID = extras.getLong("id");
 		
+		ENSNotification.cancel(this, mID);
+		
 		mAPI = new ENSApi(this);
 		mAPI.getENS(mID, new APICallback() {
 			
@@ -103,6 +116,8 @@ public class SingleENSActivity extends Activity {
 				
 				mHeader.setVisibility(View.VISIBLE);
 				mBody.setVisibility(View.VISIBLE);
+				
+				mLoaded = true;
 	
 				//mWebView.loadDataWithBaseURL("fake://fake.de", getFullMessage(), "text/html", "UTF-8", null);				
 			}
@@ -131,13 +146,13 @@ public class SingleENSActivity extends Activity {
 		
 		switch(item.getItemId()){ 
 		case R.id.answer:
-			answer();
+			if(mLoaded) answer();
 			break;
 		case R.id.answer_quote:
-			answerQuote();
+			if(mLoaded) answerQuote();
 			break;
 		case R.id.forward:
-			forward();
+			if(mLoaded) forward();
 			break;
 		}
 		
@@ -158,7 +173,10 @@ public class SingleENSActivity extends Activity {
 		draft.setMessage(mENS.getMessage_raw());
 		ArrayList<Long> recip = new ArrayList<Long>();
 		recip.add(mENS.getVon().getId());
+		ArrayList<String> recip_name = new ArrayList<String>();
+		recip_name.add(mENS.getVon().getUsername());
 		draft.setRecipients(recip);
+		draft.setRecipients_name(recip_name);
 		draft.setSubject(Helper.BetreffRe(mENS.getSubject()));
 		draft.setReferenceID(mENS.getId());
 		draft.setReferenceType("forward");
@@ -176,7 +194,10 @@ public class SingleENSActivity extends Activity {
 		draft.setMessage("");
 		ArrayList<Long> recip = new ArrayList<Long>();
 		recip.add(mENS.getVon().getId());
+		ArrayList<String> recip_name = new ArrayList<String>();
+		recip_name.add(mENS.getVon().getUsername());
 		draft.setRecipients(recip);
+		draft.setRecipients_name(recip_name);
 		draft.setSubject(Helper.BetreffRe(mENS.getSubject()));
 		draft.setReferenceID(mENS.getId());
 		draft.setReferenceType("reply");
@@ -194,7 +215,10 @@ public class SingleENSActivity extends Activity {
 		draft.setMessage(mENS.getMessage_raw());
 		ArrayList<Long> recip = new ArrayList<Long>();
 		recip.add(mENS.getVon().getId());
+		ArrayList<String> recip_name = new ArrayList<String>();
+		recip_name.add(mENS.getVon().getUsername());
 		draft.setRecipients(recip);
+		draft.setRecipients_name(recip_name);
 		draft.setSubject(Helper.BetreffRe(mENS.getSubject()));
 		draft.setReferenceID(mENS.getId());
 		draft.setReferenceType("reply");

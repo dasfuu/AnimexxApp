@@ -31,6 +31,9 @@ public class ENSDraftObject {
 	@DatabaseField(dataType = DataType.SERIALIZABLE)
 	ArrayList<Long> recipients;
 	
+	@DatabaseField(dataType = DataType.SERIALIZABLE)
+	ArrayList<String> recipients_name;
+	
 	@DatabaseField
 	String referenceType;
 	
@@ -107,6 +110,14 @@ public class ENSDraftObject {
 	
 	public void setReferenceID(long referenceID) {
 		this.referenceID = referenceID;
+	}
+
+	public ArrayList<String> getRecipients_name() {
+		return recipients_name;
+	}
+
+	public void setRecipients_name(ArrayList<String> recipients_name) {
+		this.recipients_name = recipients_name;
 	}
 
 	

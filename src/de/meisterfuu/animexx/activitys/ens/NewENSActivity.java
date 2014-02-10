@@ -10,6 +10,7 @@ import de.meisterfuu.animexx.objects.UserObject;
 import de.meisterfuu.animexx.utils.APIException;
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.view.Menu;
@@ -69,7 +70,10 @@ public class NewENSActivity extends Activity {
 				
 				mMessage.setText(mENSDraft.getMessage());
 				mSubject.setText(mENSDraft.getSubject());
-				mRecipient.setText(mENSDraft.getRecipients().get(0)+"");
+				if(mENSDraft.getRecipients_name().size()>0){
+					mRecipient.setText(mENSDraft.getRecipients_name().get(0)+"");
+				}
+
 				
 				mHeader.setVisibility(View.VISIBLE);
 				mBody.setVisibility(View.VISIBLE);
@@ -107,9 +111,11 @@ public class NewENSActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
-
+	ProgressDialog mDialog;
 
 	private void send() {
+		mDialog = new ProgressDialog(this, ProgressDialog.STYLE_SPINNER);
+		mDialog.setTitle("Prüfe Nutzernamen");
 		String[] names = mRecipient.getText().toString().split(",");
 		ArrayList<String> names_ = new ArrayList<String>();
 		for(String s: names){
@@ -122,9 +128,11 @@ public class NewENSActivity extends Activity {
 			public void onCallback(APIException pError, Object pObject) {
 				ENSApi.anCheckObject ret = (ENSApi.anCheckObject)pObject;
 				if(ret.errors.size()> 0){
+					mDialog.cancel();
 					Toast.makeText(NewENSActivity.this, ret.errors.toString(), Toast.LENGTH_SHORT).show();
 				} else {
 					mENSDraft.setRecipients(ret.IDs);
+					mDialog.setTitle("Sende ENS");
 					send_();
 				}
 			}
@@ -143,12 +151,13 @@ public class NewENSActivity extends Activity {
 					mAPI.deleteENSDraft(mENSDraft, new APICallback() {						
 						@Override
 						public void onCallback(APIException pError, Object pObject) {
-
+							
 						}
 					});
 				}
 			}
 		});
+		mDialog.cancel();
 		NewENSActivity.this.finish();
 	}
 

@@ -28,13 +28,14 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_new_ens">Neue ENS</string>
     <string name="action_share">Share</string>
-    <string name="action_reply">Reply</string>
+    <string name="action_reply">Antworten</string>
     <string name="ens_answer">Antworten</string>
     <string name="ens_answer_quote">Antwort mit Zitat</string>
     <string name="ens_forward">Weiterleiten</string>
     <string name="ens_subject">Betreff</string>
     <string name="ens_message">Nachricht</string>
     <string name="ens_send">Absenden</string>
+    <string name="menu_settings">Einstellungen</string>
     
 
 </resources>

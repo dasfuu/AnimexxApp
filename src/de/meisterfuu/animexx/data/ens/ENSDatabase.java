@@ -17,7 +17,7 @@ import de.meisterfuu.animexx.objects.ENSDraftObject;
 public class ENSDatabase extends OrmLiteSqliteOpenHelper {
 
 	private static final String DATABASE_NAME = "ens.db";
-	private static final int DATABASE_VERSION = 2;
+	private static final int DATABASE_VERSION = 3;
 
 	private RuntimeExceptionDao<ENSObject, Long> ENSRuntimeDao = null;
 	private RuntimeExceptionDao<ENSDraftObject, Long> ENSSendRuntimeDao = null;

@@ -11,6 +11,8 @@
     <color name="bg_green2">#109618</color>
     <color name="bg_lightgreen">#66AA00</color>
     <color name="bg_light">#C3C3FF</color>
+    
+    <color name="animexx_blue_notfiy_light">#ff0000ff</color>
 
     <style name="AppBaseTheme" parent="android:Theme.Holo.Light">
         <!-- API 14 theme customizations can go here. -->

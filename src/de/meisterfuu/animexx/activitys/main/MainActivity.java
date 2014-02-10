@@ -168,7 +168,8 @@ public class MainActivity extends Activity {
 		}
 
 		switch (item.getItemId()) {
-		case 2:
+		case R.id.menu_settings:
+			SettingsActivity.getInstance(this);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -203,7 +204,7 @@ public class MainActivity extends Activity {
 		this.setTitle("ENS");
 		Fragment fragment = ENSFolderFragment.getInstance(1, ENSApi.TYPE_INBOX);
 		FragmentManager fragmentManager = getFragmentManager();
-		fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, "1_"+ENSApi.TYPE_INBOX).commit();
+		//fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, "1_"+ENSApi.TYPE_INBOX).commit();
 		getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
 		new ENSApi(MainActivity.this).getFolderList(new APICallback() {
