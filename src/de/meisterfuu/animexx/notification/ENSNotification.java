@@ -3,6 +3,7 @@ package de.meisterfuu.animexx.notification;
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.R.drawable;
 import de.meisterfuu.animexx.R.string;
+import de.meisterfuu.animexx.activitys.ens.SingleENSActivity;
 import de.meisterfuu.animexx.utils.imageloader.BitmapLoaderCustom;
 import de.meisterfuu.animexx.utils.imageloader.ImageSaveObject;
 import android.annotation.TargetApi;
@@ -16,6 +17,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 
 /**
@@ -46,6 +49,8 @@ public class ENSNotification {
 	public static void notify(final Context pContext, final String pTitle, final String pUserName, final String pUserId, final String pId, final String pFrom, final int pNumber) {
 		final Resources res = pContext.getResources();
 
+
+		
 		// This image is used as the notification's large icon (thumbnail).
 		// TODO: Remove this if your notification has no relevant thumbnail.
 		final Bitmap picture = BitmapLoaderCustom.getUserBitmap(pUserId, pContext);
@@ -55,10 +60,6 @@ public class ENSNotification {
 		final String text = "ENS von "+pUserName;
 
 		final NotificationCompat.Builder builder = new NotificationCompat.Builder(pContext)
-
-		// Set appropriate defaults for the notification light, sound,
-		// and vibration.
-				.setDefaults(Notification.DEFAULT_ALL)
 
 				// Set required fields, including the small icon, the
 				// notification title, and text.
@@ -83,25 +84,24 @@ public class ENSNotification {
 				// timestamp will by set to the time at which it was shown.
 				// TODO: Call setWhen if this notification relates to a past or
 				// upcoming event. The sole argument to this method should be
-				// the notification timestamp in milliseconds.
-				
+				// the notification timestamp in milliseconds.				
 				.setWhen(Long.valueOf(pFrom))
 
 				// Set the pending intent to be initiated when the user touches
 				// the notification.
-				.setContentIntent(PendingIntent.getActivity(pContext, 0, new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com")), PendingIntent.FLAG_UPDATE_CURRENT))
+				.setContentIntent(SingleENSActivity.getPendingIntent(pContext, Long.valueOf(pId)))
 
 				// Example additional actions for this notification. These will
 				// only show on devices running Android 4.1 or later, so you
 				// should ensure that the activity in this notification's
 				// content intent provides access to the same actions in
 				// another way.
-				.addAction(
-						R.drawable.ic_action_stat_share,
-						res.getString(R.string.action_share),
-						PendingIntent.getActivity(pContext, 0,
-								Intent.createChooser(new Intent(Intent.ACTION_SEND).setType("text/plain").putExtra(Intent.EXTRA_TEXT, "Dummy text"), "Dummy title"),
-								PendingIntent.FLAG_UPDATE_CURRENT))
+//				.addAction(
+//						R.drawable.ic_action_stat_share,
+//						res.getString(R.string.action_share),
+//						PendingIntent.getActivity(pContext, 0,
+//								Intent.createChooser(new Intent(Intent.ACTION_SEND).setType("text/plain").putExtra(Intent.EXTRA_TEXT, "Dummy text"), "Dummy title"),
+//								PendingIntent.FLAG_UPDATE_CURRENT))
 				
 				.addAction(R.drawable.ic_action_stat_reply, res.getString(R.string.action_reply), null)
 
@@ -112,7 +112,25 @@ public class ENSNotification {
 		// notification drawer on devices running Android 3.0 or later.
 		if(picture != null)builder.setLargeIcon(picture);
 		
-		notify(pContext, pId.hashCode(),builder.build());
+		Boolean loud = PreferenceManager.getDefaultSharedPreferences(pContext).getBoolean("notifications_new_message", true);
+		String sound_uri = PreferenceManager.getDefaultSharedPreferences(pContext).getString("notifications_new_message_ringtone", null);
+		Boolean vibrate = PreferenceManager.getDefaultSharedPreferences(pContext).getBoolean("notifications_new_message_vibrate", true);
+		
+		if(loud){
+			if(sound_uri != null){
+				builder.setSound(Uri.parse(sound_uri));
+			} else {
+				builder.setDefaults(Notification.DEFAULT_SOUND);
+			}
+			if(vibrate){
+				builder.setVibrate(new long[]{0,250,100,250});
+			}
+			builder.setLights(R.color.animexx_blue, 1000, 600);
+			
+			notify(pContext, pId.hashCode(),builder.build());
+		}
+		
+
 	}
 
 
@@ -135,6 +153,20 @@ public class ENSNotification {
 		final NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR) {
 			nm.cancel(NOTIFICATION_TAG, 0);
+		} else {
+			nm.cancel(NOTIFICATION_TAG.hashCode());
+		}
+	}
+	
+	
+	/**
+	 * Cancels any notifications of this type previously shown using {@link #notify(Context, String, int)}.
+	 */
+	@TargetApi(Build.VERSION_CODES.ECLAIR)
+	public static void cancel(final Context context, long id) {
+		final NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR) {
+			nm.cancel(NOTIFICATION_TAG, (""+id).hashCode());
 		} else {
 			nm.cancel(NOTIFICATION_TAG.hashCode());
 		}
