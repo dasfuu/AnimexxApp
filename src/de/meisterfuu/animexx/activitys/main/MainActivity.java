@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.activitys.ens.ENSFolderFragment;
+import de.meisterfuu.animexx.activitys.rpg.RPGListFragment;
 import de.meisterfuu.animexx.adapter.ENSFolderSpinnerAdapter;
 import de.meisterfuu.animexx.adapter.MainDrawerAdapter;
 import de.meisterfuu.animexx.data.APICallback;
@@ -195,6 +196,8 @@ public class MainActivity extends Activity {
 		mLastPosition = pPosition;
 		if (pPosition == 0) {
 			selectENS();
+		} else if(pPosition == 1) {
+			selectRPG();
 		}
 	}
 
@@ -234,6 +237,15 @@ public class MainActivity extends Activity {
 		invalidateOptionsMenu();
 	}
 
+	private void selectRPG() {
+		mSelected = "RPG";
+		this.setTitle("RPG");
+		Fragment fragment = RPGListFragment.getInstance();
+		FragmentManager fragmentManager = getFragmentManager();
+		fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, "RPGList").commit();
+		getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+		invalidateOptionsMenu();
+	}
 
 	/**
 	 * When using the ActionBarDrawerToggle, you must call it during

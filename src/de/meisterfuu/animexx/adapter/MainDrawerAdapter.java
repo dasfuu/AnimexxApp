@@ -31,6 +31,12 @@ public class MainDrawerAdapter extends BaseAdapter {
 		temp.setSubtitle("");
 		this.addItem(temp);
 		
+		temp = new DrawerObject();
+		temp.setIconId(R.drawable.ic_stat_ens);
+		temp.setTitle("RPG");
+		temp.setSubtitle("");
+		this.addItem(temp);
+		
 	}
 	
 	public void addItem(DrawerObject pItem){

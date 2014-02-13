@@ -88,6 +88,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.meisterfuu.animexx.activitys.main.MainActivity" />
         </activity>
+        <activity
+            android:name="de.meisterfuu.animexx.activitys.rpg.RPGDetailActivity"
+            android:label="@string/title_activity_rpgdetail"
+            android:parentActivityName="de.meisterfuu.animexx.activitys.main.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.meisterfuu.animexx.activitys.main.MainActivity" />
+        </activity>
     </application>
 
 </manifest>
