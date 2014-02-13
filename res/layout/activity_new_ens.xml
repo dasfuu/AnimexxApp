@@ -36,6 +36,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
+                    android:hint="An"
+                    android:visibility="gone" />
+
+                <de.meisterfuu.animexx.utils.views.UsernameAutoCompleteTextView
+                    android:id="@+id/activity_ens_new_user_search"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:ems="10"
                     android:hint="An" />
 
                 <EditText
@@ -46,6 +55,7 @@
                     android:inputType="textEmailSubject"
                     android:singleLine="true"
                     android:text="" />
+
             </LinearLayout>
         </FrameLayout>
 

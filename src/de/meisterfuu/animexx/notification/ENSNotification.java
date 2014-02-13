@@ -103,7 +103,7 @@ public class ENSNotification {
 //								Intent.createChooser(new Intent(Intent.ACTION_SEND).setType("text/plain").putExtra(Intent.EXTRA_TEXT, "Dummy text"), "Dummy title"),
 //								PendingIntent.FLAG_UPDATE_CURRENT))
 				
-				.addAction(R.drawable.ic_action_stat_reply, res.getString(R.string.action_reply), null)
+//				.addAction(R.drawable.ic_action_stat_reply, res.getString(R.string.action_reply), null)
 
 				// Automatically dismiss the notification when it is touched.
 				.setAutoCancel(true);

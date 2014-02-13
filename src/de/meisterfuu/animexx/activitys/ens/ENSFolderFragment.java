@@ -29,6 +29,11 @@ public class ENSFolderFragment extends ListFragment implements OnScrollListener 
 	ENSFolderAdapter mAdapter;
 	int mPrevTotalItemCount;
 	
+	static ENSFolderAdapter saveAdapter;
+	static int saveItemCount, saveNextPage;
+	static ArrayList<ENSObject> saveList;
+	static int saveScrollstate;
+	
 	public static ENSFolderFragment getInstance(long pFolderID, String pType){
 		ENSFolderFragment result = new ENSFolderFragment();
 	     Bundle args = new Bundle();
@@ -44,6 +49,13 @@ public class ENSFolderFragment extends ListFragment implements OnScrollListener 
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
+				
+		ENSFolderFragment.saveScrollstate = this.getListView().getFirstVisiblePosition(); 
+		ENSFolderFragment.saveNextPage = mNextPage;
+		ENSFolderFragment.saveList = mList;
+		ENSFolderFragment.saveAdapter = mAdapter;
+		ENSFolderFragment.saveItemCount = mPrevTotalItemCount;		
+		
 		SingleENSActivity.getInstance(this.getActivity(), mAdapter.getItem(position).getId());		
 	}
 	
@@ -58,11 +70,15 @@ public class ENSFolderFragment extends ListFragment implements OnScrollListener 
 		Request.config = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
 		mAPI = new ENSApi(this.getActivity());
 
-		if(!mInitiated) init();
+		if(ENSFolderFragment.saveAdapter == null){
+			init();
+		} else {
+			initOld();
+		}
 		
 		super.onResume();
 	}
-	
+
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
@@ -77,8 +93,28 @@ public class ENSFolderFragment extends ListFragment implements OnScrollListener 
 		this.getListView().setOnScrollListener(this);
 		mList = new ArrayList<ENSObject>();
 		mAdapter = new ENSFolderAdapter(mList, ENSFolderFragment.this.getActivity());
-		ENSFolderFragment.this.setListAdapter(mAdapter);
+		this.setListAdapter(mAdapter);
 		getNextPage();		
+	}
+	
+	private void initOld() {
+		this.mType = this.getArguments().getString("mType");
+		this.mFolderID = this.getArguments().getLong("mFolderID");
+		mInitiated = false;
+		mNextPage = ENSFolderFragment.saveNextPage;
+		this.getListView().setOnScrollListener(this);
+		mList = ENSFolderFragment.saveList;
+		mAdapter = ENSFolderFragment.saveAdapter;
+		mPrevTotalItemCount = ENSFolderFragment.saveItemCount;
+		this.setListAdapter(mAdapter);
+		
+		this.getListView().setSelectionFromTop(ENSFolderFragment.saveScrollstate, 0);
+		
+		ENSFolderFragment.saveScrollstate = 0;
+		ENSFolderFragment.saveNextPage = 0;
+		ENSFolderFragment.saveList = null;
+		ENSFolderFragment.saveAdapter = null;
+		ENSFolderFragment.saveItemCount = 0;		
 	}
 	
 	private void getNextPage(){

@@ -8,6 +8,7 @@ import de.meisterfuu.animexx.data.ens.ENSApi;
 import de.meisterfuu.animexx.objects.ENSDraftObject;
 import de.meisterfuu.animexx.objects.UserObject;
 import de.meisterfuu.animexx.utils.APIException;
+import de.meisterfuu.animexx.utils.views.UsernameAutoCompleteTextView;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -39,6 +40,7 @@ public class NewENSActivity extends Activity {
 	long mDraftID;
 	ENSApi mAPI;
 	EditText mMessage, mSubject, mRecipient;
+	UsernameAutoCompleteTextView mSearch;
 	FrameLayout mHeader, mBody;
 	ENSDraftObject mENSDraft;
 	ArrayList<UserObject> mRecipients = new ArrayList<UserObject>();
@@ -50,11 +52,14 @@ public class NewENSActivity extends Activity {
 		
 		mMessage = (EditText) this.findViewById(R.id.activity_ens_new_message);
 		mSubject = (EditText) this.findViewById(R.id.activity_ens_new_subject);
-		mRecipient = (EditText) this.findViewById(R.id.activity_ens_new_user);
+//		mRecipient = (EditText) this.findViewById(R.id.activity_ens_new_user);
 		
+		mSearch = (UsernameAutoCompleteTextView) this.findViewById(R.id.activity_ens_new_user_search);
+		 
 		mHeader = (FrameLayout) this.findViewById(R.id.activity_ens_new_header);
 		mBody = (FrameLayout) this.findViewById(R.id.activity_ens_new_body);
 		
+		mSearch.init();
 		mHeader.setVisibility(View.GONE);
 		mBody.setVisibility(View.GONE);
 
@@ -71,7 +76,7 @@ public class NewENSActivity extends Activity {
 				mMessage.setText(mENSDraft.getMessage());
 				mSubject.setText(mENSDraft.getSubject());
 				if(mENSDraft.getRecipients_name().size()>0){
-					mRecipient.setText(mENSDraft.getRecipients_name().get(0)+"");
+					mSearch.setText(mENSDraft.getRecipients_name().get(0)+", ");
 				}
 
 				
@@ -116,10 +121,11 @@ public class NewENSActivity extends Activity {
 	private void send() {
 		mDialog = new ProgressDialog(this, ProgressDialog.STYLE_SPINNER);
 		mDialog.setTitle("Prüfe Nutzernamen");
-		String[] names = mRecipient.getText().toString().split(",");
+		String[] names = mSearch.getText().toString().split(",");
 		ArrayList<String> names_ = new ArrayList<String>();
 		for(String s: names){
 			s = s.trim();
+			if(s.isEmpty()) continue;
 			names_.add(s);
 		}
 		mAPI.checkUserName(names_, new APICallback() {
