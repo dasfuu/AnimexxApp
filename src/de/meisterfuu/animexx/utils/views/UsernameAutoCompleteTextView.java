@@ -5,6 +5,7 @@ import java.util.List;
 
 import de.meisterfuu.animexx.data.APICallback;
 import de.meisterfuu.animexx.data.profile.UserApi;
+import de.meisterfuu.animexx.objects.UserObject;
 import de.meisterfuu.animexx.objects.UserSearchResultObject;
 import de.meisterfuu.animexx.utils.APIException;
 
@@ -23,33 +24,35 @@ public class UsernameAutoCompleteTextView extends MultiAutoCompleteTextView impl
 
 	public UsernameAutoCompleteTextView(Context context) {
 		super(context);
-		init(context);
+		mContext = context;
 	}
 
 	public UsernameAutoCompleteTextView(Context context, AttributeSet attrs,
 			int defStyle) {
 		super(context, attrs, defStyle);
-		init(context);
+		mContext = context;
 	}
 
 	public UsernameAutoCompleteTextView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		init(context);
+		mContext = context;
 	}
 	
 	Context mContext;
 	
-	private List<UserSearchResultObject> mUser;	
-    public ArrayAdapter<UserSearchResultObject> mAdapter;
+	private List<UserObject> mUser;	
+    public ArrayAdapter<UserObject> mAdapter;
     private UserApi mApi;
 	
-	private void init(Context context) {
-		mContext = context;
+	public void init() {
+
 		mApi = new UserApi(mContext);
-		mUser = new ArrayList<UserSearchResultObject>();
+		mUser = new ArrayList<UserObject>();
 		
-		this.setOnItemClickListener(this);
-		mAdapter = new ArrayAdapter<UserSearchResultObject>(mContext.getApplicationContext(), android.R.layout.simple_dropdown_item_1line, mUser);
+		//this.setOnItemClickListener(this);
+		this.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
+		this.setThreshold(1);
+		mAdapter = new ArrayAdapter<UserObject>(mContext, android.R.layout.simple_list_item_1, mUser);
 		this.setAdapter(mAdapter);
 		
 		this.addTextChangedListener(new TextWatcher() {
@@ -65,22 +68,25 @@ public class UsernameAutoCompleteTextView extends MultiAutoCompleteTextView impl
 
             }
 
-            public void onTextChanged(CharSequence s, int start, int before,
-                    int count) {
-                    
-                	mApi.SearchUserByName(s.toString(), new APICallback() {
-					
-					@SuppressWarnings("unchecked")
-					@Override
-					public void onCallback(APIException pError, Object pObject) {
-						mUser = (ArrayList<UserSearchResultObject>)pObject;
-						
-						mAdapter = new ArrayAdapter<UserSearchResultObject>(mContext.getApplicationContext(), android.R.layout.simple_dropdown_item_1line, mUser);
-						UsernameAutoCompleteTextView.this.setAdapter(mAdapter);
-						mAdapter.notifyDataSetChanged();
-					}
-				});
-                
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            	
+					String[] t = UsernameAutoCompleteTextView.this.getText().toString().split(",");
+					String last = "";
+					if(t.length > 0) last = t[t.length-1].trim();
+            		if(last.length() == 0) return;
+            		
+          		    mApi.SearchUserByName(last, new APICallback() {					
+						@SuppressWarnings("unchecked")
+						@Override
+						public void onCallback(APIException pError, Object pObject) {
+							mUser = (ArrayList<UserObject>)pObject;
+							//mAdapter = new ArrayAdapter<UserObject>(mContext, android.R.layout.simple_list_item_1 , mUser);
+							mAdapter.clear();
+							mAdapter.addAll(mUser);
+							mAdapter.notifyDataSetChanged();
+							System.out.println(mAdapter.getCount());
+						}
+                	});
             }
 
         });
@@ -89,7 +95,7 @@ public class UsernameAutoCompleteTextView extends MultiAutoCompleteTextView impl
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		UserSearchResultObject user = mAdapter.getItem(position);
+		UserObject user = mAdapter.getItem(position);
 		this.setText("");
 		Toast.makeText(mContext, user.getUsername()+" "+user.getId(), Toast.LENGTH_SHORT).show();
 	}

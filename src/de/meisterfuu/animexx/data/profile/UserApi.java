@@ -7,6 +7,8 @@ import java.util.ArrayList;
 
 import oauth.signpost.OAuth;
 
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.json.JSONObject;
 
 import android.content.Context;
@@ -75,20 +77,19 @@ public class UserApi {
 	 * @param pSearchString
 	 * @param pCallback (ArrayList<UserSearchResultObject>)
 	 */
-	@Deprecated
 	public void SearchUserByName(final String pSearchString, final APICallback pCallback) {
 		final Handler hand = new Handler();		
 		new Thread(new Runnable() {
 			public void run() {
 				APIException error = null;
-				ArrayList<UserSearchResultObject> temp = null;
+				ArrayList<UserObject> temp = null;
 				try {
 					temp = searchUserByNameWeb(pSearchString);
 				} catch (APIException e) {
 					error = e;
 				}
 				
-				final ArrayList<UserSearchResultObject> retu = temp;
+				final ArrayList<UserObject> retu = temp;
 				final APIException ferror = error;
 				
 				hand.post(new Runnable() {			
@@ -125,18 +126,18 @@ public class UserApi {
 
 	}
 	
-	@Deprecated
-	private ArrayList<UserSearchResultObject> searchUserByNameWeb(String pUsername) throws APIException {
+	private ArrayList<UserObject> searchUserByNameWeb(String pUsername) throws APIException {
 		try {
 			
-			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/mitglieder/suche/?such_marams=" + OAuth.percentEncode("{\"username\":\""+pUsername+"\"}")  +"&api=2");
+			String url = "https://ws.animexx.de/json/mitglieder/username_autocomplete/?api=2";
+			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/mitglieder/username_autocomplete/?api=2&str="+OAuth.percentEncode(pUsername));
 			JSONObject resultObj = new JSONObject(result);
 			if(resultObj.getBoolean("success")){				 
-					Type collectionType = new TypeToken<ArrayList<UserSearchResultObject>>(){}.getType();
-					ArrayList<UserSearchResultObject> list = gson.fromJson(resultObj.getJSONObject("return").getString("mitglieder"), collectionType);	
+					Type collectionType = new TypeToken<ArrayList<UserObject>>(){}.getType();
+					ArrayList<UserObject> list = gson.fromJson(resultObj.getString("return"), collectionType);	
 					return list;
 			} else {
-				throw new APIException("Error", APIException.OTHER);
+					throw new APIException("Error", APIException.OTHER);
 			}		
 		} catch (Exception e) {
 			e.printStackTrace();
