@@ -38,10 +38,17 @@ public class ImageDownloaderCustom {
 	private String folder;
 	Map<String, Bitmap> imageCache;
 	boolean clickable = false;
-
+	private boolean round;
 
 	public ImageDownloaderCustom(String folder) {
 		this.folder = folder;
+		this.round = false;
+		imageCache = new HashMap<String, Bitmap>();
+	}
+
+	public ImageDownloaderCustom(String folder, boolean round) {
+		this.folder = folder;
+		this.round = round;
 		imageCache = new HashMap<String, Bitmap>();
 	}
 	
@@ -283,6 +290,8 @@ public class ImageDownloaderCustom {
 		public BitmapDownloaderTask getBitmapDownloaderTask() {
 			return bitmapDownloaderTaskReference.get();
 		}
+		
+		
 	}
 
 

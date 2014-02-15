@@ -39,7 +39,8 @@ public class RPGListFragment extends ListFragment  {
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
-		RPGDetailActivity.getInstance(this.getActivity(), mAdapter.getItem(position).getId());		
+		//RPGDetailActivity.getInstance(this.getActivity(), mAdapter.getItem(position).getId());		
+		RPGPostListActivity.getInstance(this.getActivity(), mAdapter.getItem(position).getId());		
 	}
 	
 	@Override
@@ -72,7 +73,7 @@ public class RPGListFragment extends ListFragment  {
 	
 	private void loadRPG(){
 				
-		mAPI.getFolderList(new APICallback(){
+		mAPI.getRPGList(new APICallback(){
 
 			@SuppressWarnings("unchecked")
 			@Override

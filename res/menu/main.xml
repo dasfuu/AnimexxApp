@@ -14,7 +14,7 @@
   limitations under the License.
   -->
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/menu_settings" android:title="@string/menu_settings" android:showAsAction="never"></item>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"><item android:id="@+id/menu_settings" android:title="@string/menu_settings" android:showAsAction="never"></item>
+    
     
 </menu>

@@ -1,10 +1,16 @@
 package de.meisterfuu.animexx.objects;
 
+import java.io.Serializable;
+
 import com.google.gson.annotations.SerializedName;
 
 
-public class AvatarObject {
+public class AvatarObject implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	@SerializedName("height")
 	int height;
 	@SerializedName("width")

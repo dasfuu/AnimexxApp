@@ -13,6 +13,9 @@ import de.meisterfuu.animexx.objects.ENSDraftObject;
 import de.meisterfuu.animexx.objects.UserObject;
 import de.meisterfuu.animexx.utils.APIException;
 import de.meisterfuu.animexx.utils.Helper;
+import de.meisterfuu.animexx.utils.imageloader.ImageDownloaderCustom;
+import de.meisterfuu.animexx.utils.imageloader.ImageLoaderCustom;
+import de.meisterfuu.animexx.utils.imageloader.ImageSaveObject;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.PendingIntent;
@@ -24,6 +27,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class SingleENSActivity extends Activity {
@@ -33,11 +37,16 @@ public class SingleENSActivity extends Activity {
 	
 	WebView mWebView;
 	TextView mSubject, mUserLabel, mUser, mDate, mMessage;
+	ImageView mAvatar;
 	FrameLayout mHeader, mBody;
 	ENSApi mAPI;
 	Boolean mLoaded = false;
 	
+	ImageDownloaderCustom ImageLoader = new ImageDownloaderCustom("forenavatar");
+	ImageLoaderCustom ImageLoaderProfile = new ImageLoaderCustom("profilbild");
+	
 	SimpleDateFormat sdf = new SimpleDateFormat("'Datum: 'HH:mm dd.MM.yyyy", Locale.getDefault());
+
 	
 	public static void getInstance(Context pContext,long pID){
 		Intent i = new Intent().setClass(pContext, SingleENSActivity.class);
@@ -69,6 +78,7 @@ public class SingleENSActivity extends Activity {
 		mDate = (TextView)this.findViewById(R.id.activity_ens_single_date);
 		mWebView = (WebView)this.findViewById(R.id.activity_ens_single_webview);
 		mMessage = (TextView)this.findViewById(R.id.activity_ens_single_message);
+		mAvatar = (ImageView)this.findViewById(R.id.activity_ens_single_user_avatar);
 		
 		mHeader = (FrameLayout) this.findViewById(R.id.activity_ens_single_header);
 		mBody = (FrameLayout) this.findViewById(R.id.activity_ens_single_body);
@@ -112,10 +122,26 @@ public class SingleENSActivity extends Activity {
 					mUserLabel.setText("An:");
 					mUser.setText(target.getUsername());
 				}
+				
+				if(ImageLoaderProfile.exists(new ImageSaveObject("", target.getId()+""), SingleENSActivity.this)){
+					ImageLoaderProfile.download(new ImageSaveObject("", target.getId()+""), mAvatar);			
+				} else {
+					if(target.getAvatar() != null){
+						ImageSaveObject image = new ImageSaveObject(target.getAvatar().getUrl(), target.getId()+"");
+						System.out.println(target.getAvatar().getUrl());
+						ImageLoader.download(image, mAvatar);
+					} else {
+						mAvatar.setVisibility(View.GONE);
+					}
+				}
+				
 				mMessage.setText(Html.fromHtml(getFullMessage()));
+				
 				
 				mHeader.setVisibility(View.VISIBLE);
 				mBody.setVisibility(View.VISIBLE);
+				
+				
 				
 				mLoaded = true;
 	

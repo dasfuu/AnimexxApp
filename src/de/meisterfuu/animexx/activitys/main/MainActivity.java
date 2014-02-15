@@ -82,6 +82,8 @@ public class MainActivity extends Activity {
 
 		};
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
+		
+		selectItem(0);
 
 		if (savedInstanceState == null) {
 
@@ -100,8 +102,7 @@ public class MainActivity extends Activity {
 	protected void onResume() {
 		super.onResume();
 		System.out.println("RESUME");
-		
-		selectItem(0);
+		selectItem(mLastPosition);
 	}
 
 

@@ -260,7 +260,17 @@ public class RPGObject {
 
 
 
-	static class PlayerObject {
+	public ArrayList<PlayerObject> getPlayer() {
+		return player;
+	}
+
+	public void setPlayer(ArrayList<PlayerObject> player) {
+		this.player = player;
+	}
+
+
+
+	public static class PlayerObject {
 
 	
 //	{
@@ -327,6 +337,10 @@ public class RPGObject {
 //		  "hauptbild_x":129,
 //		  "hauptbild_y":200		
 		
+		@SerializedName("avatare")
+		ArrayList<PlayerAvatarObject> avatars;
+		
+		
 		public PlayerObject() {
 			
 		}
@@ -386,7 +400,67 @@ public class RPGObject {
 		public void setStatus(int status) {
 			this.status = status;
 		}
+
+		public ArrayList<PlayerAvatarObject> getAvatars() {
+			return avatars;
+		}
+
+		public void setAvatars(ArrayList<PlayerAvatarObject> avatars) {
+			this.avatars = avatars;
+		}
 	
+		
+	}
+	
+	public static class PlayerAvatarObject {
+
+
+//	      "id":1450427, Avatar-ID
+//	      "x":160, Breite des Avatars
+//	      "y":120  Höhe des Avatars
+
+		@SerializedName("id")
+		long id;
+		@SerializedName("x")
+		int x;
+		@SerializedName("y")
+		int y;
+		
+		
+		public PlayerAvatarObject() {
+			
+		}
+
+
+		public long getId() {
+			return id;
+		}
+
+
+		public void setId(long id) {
+			this.id = id;
+		}
+
+
+		public int getX() {
+			return x;
+		}
+
+
+		public void setX(int x) {
+			this.x = x;
+		}
+
+
+		public int getY() {
+			return y;
+		}
+
+
+		public void setY(int y) {
+			this.y = y;
+		}
+		
 		
 	}
 }

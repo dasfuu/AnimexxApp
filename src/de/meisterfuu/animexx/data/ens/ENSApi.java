@@ -317,7 +317,7 @@ public class ENSApi {
 	private ENSObject getENSfromWeb(long pID) throws APIException{
 
 		try {
-			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/ens/ens_open/?ens_id=" + pID + "&text_format=both&api=2");
+			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/ens/ens_open/?ens_id=" + pID + "&text_format=both&api=2&get_user_avatar=true");
 			JSONObject resultObj = new JSONObject(result);
 			if(resultObj.getBoolean("success")){
 				ENSObject ENS = gson.fromJson(resultObj.getString("return"), ENSObject.class);

@@ -24,7 +24,7 @@ public class ENSFolderAdapter extends BaseAdapter {
 	
 	List<ENSObject> mItems;
 	Activity mContext;
-	ImageDownloaderCustom ImageLoader = new ImageDownloaderCustom("forenavatar");
+	ImageDownloaderCustom ImageLoader = new ImageDownloaderCustom("forenavatar", true);
 	ImageLoaderCustom ImageLoaderProfile = new ImageLoaderCustom("profilbild");
 	
 	public ENSFolderAdapter(List<ENSObject> pList, Activity pContext){
@@ -163,17 +163,24 @@ public class ENSFolderAdapter extends BaseAdapter {
 
 		//Flags
 		if(ENS.isAnswered()){
-			holder.Flag_Answered.getDrawable().setColorFilter(mContext.getResources().getColor(R.color.animexx_blue), PorterDuff.Mode.MULTIPLY );
+			holder.Flag_Answered.setImageResource(R.drawable.ens_flags_answered_blue);
+		} else {
+			holder.Flag_Answered.setImageResource(R.drawable.ens_flags_answered);
 		}
 		
 		if(ENS.isForwarded()){
-			holder.Flag_Forwarded.getDrawable().setColorFilter(mContext.getResources().getColor(R.color.animexx_blue), PorterDuff.Mode.MULTIPLY );
+			holder.Flag_Forwarded.setImageResource(R.drawable.ens_flags_forwarded_blue);
+		} else {
+			holder.Flag_Forwarded.setImageResource(R.drawable.ens_flags_forwarded);
 		}
 		
 		//Sys ENS
 		if(ENS.getType() == 2){
 			
 		}
+		
+
+		//holder.Avatar.getDrawable().set//.setColorFilter(mContext.getResources().getColor(R.color.animexx_blue), PorterDuff.Mode. );
 		
 		//Avatar
 		if(ImageLoaderProfile.exists(new ImageSaveObject("", target.getId()+""), mContext)){
@@ -186,7 +193,8 @@ public class ENSFolderAdapter extends BaseAdapter {
 				System.out.println(target.getAvatar().getUrl());
 				ImageLoader.download(image, holder.Avatar);
 			} else {
-				holder.Avatar.setVisibility(View.GONE);
+				//holder.Avatar.setVisibility(View.GONE);
+				holder.Avatar.setImageResource(R.drawable.ic_contact_picture);
 			}
 		}
 		
