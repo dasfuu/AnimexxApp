@@ -176,6 +176,7 @@ public class NewENSActivity extends Activity {
 	
 	public void send_(){
 		mENSDraft.setMessage(mMessage.getText().toString());
+		mENSDraft.setSubject(mSubject.getText().toString());
 		mAPI.saveENSDraft(mENSDraft, null);
 		mAPI.sendENS(mENSDraft, new APICallback() {
 			

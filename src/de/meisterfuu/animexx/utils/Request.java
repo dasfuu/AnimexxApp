@@ -154,7 +154,7 @@ public class Request {
 		}
 		
 		String erg = responseBuilder.toString();
-		Log.i("Animexx", "Response : " +  erg.substring(0, Math.min(100, erg.length()-1)));
+		Log.i("Animexx", "Response : " +  erg.substring(0, Math.min(300, erg.length()-1)));
 
 		return erg;
 	}

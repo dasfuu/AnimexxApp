@@ -108,6 +108,8 @@ public class MainActivity extends Activity {
 		super.onResume();
 		System.out.println("RESUME");
 		selectItem(mLastPosition);
+
+
 	}
 
 
