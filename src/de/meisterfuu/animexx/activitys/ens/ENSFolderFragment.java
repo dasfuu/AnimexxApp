@@ -28,16 +28,18 @@ public class ENSFolderFragment extends ListFragment implements OnScrollListener 
 	ArrayList<ENSObject> mList;
 	ENSFolderAdapter mAdapter;
 	int mPrevTotalItemCount;
+	private long mDesign;
 	
 	static ENSFolderAdapter saveAdapter;
 	static int saveItemCount, saveNextPage;
 	static ArrayList<ENSObject> saveList;
 	static int saveScrollstate;
 	
-	public static ENSFolderFragment getInstance(long pFolderID, String pType){
+	public static ENSFolderFragment getInstance(long pFolderID, String pType, long pDesign){
 		ENSFolderFragment result = new ENSFolderFragment();
 	     Bundle args = new Bundle();
 	     args.putLong("mFolderID", pFolderID);
+	     args.putLong("mDesign", pDesign);
 	     args.putString("mType", pType);
 	     result.setArguments(args);
 		return result;
@@ -88,18 +90,24 @@ public class ENSFolderFragment extends ListFragment implements OnScrollListener 
 	private void init(){
 		this.mType = this.getArguments().getString("mType");
 		this.mFolderID = this.getArguments().getLong("mFolderID");
+		this.mDesign = this.getArguments().getLong("mDesign");
 		mInitiated = false;
 		mNextPage = 0;
 		this.getListView().setOnScrollListener(this);
 		mList = new ArrayList<ENSObject>();
-		mAdapter = new ENSFolderAdapter(mList, ENSFolderFragment.this.getActivity());
+		mAdapter = new ENSFolderAdapter(mList, ENSFolderFragment.this.getActivity(), mDesign);
 		this.setListAdapter(mAdapter);
+		if(mDesign == 4){
+			this.getListView().setDivider(null);
+			this.getListView().setPadding(15, 0, 15, 0);
+		}
 		getNextPage();		
 	}
 	
 	private void initOld() {
 		this.mType = this.getArguments().getString("mType");
 		this.mFolderID = this.getArguments().getLong("mFolderID");
+		this.mDesign = this.getArguments().getLong("mDesign");
 		mInitiated = false;
 		mNextPage = ENSFolderFragment.saveNextPage;
 		this.getListView().setOnScrollListener(this);
@@ -109,6 +117,11 @@ public class ENSFolderFragment extends ListFragment implements OnScrollListener 
 		this.setListAdapter(mAdapter);
 		
 		this.getListView().setSelectionFromTop(ENSFolderFragment.saveScrollstate, 0);
+		
+		if(mDesign == 4){
+			this.getListView().setDivider(null);
+			this.getListView().setPadding(15, 0, 15, 0);
+		}
 		
 		ENSFolderFragment.saveScrollstate = 0;
 		ENSFolderFragment.saveNextPage = 0;

@@ -59,7 +59,7 @@ public class GcmIntentService extends IntentService {
 					ENSNotification.notify(this, extras.getString("title"), extras.getString("from_username"), extras.getString("from_id"), extras.getString("id"), extras.getString("from"), 1);
 				} else {
 					// Post notification of unknown received message.
-					sendNotification("Received: " + extras.toString());
+					// sendNotification("Received: " + extras.toString());
 					Log.i(TAG, "Received: " + extras.toString());
 				}
 

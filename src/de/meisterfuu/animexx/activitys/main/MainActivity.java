@@ -4,13 +4,16 @@ import java.util.ArrayList;
 
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.activitys.ens.ENSFolderFragment;
+import de.meisterfuu.animexx.activitys.ens.NewENSActivity;
 import de.meisterfuu.animexx.activitys.rpg.RPGListFragment;
 import de.meisterfuu.animexx.adapter.ENSFolderSpinnerAdapter;
 import de.meisterfuu.animexx.adapter.MainDrawerAdapter;
 import de.meisterfuu.animexx.data.APICallback;
+import de.meisterfuu.animexx.data.Self;
 import de.meisterfuu.animexx.data.ens.ENSApi;
 import de.meisterfuu.animexx.objects.ENSFolderObject;
 import de.meisterfuu.animexx.utils.APIException;
+import de.meisterfuu.animexx.utils.Helper;
 import de.meisterfuu.animexx.utils.Request;
 
 import android.app.ActionBar;
@@ -40,6 +43,7 @@ public class MainActivity extends Activity {
 	private MainDrawerAdapter mAdapter;
 	private String mSelected = "ENS";
 	private int mLastPosition = -1;
+	private long mDesign;
 
 
 	@Override
@@ -83,6 +87,7 @@ public class MainActivity extends Activity {
 		};
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 		
+		mDesign = 1;
 		selectItem(0);
 
 		if (savedInstanceState == null) {
@@ -139,8 +144,7 @@ public class MainActivity extends Activity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.main, menu);
+		inflateMenu(menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -153,12 +157,28 @@ public class MainActivity extends Activity {
 		if (drawerOpen) {
 			//menu.clear();
 		}
+		inflateMenu(menu);
+		
 		if (mSelected.equals("ENS")) {
 			// MenuInflater inflater = getMenuInflater();
 			// inflater.inflate(R.menu.main, menu);
-		}
+		} 
 
 		return super.onPrepareOptionsMenu(menu);
+	}
+	
+	public Menu inflateMenu(Menu menu){
+		menu.clear();
+		if (mSelected.equals("ENS")) {
+			MenuInflater inflater = getMenuInflater();
+			inflater.inflate(R.menu.main_ens, menu);
+		} else if (mSelected.equals("RPG")) {
+			MenuInflater inflater = getMenuInflater();
+			inflater.inflate(R.menu.main_rpg, menu);
+		}
+
+		return menu;
+		
 	}
 
 
@@ -172,6 +192,9 @@ public class MainActivity extends Activity {
 		switch (item.getItemId()) {
 		case R.id.menu_settings:
 			SettingsActivity.getInstance(this);
+			return true;
+		case R.id.menu_new_ens:
+			NewENSActivity.getInstanceBlank(this);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -196,8 +219,18 @@ public class MainActivity extends Activity {
 		if(mLastPosition == pPosition) return;
 		mLastPosition = pPosition;
 		if (pPosition == 0) {
+			mDesign = 1;
 			selectENS();
 		} else if(pPosition == 1) {
+			mDesign = 2;
+			selectENS();
+		} else if(pPosition == 2) {
+			mDesign = 3;
+			selectENS();
+		} else if(pPosition == 3) {
+			mDesign = 4;
+			selectENS();
+		} else if(pPosition == 4) {
 			selectRPG();
 		}
 	}
@@ -205,8 +238,8 @@ public class MainActivity extends Activity {
 
 	private void selectENS() {
 		mSelected = "ENS";
-		this.setTitle("ENS");
-		Fragment fragment = ENSFolderFragment.getInstance(1, ENSApi.TYPE_INBOX);
+		this.setTitle("");
+		Fragment fragment = ENSFolderFragment.getInstance(1, ENSApi.TYPE_INBOX, mDesign);
 		FragmentManager fragmentManager = getFragmentManager();
 		//fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, "1_"+ENSApi.TYPE_INBOX).commit();
 		getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
@@ -223,7 +256,7 @@ public class MainActivity extends Activity {
 					@Override
 					public boolean onNavigationItemSelected(int itemPosition, long itemId) {
 						ENSFolderObject folder = spinnerAdapter.getItem(itemPosition);
-						Fragment fragment = ENSFolderFragment.getInstance(folder.getId(), folder.getType());
+						Fragment fragment = ENSFolderFragment.getInstance(folder.getId(), folder.getType(), mDesign);
 						FragmentManager fragmentManager = getFragmentManager();
 						fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, folder.getId()+"_"+folder.getType()).commit();
 						return true;

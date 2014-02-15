@@ -27,5 +27,6 @@
     <string name="title_activity_new_ens">Neue ENS</string>
     <string name="title_activity_rpgdetail"></string>
     <string name="title_activity_rpgpost_list"></string>
+    <string name="menu_new_ens">Neue ENS</string>
 
 </resources>

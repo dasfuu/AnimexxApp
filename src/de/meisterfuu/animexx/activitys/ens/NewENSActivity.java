@@ -8,6 +8,7 @@ import de.meisterfuu.animexx.data.ens.ENSApi;
 import de.meisterfuu.animexx.objects.ENSDraftObject;
 import de.meisterfuu.animexx.objects.UserObject;
 import de.meisterfuu.animexx.utils.APIException;
+import de.meisterfuu.animexx.utils.Helper;
 import de.meisterfuu.animexx.utils.views.UsernameAutoCompleteTextView;
 import android.os.Bundle;
 import android.app.Activity;
@@ -29,6 +30,34 @@ public class NewENSActivity extends Activity {
 	     	args.putLong("ENSDraftObject", pDraft.getID());
 	     i.putExtras(args);
 	     pContext.startActivity(i);
+	}
+	
+	public static void getInstanceBlank(final Context pContext){
+		final ENSDraftObject draft = new ENSDraftObject();
+		draft.setMessage("");
+		ArrayList<Long> recip = new ArrayList<Long>();
+		ArrayList<String> recip_name = new ArrayList<String>();
+		draft.setRecipients(recip);
+		draft.setRecipients_name(recip_name);
+		draft.setSubject("");		
+		draft.setReferenceType(null);
+		draft.setSignature("");
+		
+		final ENSApi mAPI = new ENSApi(pContext);
+		mAPI.saveENSDraft(draft, new APICallback() {
+			
+			@Override
+			public void onCallback(APIException pError, Object pObject) {
+				Intent i = new Intent().setClass(pContext, NewENSActivity.class);
+			    Bundle args = new Bundle();
+			    args.putLong("ENSDraftObject", draft.getID());
+			    i.putExtras(args);
+			    pContext.startActivity(i);
+			    mAPI.close();
+			}
+		});
+		
+
 	}
 	
 	public static void getInstance(Context pContext){
