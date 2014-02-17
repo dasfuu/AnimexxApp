@@ -8,7 +8,6 @@ import de.meisterfuu.animexx.data.ens.ENSApi;
 import de.meisterfuu.animexx.objects.ENSDraftObject;
 import de.meisterfuu.animexx.objects.UserObject;
 import de.meisterfuu.animexx.utils.APIException;
-import de.meisterfuu.animexx.utils.Helper;
 import de.meisterfuu.animexx.utils.views.UsernameAutoCompleteTextView;
 import android.os.Bundle;
 import android.app.Activity;

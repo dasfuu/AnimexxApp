@@ -12,10 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.data.Self;
-import de.meisterfuu.animexx.data.ens.ENSApi;
-import de.meisterfuu.animexx.objects.ENSFolderObject;
 import de.meisterfuu.animexx.objects.RPGObject;
-import de.meisterfuu.animexx.objects.RPGObject.PlayerObject;
 import de.meisterfuu.animexx.utils.imageloader.ImageDownloaderCustom;
 
 public class RPGSpinnerAdapter extends BaseAdapter {

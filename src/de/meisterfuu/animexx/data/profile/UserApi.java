@@ -7,8 +7,6 @@ import java.util.ArrayList;
 
 import oauth.signpost.OAuth;
 
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
 import org.json.JSONObject;
 
 import android.content.Context;
@@ -19,9 +17,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import de.meisterfuu.animexx.data.APICallback;
-import de.meisterfuu.animexx.objects.ENSObject;
 import de.meisterfuu.animexx.objects.UserObject;
-import de.meisterfuu.animexx.objects.UserSearchResultObject;
 import de.meisterfuu.animexx.utils.APIException;
 import de.meisterfuu.animexx.utils.Request;
 
@@ -106,30 +102,10 @@ public class UserApi {
 	
 	
 	//Web-Api Access
-	
-	private ENSObject getUserfromWeb(long pID) throws APIException{
-
-		try {
-			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/ens/ens_open/?ens_id=" + pID + "&text_format=html&api=2");
-			JSONObject resultObj = new JSONObject(result);
-			if(resultObj.getBoolean("success")){
-				ENSObject ENS = gson.fromJson(resultObj.getString("return"), ENSObject.class);
-				return ENS;
-			} else {
-				throw new APIException("Error", APIException.OTHER);
-			}		
-	
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new APIException("Request Failed", APIException.REQUEST_FAILED);
-		}	
-
-	}
-	
+		
 	private ArrayList<UserObject> searchUserByNameWeb(String pUsername) throws APIException {
 		try {
 			
-			String url = "https://ws.animexx.de/json/mitglieder/username_autocomplete/?api=2";
 			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/mitglieder/username_autocomplete/?api=2&str="+OAuth.percentEncode(pUsername));
 			JSONObject resultObj = new JSONObject(result);
 			if(resultObj.getBoolean("success")){				 

@@ -19,7 +19,7 @@ import android.support.v4.app.NotificationCompat;
  * <p>
  * This class makes heavy use of the {@link NotificationCompat.Builder} helper class to create notifications in a backward-compatible way.
  */
-public class ENSNotification {
+public class ENSCollapseNotification {
 
 	/**
 	 * The unique identifier for this type of notification.
@@ -118,7 +118,7 @@ public class ENSNotification {
 			}
 			builder.setLights(R.color.animexx_blue, 1000, 600);
 			
-			notify(pContext, pId.hashCode(),builder.build());
+			notify(pContext,builder.build());
 		}
 		
 
@@ -126,10 +126,10 @@ public class ENSNotification {
 
 
 	@TargetApi(Build.VERSION_CODES.ECLAIR)
-	private static void notify(final Context context, final int id, final Notification notification) {
+	private static void notify(final Context context, final Notification notification) {
 		final NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR) {
-			nm.notify(NOTIFICATION_TAG, id, notification);
+			nm.notify(NOTIFICATION_TAG, 1, notification);
 		} else {
 			nm.notify(NOTIFICATION_TAG.hashCode(), notification);
 		}
@@ -149,17 +149,4 @@ public class ENSNotification {
 		}
 	}
 	
-	
-	/**
-	 * Cancels any notifications of this type previously shown using {@link #notify(Context, String, int)}.
-	 */
-	@TargetApi(Build.VERSION_CODES.ECLAIR)
-	public static void cancel(final Context context, long id) {
-		final NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR) {
-			nm.cancel(NOTIFICATION_TAG, (""+id).hashCode());
-		} else {
-			nm.cancel(NOTIFICATION_TAG.hashCode());
-		}
-	}
 }

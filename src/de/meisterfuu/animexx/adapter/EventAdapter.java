@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.meisterfuu.animexx.R;
-import de.meisterfuu.animexx.objects.RPGObject;
-import de.meisterfuu.animexx.utils.imageloader.ImageDownloaderCustom;
-import de.meisterfuu.animexx.utils.imageloader.ImageLoaderCustom;
+import de.meisterfuu.animexx.objects.EventObject;
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,14 +13,12 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 
-public class RPGListAdapter extends BaseAdapter {
+public class EventAdapter extends BaseAdapter {
 	
-	List<RPGObject> mItems;
+	List<EventObject> mItems;
 	Activity mContext;
-	ImageDownloaderCustom ImageLoader = new ImageDownloaderCustom("forenavatar");
-	ImageLoaderCustom ImageLoaderProfile = new ImageLoaderCustom("profilbild");
 	
-	public RPGListAdapter(List<RPGObject> pList, Activity pContext){
+	public EventAdapter(List<EventObject> pList, Activity pContext){
 		this.mItems = pList;
 		this.mContext = pContext;
 	}
@@ -37,6 +33,7 @@ public class RPGListAdapter extends BaseAdapter {
 
 	
 	static class ViewHolder {
+
 		public TextView Title, Subtitle, Color;
 	}
 
@@ -49,7 +46,7 @@ public class RPGListAdapter extends BaseAdapter {
 
 	@Override
 	public boolean areAllItemsEnabled() {
-		return false;
+		return true;
 	}
 
 	@Override
@@ -58,7 +55,7 @@ public class RPGListAdapter extends BaseAdapter {
 	}
 
 	@Override
-	public RPGObject getItem(int position) {
+	public EventObject getItem(int position) {
 		return mItems.get(position);
 	}
 
@@ -78,35 +75,36 @@ public class RPGListAdapter extends BaseAdapter {
 	}
 
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-
-		
+	public View getView(int position, View convertView, ViewGroup parent) {		
 		View rowView = convertView;
 		if (rowView == null) {
 			LayoutInflater inflater = mContext.getLayoutInflater();
-			rowView = inflater.inflate(R.layout.listitem_rpg, null);
+			
+			rowView = inflater.inflate(R.layout.listitem_event, null);
+
+
 			ViewHolder viewHolder = new ViewHolder();
-			viewHolder.Title = (TextView) rowView.findViewById(R.id.rpg_list_item_title);
-			viewHolder.Subtitle = (TextView) rowView.findViewById(R.id.rpg_list_item_subtitle);
-			viewHolder.Color = (TextView) rowView.findViewById(R.id.rpg_list_item_color);
+			viewHolder.Title = (TextView) rowView.findViewById(R.id.event_list_item_title);
+			viewHolder.Subtitle = (TextView) rowView.findViewById(R.id.event_list_item_subtitle);
+			viewHolder.Color = (TextView) rowView.findViewById(R.id.event_list_item_color);
 			rowView.setTag(viewHolder);
 		}
 
 		ViewHolder holder = (ViewHolder) rowView.getTag();
-		final RPGObject RPG = mItems.get(position);
+		final EventObject Event = mItems.get(position);
 		
 		//Init
-		holder.Color.setBackgroundResource(R.color.animexx_blue);
+		//holder.Color.setBackgroundResource(R.color.animexx_blue);
 		
-		//Subject
-		holder.Title.setText(RPG.getName());
-		holder.Subtitle.setText("Letzter Post: "+RPG.getLastPostDate());
+
+		holder.Title.setText(Event.getName());	
+		holder.Subtitle.setText("In "+Event.getCity()+" / "+Event.getAttendees()+" Besucher \n"+Event.getStartDate()+" - "+Event.getEndDate());
 
 		
 		return rowView;
 	}
 
-	public void addAll(ArrayList<RPGObject> list) {
+	public void addAll(ArrayList<EventObject> list) {
 		mItems.addAll(list);
 		this.notifyDataSetChanged();		
 	}

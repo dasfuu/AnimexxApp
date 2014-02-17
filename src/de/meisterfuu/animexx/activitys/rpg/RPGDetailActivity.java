@@ -1,9 +1,6 @@
 package de.meisterfuu.animexx.activitys.rpg;
 
 import de.meisterfuu.animexx.R;
-import de.meisterfuu.animexx.R.layout;
-import de.meisterfuu.animexx.R.menu;
-import de.meisterfuu.animexx.activitys.ens.SingleENSActivity;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;

@@ -63,9 +63,27 @@ public class RPGPostObject {
 //		      "Test 1"
 //		    ]
 //		  ]
+	@SerializedName("metadaten")
+	String metadata;
 	
 	public RPGPostObject(){
 		
+	}
+
+	public String getMetadata() {
+		return metadata;
+	}
+
+	public void setMetadata(String metadata) {
+		this.metadata = metadata;
+	}
+
+	public int getAction() {
+		return action;
+	}
+
+	public int getInTime() {
+		return inTime;
 	}
 
 	public String getPost() {
@@ -108,16 +126,16 @@ public class RPGPostObject {
 		this.author = author;
 	}
 
-	public int isAction() {
-		return action;
+	public boolean isAction() {
+		return (action == 1);
 	}
 
 	public void setAction(int action) {
 		this.action = action;
 	}
 
-	public int isInTime() {
-		return inTime;
+	public boolean isInTime() {
+		return (inTime == 1);
 	}
 
 	public void setInTime(int inTime) {

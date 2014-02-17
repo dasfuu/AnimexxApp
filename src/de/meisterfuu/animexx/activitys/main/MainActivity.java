@@ -5,15 +5,14 @@ import java.util.ArrayList;
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.activitys.ens.ENSFolderFragment;
 import de.meisterfuu.animexx.activitys.ens.NewENSActivity;
+import de.meisterfuu.animexx.activitys.events.EventListFragment;
 import de.meisterfuu.animexx.activitys.rpg.RPGListFragment;
 import de.meisterfuu.animexx.adapter.ENSFolderSpinnerAdapter;
 import de.meisterfuu.animexx.adapter.MainDrawerAdapter;
 import de.meisterfuu.animexx.data.APICallback;
-import de.meisterfuu.animexx.data.Self;
 import de.meisterfuu.animexx.data.ens.ENSApi;
 import de.meisterfuu.animexx.objects.ENSFolderObject;
 import de.meisterfuu.animexx.utils.APIException;
-import de.meisterfuu.animexx.utils.Helper;
 import de.meisterfuu.animexx.utils.Request;
 
 import android.app.ActionBar;
@@ -32,7 +31,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 public class MainActivity extends Activity {
@@ -177,6 +175,9 @@ public class MainActivity extends Activity {
 		} else if (mSelected.equals("RPG")) {
 			MenuInflater inflater = getMenuInflater();
 			inflater.inflate(R.menu.main_rpg, menu);
+		} else if (mSelected.equals("EVENT")) {
+			MenuInflater inflater = getMenuInflater();
+			inflater.inflate(R.menu.main_rpg, menu);
 		}
 
 		return menu;
@@ -234,6 +235,8 @@ public class MainActivity extends Activity {
 			selectENS();
 		} else if(pPosition == 4) {
 			selectRPG();
+		} else if(pPosition == 5) {
+			selectEvent();
 		}
 	}
 
@@ -241,9 +244,9 @@ public class MainActivity extends Activity {
 	private void selectENS() {
 		mSelected = "ENS";
 		this.setTitle("");
-		Fragment fragment = ENSFolderFragment.getInstance(1, ENSApi.TYPE_INBOX, mDesign);
-		FragmentManager fragmentManager = getFragmentManager();
-		//fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, "1_"+ENSApi.TYPE_INBOX).commit();
+//		Fragment fragment = ENSFolderFragment.getInstance(1, ENSApi.TYPE_INBOX, mDesign);
+//		FragmentManager fragmentManager = getFragmentManager();
+//		fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, "1_"+ENSApi.TYPE_INBOX).commit();
 		getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
 		new ENSApi(MainActivity.this).getFolderList(new APICallback() {
@@ -283,6 +286,16 @@ public class MainActivity extends Activity {
 		invalidateOptionsMenu();
 	}
 
+	private void selectEvent() {
+		mSelected = "EVENT";
+		this.setTitle("Events");
+		Fragment fragment = EventListFragment.getInstance();
+		FragmentManager fragmentManager = getFragmentManager();
+		fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, "RPGList").commit();
+		getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+		invalidateOptionsMenu();
+	}
+	
 	/**
 	 * When using the ActionBarDrawerToggle, you must call it during
 	 * onPostCreate() and onConfigurationChanged()...

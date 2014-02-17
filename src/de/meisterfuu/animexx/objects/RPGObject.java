@@ -58,6 +58,8 @@ public class RPGObject {
 //		    "Test-Angabe",
 //		    "<\\'>\":\/"
 //		  ],	
+	@SerializedName("posting_metadaten")
+	String metadata;
 	
 	
 //		  "frei":3,
@@ -78,9 +80,6 @@ public class RPGObject {
 //		    "storniert":false Ob es storniert wurde
 //		  },
 
-	
-	
-	
 //		  "tofu_at_hide":0, Bitmaske über die BBCodes, die nicht akzeptiert werden; aktuell noch nicht genauer dokumentiert
 //		  "tofu_avatare":3, Position der Avatare; aktuell noch nicht genauer dokumentiert
 //		  "tofu_sponsor":{ ... }, User-Objekt; sollte identisch mit tofu_data["mitglied"] sein
@@ -101,12 +100,16 @@ public class RPGObject {
 	
 //		  "typ_genre":0,
 //		  "typ_hentai":0,
-//		  "typ_spielerzahl":0,
 //		  "typ_geschlecht":0,
 //		  "typ_zulassung":0,
 //		  "typ_hauptzeit":0,
 //		  "typ_schreibstil":0,
 	
+	
+//	      "typ_spielerzahl":0,
+	@SerializedName("typ_spielerzahl")
+	int playerCount;
+	 
 	
 //		  "adult":false,
 	@SerializedName("adult")
@@ -128,6 +131,22 @@ public class RPGObject {
 	
 	public RPGObject() {
 		
+	}
+
+	public String getMetadata() {
+		return metadata;
+	}
+
+	public void setMetadata(String metadata) {
+		this.metadata = metadata;
+	}
+
+	public int getPlayerCount() {
+		return playerCount;
+	}
+
+	public void setPlayerCount(int playerCount) {
+		this.playerCount = playerCount;
 	}
 
 	public long getId() {

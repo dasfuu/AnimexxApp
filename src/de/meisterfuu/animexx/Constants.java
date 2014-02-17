@@ -1,5 +1,7 @@
 package de.meisterfuu.animexx;
 
+import android.provider.CalendarContract;
+
 public class Constants {
 
 	// OAuth
@@ -14,6 +16,11 @@ public class Constants {
 	public static final String OAUTH_CALLBACK_HOST = "callback/";
 	public static final String OAUTH_CALLBACK_URL = OAUTH_CALLBACK_SCHEME	+ "://" + OAUTH_CALLBACK_HOST;
 
+    public static final String FULL_PACKAGE_NAME = "de.meisterfuu.animexx";
+    public static final String ACCOUNT_NAME = "Animexx";
+    public static final String ACCOUNT_TYPE = FULL_PACKAGE_NAME+".account";
+    public static final String CONTENT_CALENDAR_AUTHORITY = CalendarContract.AUTHORITY;
+	
 	// Other
 	public static final String VERSION = "v2.0.0";
 

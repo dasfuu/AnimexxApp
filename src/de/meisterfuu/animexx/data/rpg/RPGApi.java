@@ -13,9 +13,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import de.meisterfuu.animexx.data.APICallback;
-import de.meisterfuu.animexx.data.ens.ENSApi;
-import de.meisterfuu.animexx.data.ens.ENSDatabase;
-import de.meisterfuu.animexx.objects.ENSFolderObject;
 import de.meisterfuu.animexx.objects.RPGObject;
 import de.meisterfuu.animexx.objects.RPGPostObject;
 import de.meisterfuu.animexx.utils.APIException;

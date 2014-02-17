@@ -1,7 +1,6 @@
 package de.meisterfuu.animexx.adapter;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import de.meisterfuu.animexx.R;
@@ -11,7 +10,6 @@ import de.meisterfuu.animexx.utils.imageloader.ImageDownloaderCustom;
 import de.meisterfuu.animexx.utils.imageloader.ImageLoaderCustom;
 import de.meisterfuu.animexx.utils.imageloader.ImageSaveObject;
 import android.app.Activity;
-import android.graphics.PorterDuff;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +23,7 @@ public class ENSFolderAdapter extends BaseAdapter {
 	List<ENSObject> mItems;
 	Activity mContext;
 	long mDesign;
-	ImageDownloaderCustom ImageLoader = new ImageDownloaderCustom("forenavatar", true);
+	ImageDownloaderCustom ImageLoader = new ImageDownloaderCustom("forenavatar");
 	ImageLoaderCustom ImageLoaderProfile = new ImageLoaderCustom("profilbild");
 	
 	public ENSFolderAdapter(List<ENSObject> pList, Activity pContext, long pDesign){

@@ -2,7 +2,6 @@ package de.meisterfuu.animexx.receiver;
 
 import de.meisterfuu.animexx.services.GcmIntentService;
 import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;

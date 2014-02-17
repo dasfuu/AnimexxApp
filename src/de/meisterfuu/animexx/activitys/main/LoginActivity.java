@@ -2,6 +2,7 @@ package de.meisterfuu.animexx.activitys.main;
 
 
 
+import de.meisterfuu.animexx.Constants;
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.data.APICallback;
 import de.meisterfuu.animexx.data.Self;
@@ -10,7 +11,10 @@ import de.meisterfuu.animexx.utils.APIException;
 import de.meisterfuu.animexx.utils.Request;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
@@ -43,6 +47,17 @@ public class LoginActivity extends Activity implements OnClickListener {
 		if(Self.getInstance(this).isLoggedIn()){
 			//Yes? set result TRUE
 			result = true;
+			
+			//Create Account
+	        AccountManager manager = AccountManager.get(this);
+	        final Account acc = new Account(Constants.ACCOUNT_NAME, Constants.ACCOUNT_TYPE);
+	        if (manager.addAccountExplicitly(acc, null, null)) {
+	            // Only change sync settings if it did not exist, yet
+	            ContentResolver.setIsSyncable(acc, Constants.CONTENT_CALENDAR_AUTHORITY, 1);
+	            ContentResolver.setSyncAutomatically(acc, Constants.CONTENT_CALENDAR_AUTHORITY, true);
+	            // Sync daily by default
+	            ContentResolver.addPeriodicSync(acc, Constants.CONTENT_CALENDAR_AUTHORITY, new Bundle(), 24 * 60 * 60);
+	        }
 			
 			//Yes? Start MainActivity
 			startActivity(new Intent().setClass(this, MainActivity.class));

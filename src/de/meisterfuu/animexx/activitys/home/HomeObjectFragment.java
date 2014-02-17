@@ -13,7 +13,6 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import de.meisterfuu.animexx.R;
-import de.meisterfuu.animexx.R.layout;
 import de.meisterfuu.animexx.dummy.DummyContent;
 
 /**

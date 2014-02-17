@@ -5,7 +5,6 @@ import org.json.JSONObject;
 
 import de.meisterfuu.animexx.data.profile.UserApi;
 import de.meisterfuu.animexx.utils.APIException;
-import de.meisterfuu.animexx.utils.Request;
 import oauth.signpost.OAuth;
 import android.content.Context;
 import android.content.SharedPreferences;

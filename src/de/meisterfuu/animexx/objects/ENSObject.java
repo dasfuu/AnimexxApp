@@ -13,7 +13,7 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable
-public class ENSObject implements Comparable {
+public class ENSObject implements Comparable<ENSObject> {
 
 //	- id, int, identisch zum ens_id-Parameter
 //	- von, User-Objekt
@@ -278,8 +278,8 @@ public class ENSObject implements Comparable {
 
 
 	@Override
-	public int compareTo(Object another) {
-		return ((Long)((ENSObject) another).getId()).compareTo(this.getId());
+	public int compareTo(ENSObject another) {
+		return ((Long)another.getId()).compareTo(this.getId());
 
 	}
 	

@@ -27,7 +27,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -38,17 +37,9 @@ public class ImageDownloaderCustom {
 	private String folder;
 	Map<String, Bitmap> imageCache;
 	boolean clickable = false;
-	private boolean round;
 
 	public ImageDownloaderCustom(String folder) {
 		this.folder = folder;
-		this.round = false;
-		imageCache = new HashMap<String, Bitmap>();
-	}
-
-	public ImageDownloaderCustom(String folder, boolean round) {
-		this.folder = folder;
-		this.round = round;
 		imageCache = new HashMap<String, Bitmap>();
 	}
 	
