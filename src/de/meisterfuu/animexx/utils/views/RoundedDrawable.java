@@ -19,7 +19,6 @@ import android.graphics.drawable.LayerDrawable;
 import android.util.Log;
 import android.widget.ImageView.ScaleType;
 
-@SuppressWarnings("UnusedDeclaration")
 public class RoundedDrawable extends Drawable {
 
   public static final String TAG = "RoundedDrawable";
@@ -43,7 +42,6 @@ public class RoundedDrawable extends Drawable {
   private ScaleType mScaleType = ScaleType.FIT_CENTER;
 
   public RoundedDrawable(Bitmap bitmap) {
-
     mBitmapWidth = bitmap.getWidth();
     mBitmapHeight = bitmap.getHeight();
     mBitmapRect.set(0, 0, mBitmapWidth, mBitmapHeight);

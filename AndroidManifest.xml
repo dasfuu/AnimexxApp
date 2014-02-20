@@ -130,6 +130,14 @@
             android:name="de.meisterfuu.animexx.activitys.rpg.RPGPostListActivity"
             android:label="@string/title_activity_rpgpost_list" >
         </activity>
+        <activity
+            android:name="de.meisterfuu.animexx.SingleEventActivity"
+            android:label="@string/title_activity_single_event"
+            android:parentActivityName="de.meisterfuu.animexx.activitys.main.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.meisterfuu.animexx.activitys.main.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

@@ -2,17 +2,12 @@
 <resources>
 
     <string name="app_name">Animexx</string>
-
     <string name="activity_login_button">Login</string>
     <string name="title_activity_main">Animexx</string>
-
-
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="listitem_loading_caption">Laden...</string>
-
     <string name="hello_world">Hello world!</string>
-
     <string name="action_share">Share</string>
     <string name="action_reply">Antworten</string>
     <string name="action_settings">Einstellungen</string>
@@ -28,5 +23,6 @@
     <string name="title_activity_rpgdetail"></string>
     <string name="title_activity_rpgpost_list"></string>
     <string name="menu_new_ens">Neue ENS</string>
+    <string name="title_activity_single_event">SingleEventActivity</string>
 
 </resources>

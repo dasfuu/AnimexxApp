@@ -2,6 +2,8 @@ package de.meisterfuu.animexx.utils.imageloader;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FilterInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
@@ -17,6 +19,9 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpParams;
+
+import de.meisterfuu.animexx.R;
+import de.meisterfuu.animexx.utils.views.RoundedImageView;
 
 import android.content.Context;
 import android.content.Intent;
@@ -100,13 +105,21 @@ public class ImageDownloaderCustom {
 
 			}
 			// No? download it
+
 			if (bitmap == null) {
+				System.out.println("Imagedownload...");
 				BitmapDownloaderTask task = new BitmapDownloaderTask(imageView);
 				DownloadedDrawable downloadedDrawable = new DownloadedDrawable(task);
-				imageView.setImageDrawable(downloadedDrawable);
+				if(imageView instanceof RoundedImageView){
+					((RoundedImageView)imageView).setImageDrawable(downloadedDrawable, true);
+				} else {
+					imageView.setImageDrawable(downloadedDrawable);
+				}
+
 				task.execute(url);
 			} else {
 				// Yes? set the image
+
 				imageView.setImageBitmap(bitmap);
 				if (clickable) imageView.setOnClickListener(new OnClickListener() {
 
@@ -224,7 +237,8 @@ public class ImageDownloaderCustom {
 		protected Bitmap doInBackground(ImageSaveObject... params) {
 			// params comes from the execute() call: params[0] is the url.
 			url = params[0];
-			return downloadBitmap(params[0].getUrl());
+			Bitmap b =  downloadBitmap(params[0].getUrl());
+			return b;
 		}
 
 
@@ -235,21 +249,24 @@ public class ImageDownloaderCustom {
 				bitmap = null;
 			}
 
+			Log.w("ImageDownloader", "imageViewReference: " + imageViewReference);
 			if (imageViewReference != null) {
 				final ImageView imageView = imageViewReference.get();
 				BitmapDownloaderTask bitmapDownloaderTask = getBitmapDownloaderTask(imageView);
-				// Change bitmap only if this process is still associated with it
+				Log.w("ImageDownloader", "bitmapDownloaderTask: " + bitmapDownloaderTask);
+				Log.w("ImageDownloader", "bitmapDownloaderTask this: " + this);
+				//Change bitmap only if this process is still associated with it
 				if (this == bitmapDownloaderTask) {
 					imageView.setImageBitmap(bitmap);
 					// cache the image
 
-					String filename = url.getName();
+					String filename = url.getName();					
 					final File f = new File(getCacheDirectory(imageView.getContext()), filename);
-
-					imageCache.put(f.getPath(), bitmap);
-
 					writeFile(bitmap, f);
+					imageCache.put(f.getPath(), bitmap);
 					
+
+
 					
 					if (clickable) imageView.setOnClickListener(new OnClickListener() {
 
@@ -295,6 +312,7 @@ public class ImageDownloaderCustom {
 
 		try {
 			HttpResponse response = client.execute(getRequest);
+			Log.w("ImageDownloader", "DownloadImage " + response);
 			final int statusCode = response.getStatusLine().getStatusCode();
 			if (statusCode != HttpStatus.SC_OK) {
 				Log.w("ImageDownloader", "Error " + statusCode + " while retrieving bitmap from " + url);
@@ -306,7 +324,8 @@ public class ImageDownloaderCustom {
 				InputStream inputStream = null;
 				try {
 					inputStream = entity.getContent();
-					final Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+					final Bitmap bitmap = BitmapFactory.decodeStream(new FlushedInputStream(inputStream));
+					Log.w("ImageDownloader", "return bitmap: " + bitmap.getHeight());
 					return bitmap;
 				} finally {
 					if (inputStream != null) {
@@ -326,5 +345,32 @@ public class ImageDownloaderCustom {
 		}
 		return null;
 	}
+	
+	
+	static class FlushedInputStream extends FilterInputStream {
+	    public FlushedInputStream(InputStream inputStream) {
+	        super(inputStream);
+	    }
+
+	    @Override
+	    public long skip(long n) throws IOException {
+	        long totalBytesSkipped = 0L;
+	        while (totalBytesSkipped < n) {
+	            long bytesSkipped = in.skip(n - totalBytesSkipped);
+	            if (bytesSkipped == 0L) {
+	                  int bytes = read();
+	                  if (bytes < 0) {
+	                      break;  // we reached EOF
+	                  } else {
+	                      bytesSkipped = 1; // we read one byte
+	                  }
+	           }
+	            totalBytesSkipped += bytesSkipped;
+	        }
+	        return totalBytesSkipped;
+	    }
+	}
+	
+
 
 }

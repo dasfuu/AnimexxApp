@@ -1,6 +1,7 @@
 package de.meisterfuu.animexx.utils.views;
 
 import de.meisterfuu.animexx.R;
+import de.meisterfuu.animexx.utils.imageloader.ImageDownloaderCustom;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
@@ -13,7 +14,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.ImageView;
 
-@SuppressWarnings("UnusedDeclaration")
 public class RoundedImageView extends ImageView {
 
   public static final String TAG = "RoundedImageView";
@@ -43,6 +43,7 @@ public class RoundedImageView extends ImageView {
 
   private ScaleType mScaleType;
 
+  
   public RoundedImageView(Context context) {
     super(context);
   }
@@ -147,6 +148,13 @@ public class RoundedImageView extends ImageView {
   public void setImageDrawable(Drawable drawable) {
     mResource = 0;
     mDrawable = RoundedDrawable.fromDrawable(drawable);
+    updateDrawableAttrs();
+    super.setImageDrawable(mDrawable);
+  }
+  
+   public void setImageDrawable(Drawable drawable, boolean download) {
+    mResource = 0;
+    mDrawable = drawable;
     updateDrawableAttrs();
     super.setImageDrawable(mDrawable);
   }
