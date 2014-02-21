@@ -58,8 +58,8 @@ public class RPGObject {
 //		    "Test-Angabe",
 //		    "<\\'>\":\/"
 //		  ],	
-	@SerializedName("posting_metadaten")
-	String metadata;
+//	@SerializedName("posting_metadaten")
+//	String metadata;
 	
 	
 //		  "frei":3,
@@ -133,13 +133,13 @@ public class RPGObject {
 		
 	}
 
-	public String getMetadata() {
-		return metadata;
-	}
-
-	public void setMetadata(String metadata) {
-		this.metadata = metadata;
-	}
+//	public String getMetadata() {
+//		return metadata;
+//	}
+//
+//	public void setMetadata(String metadata) {
+//		this.metadata = metadata;
+//	}
 
 	public int getPlayerCount() {
 		return playerCount;

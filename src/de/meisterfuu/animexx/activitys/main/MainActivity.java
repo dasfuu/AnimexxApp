@@ -10,9 +10,11 @@ import de.meisterfuu.animexx.activitys.rpg.RPGListFragment;
 import de.meisterfuu.animexx.adapter.ENSFolderSpinnerAdapter;
 import de.meisterfuu.animexx.adapter.MainDrawerAdapter;
 import de.meisterfuu.animexx.data.APICallback;
+import de.meisterfuu.animexx.data.Self;
 import de.meisterfuu.animexx.data.ens.ENSApi;
 import de.meisterfuu.animexx.objects.ENSFolderObject;
 import de.meisterfuu.animexx.utils.APIException;
+import de.meisterfuu.animexx.utils.Helper;
 import de.meisterfuu.animexx.utils.Request;
 
 import android.app.ActionBar;
@@ -106,8 +108,6 @@ public class MainActivity extends Activity {
 		super.onResume();
 		System.out.println("RESUME");
 		selectItem(mLastPosition);
-
-
 	}
 
 

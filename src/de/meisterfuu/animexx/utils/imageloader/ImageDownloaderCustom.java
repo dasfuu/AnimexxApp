@@ -20,7 +20,6 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpParams;
 
-import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.utils.views.RoundedImageView;
 
 import android.content.Context;
@@ -107,7 +106,6 @@ public class ImageDownloaderCustom {
 			// No? download it
 
 			if (bitmap == null) {
-				System.out.println("Imagedownload...");
 				BitmapDownloaderTask task = new BitmapDownloaderTask(imageView);
 				DownloadedDrawable downloadedDrawable = new DownloadedDrawable(task);
 				if(imageView instanceof RoundedImageView){
@@ -249,12 +247,9 @@ public class ImageDownloaderCustom {
 				bitmap = null;
 			}
 
-			Log.w("ImageDownloader", "imageViewReference: " + imageViewReference);
 			if (imageViewReference != null) {
 				final ImageView imageView = imageViewReference.get();
 				BitmapDownloaderTask bitmapDownloaderTask = getBitmapDownloaderTask(imageView);
-				Log.w("ImageDownloader", "bitmapDownloaderTask: " + bitmapDownloaderTask);
-				Log.w("ImageDownloader", "bitmapDownloaderTask this: " + this);
 				//Change bitmap only if this process is still associated with it
 				if (this == bitmapDownloaderTask) {
 					imageView.setImageBitmap(bitmap);
@@ -312,7 +307,6 @@ public class ImageDownloaderCustom {
 
 		try {
 			HttpResponse response = client.execute(getRequest);
-			Log.w("ImageDownloader", "DownloadImage " + response);
 			final int statusCode = response.getStatusLine().getStatusCode();
 			if (statusCode != HttpStatus.SC_OK) {
 				Log.w("ImageDownloader", "Error " + statusCode + " while retrieving bitmap from " + url);
@@ -325,7 +319,6 @@ public class ImageDownloaderCustom {
 				try {
 					inputStream = entity.getContent();
 					final Bitmap bitmap = BitmapFactory.decodeStream(new FlushedInputStream(inputStream));
-					Log.w("ImageDownloader", "return bitmap: " + bitmap.getHeight());
 					return bitmap;
 				} finally {
 					if (inputStream != null) {

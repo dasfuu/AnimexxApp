@@ -6,7 +6,6 @@ import java.util.List;
 import de.meisterfuu.animexx.data.APICallback;
 import de.meisterfuu.animexx.data.profile.UserApi;
 import de.meisterfuu.animexx.objects.UserObject;
-import de.meisterfuu.animexx.objects.UserSearchResultObject;
 import de.meisterfuu.animexx.utils.APIException;
 
 import android.content.Context;

@@ -1,7 +1,6 @@
 package de.meisterfuu.animexx.utils.views;
 
 import de.meisterfuu.animexx.R;
-import de.meisterfuu.animexx.utils.imageloader.ImageDownloaderCustom;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;

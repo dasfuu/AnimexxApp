@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.meisterfuu.animexx"
-    android:versionCode="61"
+    android:versionCode="62"
     android:versionName="2.0" >
 
     <uses-sdk
@@ -131,7 +131,7 @@
             android:label="@string/title_activity_rpgpost_list" >
         </activity>
         <activity
-            android:name="de.meisterfuu.animexx.SingleEventActivity"
+            android:name="de.meisterfuu.animexx.activitys.events.SingleEventActivity"
             android:label="@string/title_activity_single_event"
             android:parentActivityName="de.meisterfuu.animexx.activitys.main.MainActivity" >
             <meta-data

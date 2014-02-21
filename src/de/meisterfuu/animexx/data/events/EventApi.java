@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import org.json.JSONObject;
 
+
 import android.content.Context;
 import android.os.Handler;
 
@@ -12,6 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.data.APICallback;
 import de.meisterfuu.animexx.objects.EventObject;
 import de.meisterfuu.animexx.utils.APIException;
@@ -124,6 +126,7 @@ public class EventApi {
 		// TODO Auto-generated method stub
 		try {
 			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/events/event/details/?api=2&id="+pID);
+			//result = mContext.getResources().getString(R.string.testJSON);
 			JSONObject resultObj = new JSONObject(result);
 			if(resultObj.getBoolean("success")){
 				EventObject obj = gson.fromJson(resultObj.getString("return"), EventObject.class);

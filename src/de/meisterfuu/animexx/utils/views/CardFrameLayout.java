@@ -1,14 +1,10 @@
 package de.meisterfuu.animexx.utils.views;
 
-import de.meisterfuu.animexx.R;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
 
 public class CardFrameLayout extends FrameLayout
 {

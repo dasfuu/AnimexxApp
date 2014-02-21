@@ -63,20 +63,20 @@ public class RPGPostObject {
 //		      "Test 1"
 //		    ]
 //		  ]
-	@SerializedName("metadaten")
-	String metadata;
+//	@SerializedName("metadaten")
+//	String metadata;
 	
 	public RPGPostObject(){
 		
 	}
 
-	public String getMetadata() {
-		return metadata;
-	}
-
-	public void setMetadata(String metadata) {
-		this.metadata = metadata;
-	}
+//	public String getMetadata() {
+//		return metadata;
+//	}
+//
+//	public void setMetadata(String metadata) {
+//		this.metadata = metadata;
+//	}
 
 	public int getAction() {
 		return action;

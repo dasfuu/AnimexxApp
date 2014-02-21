@@ -24,5 +24,142 @@
     <string name="title_activity_rpgpost_list"></string>
     <string name="menu_new_ens">Neue ENS</string>
     <string name="title_activity_single_event">SingleEventActivity</string>
+    <string name="testJSON">{
+  "success":true,
+  "return":{
+    "id":"37179",
+    "name":"Frankfurter Buchmesse 2014",
+    "datum_von":"2014-10-08",
+    "datum_bis":"2014-10-12",
+    "animexx":1,
+    "bereich":{
+      "id":"24",
+      "name":"Messe \/ Gro\u00dfveranstaltung",
+      "name_kurz":"Messe",
+      "name_pl":"Messen \/ Gro\u00dfveranstaltungen",
+      "name_kurz_pl":"Messen",
+      "beschreibung":"",
+      "ueberbereich":"1"
+    },
+    "groesse":"6",
+    "reihe":{
+      "name":"Frankfurter Buchmesse",
+      "ort":"Frankfurt\/Main",
+      "homepage":"http:\/\/www.frankfurter-buchmesse.de\/",
+      "kontakt":"",
+      "beschreibung":"",
+      "admins":[
+        {
+          "id":2,
+          "username":"cato",
+          "steckbrief_freigabe":true
+        }
+      ],
+      "edit_datum":"2004-09-17 10:26:15",
+      "app_einleitung":"",
+      "logo":"https:\/\/media.animexx.de\/events\/logos\/6\/reihe-56.png",
+      "id":56,
+      "regel":1,
+      "groesse":5,
+      "bereich":1,
+      "status":0,
+      "passiv":0,
+      "anz_events":14,
+      "geo_zoom":0,
+      "geo_type":0,
+      "logo_x":600,
+      "logo_y":231,
+      "geo_laenge":0,
+      "geo_breite":0,
+      "logo_thumb":"",
+      "groesse_str":"500-2000",
+      "bereich_str":"Convention",
+      "regel_str":"xxx"
+    },
+    "ueberevent":null,
+    "plz":"60327",
+    "ort":"Frankfurt\/Main",
+    "bundesland_iso":"DE-HE",
+    "land_iso":"DE",
+    "geo_laenge":"8.64847",
+    "geo_breite":"50.1115",
+    "geo_type":"0",
+    "homepage":"http:\/\/www.buchmesse.de\/",
+    "adresse":"Messegel\u00e4nde\r\nLudwig-Erhard-Anlage 1",
+    "veranstalter":"",
+    "thema":null,
+    "kontakt":"info@book-fair.com",
+    "app_einleitung":"",
+    "logo":"https:\/\/media.animexx.de\/events\/logos\/6\/reihe-56.png",
+    "logo_x":600,
+    "logo_y":231,
+    "abgesagt":"0",
+    "dabei_anzahl":"2015",
+    "termine_anzahl":0,
+    "berichte_anzahl":"1",
+    "videos_anzahl":0,
+    "news_anzahl":0,
+    "cosplay_anzahl":"0",
+    "cosplay_anzahl_1m":"0",
+    "admins":[
+      {
+        "id":72679,
+        "username":"Kickaha",
+        "steckbrief_freigabe":true
+      },
+      {
+        "id":2,
+        "username":"cato",
+        "steckbrief_freigabe":true
+      }
+    ],
+    "history_zugriff":1,
+    "fanprodukte_policy":"-1",
+    "highlight":1,
+    "unterevents":4,
+    "edit_datum":"2012-08-25 17:07:22",
+    "status":"0",
+    "hashtags":"",
+    "zirkel_thread":0,
+    "animexx_str":"Der Animexx ist vertreten",
+    "groesse_str":"2000-5000",
+    "land_name":"Deutschland",
+    "bundesland_name":"Hessen",
+    "admin":0,
+    "beschreibungsseiten":[
+      {
+        "id":"116449",
+        "sprache":"de",
+        "seite":"1",
+        "seitenname":"Seite 1",
+        "html":"0",
+        "status":"0"
+      }
+    ],
+    "conhopperorden":0,
+    "reihe_next":null,
+    "reihe_prev":{
+      "id":37178,
+      "name":"Frankfurter Buchmesse 2013",
+      "datum_von":"2013-10-09",
+      "datum_bis":"2013-10-13"
+    },
+    "logo_thumb":"",
+    "dabei":1,
+    "dabei_special_status":"0",
+    "dabei_special_status_str":0,
+    "dabei_status":"1",
+    "dabei_status_str":"Unsicher",
+    "dabei_tage":[
+
+    ],
+    "dabei_kommentar":"",
+    "anz_mitfahr_gebote":0,
+    "anz_mitfahr_gesuche":0,
+    "anz_unterkunft_hotel":0,
+    "anz_unterkunft_privat":0,
+    "anz_fotoreihen":0,
+    "anz_fotos":0
+  }</string>
 
 </resources>
