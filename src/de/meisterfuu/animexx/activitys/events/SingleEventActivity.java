@@ -42,7 +42,7 @@ public class SingleEventActivity extends Activity {
 	
 	FrameLayout mHeader, mBody;
 	ImageView mLogo;
-	TextView mStart,mEnd,mAddress,mCount;
+	TextView mStart,mEnd,mAddress,mCount, mAnimexxStatus;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,11 +58,13 @@ public class SingleEventActivity extends Activity {
 		mStart = (TextView) this.findViewById(R.id.activity_event_single_start_text);
 		mEnd = (TextView) this.findViewById(R.id.activity_event_single_end_text);
 		mAddress = (TextView) this.findViewById(R.id.activity_event_single_address_text);
+		mAnimexxStatus = (TextView) this.findViewById(R.id.activity_event_single_animexx_text);
 		mCount = (TextView) this.findViewById(R.id.activity_event_single_atcount_text);
 		
 		
 		mHeader.setVisibility(View.GONE);
 		mBody.setVisibility(View.GONE);
+		SingleEventActivity.this.getActionBar().setTitle("");
 		
 		if(this.getIntent().hasExtra("id")){
 			Bundle extras = this.getIntent().getExtras();
@@ -85,13 +87,15 @@ public class SingleEventActivity extends Activity {
 				}
 
 				
-				mStart.setText(mEvent.getStartDate());
-				mEnd.setText(mEvent.getEndDate());
+				mStart.setText("Vom: "+mEvent.getStartDate());
+				mEnd.setText("Bis: "+mEvent.getEndDate());
 				mAddress.setText(mEvent.getAddress());
-				mCount.setText(mEvent.getAttendees());
+				mCount.setText(mEvent.getAttendees()+" Teilnehmer");
+				mAnimexxStatus.setText(mEvent.getAnimexxString());
+				SingleEventActivity.this.getActionBar().setTitle(mEvent.getName());
 				
 				mHeader.setVisibility(View.VISIBLE);
-				
+	;
 			}
 			
 		}, mID, EventApi.DETAIL_FULL);

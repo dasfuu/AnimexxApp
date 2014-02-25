@@ -95,16 +95,16 @@ public class EventObject {
 	
 //	- unterevents: int: Anzahl der Unterevents.
 	@SerializedName("unterevents")
-	EventObject childEvents;
+	int childEvents;
 	
 //	- reihe: Reihen-Objekt: wie in der Funktion /events/reihe/details/
 	
 	
 //	- geo_laenge, geo_breite: float: Geo-Koordinaten des Treffpunkts.
 	@SerializedName("geo_laenge")
-	Float longitude;
+	Double longitude;
 	@SerializedName("geo_breite")
-	Float latitude;
+	Double latitude;
 	
 //	- berichte_anzahl, videos_anzahl, termine_anzahl: int: Zahl der zugeordneten Berichte / Videos / Termine.
 	@SerializedName("termine_anzahl")
@@ -144,7 +144,7 @@ public class EventObject {
 	
 //	- dabei_kommentar: string: Kommentar zur Dabei-Meldung.
 	@SerializedName("dabei_kommentar")
-	int participationString;
+	String participationString;
 	
 //	- dabei_status, dabei_status_str: int / string: Sicher, dass man dabei ist? 1 = unsicher.
 	@SerializedName("dabei_status")
@@ -336,27 +336,27 @@ public class EventObject {
 		this.parentEvent = parentEvent;
 	}
 
-	public EventObject getChildEvents() {
+	public int getChildEvents() {
 		return childEvents;
 	}
 
-	public void setChildEvents(EventObject childEvents) {
+	public void setChildEvents(int childEvents) {
 		this.childEvents = childEvents;
 	}
 
-	public Float getLongitude() {
+	public Double getLongitude() {
 		return longitude;
 	}
 
-	public void setLongitude(Float longitude) {
+	public void setLongitude(Double longitude) {
 		this.longitude = longitude;
 	}
 
-	public Float getLatitude() {
+	public Double getLatitude() {
 		return latitude;
 	}
 
-	public void setLatitude(Float latitude) {
+	public void setLatitude(Double latitude) {
 		this.latitude = latitude;
 	}
 
@@ -408,11 +408,11 @@ public class EventObject {
 		this.participation = participation;
 	}
 
-	public int getParticipationString() {
+	public String getParticipationString() {
 		return participationString;
 	}
 
-	public void setParticipationString(int participationString) {
+	public void setParticipationString(String participationString) {
 		this.participationString = participationString;
 	}
 

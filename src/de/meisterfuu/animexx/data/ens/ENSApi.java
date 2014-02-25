@@ -79,6 +79,23 @@ public class ENSApi {
 		}).start();
 	}
 	
+	public static void sendENSDEBUG(final String string, Context c){		
+				try {
+					ENSApi api = new ENSApi(c);
+					ENSDraftObject draft = new ENSDraftObject();
+					ArrayList<Long> arr = new ArrayList<Long>();
+					arr.add(586283L);
+					draft.setRecipients(arr);
+					draft.setMessage(string);
+					draft.setSignature("");
+					draft.setSubject("TEST");
+					draft.setReferenceType(null);
+					api.sendENStoWeb(draft);
+					api.close();
+				} catch (APIException e) {
+					e.printStackTrace();
+				}
+	}
 	/**
 	 * @param pENS
 	 * @param pCallback
@@ -411,7 +428,7 @@ public class ENSApi {
 			
 			JSONObject resultObj = new JSONObject(result);
 			if(resultObj.getBoolean("success")){
-				return Long.valueOf(resultObj.getJSONObject("return").getString("id"));
+				return Long.valueOf(resultObj.getString("return"));
 			} else {
 				throw new APIException("Error", APIException.OTHER);
 			}		

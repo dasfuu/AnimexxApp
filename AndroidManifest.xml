@@ -138,6 +138,26 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.meisterfuu.animexx.activitys.main.MainActivity" />
         </activity>
+        <activity
+            android:name="de.meisterfuu.animexx.xmpp.XMPPTestActivity"
+            android:label="@string/title_activity_xmpptest" >
+        </activity>
+
+        <service
+            android:name="de.meisterfuu.animexx.xmpp.XMPPService"
+            android:enabled="true"
+            android:exported="false" >
+        </service>
+
+        <activity
+            android:name="de.meisterfuu.animexx.xmpp.XMPPRoosterActivity"
+            android:label="@string/title_activity_xmpprooster" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

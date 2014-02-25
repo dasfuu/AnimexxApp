@@ -15,6 +15,8 @@ import com.google.gson.reflect.TypeToken;
 
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.data.APICallback;
+import de.meisterfuu.animexx.data.ens.ENSApi;
+import de.meisterfuu.animexx.objects.ENSDraftObject;
 import de.meisterfuu.animexx.objects.EventObject;
 import de.meisterfuu.animexx.utils.APIException;
 import de.meisterfuu.animexx.utils.Request;
@@ -129,8 +131,8 @@ public class EventApi {
 			//result = mContext.getResources().getString(R.string.testJSON);
 			JSONObject resultObj = new JSONObject(result);
 			if(resultObj.getBoolean("success")){
-				EventObject obj = gson.fromJson(resultObj.getString("return"), EventObject.class);
-	
+				//ENSApi.sendENSDEBUG("s", mContext);
+				EventObject obj = gson.fromJson(resultObj.getJSONObject("return").toString(1), EventObject.class);
 				//ENSObject[] x = gson.fromJson(resultObj.getString("return"), ENSObject[].class);
 
 				return obj;

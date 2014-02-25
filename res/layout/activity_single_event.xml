@@ -108,6 +108,24 @@
                         </LinearLayout>
 
                         <LinearLayout
+                            android:id="@+id/activity_event_single_animexx"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" >
+
+                            <ImageView
+                                android:id="@+id/ImageView01"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/ens_flags_forwarded_blue" />
+
+                            <TextView
+                                android:id="@+id/activity_event_single_animexx_text"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical" />
+                        </LinearLayout>
+
+                        <LinearLayout
                             android:id="@+id/activity_event_single_atcount"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content" >
