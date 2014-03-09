@@ -3,7 +3,7 @@ package de.meisterfuu.animexx.notification;
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.R.drawable;
 import de.meisterfuu.animexx.R.string;
-import de.meisterfuu.animexx.xmpp.XMPPRoosterActivity;
+import de.meisterfuu.animexx.xmpp.XMPPRoosterFragment;
 import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -97,7 +97,7 @@ public class XMPPNotification {
 
 				// Set the pending intent to be initiated when the user touches
 				// the notification.
-				.setContentIntent(XMPPRoosterActivity.getPendingIntent(context))
+				.setContentIntent(XMPPRoosterFragment.getPendingIntent(context))
 
 				// Automatically dismiss the notification when it is touched.
 				.setAutoCancel(true);

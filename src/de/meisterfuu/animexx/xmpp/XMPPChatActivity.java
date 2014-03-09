@@ -35,7 +35,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class XMPPTestActivity extends Activity  {
+public class XMPPChatActivity extends Activity  {
 
 	Handler h;
 	ListView lv;
@@ -46,7 +46,7 @@ public class XMPPTestActivity extends Activity  {
 	String mjabberName;
 	
 	public static void getInstance(Context pContext,String jabberName){
-		Intent i = new Intent().setClass(pContext, XMPPTestActivity.class);
+		Intent i = new Intent().setClass(pContext, XMPPChatActivity.class);
 	     Bundle args = new Bundle();
 	     args.putString("name", jabberName);
 	     i.putExtras(args);
@@ -67,8 +67,8 @@ public class XMPPTestActivity extends Activity  {
 		Bundle extras = this.getIntent().getExtras();
 		mjabberName = extras.getString("name");
 		
-		Intent intent = new Intent(this, XMPPService.class);
-		startService(intent);
+//		Intent intent = new Intent(this, XMPPService.class);
+//		startService(intent);
 	 
 		final BroadcastReceiver receiver = new BroadcastReceiver() {
 			@Override
@@ -94,11 +94,11 @@ public class XMPPTestActivity extends Activity  {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(XMPPService.SEND_MESSAGE);
-				intent.setPackage(XMPPTestActivity.this.getPackageName());
+				intent.setPackage(XMPPChatActivity.this.getPackageName());
 				intent.putExtra(XMPPService.BUNDLE_MESSAGE_BODY, mNewMessageTx.getText().toString());
 				intent.putExtra(XMPPService.BUNDLE_TO, mjabberName);
 				getApplicationContext().sendBroadcast(intent);
-				list.add("Me: "+mNewMessageTx.getText().toString());
+				list.add("Me:\n"+mNewMessageTx.getText().toString());
 				mNewMessageTx.setText("");
 			}
 		});

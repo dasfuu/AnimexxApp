@@ -1,0 +1,9 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/menu_xmpp_switch"
+        android:actionLayout="@layout/actionlayout_xmpp_switch"
+        android:showAsAction="always"
+        android:title=""/>
+
+</menu>

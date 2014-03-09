@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -155,6 +156,8 @@ public class EventObject {
 //	- dabei_special_status, dabei_special_status_str: int / string: spezielle Funktion auf der Con (Helfer, Orga)? Derzeit nur 1/2 vergeben, kann aber mehr werden. Bitte den String verwenden.
 	@SerializedName("dabei_special_status_str")
 	String participationSpecial;
+	
+	public long internal_id;
 	
 	public EventObject(){
 		
@@ -444,6 +447,7 @@ public class EventObject {
 	
 	public Date getStartTS(){
 		try {
+			sdf.setTimeZone(TimeZone.getTimeZone("Europe/Berlin"));
 			return sdf.parse(this.getStartDate());
 		} catch (ParseException e) {
 			e.printStackTrace();
@@ -453,6 +457,7 @@ public class EventObject {
 	
 	public Date getEndTS(){
 		try {
+			sdf.setTimeZone(TimeZone.getTimeZone("Europe/Berlin"));
 			return sdf.parse(this.getEndDate());
 		} catch (ParseException e) {
 			e.printStackTrace();

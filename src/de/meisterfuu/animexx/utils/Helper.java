@@ -38,7 +38,7 @@ public class Helper {
 			s += "\n\n";
 			s += ""+text;
 			//Request.sendENS("Debug Log", s, "Debug Log "+Constants.VERSION, new int[]{586283}, -1);
-			Log.i("Debug Log", "Debug Log gesendet");
+			Log.i("Debug", "Debug Log gesendet");
 			//Request.doToast("Debug Log gesendet!", con);
 		} catch (Exception z) {
 			z.printStackTrace();

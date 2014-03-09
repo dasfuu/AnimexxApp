@@ -44,7 +44,7 @@
 
             <meta-data
                 android:name="android.content.SyncAdapter"
-                android:resource="@xml/syncadapter" />
+                android:resource="@xml/calsyncadapter" />
         </service>
         <service
             android:name="de.meisterfuu.animexx.services.AccountService"
@@ -139,7 +139,7 @@
                 android:value="de.meisterfuu.animexx.activitys.main.MainActivity" />
         </activity>
         <activity
-            android:name="de.meisterfuu.animexx.xmpp.XMPPTestActivity"
+            android:name="de.meisterfuu.animexx.xmpp.XMPPChatActivity"
             android:label="@string/title_activity_xmpptest" >
         </activity>
 
@@ -148,16 +148,6 @@
             android:enabled="true"
             android:exported="false" >
         </service>
-
-        <activity
-            android:name="de.meisterfuu.animexx.xmpp.XMPPRoosterActivity"
-            android:label="@string/title_activity_xmpprooster" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
     </application>
 
 </manifest>

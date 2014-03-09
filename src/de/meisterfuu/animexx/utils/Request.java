@@ -16,23 +16,18 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.CoreProtocolPNames;
-import org.json.JSONArray;
+
 import org.json.JSONObject;
 
 import de.meisterfuu.animexx.Constants;
-
-import android.app.ActivityManager;
-import android.app.ActivityManager.RunningServiceInfo;
+import de.meisterfuu.animexx.Debug;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 
 import android.util.Log;
-import android.widget.Toast;
 
 public class Request {
 
@@ -53,7 +48,6 @@ public class Request {
 
 	public static String doHTTPGetRequest(String url) throws Exception {
 		HttpGet request = new HttpGet(url);
-		//Log.i("Animexx", "Requesting URL : " + url);
 		return SignSend(request);
 	}
 
@@ -66,7 +60,6 @@ public class Request {
 		nameValuePairs.add(new BasicNameValuePair("collapse_by_type", collapse));
 		request.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
-		Log.i("Animexx", "Requesting URL : " + url);
 		return SignSend(request);
 	}
 
@@ -91,7 +84,6 @@ public class Request {
 
 		// request.setEntity(se);
 
-		Log.i("Animexx", "Requesting URL : " + url);
 		return SignSend(request);
 	}
 
@@ -103,7 +95,6 @@ public class Request {
 		nameValuePairs.add(new BasicNameValuePair("registration_id", id));
 		request.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
-		Log.i("Animexx", "Requesting URL : " + url);
 		return SignSend(request);
 	}
 
@@ -141,9 +132,9 @@ public class Request {
 		httpclient.getParams().setParameter(CoreProtocolPNames.USER_AGENT, "Android App " + Constants.VERSION);
 		
 		consumer.sign(pRequest);		
-		Log.i("Animexx", "Request : " + pRequest.getURI());		
+		if(!Debug.SILENT_NETWORK)Log.i("Animexx", "Request : " + pRequest.getURI());		
 		HttpResponse response = httpclient.execute(pRequest);
-		Log.i("Animexx", "Statusline : " + response.getStatusLine());
+		if(!Debug.SILENT_NETWORK)Log.i("Animexx", "Statusline : " + response.getStatusLine());
 		
 		InputStream data = response.getEntity().getContent();
 		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(data));
@@ -154,10 +145,12 @@ public class Request {
 		}
 		
 		String erg = responseBuilder.toString();
-		Log.i("Animexx", "Response : " +  erg.substring(0, Math.min(30000, erg.length()-1)));
+		if(!Debug.SILENT_NETWORK)Log.i("Animexx", "Response : " +  erg.substring(0, Math.min(Debug.NETWORK_ANSWER_LOG_LENGTH, erg.length()-1)));
 
 		return erg;
 	}
+	
+	
 
 	// HttpPost request = new HttpPost(url);
 	// HttpParameters para = new HttpParameters();

@@ -18,11 +18,11 @@ import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Message.Type;
 import org.jivesoftware.smack.packet.Presence;
 
-import de.meisterfuu.animexx.activitys.ens.SingleENSActivity;
+import de.meisterfuu.animexx.Debug;
+import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.notification.XMPPNotification;
 
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -42,6 +42,8 @@ public class XMPPService extends Service implements ChatManagerListener,
 	static XMPPService mThis;
 	ArrayList<String> rooster;
 	static long lastLogin, lastStart, lastCreate;
+	
+	public static final String TAG = "XMPP";
 
 	public static final String NEW_MESSAGE = "de.meisterfuu.animexx.xmpp.newmessage";
 	public static final String SEND_MESSAGE = "de.meisterfuu.animexx.xmpp.sendmessage";
@@ -65,16 +67,7 @@ public class XMPPService extends Service implements ChatManagerListener,
 	public void onCreate() {
 		super.onCreate();
 		
-		final NotificationCompat.Builder builder = new NotificationCompat.Builder(this);		
-		Notification notification = builder
-			.setOngoing(true)
-			.setTicker("Animexxenger")
-			.setContentTitle("Animexxenger")
-			.setContentText("XMPP Aktiv")
-			.setContentIntent(XMPPRoosterActivity.getPendingIntent(this))
-			.build();
-		this.startForeground(42, notification);
-		
+
 
 		
 
@@ -89,9 +82,19 @@ public class XMPPService extends Service implements ChatManagerListener,
 		// turn on the enhanced debugger
 		XMPPConnection.DEBUG_ENABLED = true;
 		setupNewMessageReceiver();
-		
-		
-
+	}
+	
+	private Notification getNotification(String pTitle){
+		final NotificationCompat.Builder builder = new NotificationCompat.Builder(this);		
+		Notification notification = builder
+			.setOngoing(true)
+			.setTicker("Animexxenger")
+			.setContentTitle("Animexxenger")
+			.setContentText("XMPP Aktiv")
+			.setSmallIcon(R.drawable.ic_launcher)
+			.setContentIntent(XMPPRoosterFragment.getPendingIntent(this))
+			.build();
+		 return notification;
 	}
 
 	private void setupNewMessageReceiver() {
@@ -122,11 +125,17 @@ public class XMPPService extends Service implements ChatManagerListener,
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
+
+		Notification notification = getNotification("");		
+//		final NotificationManager nm = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+//		nm.notify(42, notification);
+		this.startForeground(42, notification);
+		
 		lastStart = System.currentTimeMillis();
 		// Enter your login information here
 		try {
 			if (mConnection == null || !mConnection.isConnected()) {
-				login("xxx", "xxx");
+				login(Debug.XMPP_USER, Debug.XMPP_PW);
 	
 			}
 		} catch (XMPPException e) {
@@ -209,7 +218,7 @@ public class XMPPService extends Service implements ChatManagerListener,
 	@Override
 	public void processMessage(Chat chat, Message message) {
 		if(message.getType().equals(Type.chat) || message.getType().equals(Type.normal)) {
-			if(message.getBody() != null) {
+			if(message.getBody() != null && !chat.getParticipant().startsWith("animexx")) {
 				Intent intent = new Intent(XMPPService.NEW_MESSAGE);
 				intent.setPackage(this.getPackageName());
 				intent.putExtra(BUNDLE_MESSAGE_BODY, message.getBody());

@@ -16,12 +16,16 @@ import de.meisterfuu.animexx.objects.ENSFolderObject;
 import de.meisterfuu.animexx.utils.APIException;
 import de.meisterfuu.animexx.utils.Helper;
 import de.meisterfuu.animexx.utils.Request;
+import de.meisterfuu.animexx.xmpp.EmptyRoosterFragment;
+import de.meisterfuu.animexx.xmpp.XMPPRoosterFragment;
+import de.meisterfuu.animexx.xmpp.XMPPService;
 
 import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -33,7 +37,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ListView;
+import android.widget.Switch;
 
 public class MainActivity extends Activity {
 
@@ -106,6 +113,7 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		Request.config = PreferenceManager.getDefaultSharedPreferences(this);
 		System.out.println("RESUME");
 		selectItem(mLastPosition);
 	}
@@ -178,6 +186,28 @@ public class MainActivity extends Activity {
 		} else if (mSelected.equals("EVENT")) {
 			MenuInflater inflater = getMenuInflater();
 			inflater.inflate(R.menu.main_rpg, menu);
+		} else if (mSelected.equals("XMPP")) {
+			MenuInflater inflater = getMenuInflater();
+			inflater.inflate(R.menu.main_xmpp, menu);
+	        View v = (View) menu.findItem(R.id.menu_xmpp_switch).getActionView();
+			Switch sw = ((Switch)v.findViewById(R.id.ac_switch_actionbar));			
+			sw.setChecked(PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getBoolean("xmpp_status", false));
+			sw.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+				
+				@Override
+				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+					PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit().putBoolean("xmpp_status", isChecked).commit();
+					if(isChecked){
+						Intent intent = new Intent(MainActivity.this, XMPPService.class);
+						MainActivity.this.startService(intent);
+						selectChat();
+					} else {
+						Intent intent = new Intent(MainActivity.this, XMPPService.class);
+						MainActivity.this.stopService(intent);
+						selectChat();
+					}
+				}
+			});
 		}
 
 		return menu;
@@ -192,12 +222,15 @@ public class MainActivity extends Activity {
 			return true;
 		}
 
+
 		switch (item.getItemId()) {
 		case R.id.menu_settings:
 			SettingsActivity.getInstance(this);
 			return true;
 		case R.id.menu_new_ens:
 			NewENSActivity.getInstanceBlank(this);
+			return true;
+		case R.id.menu_xmpp_switch:
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -237,7 +270,27 @@ public class MainActivity extends Activity {
 			selectRPG();
 		} else if(pPosition == 5) {
 			selectEvent();
+		} else if(pPosition == 6) {
+			selectChat();
 		}
+	}
+
+
+	private void selectChat() {
+		mSelected = "XMPP";
+		this.setTitle("Chat");
+		Fragment fragment;
+		boolean chat = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("xmpp_status", false);
+		if(chat){
+			fragment = XMPPRoosterFragment.getInstance();
+		} else {
+			fragment = EmptyRoosterFragment.getInstance();
+		}
+
+		FragmentManager fragmentManager = getFragmentManager();
+		fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, "Rooster").commit();
+		getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+		invalidateOptionsMenu();
 	}
 
 

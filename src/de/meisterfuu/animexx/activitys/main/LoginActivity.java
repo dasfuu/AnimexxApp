@@ -9,6 +9,7 @@ import de.meisterfuu.animexx.data.Self;
 import de.meisterfuu.animexx.data.other.GCMApi;
 import de.meisterfuu.animexx.utils.APIException;
 import de.meisterfuu.animexx.utils.Request;
+import de.meisterfuu.animexx.xmpp.XMPPService;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.accounts.Account;
@@ -20,7 +21,9 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 
 public class LoginActivity extends Activity implements OnClickListener {
 	
@@ -61,6 +64,16 @@ public class LoginActivity extends Activity implements OnClickListener {
 			
 			//Yes? Start MainActivity
 			startActivity(new Intent().setClass(this, MainActivity.class));
+			
+			boolean chat = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("xmpp_status", false);
+			if(chat){
+				Intent intent = new Intent(this, XMPPService.class);
+				this.startService(intent);
+			} else {
+				Intent intent = new Intent(this, XMPPService.class);
+				this.stopService(intent);
+			}
+
 			
 			//Own User data known?
 			if(Self.getInstance(this).getUserID() == -1L){
