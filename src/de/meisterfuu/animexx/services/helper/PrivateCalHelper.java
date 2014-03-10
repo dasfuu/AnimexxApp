@@ -127,13 +127,17 @@ public class PrivateCalHelper {
         ec.setTime(event.getEndTS());
         
         int day =  sc.get(Calendar.DAY_OF_MONTH)+1;
-        int daye = ec.get(Calendar.DAY_OF_MONTH);
+        int daye = ec.get(Calendar.DAY_OF_MONTH)+1;
         if(event.isFullday()){
-          sc.set(Calendar.DAY_OF_MONTH, day);
-          sc.set(Calendar.HOUR_OF_DAY, 12);
-          ec.set(Calendar.DAY_OF_MONTH, daye);
-          ec.set(Calendar.HOUR_OF_DAY, 13);
-        }
+            sc.set(Calendar.DAY_OF_MONTH, day);
+            sc.set(Calendar.HOUR_OF_DAY, 0);
+            sc.set(Calendar.SECOND, 0);
+            sc.set(Calendar.MINUTE, 0);
+            ec.set(Calendar.DAY_OF_MONTH, daye);
+            ec.set(Calendar.HOUR_OF_DAY, 0);
+            ec.set(Calendar.SECOND, 0);
+            ec.set(Calendar.MINUTE, 0);
+          }
 
         
 //        Log.e("EVENT", "offest "+TimeZone.getTimeZone("Europe/Berlin").getRawOffset());
@@ -151,7 +155,12 @@ public class PrivateCalHelper {
 
         
         values.put(Events.CALENDAR_ID, calendarId);        
-        values.put(Events.ALL_DAY, event.isFullday());
+        if(event.isFullday()){
+        	values.put(Events.ALL_DAY, 1);
+        }
+        if(event.getId().startsWith("geb_")){
+        	values.put(Events.RRULE, "FREQ=YEARLY;INTERVAL=1;COUNT=10;");
+        }
         values.put(Events.DTSTART, dtstart);
         values.put(Events.DTEND, dtend);
         values.put(Events.EVENT_TIMEZONE, "Europe/Berlin");
@@ -206,12 +215,16 @@ public class PrivateCalHelper {
         ec.setTime(event.getEndTS());
         
         int day =  sc.get(Calendar.DAY_OF_MONTH)+1;
-        int daye = ec.get(Calendar.DAY_OF_MONTH);
+        int daye = ec.get(Calendar.DAY_OF_MONTH)+1;
         if(event.isFullday()){
           sc.set(Calendar.DAY_OF_MONTH, day);
-          sc.set(Calendar.HOUR_OF_DAY, 12);
+          sc.set(Calendar.HOUR_OF_DAY, 0);
+          sc.set(Calendar.SECOND, 0);
+          sc.set(Calendar.MINUTE, 0);
           ec.set(Calendar.DAY_OF_MONTH, daye);
-          ec.set(Calendar.HOUR_OF_DAY, 13);
+          ec.set(Calendar.HOUR_OF_DAY, 0);
+          ec.set(Calendar.SECOND, 0);
+          ec.set(Calendar.MINUTE, 0);
         }
 
         
@@ -229,7 +242,12 @@ public class PrivateCalHelper {
         
 
         values.put(Events.CALENDAR_ID, calendarId);        
-        values.put(Events.ALL_DAY, event.isFullday());
+        if(event.isFullday()){
+        	values.put(Events.ALL_DAY, 1);
+        }
+        if(event.getId().startsWith("geb_")){
+        	values.put(Events.RRULE, "FREQ=YEARLY;INTERVAL=1;COUNT=10;");
+        }
         values.put(Events.DTSTART, dtstart);
         values.put(Events.DTEND, dtend);
         values.put(Events.EVENT_TIMEZONE, "Europe/Berlin");
@@ -281,6 +299,7 @@ public class PrivateCalHelper {
             		temp.dtend = cursor.getLong(2);
             		ret.add(temp);
         	}
+        	cursor.close();
         } 
     	
     	return ret;
@@ -323,6 +342,8 @@ public class PrivateCalHelper {
             Log.e("TAG", "Unable to create calendar");
             return;
         }
+        
+//        contentResolver.delete(getAdapterUri(Events.CONTENT_URI), Events.CALENDAR_ID + " = ?", new String[]{String.valueOf(calendarId)});
 
         
         CalendarApi API = new CalendarApi(pContext);
@@ -335,7 +356,7 @@ public class PrivateCalHelper {
         Calendar c = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.GERMANY);
 		try {
-	        for(int i = 0; i < 24; i++){
+	        for(int i = 0; i < 12; i++){
 				events.addAll(API.getEventListNT(sdf.format(c.getTime())));
 				c.add(Calendar.MONTH, 1);
 	        }
@@ -346,7 +367,7 @@ public class PrivateCalHelper {
 	        for(CalendarEntryObject obj: events){	  
 	        	boolean cont = false;
 	        	for(CompareObject obj_inner: _arr){
-	        		Log.d(TAG, obj.getId() + " = " + obj_inner.animexx_id);
+//	        		Log.d(TAG, obj.getId() + " = " + obj_inner.animexx_id);
 	        		 if(obj.getId().equals(obj_inner.animexx_id)){
 	        			 cont = true;
 		 	        	 obj.internal_id = obj_inner._id;

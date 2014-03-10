@@ -125,12 +125,16 @@ public class EventCalHelper {
          ec.setTime(event.getEndTS());
          
          int day =  sc.get(Calendar.DAY_OF_MONTH)+1;
-         int daye = ec.get(Calendar.DAY_OF_MONTH)+1;
+         int daye = ec.get(Calendar.DAY_OF_MONTH)+2;
          if(true){
-           sc.set(Calendar.HOUR_OF_DAY, 12);
            sc.set(Calendar.DAY_OF_MONTH, day);
-           ec.set(Calendar.HOUR_OF_DAY, 13);
+           sc.set(Calendar.HOUR_OF_DAY, 0);
+           sc.set(Calendar.SECOND, 0);
+           sc.set(Calendar.MINUTE, 0);
            ec.set(Calendar.DAY_OF_MONTH, daye);
+           ec.set(Calendar.HOUR_OF_DAY, 0);
+           ec.set(Calendar.SECOND, 0);
+           ec.set(Calendar.MINUTE, 0);
          }
          
 
@@ -141,7 +145,7 @@ public class EventCalHelper {
         
         
         values.put(Events.CALENDAR_ID, calendarId);        
-        values.put(Events.ALL_DAY, true);
+        values.put(Events.ALL_DAY, 1);
         values.put(Events.DTSTART, dtstart);
         values.put(Events.DTEND, dtend);
         values.put(Events.EVENT_TIMEZONE, "Europe/Berlin");
@@ -196,14 +200,23 @@ public class EventCalHelper {
          ec.setTime(event.getEndTS());
          
          int day =  sc.get(Calendar.DAY_OF_MONTH)+1;
-         int daye = ec.get(Calendar.DAY_OF_MONTH)+1;
+         int daye = ec.get(Calendar.DAY_OF_MONTH)+2;
+//         if(true){
+//           sc.set(Calendar.HOUR_OF_DAY, 12);
+//           sc.set(Calendar.DAY_OF_MONTH, day);
+//           ec.set(Calendar.HOUR_OF_DAY, 13);
+//           ec.set(Calendar.DAY_OF_MONTH, daye);
+//         }
          if(true){
-           sc.set(Calendar.HOUR_OF_DAY, 12);
-           sc.set(Calendar.DAY_OF_MONTH, day);
-           ec.set(Calendar.HOUR_OF_DAY, 13);
-           ec.set(Calendar.DAY_OF_MONTH, daye);
-         }
-         
+             sc.set(Calendar.DAY_OF_MONTH, day);
+             sc.set(Calendar.HOUR_OF_DAY, 0);
+             sc.set(Calendar.SECOND, 0);
+             sc.set(Calendar.MINUTE, 0);
+             ec.set(Calendar.DAY_OF_MONTH, daye);
+             ec.set(Calendar.HOUR_OF_DAY, 0);
+             ec.set(Calendar.SECOND, 0);
+             ec.set(Calendar.MINUTE, 0);
+           }
 
                  
         long dtstart = sc.getTimeInMillis();
@@ -212,7 +225,7 @@ public class EventCalHelper {
         
         
         values.put(Events.CALENDAR_ID, calendarId);        
-        values.put(Events.ALL_DAY, true);
+        values.put(Events.ALL_DAY, 1);
         values.put(Events.DTSTART, dtstart);
         values.put(Events.DTEND, dtend);
         values.put(Events.EVENT_TIMEZONE, "Europe/Berlin");
@@ -266,6 +279,7 @@ public class EventCalHelper {
             		temp.dtend = cursor.getLong(2);
             		ret.add(temp);
         	}
+        	cursor.close();
         } 
     	
     	return ret;
