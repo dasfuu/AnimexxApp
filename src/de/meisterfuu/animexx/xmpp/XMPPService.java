@@ -166,6 +166,7 @@ public class XMPPService extends Service implements ChatManagerListener,
 			AndroidConnectionConfiguration config = new AndroidConnectionConfiguration("jabber.animexx.de");
 			config.setReconnectionAllowed(true);
 			mConnection = new XMPPConnection(config);
+
 			if(Debug.XMPP_CONNECTION_LISTENER)mConnection.addConnectionListener(new ConnectionListener() {
 				 
 	            @Override
