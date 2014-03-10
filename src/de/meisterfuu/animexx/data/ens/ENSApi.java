@@ -2,6 +2,7 @@ package de.meisterfuu.animexx.data.ens;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 
 import oauth.signpost.OAuth;
 
@@ -21,6 +22,8 @@ import de.meisterfuu.animexx.data.APICallback;
 import de.meisterfuu.animexx.objects.ENSFolderObject;
 import de.meisterfuu.animexx.objects.ENSObject;
 import de.meisterfuu.animexx.objects.ENSDraftObject;
+import de.meisterfuu.animexx.objects.ENSQueueObject;
+import de.meisterfuu.animexx.services.ENSQueueService;
 import de.meisterfuu.animexx.utils.APIException;
 import de.meisterfuu.animexx.utils.Request;
 
@@ -56,11 +59,15 @@ public class ENSApi {
 		new Thread(new Runnable() {
 			public void run() {
 				long id = -1;
-				APIException error = null;				
-
+				APIException error = null;		
 				try {
 					id = sendENStoWeb(pENS);
 				} catch (APIException e) {
+					ENSQueueObject qObj = new ENSQueueObject();
+					qObj.setDraft(pENS);
+					qObj.setSubject(pENS.getSubject());
+					saveQueueToDB(qObj);
+					ENSQueueService.startAction(mContext);
 					error = e;
 				}
 				
@@ -79,22 +86,36 @@ public class ENSApi {
 		}).start();
 	}
 	
+	/**
+	 * @param pENS
+	 * @throws APIException 
+	 */
+	public long NTsendENS(final ENSDraftObject pENS) throws APIException{		
+		long id = -1;
+		try {
+			id = sendENStoWeb(pENS);
+		} catch (APIException e) {
+//			throw e;
+		}
+		return id;
+	}
+	
 	public static void sendENSDEBUG(final String string, Context c){		
-				try {
-					ENSApi api = new ENSApi(c);
-					ENSDraftObject draft = new ENSDraftObject();
-					ArrayList<Long> arr = new ArrayList<Long>();
-					arr.add(586283L);
-					draft.setRecipients(arr);
-					draft.setMessage(string);
-					draft.setSignature("");
-					draft.setSubject("TEST");
-					draft.setReferenceType(null);
-					api.sendENStoWeb(draft);
-					api.close();
-				} catch (APIException e) {
-					e.printStackTrace();
-				}
+				ENSApi api = new ENSApi(c);
+				ENSDraftObject draft = new ENSDraftObject();
+				ArrayList<Long> arr = new ArrayList<Long>();
+				arr.add(586283L);
+				draft.setRecipients(arr);
+				draft.setMessage(string);
+				draft.setSignature("");
+				draft.setSubject("TEST");
+				draft.setReferenceType(null);
+				ENSQueueObject qObj = new ENSQueueObject();
+				qObj.setDraft(draft);
+				qObj.setSubject(draft.getSubject());
+				api.saveQueueToDB(qObj);
+				ENSQueueService.startAction(c);
+				api.close();
 	}
 	/**
 	 * @param pENS
@@ -428,7 +449,7 @@ public class ENSApi {
 			
 			JSONObject resultObj = new JSONObject(result);
 			if(resultObj.getBoolean("success")){
-				return Long.valueOf(resultObj.getString("return"));
+				return 1;
 			} else {
 				throw new APIException("Error", APIException.OTHER);
 			}		
@@ -448,8 +469,13 @@ public class ENSApi {
 		return true;
 	}
 	
+	private boolean saveQueueToDB(ENSQueueObject ens){
+		getHelper().getENSQueueDataDao().createOrUpdate(ens);
+		return true;
+	}
+	
 	private boolean saveDraftToDB(ENSDraftObject ens){
-		getHelper().getSendENSDataDao().createOrUpdate(ens);
+		getHelper().getENSDraftDataDao().createOrUpdate(ens);
 		return true;
 	}
 	
@@ -460,7 +486,12 @@ public class ENSApi {
 	}
 	
 	private boolean removeDraftFromDB(ENSDraftObject ens){
-		getHelper().getSendENSDataDao().delete(ens);
+		getHelper().getENSDraftDataDao().delete(ens);
+		return true;
+	}
+	
+	public boolean removeFromQueue(ENSQueueObject ens){
+		getHelper().getENSQueueDataDao().delete(ens);
 		return true;
 	}
 	
@@ -469,7 +500,11 @@ public class ENSApi {
 	}
 	
 	private ENSDraftObject getFromDraftDB(long id){
-		return getHelper().getSendENSDataDao().queryForId(id);
+		return getHelper().getENSDraftDataDao().queryForId(id);
+	}
+	
+	public List<ENSQueueObject> getFromQueue(){
+		return getHelper().getENSQueueDataDao().queryForAll();
 	}
 	
 	private ENSDatabase databaseHelper = null;

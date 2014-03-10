@@ -3,10 +3,12 @@ package de.meisterfuu.animexx.xmpp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 
 import org.jivesoftware.smack.AndroidConnectionConfiguration;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ChatManagerListener;
+import org.jivesoftware.smack.ConnectionListener;
 import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.Roster;
 import org.jivesoftware.smack.RosterEntry;
@@ -20,6 +22,7 @@ import org.jivesoftware.smack.packet.Presence;
 
 import de.meisterfuu.animexx.Debug;
 import de.meisterfuu.animexx.R;
+import de.meisterfuu.animexx.data.ens.ENSApi;
 import de.meisterfuu.animexx.notification.XMPPNotification;
 
 import android.app.Notification;
@@ -66,12 +69,7 @@ public class XMPPService extends Service implements ChatManagerListener,
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		
 
-
-		
-
-		
 		lastCreate = System.currentTimeMillis();
 		mHandler = new Handler();
 		mThis = this;
@@ -164,34 +162,79 @@ public class XMPPService extends Service implements ChatManagerListener,
 			throws XMPPException {
 		
 		lastLogin = System.currentTimeMillis();
-		AndroidConnectionConfiguration config = new AndroidConnectionConfiguration(
-				"jabber.animexx.de");
-		config.setReconnectionAllowed(true);
-		mConnection = new XMPPConnection(config);
-		
-		
+		if(mConnection == null){
+			AndroidConnectionConfiguration config = new AndroidConnectionConfiguration("jabber.animexx.de");
+			config.setReconnectionAllowed(true);
+			mConnection = new XMPPConnection(config);
+			if(Debug.XMPP_CONNECTION_LISTENER)mConnection.addConnectionListener(new ConnectionListener() {
+				 
+	            @Override
+	            public void reconnectionSuccessful() {
+	            	Date d = new Date();
+	                ENSApi.sendENSDEBUG("reconnectionSuccessful at "+d.toString(), XMPPService.this);
+	            }
+	            
+	            @Override
+	            public void reconnectionFailed(Exception arg0) {
+	            	Date d = new Date();
+	                ENSApi.sendENSDEBUG("reconnectionFailed at "+d.toString(), XMPPService.this);
+	            }
+	 
+	            @Override
+	            public void reconnectingIn(int seconds) {
+	            	Date d = new Date();
+	                ENSApi.sendENSDEBUG("reconnectingIn "+ seconds +"s at "+d.toString(), XMPPService.this);
+	            }
+	            
+	            @Override
+	            public void connectionClosedOnError(Exception arg0) {
+	            	Date d = new Date();
+	                ENSApi.sendENSDEBUG("connectionClosedOnError at "+d.toString(), XMPPService.this);
+	            }
+	            
+	            @Override
+	            public void connectionClosed() {
+	            	Date d = new Date();
+	                ENSApi.sendENSDEBUG("connectionClosed at "+d.toString(), XMPPService.this);
+	            }
+	        });
+		}
 
-		mThread = new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				try {
-					Looper.prepare();
-					mConnection.connect();
-					mConnection.login(userName, password);
-					mConnection.getChatManager().addChatListener(
-							XMPPService.this);
-					mConnection.getRoster().addRosterListener(XMPPService.this);
-					mTHandler = new Handler();
-					Looper.loop();
-				} catch (XMPPException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+		if(mThread == null || !mThread.isAlive()){
+			mThread = new Thread(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						Looper.prepare();
+						mConnection.connect();
+						mConnection.login(userName, password);
+						mConnection.getChatManager().addChatListener(XMPPService.this);
+						mConnection.getRoster().addRosterListener(XMPPService.this);
+						mTHandler = new Handler();
+						Looper.loop();
+					} catch (XMPPException e) {
+						e.printStackTrace();
+					}
 				}
-			}
-
-		});
-		mThread.start();
+	
+			});
+			mThread.start();
+		} else {
+			mTHandler.post(new Runnable() {
+				
+				@Override
+				public void run() {
+					try {
+						mConnection.connect();
+						mConnection.login(userName, password);
+						mConnection.getChatManager().addChatListener(XMPPService.this);
+						mConnection.getRoster().addRosterListener(XMPPService.this);
+					} catch (XMPPException e) {
+						e.printStackTrace();
+					}
+				}
+			});
+		}
 	}
 
 	public void sendMessage(String message, String to) throws XMPPException {

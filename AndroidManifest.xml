@@ -148,6 +148,10 @@
             android:enabled="true"
             android:exported="false" >
         </service>
+        <service
+            android:name="de.meisterfuu.animexx.services.ENSQueueService"
+            android:exported="false" >
+        </service>
     </application>
 
 </manifest>

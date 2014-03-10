@@ -100,6 +100,7 @@ public class XMPPChatActivity extends Activity  {
 				getApplicationContext().sendBroadcast(intent);
 				list.add("Me:\n"+mNewMessageTx.getText().toString());
 				mNewMessageTx.setText("");
+				adapter.notifyDataSetChanged();
 			}
 		});
 	    

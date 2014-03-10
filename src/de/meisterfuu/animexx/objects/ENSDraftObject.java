@@ -1,5 +1,6 @@
 package de.meisterfuu.animexx.objects;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import com.j256.ormlite.field.DataType;
@@ -7,7 +8,7 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable
-public class ENSDraftObject {
+public class ENSDraftObject implements Serializable {
 	
 //	- betreff, string / benötigt
 //	- text, string / benötigt

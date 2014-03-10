@@ -13,14 +13,16 @@ import com.j256.ormlite.table.TableUtils;
 
 import de.meisterfuu.animexx.objects.ENSObject;
 import de.meisterfuu.animexx.objects.ENSDraftObject;
+import de.meisterfuu.animexx.objects.ENSQueueObject;
 
 public class ENSDatabase extends OrmLiteSqliteOpenHelper {
 
 	private static final String DATABASE_NAME = "ens.db";
-	private static final int DATABASE_VERSION = 4;
+	private static final int DATABASE_VERSION = 5;
 
 	private RuntimeExceptionDao<ENSObject, Long> ENSRuntimeDao = null;
 	private RuntimeExceptionDao<ENSDraftObject, Long> ENSSendRuntimeDao = null;
+	private RuntimeExceptionDao<ENSQueueObject, Long> ENSQueueRuntimeDao = null;
 
 	public ENSDatabase(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -30,6 +32,7 @@ public class ENSDatabase extends OrmLiteSqliteOpenHelper {
 		try {
 			TableUtils.clearTable(getConnectionSource(), ENSObject.class);
 			TableUtils.clearTable(getConnectionSource(), ENSDraftObject.class);
+			TableUtils.clearTable(getConnectionSource(), ENSQueueObject.class);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -41,6 +44,7 @@ public class ENSDatabase extends OrmLiteSqliteOpenHelper {
 			Log.i(ENSDatabase.class.getName(), "onCreate");
 			TableUtils.createTable(connectionSource, ENSObject.class);
 			TableUtils.createTable(connectionSource, ENSDraftObject.class);
+			TableUtils.createTable(connectionSource, ENSQueueObject.class);
 		} catch (SQLException e) {
 			Log.e(ENSDatabase.class.getName(), "Can't create database", e);
 			throw new RuntimeException(e);
@@ -54,6 +58,7 @@ public class ENSDatabase extends OrmLiteSqliteOpenHelper {
 			Log.i(ENSDatabase.class.getName(), "onUpgrade");
 			TableUtils.dropTable(connectionSource, ENSObject.class, true);
 			TableUtils.dropTable(connectionSource, ENSDraftObject.class, true);
+			TableUtils.dropTable(connectionSource, ENSQueueObject.class, true);
 			// after we drop the old databases, we create the new ones
 			onCreate(db, connectionSource);
 		} catch (SQLException e) {
@@ -67,6 +72,7 @@ public class ENSDatabase extends OrmLiteSqliteOpenHelper {
 		super.close();
 		ENSRuntimeDao = null;
 		ENSSendRuntimeDao = null;
+		ENSQueueRuntimeDao = null;
 	}
 	
 	
@@ -76,11 +82,17 @@ public class ENSDatabase extends OrmLiteSqliteOpenHelper {
 		}
 		return ENSRuntimeDao;
 	}
-	public RuntimeExceptionDao<ENSDraftObject, Long> getSendENSDataDao() {
+	public RuntimeExceptionDao<ENSDraftObject, Long> getENSDraftDataDao() {
 		if (ENSSendRuntimeDao == null) {
 			ENSSendRuntimeDao = getRuntimeExceptionDao(ENSDraftObject.class);
 		}
 		return ENSSendRuntimeDao;
+	}
+	public RuntimeExceptionDao<ENSQueueObject, Long> getENSQueueDataDao() {
+		if (ENSQueueRuntimeDao == null) {
+			ENSQueueRuntimeDao = getRuntimeExceptionDao(ENSQueueObject.class);
+		}
+		return ENSQueueRuntimeDao;
 	}
 
 
