@@ -41,6 +41,7 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ListView;
 import android.widget.Switch;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
@@ -190,7 +191,7 @@ public class MainActivity extends Activity {
 			MenuInflater inflater = getMenuInflater();
 			inflater.inflate(R.menu.main_xmpp, menu);
 	        View v = (View) menu.findItem(R.id.menu_xmpp_switch).getActionView();
-			Switch sw = ((Switch)v.findViewById(R.id.ac_switch_actionbar));			
+			final Switch sw = ((Switch)v.findViewById(R.id.ac_switch_actionbar));			
 			sw.setChecked(PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getBoolean("xmpp_status", false));
 			sw.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 				
@@ -198,9 +199,15 @@ public class MainActivity extends Activity {
 				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 					PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit().putBoolean("xmpp_status", isChecked).commit();
 					if(isChecked){
-						Intent intent = new Intent(MainActivity.this, XMPPService.class);
-						MainActivity.this.startService(intent);
-						selectChat();
+						String password = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("xmpp_password", null);
+						if(password != null){
+							Intent intent = new Intent(MainActivity.this, XMPPService.class);
+							MainActivity.this.startService(intent);
+							selectChat();
+						} else {
+							sw.setChecked(false);
+							Toast.makeText(MainActivity.this, "Kein Passwort", Toast.LENGTH_LONG).show();
+						}
 					} else {
 						Intent intent = new Intent(MainActivity.this, XMPPService.class);
 						MainActivity.this.stopService(intent);

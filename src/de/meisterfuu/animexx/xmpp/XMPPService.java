@@ -22,6 +22,7 @@ import org.jivesoftware.smack.packet.Presence;
 
 import de.meisterfuu.animexx.Debug;
 import de.meisterfuu.animexx.R;
+import de.meisterfuu.animexx.data.Self;
 import de.meisterfuu.animexx.data.ens.ENSApi;
 import de.meisterfuu.animexx.notification.XMPPNotification;
 
@@ -34,6 +35,7 @@ import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 
 public class XMPPService extends Service implements ChatManagerListener,
@@ -55,12 +57,8 @@ public class XMPPService extends Service implements ChatManagerListener,
 	public static final String NEW_CHAT = "de.meisterfuu.animexx.xmpp.newchat";
 	public static final String NEW_ROOSTER = "de.meisterfuu.animexx.xmpp.newrooster";
 	
-
-	public XMPPService() {
-
-	}
 	
-	public static XMPPService getInstace(){
+	public static XMPPService getInstance(){
 		return mThis;
 	}
 	
@@ -132,9 +130,19 @@ public class XMPPService extends Service implements ChatManagerListener,
 		lastStart = System.currentTimeMillis();
 		// Enter your login information here
 		try {
+			
+			//Get Username
+			String username = Self.getInstance(this).getUsername();
+			
+			//Password?
+			String password = PreferenceManager.getDefaultSharedPreferences(this).getString("xmpp_password", null);
+			if(password == null){
+//				this.stopSelf();
+				return Service.START_NOT_STICKY;
+			}
+			
 			if (mConnection == null || !mConnection.isConnected()) {
-				login(Debug.XMPP_USER, Debug.XMPP_PW);
-	
+				login(username, Debug.XMPP_PW);	
 			}
 		} catch (XMPPException e) {
 			// TODO Auto-generated catch block
@@ -178,7 +186,7 @@ public class XMPPService extends Service implements ChatManagerListener,
 	            @Override
 	            public void reconnectionFailed(Exception arg0) {
 	            	Date d = new Date();
-	                ENSApi.sendENSDEBUG("reconnectionFailed at "+d.toString(), XMPPService.this);
+	                ENSApi.sendENSDEBUG("reconnectionFailed "+ arg0.getMessage() +" at "+d.toString(), XMPPService.this);
 	            }
 	 
 	            @Override
@@ -190,13 +198,26 @@ public class XMPPService extends Service implements ChatManagerListener,
 	            @Override
 	            public void connectionClosedOnError(Exception arg0) {
 	            	Date d = new Date();
-	                ENSApi.sendENSDEBUG("connectionClosedOnError at "+d.toString(), XMPPService.this);
+	                ENSApi.sendENSDEBUG("connectionClosedOnError "+ arg0.getMessage() +" at "+d.toString(), XMPPService.this);
+	                startThis();
 	            }
 	            
 	            @Override
 	            public void connectionClosed() {
 	            	Date d = new Date();
 	                ENSApi.sendENSDEBUG("connectionClosed at "+d.toString(), XMPPService.this);
+	                startThis();
+	            }
+	            
+	            void startThis(){
+	            	mTHandler.postDelayed(new Runnable() {
+						
+						@Override
+						public void run() {
+				           	Intent i = new Intent(XMPPService.this, XMPPService.class);
+			            	XMPPService.this.startService(i);
+						}
+					}, 1000);	 
 	            }
 	        });
 		}

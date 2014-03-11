@@ -71,7 +71,7 @@ public class XMPPRoosterFragment extends ListFragment {
 				String action = intent.getAction();
 				if (action.equals(XMPPService.NEW_ROOSTER)) {
 					try{
-						Collection<RosterEntry> entries = XMPPService.getInstace().getRoster();
+						Collection<RosterEntry> entries = XMPPService.getInstance().getRoster();
 						list.clear();
 	//					list.add("lastCreate "+new Date(XMPPService.lastCreate).toString());
 	//					list.add("lastLogin "+new Date(XMPPService.lastLogin).toString());
@@ -93,7 +93,7 @@ public class XMPPRoosterFragment extends ListFragment {
 		this.getActivity().registerReceiver(receiver, filter);
 		
 		try{
-			Collection<RosterEntry> entries = XMPPService.getInstace().getRoster();
+			Collection<RosterEntry> entries = XMPPService.getInstance().getRoster();
 			list.clear();
 	//		list.add("lastCreate "+new Date(XMPPService.lastCreate).toString());
 	//		list.add("lastLogin "+new Date(XMPPService.lastLogin).toString());
