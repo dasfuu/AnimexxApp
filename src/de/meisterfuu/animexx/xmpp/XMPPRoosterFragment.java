@@ -10,7 +10,12 @@ import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.R.layout;
 import de.meisterfuu.animexx.R.menu;
 import de.meisterfuu.animexx.activitys.ens.SingleENSActivity;
+import de.meisterfuu.animexx.activitys.main.MainActivity;
 import de.meisterfuu.animexx.activitys.rpg.RPGListFragment;
+import de.meisterfuu.animexx.data.APICallback;
+import de.meisterfuu.animexx.data.xmpp.XMPPApi;
+import de.meisterfuu.animexx.objects.XMPPRoosterObject;
+import de.meisterfuu.animexx.utils.APIException;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.ListActivity;
@@ -27,9 +32,10 @@ import android.widget.ListView;
 
 public class XMPPRoosterFragment extends ListFragment {
 
-	ArrayList<String> list;
-	ArrayAdapter<String> adapter;
+	ArrayList<XMPPRoosterObject> list;
+	ArrayAdapter<XMPPRoosterObject> adapter;
 	BroadcastReceiver receiver;
+	XMPPApi mApi;
 	
 	
 	public static XMPPRoosterFragment getInstance(){
@@ -44,8 +50,8 @@ public class XMPPRoosterFragment extends ListFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		list = new ArrayList<String>();
-		adapter = new ArrayAdapter<String>(this.getActivity(),android.R.layout.simple_list_item_1, list);
+		list = new ArrayList<XMPPRoosterObject>();
+		adapter = new ArrayAdapter<XMPPRoosterObject>(this.getActivity(),android.R.layout.simple_list_item_1, list);
 		setListAdapter(adapter);
 	}
 	
@@ -54,6 +60,7 @@ public class XMPPRoosterFragment extends ListFragment {
 	@Override
 	public void onPause() {
 		super.onPause();
+		mApi.close();
 		this.getActivity().unregisterReceiver(receiver);
 	}
 
@@ -62,7 +69,7 @@ public class XMPPRoosterFragment extends ListFragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-		
+		mApi = new XMPPApi(this.getActivity());
 		
 		
 		receiver = new BroadcastReceiver() {
@@ -70,19 +77,7 @@ public class XMPPRoosterFragment extends ListFragment {
 			public void onReceive(Context context, Intent intent) {
 				String action = intent.getAction();
 				if (action.equals(XMPPService.NEW_ROOSTER)) {
-					try{
-						Collection<RosterEntry> entries = XMPPService.getInstance().getRoster();
-						list.clear();
-	//					list.add("lastCreate "+new Date(XMPPService.lastCreate).toString());
-	//					list.add("lastLogin "+new Date(XMPPService.lastLogin).toString());
-	//					list.add("lastStart "+new Date(XMPPService.lastStart).toString());
-						for (RosterEntry r : entries) {
-							list.add(r.getUser());
-						}
-						adapter.notifyDataSetChanged();
-					} catch (Exception e){
-						e.printStackTrace();
-					}
+					getRooster();
 				}
 			}
 		};
@@ -91,22 +86,23 @@ public class XMPPRoosterFragment extends ListFragment {
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(XMPPService.NEW_ROOSTER);
 		this.getActivity().registerReceiver(receiver, filter);
-		
-		try{
-			Collection<RosterEntry> entries = XMPPService.getInstance().getRoster();
-			list.clear();
-	//		list.add("lastCreate "+new Date(XMPPService.lastCreate).toString());
-	//		list.add("lastLogin "+new Date(XMPPService.lastLogin).toString());
-	//		list.add("lastStart "+new Date(XMPPService.lastStart).toString());
-			for (RosterEntry r : entries) {
-				list.add(r.getUser());
-			}
-			adapter.notifyDataSetChanged();
-		} catch (Exception e){
-			e.printStackTrace();
-		}
+		getRooster();
 	}
 
+	
+	private void getRooster(){
+		mApi.getRooster(new APICallback() {
+			
+			@Override
+			public void onCallback(APIException pError, Object pObject) {
+				ArrayList<XMPPRoosterObject> temp = (ArrayList<XMPPRoosterObject>) pObject;
+				list.clear();
+				list.addAll(temp);
+				adapter.notifyDataSetChanged();
+			}
+			
+		});
+	}
 
 
 
@@ -114,13 +110,14 @@ public class XMPPRoosterFragment extends ListFragment {
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
 		
-		XMPPChatActivity.getInstance(this.getActivity(), list.get(position));
+		XMPPChatActivity.getInstance(this.getActivity(), list.get(position).getJid());
 	}
 
 
 
 	public static PendingIntent getPendingIntent(Context pContext) {
-	     Intent intent = new Intent(pContext, XMPPRoosterFragment.class);
+	     Intent intent = new Intent(pContext, MainActivity.class);
+	     intent.putExtra("LANDING", "CHAT");
 	     return PendingIntent.getActivity(pContext, 0, intent, 0);
 	}
 

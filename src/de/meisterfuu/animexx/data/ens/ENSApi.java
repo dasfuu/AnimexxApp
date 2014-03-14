@@ -19,6 +19,7 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
 import android.content.Context;
 import android.os.Handler;
 import de.meisterfuu.animexx.data.APICallback;
+import de.meisterfuu.animexx.data.DatabaseHelper;
 import de.meisterfuu.animexx.objects.ENSFolderObject;
 import de.meisterfuu.animexx.objects.ENSObject;
 import de.meisterfuu.animexx.objects.ENSDraftObject;
@@ -33,7 +34,6 @@ public class ENSApi {
 	public static final String TYPE_INBOX = "an";
 	public static final String TYPE_OUTBOX = "von";
 	
-	ENSDatabase mDB;
 	Context mContext;
 	Gson gson;
 	
@@ -507,7 +507,7 @@ public class ENSApi {
 		return getHelper().getENSQueueDataDao().queryForAll();
 	}
 	
-	private ENSDatabase databaseHelper = null;
+	private DatabaseHelper databaseHelper = null;
 
 	public void close() {
 	    if (databaseHelper != null) {
@@ -516,10 +516,10 @@ public class ENSApi {
 	    }
 	}
 
-	private ENSDatabase getHelper() {
+	private DatabaseHelper getHelper() {
 	    if (databaseHelper == null) {
 	        databaseHelper =
-	            OpenHelperManager.getHelper(mContext, ENSDatabase.class);
+	            OpenHelperManager.getHelper(mContext, DatabaseHelper.class);
 	    }
 	    return databaseHelper;
 	}

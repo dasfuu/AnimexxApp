@@ -96,11 +96,18 @@ public class MainActivity extends Activity {
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 		
 		mDesign = 1;
-		selectItem(0);
-
-		if (savedInstanceState == null) {
-
+		if(this.getIntent().hasExtra("LANDING") && this.getIntent().getStringExtra("LANDING").equals("CHAT")){
+			selectItem(6);
+		} else {
+			selectItem(0);
 		}
+	}
+
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		
 	}
 
 

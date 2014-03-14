@@ -38,15 +38,16 @@ import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 
-public class XMPPService extends Service implements ChatManagerListener,
-		MessageListener, RosterListener {
+public class XMPPService extends Service {
 
 	Handler mHandler, mTHandler;
-	XMPPConnection mConnection;
 	Thread mThread;
 	static XMPPService mThis;
+	
 	ArrayList<String> rooster;
-	static long lastLogin, lastStart, lastCreate;
+
+	private ReconnectionManager mReconManager;
+	private ChatConnection mConnection;
 	
 	public static final String TAG = "XMPP";
 
@@ -57,27 +58,28 @@ public class XMPPService extends Service implements ChatManagerListener,
 	public static final String NEW_CHAT = "de.meisterfuu.animexx.xmpp.newchat";
 	public static final String NEW_ROOSTER = "de.meisterfuu.animexx.xmpp.newrooster";
 	
+	public static final String BUNDLE_FROM = "b_from";
+	public static final String BUNDLE_TO = "b_from";
+	public static final String BUNDLE_TIME = "b_time";
+	public static final String BUNDLE_MESSAGE_BODY = "b_body";
+	
 	
 	public static XMPPService getInstance(){
 		return mThis;
 	}
 	
-	public static final String BUNDLE_TO = "b_from";
+	public ChatConnection getConnection(){
+		return mConnection;
+	}
+	
 	
 	@Override
 	public void onCreate() {
 		super.onCreate();
 
-		lastCreate = System.currentTimeMillis();
 		mHandler = new Handler();
 		mThis = this;
-		
-		rooster = new ArrayList<String>();
-		
-		SmackAndroid.init(this);
-		// turn on the enhanced debugger
-		XMPPConnection.DEBUG_ENABLED = true;
-		setupNewMessageReceiver();
+
 	}
 	
 	private Notification getNotification(String pTitle){
@@ -93,247 +95,54 @@ public class XMPPService extends Service implements ChatManagerListener,
 		 return notification;
 	}
 
-	private void setupNewMessageReceiver() {
-		final BroadcastReceiver receiver = new BroadcastReceiver() {
-			@Override
-			public void onReceive(Context context, Intent intent) {
-				String action = intent.getAction();
-				if (action.equals(SEND_MESSAGE)) {
-					try {
-						sendMessage(intent.getStringExtra(BUNDLE_MESSAGE_BODY), intent.getStringExtra(BUNDLE_TO));
-						Intent i = new Intent(SEND_MESSAGE_OK);
-						i.setPackage(XMPPService.this.getPackageName());	
-						getApplicationContext().sendBroadcast(i);
-					} catch (XMPPException e) {
-						Intent i = new Intent(SEND_MESSAGE_BAD);
-						i.setPackage(XMPPService.this.getPackageName());	
-						getApplicationContext().sendBroadcast(i);
-					}
-				}
-			}
-		};
-		
-		
-		IntentFilter filter = new IntentFilter();
-		filter.addAction(SEND_MESSAGE);
-		registerReceiver(receiver, filter);
-	}
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 
 		Notification notification = getNotification("");		
-//		final NotificationManager nm = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-//		nm.notify(42, notification);
 		this.startForeground(42, notification);
 		
-		lastStart = System.currentTimeMillis();
-		// Enter your login information here
-		try {
-			
-			//Get Username
-			String username = Self.getInstance(this).getUsername();
-			
-			//Password?
-			String password = PreferenceManager.getDefaultSharedPreferences(this).getString("xmpp_password", null);
-			if(password == null){
-//				this.stopSelf();
-				return Service.START_NOT_STICKY;
-			}
-			
-			if (mConnection == null || !mConnection.isConnected()) {
-				login(username, Debug.XMPP_PW);	
-			}
-		} catch (XMPPException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 
+		
+		if(mThread == null || !mThread.isAlive()){
+			mThread = new Thread(new Runnable() {
+				@Override
+				public void run() {
+						Looper.prepare();
+						mTHandler = new Handler();
+						mConnection = new ChatConnection(XMPPService.this);
+						mConnection.connect();
+						mReconManager = new ReconnectionManager(XMPPService.this, mConnection);
+						Looper.loop();
+				}
+	
+			});
+			mThread.start();
+		} 
+		
+		
 		return Service.START_STICKY;
 	}
 
 	@Override
 	public IBinder onBind(Intent intent) {
-		// TODO: Return the communication channel to the service.
-		throw new UnsupportedOperationException("Not yet implemented");
+		throw new UnsupportedOperationException("Not implemented");
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
 		mThis = null;
-		disconnect();
+		mTHandler.post(new Runnable() {
+			
+			@Override
+			public void run() {
+				mReconManager.stop();
+				mConnection.disconnect();
+
+			}
+		});
 		stopForeground(true);
 	}
-
-	public void login(final String userName, final String password)
-			throws XMPPException {
-		
-		lastLogin = System.currentTimeMillis();
-		if(mConnection == null){
-			AndroidConnectionConfiguration config = new AndroidConnectionConfiguration("jabber.animexx.de");
-			config.setReconnectionAllowed(true);
-			mConnection = new XMPPConnection(config);
-
-			if(Debug.XMPP_CONNECTION_LISTENER)mConnection.addConnectionListener(new ConnectionListener() {
-				 
-	            @Override
-	            public void reconnectionSuccessful() {
-	            	Date d = new Date();
-	                ENSApi.sendENSDEBUG("reconnectionSuccessful at "+d.toString(), XMPPService.this);
-	            }
-	            
-	            @Override
-	            public void reconnectionFailed(Exception arg0) {
-	            	Date d = new Date();
-	                ENSApi.sendENSDEBUG("reconnectionFailed "+ arg0.getMessage() +" at "+d.toString(), XMPPService.this);
-	            }
-	 
-	            @Override
-	            public void reconnectingIn(int seconds) {
-	            	Date d = new Date();
-	                ENSApi.sendENSDEBUG("reconnectingIn "+ seconds +"s at "+d.toString(), XMPPService.this);
-	            }
-	            
-	            @Override
-	            public void connectionClosedOnError(Exception arg0) {
-	            	Date d = new Date();
-	                ENSApi.sendENSDEBUG("connectionClosedOnError "+ arg0.getMessage() +" at "+d.toString(), XMPPService.this);
-	                startThis();
-	            }
-	            
-	            @Override
-	            public void connectionClosed() {
-	            	Date d = new Date();
-	                ENSApi.sendENSDEBUG("connectionClosed at "+d.toString(), XMPPService.this);
-	                startThis();
-	            }
-	            
-	            void startThis(){
-	            	mTHandler.postDelayed(new Runnable() {
-						
-						@Override
-						public void run() {
-				           	Intent i = new Intent(XMPPService.this, XMPPService.class);
-			            	XMPPService.this.startService(i);
-						}
-					}, 1000);	 
-	            }
-	        });
-		}
-
-		if(mThread == null || !mThread.isAlive()){
-			mThread = new Thread(new Runnable() {
-				@Override
-				public void run() {
-					try {
-						Looper.prepare();
-						mConnection.connect();
-						mConnection.login(userName, password);
-						mConnection.getChatManager().addChatListener(XMPPService.this);
-						mConnection.getRoster().addRosterListener(XMPPService.this);
-						mTHandler = new Handler();
-						Looper.loop();
-					} catch (XMPPException e) {
-						e.printStackTrace();
-					}
-				}
 	
-			});
-			mThread.start();
-		} else {
-			mTHandler.post(new Runnable() {
-				
-				@Override
-				public void run() {
-					try {
-						mConnection.connect();
-						mConnection.login(userName, password);
-						mConnection.getChatManager().addChatListener(XMPPService.this);
-						mConnection.getRoster().addRosterListener(XMPPService.this);
-					} catch (XMPPException e) {
-						e.printStackTrace();
-					}
-				}
-			});
-		}
-	}
-
-	public void sendMessage(String message, String to) throws XMPPException {
-		System.out.println("this:"+this);
-		System.out.println("to:"+to);
-		System.out.println("message:"+message);
-		Chat chat = mConnection.getChatManager().createChat(to, this);
-		chat.sendMessage(message);
-	}
-
-	public void disconnect() {
-		mConnection.disconnect();
-	}
-
-	@Override
-	public void chatCreated(Chat chat, boolean arg1) {
-		chat.addMessageListener(this);
-	}
-
-	public static final String BUNDLE_FROM = "b_from";
-	public static final String BUNDLE_TIME = "b_time";
-	public static final String BUNDLE_MESSAGE_BODY = "b_body";
-
-	@Override
-	public void processMessage(Chat chat, Message message) {
-		if(message.getType().equals(Type.chat) || message.getType().equals(Type.normal)) {
-			if(message.getBody() != null && !chat.getParticipant().startsWith("animexx")) {
-				Intent intent = new Intent(XMPPService.NEW_MESSAGE);
-				intent.setPackage(this.getPackageName());
-				intent.putExtra(BUNDLE_MESSAGE_BODY, message.getBody());
-				intent.putExtra(BUNDLE_FROM, chat.getParticipant());
-				intent.putExtra(BUNDLE_TIME, ""+System.currentTimeMillis());
-				getApplicationContext().sendBroadcast(intent);
-				XMPPNotification.notify(this, message.getBody(), chat.getParticipant().split("@")[0]);
-			}
-		}
-	}
-
-	@Override
-	public void entriesAdded(Collection<String> arg0) {
-		newRoster();
-	}
-
-	@Override
-	public void entriesDeleted(Collection<String> arg0) {
-		newRoster();
-	}
-
-	@Override
-	public void entriesUpdated(Collection<String> arg0) {
-		newRoster();
-	}
-
-	@Override
-	public void presenceChanged(Presence arg0) {
-		newRoster();
-	}
-	
-	private void newRoster(){
-		Intent intent = new Intent(XMPPService.NEW_ROOSTER);
-		intent.setPackage(this.getPackageName());
-		getApplicationContext().sendBroadcast(intent);
-	}
-	
-	public Collection<RosterEntry> getRoster(){
-		Roster roster = mConnection.getRoster();
-		Collection<RosterEntry> entries = roster.getEntries();
-		return Collections.unmodifiableCollection(entries);
-	}
-//	public void displayBuddyList() {
-//	Roster roster = connection.getRoster();
-//	Collection<RosterEntry> entries = roster.getEntries();
-//	
-//
-//	print("\n\n" + roster.getEntryCount() + " buddy(ies):");
-//	for (RosterEntry r : entries) {
-//		print(r.getUser());
-//	}
-//}
 }

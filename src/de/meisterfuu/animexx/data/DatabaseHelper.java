@@ -1,4 +1,4 @@
-package de.meisterfuu.animexx.data.ens;
+package de.meisterfuu.animexx.data;
 
 import java.sql.SQLException;
 
@@ -14,17 +14,21 @@ import com.j256.ormlite.table.TableUtils;
 import de.meisterfuu.animexx.objects.ENSObject;
 import de.meisterfuu.animexx.objects.ENSDraftObject;
 import de.meisterfuu.animexx.objects.ENSQueueObject;
+import de.meisterfuu.animexx.objects.XMPPMessageObject;
+import de.meisterfuu.animexx.objects.XMPPRoosterObject;
 
-public class ENSDatabase extends OrmLiteSqliteOpenHelper {
+public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
-	private static final String DATABASE_NAME = "ens.db";
-	private static final int DATABASE_VERSION = 5;
+	private static final String DATABASE_NAME = "db.db";
+	private static final int DATABASE_VERSION = 1;
 
 	private RuntimeExceptionDao<ENSObject, Long> ENSRuntimeDao = null;
 	private RuntimeExceptionDao<ENSDraftObject, Long> ENSSendRuntimeDao = null;
 	private RuntimeExceptionDao<ENSQueueObject, Long> ENSQueueRuntimeDao = null;
+	private RuntimeExceptionDao<XMPPMessageObject, Long> XMPPRuntimeDao = null;
+	private RuntimeExceptionDao<XMPPRoosterObject, Long> XMPPSendRuntimeDao = null;
 
-	public ENSDatabase(Context context) {
+	public DatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
 	
@@ -33,6 +37,8 @@ public class ENSDatabase extends OrmLiteSqliteOpenHelper {
 			TableUtils.clearTable(getConnectionSource(), ENSObject.class);
 			TableUtils.clearTable(getConnectionSource(), ENSDraftObject.class);
 			TableUtils.clearTable(getConnectionSource(), ENSQueueObject.class);
+			TableUtils.clearTable(getConnectionSource(), XMPPMessageObject.class);
+			TableUtils.clearTable(getConnectionSource(), XMPPRoosterObject.class);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -41,12 +47,14 @@ public class ENSDatabase extends OrmLiteSqliteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db, ConnectionSource connectionSource) {
 		try {
-			Log.i(ENSDatabase.class.getName(), "onCreate");
+			Log.i(DatabaseHelper.class.getName(), "onCreate");
 			TableUtils.createTable(connectionSource, ENSObject.class);
 			TableUtils.createTable(connectionSource, ENSDraftObject.class);
 			TableUtils.createTable(connectionSource, ENSQueueObject.class);
+			TableUtils.createTable(connectionSource, XMPPMessageObject.class);
+			TableUtils.createTable(connectionSource, XMPPRoosterObject.class);
 		} catch (SQLException e) {
-			Log.e(ENSDatabase.class.getName(), "Can't create database", e);
+			Log.e(DatabaseHelper.class.getName(), "Can't create database", e);
 			throw new RuntimeException(e);
 		}
 	}
@@ -55,14 +63,16 @@ public class ENSDatabase extends OrmLiteSqliteOpenHelper {
 	public void onUpgrade(SQLiteDatabase db, ConnectionSource connectionSource, int oldVersion, int newVersion) {
 		
 		try {
-			Log.i(ENSDatabase.class.getName(), "onUpgrade");
+			Log.i(DatabaseHelper.class.getName(), "onUpgrade");
 			TableUtils.dropTable(connectionSource, ENSObject.class, true);
 			TableUtils.dropTable(connectionSource, ENSDraftObject.class, true);
 			TableUtils.dropTable(connectionSource, ENSQueueObject.class, true);
+			TableUtils.dropTable(connectionSource, XMPPMessageObject.class, true);
+			TableUtils.dropTable(connectionSource, XMPPRoosterObject.class, true);
 			// after we drop the old databases, we create the new ones
 			onCreate(db, connectionSource);
 		} catch (SQLException e) {
-			Log.e(ENSDatabase.class.getName(), "Can't drop databases", e);
+			Log.e(DatabaseHelper.class.getName(), "Can't drop databases", e);
 			throw new RuntimeException(e);
 		} 
 	}
@@ -73,6 +83,8 @@ public class ENSDatabase extends OrmLiteSqliteOpenHelper {
 		ENSRuntimeDao = null;
 		ENSSendRuntimeDao = null;
 		ENSQueueRuntimeDao = null;
+		XMPPRuntimeDao = null;
+		XMPPSendRuntimeDao = null;
 	}
 	
 	
@@ -94,6 +106,17 @@ public class ENSDatabase extends OrmLiteSqliteOpenHelper {
 		}
 		return ENSQueueRuntimeDao;
 	}
-
+	public RuntimeExceptionDao<XMPPMessageObject, Long> getXMPPMessageDao() {
+		if (XMPPRuntimeDao == null) {
+			XMPPRuntimeDao = getRuntimeExceptionDao(XMPPMessageObject.class);
+		}
+		return XMPPRuntimeDao;
+	}
+	public RuntimeExceptionDao<XMPPRoosterObject, Long> getXMPPRoosterDataDao() {
+		if (XMPPSendRuntimeDao == null) {
+			XMPPSendRuntimeDao = getRuntimeExceptionDao(XMPPRoosterObject.class);
+		}
+		return XMPPSendRuntimeDao;
+	}
 
 }
