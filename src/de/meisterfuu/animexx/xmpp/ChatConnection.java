@@ -57,7 +57,7 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 					return false;
 				}	
 				if (mConnection == null || !mConnection.isConnected()) {
-					login(username, Debug.XMPP_PW);	
+					login(username, password);	
 				} else {
 					return false;
 				}
