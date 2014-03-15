@@ -272,19 +272,10 @@ public class MainActivity extends Activity {
 			mDesign = 1;
 			selectENS();
 		} else if(pPosition == 1) {
-			mDesign = 2;
-			selectENS();
-		} else if(pPosition == 2) {
-			mDesign = 3;
-			selectENS();
-		} else if(pPosition == 3) {
-			mDesign = 4;
-			selectENS();
-		} else if(pPosition == 4) {
 			selectRPG();
-		} else if(pPosition == 5) {
+		} else if(pPosition == 2) {
 			selectEvent();
-		} else if(pPosition == 6) {
+		} else if(pPosition == 3) {
 			selectChat();
 		}
 	}

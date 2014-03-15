@@ -1,7 +1,6 @@
 package de.meisterfuu.animexx.xmpp;
 
 import java.util.Collection;
-import java.util.Date;
 
 import org.jivesoftware.smack.AndroidConnectionConfiguration;
 import org.jivesoftware.smack.Chat;
@@ -19,7 +18,6 @@ import org.jivesoftware.smack.packet.Message.Type;
 
 import de.meisterfuu.animexx.Debug;
 import de.meisterfuu.animexx.data.Self;
-import de.meisterfuu.animexx.data.ens.ENSApi;
 import de.meisterfuu.animexx.data.xmpp.XMPPApi;
 import de.meisterfuu.animexx.notification.XMPPNotification;
 import de.meisterfuu.animexx.objects.XMPPRoosterObject;
@@ -39,17 +37,17 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 	
 	public ChatConnection(Context pContext){
 		mApplicationContext = pContext.getApplicationContext();
-		
+		mApi = new XMPPApi(mApplicationContext);
 		SmackAndroid.init(mApplicationContext);
+		
 		// turn on the enhanced debugger
 		XMPPConnection.DEBUG_ENABLED = true;
+		
 		setupNewMessageReceiver();
 	}
 	
 	public boolean connect(){
 			try {
-				mApi = new XMPPApi(mApplicationContext);
-				
 				//Get Username
 				String username = Self.getInstance(mApplicationContext).getUsername();
 				
@@ -90,45 +88,37 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 			config.setReconnectionAllowed(true);
 			mConnection = new XMPPConnection(config);
 
-			mConnection.connect();
-			mConnection.login(userName, password);
-			this.setChatListener();
-			this.setRosterListener();
-			
-			if(Debug.XMPP_CONNECTION_LISTENER)mConnection.addConnectionListener(new ConnectionListener() {
-				 
-	            @Override
-	            public void reconnectionSuccessful() {
-	            	Date d = new Date();
-	                ENSApi.sendENSDEBUG("reconnectionSuccessful at "+d.toString(), mApplicationContext);
-	            }
-	            
-	            @Override
-	            public void reconnectionFailed(Exception arg0) {
-	            	Date d = new Date();
-	                ENSApi.sendENSDEBUG("reconnectionFailed "+ arg0.getMessage() +" at "+d.toString(), mApplicationContext);
-	            }
-	 
-	            @Override
-	            public void reconnectingIn(int seconds) {
-	            	Date d = new Date();
-	                ENSApi.sendENSDEBUG("reconnectingIn "+ seconds +"s at "+d.toString(), mApplicationContext);
-	            }
-	            
-	            @Override
-	            public void connectionClosedOnError(Exception arg0) {
-	            	Date d = new Date();
-	                ENSApi.sendENSDEBUG("connectionClosedOnError "+ arg0.getMessage() +" at "+d.toString(), mApplicationContext);
-	            }
-	            
-	            @Override
-	            public void connectionClosed() {
-	            	Date d = new Date();
-//	                ENSApi.sendENSDEBUG("connectionClosed at "+d.toString(), mApplicationContext);
-	            }
-	            
-	        });
 		}
+		
+		mConnection.connect();
+		if(!mConnection.isAuthenticated())mConnection.login(userName, password);
+		this.setChatListener();
+		this.setRosterListener();
+		
+		if(Debug.XMPP_CONNECTION_LISTENER)mConnection.addConnectionListener(new ConnectionListener() {
+			 
+            @Override
+            public void reconnectionSuccessful() {
+            }
+            
+            @Override
+            public void reconnectionFailed(Exception arg0) {
+            }
+ 
+            @Override
+            public void reconnectingIn(int seconds) {
+            }
+            
+            @Override
+            public void connectionClosedOnError(Exception arg0) {
+            }
+            
+            @Override
+            public void connectionClosed() {
+            }
+            
+        });
+		
 	}
 	
 	public XMPPConnection getConnection(){

@@ -1,25 +1,10 @@
 package de.meisterfuu.animexx.xmpp;
 
 import java.util.ArrayList;
-import java.util.Collection;
-
-import org.jivesoftware.smack.AndroidConnectionConfiguration;
-import org.jivesoftware.smack.Chat;
-import org.jivesoftware.smack.ChatManagerListener;
-import org.jivesoftware.smack.MessageListener;
-import org.jivesoftware.smack.Roster;
-import org.jivesoftware.smack.RosterEntry;
-import org.jivesoftware.smack.SmackAndroid;
-import org.jivesoftware.smack.XMPPConnection;
-import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smack.packet.Message;
 
 import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 
 import de.meisterfuu.animexx.R;
-import de.meisterfuu.animexx.R.layout;
-import de.meisterfuu.animexx.R.menu;
-import de.meisterfuu.animexx.activitys.ens.SingleENSActivity;
 import de.meisterfuu.animexx.adapter.ChatAdapter;
 import de.meisterfuu.animexx.data.APICallback;
 import de.meisterfuu.animexx.data.profile.UserApi;
@@ -30,20 +15,15 @@ import de.meisterfuu.animexx.utils.APIException;
 import android.os.Bundle;
 import android.os.Handler;
 import android.app.Activity;
-import android.app.ListActivity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 public class XMPPChatActivity extends Activity  {
 
@@ -112,6 +92,7 @@ public class XMPPChatActivity extends Activity  {
 		if(mjabberName.split("@")[1].equalsIgnoreCase("jabber.animexx.de")){
 			(new UserApi(this)).SearchUserByName(mjabberName.split("@")[0], new APICallback() {
 				
+				@SuppressWarnings("unchecked")
 				@Override
 				public void onCallback(APIException pError, Object pObject) {
 					ArrayList<UserObject> temp = (ArrayList<UserObject>) pObject;

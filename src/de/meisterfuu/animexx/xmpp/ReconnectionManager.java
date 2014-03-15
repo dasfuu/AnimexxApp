@@ -11,7 +11,8 @@ public class ReconnectionManager {
 	private boolean mActive = false;
 	private Handler mHandler;
 	private int count;
-	private int[] time = new int[]{15, 15, 30, 30, 60};
+	private int step;
+	private int[] time = new int[]{5, 5, 5, 5, 10, 10, 10, 10, 30};
 
 	public ReconnectionManager(XMPPService service, ChatConnection connection){
 		mService = service;
@@ -22,7 +23,8 @@ public class ReconnectionManager {
 	public void start(){
 		if(!mActive){
 			mActive = true;
-			check();
+			step = 0;
+			check(1);
 		}
 	}
 	
@@ -30,26 +32,35 @@ public class ReconnectionManager {
 		mActive = false;
 	}
 	
-	public void check(){
+	public void check(int i){
 		if(!mActive) return;
-		
-		if(mConnection != null && !mConnection.isConnected() && mConnection.shouldConnect()){
-			mConnection.connect();
-			count++;
-		} else if (mConnection != null){
-			count = 0;
-		} if(mConnection == null){
+		if(mConnection == null){
 			mService.stopSelf();
 			return;
 		}
-		if(count > 4) count = 4;
-		int ti = time[count]*1000;
+		
+		if(!mConnection.isConnected() && mConnection.shouldConnect()){
+			if(count == time[step]){
+				mConnection.connect();
+				count++;
+				count = 0;
+				step++;
+				if(step >= time.length) step = time.length-1;
+			} else {
+				count++;
+			}
+		} else {
+			count = 0;
+			step = 0;
+		} 		
+		
+		
 		mHandler.postDelayed(new Runnable() {			
 			@Override
 			public void run() {
-				 check();
+				 check(count);
 			}
-		}, ti);		
+		}, 2000);		
 		
 	}
 }

@@ -1,41 +1,16 @@
 package de.meisterfuu.animexx.xmpp;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
 
-import org.jivesoftware.smack.AndroidConnectionConfiguration;
-import org.jivesoftware.smack.Chat;
-import org.jivesoftware.smack.ChatManagerListener;
-import org.jivesoftware.smack.ConnectionListener;
-import org.jivesoftware.smack.MessageListener;
-import org.jivesoftware.smack.Roster;
-import org.jivesoftware.smack.RosterEntry;
-import org.jivesoftware.smack.RosterListener;
-import org.jivesoftware.smack.SmackAndroid;
-import org.jivesoftware.smack.XMPPConnection;
-import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smack.packet.Message;
-import org.jivesoftware.smack.packet.Message.Type;
-import org.jivesoftware.smack.packet.Presence;
 
-import de.meisterfuu.animexx.Debug;
 import de.meisterfuu.animexx.R;
-import de.meisterfuu.animexx.data.Self;
-import de.meisterfuu.animexx.data.ens.ENSApi;
-import de.meisterfuu.animexx.notification.XMPPNotification;
 
 import android.app.Notification;
 import android.app.Service;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
-import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 
 public class XMPPService extends Service {
@@ -113,6 +88,7 @@ public class XMPPService extends Service {
 						mConnection = new ChatConnection(XMPPService.this);
 						mConnection.connect();
 						mReconManager = new ReconnectionManager(XMPPService.this, mConnection);
+						mReconManager.start();
 						Looper.loop();
 				}
 	

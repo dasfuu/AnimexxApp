@@ -5,7 +5,6 @@ import java.util.List;
 
 import de.meisterfuu.animexx.data.ens.ENSApi;
 import de.meisterfuu.animexx.objects.ENSQueueObject;
-import de.meisterfuu.animexx.utils.APIException;
 import android.app.AlarmManager;
 import android.app.IntentService;
 import android.app.PendingIntent;
@@ -24,19 +23,17 @@ public class ENSQueueService extends IntentService {
 	// IntentService can perform, e.g. ACTION_FETCH_NEW_ITEMS
 	private static final String ACTION_FOO = "de.meisterfuu.animexx.action.GO";
 
-
 	public static void startAction(Context context) {
 		Intent intent = new Intent(context, ENSQueueService.class);
 		intent.setAction(ACTION_FOO);
 		context.startService(intent);
 	}
-	
+
 	public static Intent getStartActionIntent(Context context) {
 		Intent intent = new Intent(context, ENSQueueService.class);
-		intent.setAction(ACTION_FOO);	
+		intent.setAction(ACTION_FOO);
 		return intent;
 	}
-
 
 	public ENSQueueService() {
 		super("ENSQueueService");
@@ -48,35 +45,37 @@ public class ENSQueueService extends IntentService {
 			final String action = intent.getAction();
 			if (ACTION_FOO.equals(action)) {
 				handleAction();
-			} 
+			}
 		}
 	}
-
 
 	private void handleAction() {
 		ENSApi api = new ENSApi(this);
 		int error_count = 0;
 		List<ENSQueueObject> queue = api.getFromQueue();
-		for(ENSQueueObject obj: queue){
+		if (queue.size() > 0) {
+			ENSQueueObject draft = queue.get(0);
 			try {
-				api.NTsendENS(obj.getDraft());
-				api.removeFromQueue(obj);
+				api.NTsendENS(draft.getDraft());
+				api.removeFromQueue(draft);
 			} catch (Exception e) {
 				e.printStackTrace();
-				obj.setTries(obj.getTries()+1);
+				draft.setTries(draft.getTries() + 1);
 				error_count++;
-			}			
+			}
 		}
-		if(error_count > 0){
-			Calendar cal = Calendar.getInstance();
-			cal.add(Calendar.MINUTE, 15);
-			Intent intent = ENSQueueService.getStartActionIntent(this);
-			PendingIntent pintent = PendingIntent.getService(this, 0, intent, 0);
 
-			AlarmManager alarm = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-			// Start every 30 seconds
+		if (error_count > 0 || queue.size() > 1) {
+			Calendar cal = Calendar.getInstance();
+			cal.add(Calendar.MINUTE, 1);
+			Intent intent = ENSQueueService.getStartActionIntent(this);
+			PendingIntent pintent = PendingIntent
+					.getService(this, 0, intent, 0);
+
+			AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 			alarm.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pintent);
 		}
+		
 		api.close();
 	}
 
