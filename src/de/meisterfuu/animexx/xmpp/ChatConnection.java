@@ -5,11 +5,14 @@ import java.util.Collection;
 import org.jivesoftware.smack.AndroidConnectionConfiguration;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ChatManagerListener;
+import org.jivesoftware.smack.ConnectionCreationListener;
 import org.jivesoftware.smack.ConnectionListener;
 import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.RosterEntry;
 import org.jivesoftware.smack.RosterListener;
 import org.jivesoftware.smack.SmackAndroid;
+import org.jivesoftware.smack.TCPConnection;
+import org.jivesoftware.smack.TCPConnection;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;
@@ -27,26 +30,32 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 public class ChatConnection implements MessageListener, ChatManagerListener, RosterListener {
 
-	XMPPConnection mConnection;
+	TCPConnection mConnection;
 	XMPPApi mApi;
 	public static final String TAG = "XMPP";
 	private Context mApplicationContext;
+	protected boolean connectionState;
 	
 	public ChatConnection(Context pContext){
+		Log.i(TAG, "ChatConnection Constructor called");
 		mApplicationContext = pContext.getApplicationContext();
 		mApi = new XMPPApi(mApplicationContext);
+		
+    	connectionState = false;
 		SmackAndroid.init(mApplicationContext);
 		
 		// turn on the enhanced debugger
-		XMPPConnection.DEBUG_ENABLED = true;
+		TCPConnection.DEBUG_ENABLED = true;
 		
 		setupNewMessageReceiver();
 	}
 	
 	public boolean connect(){
+    	Log.i(TAG, "ChatConnection.connect() called");
 			try {
 				//Get Username
 				String username = Self.getInstance(mApplicationContext).getUsername();
@@ -61,7 +70,7 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 				} else {
 					return false;
 				}
-			} catch (XMPPException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 				return false;
 			}
@@ -69,36 +78,49 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 	}
 	
 	public void disconnect(){
+    	Log.i(TAG, ".disconnect() called");
 		mConnection.disconnect();
 		mApi.close();
-	}
-	
-	public boolean isConnected(){
-		return mConnection.isConnected();		
 	}
 	
 	public boolean shouldConnect(){
 		return PreferenceManager.getDefaultSharedPreferences(mApplicationContext).getBoolean("xmpp_status", false);
 	}
 	
-	private void login(final String userName, final String password) throws XMPPException {
+	private void login(final String userName, final String password) throws Exception {
 		
 		if(mConnection == null){
 			AndroidConnectionConfiguration config = new AndroidConnectionConfiguration("jabber.animexx.de");
 			config.setReconnectionAllowed(true);
-			mConnection = new XMPPConnection(config);
+			Log.i(TAG, "mConnection = new TCPConnection(config) called");
+			mConnection = new TCPConnection(config);
+			connectionState = true;
 
 		}
 		
+		Log.i(TAG, "TCPConnection.connect() called");
 		mConnection.connect();
-		if(!mConnection.isAuthenticated())mConnection.login(userName, password);
+		if(!mConnection.isAuthenticated()){
+			Log.i(TAG, ".login() called");
+			mConnection.login(userName, password, "App");
+		}
 		this.setChatListener();
 		this.setRosterListener();
 		
-		if(Debug.XMPP_CONNECTION_LISTENER)mConnection.addConnectionListener(new ConnectionListener() {
+		TCPConnection.addConnectionCreationListener(new ConnectionCreationListener() {
+			
+			@Override
+			public void connectionCreated(XMPPConnection arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
+		mConnection.addConnectionListener(new ConnectionListener() {
 			 
             @Override
             public void reconnectionSuccessful() {
+            	Log.i(TAG, "ConnectionListener.reconnectionSuccessful() called");
             }
             
             @Override
@@ -111,20 +133,38 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
             
             @Override
             public void connectionClosedOnError(Exception arg0) {
+            	connectionState = false;
+            	Log.i(TAG, "ConnectionListener.connectionClosedOnError() called");
             }
             
             @Override
             public void connectionClosed() {
+            	connectionState = false;
+    			Log.i(TAG, "ConnectionListener.connectionClosed() called");
             }
+
+			@Override
+			public void authenticated(XMPPConnection arg0) {
+				Log.i(TAG, "ConnectionListener.authenticated() called");				
+			}
+
+			@Override
+			public void connected(XMPPConnection arg0) {
+				connectionState = true;
+				Log.i(TAG, "ConnectionListener.connected() called");
+			}
             
         });
 		
 	}
 	
-	public XMPPConnection getConnection(){
+	public TCPConnection getConnection(){
 		return mConnection;
 	}
 	
+	public boolean isConnected(){		
+		return (mConnection.isConnected() && connectionState && !mConnection.isSocketClosed());
+	}
 	
 	public void sendMessage(String message, String to) throws XMPPException {
 		System.out.println("this:"+this);

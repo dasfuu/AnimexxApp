@@ -1,6 +1,10 @@
 package de.meisterfuu.animexx.xmpp;
 
+import java.util.Date;
+
+import de.meisterfuu.animexx.DebugNotification;
 import android.os.Handler;
+import android.util.Log;
 
 
 public class ReconnectionManager {
@@ -13,6 +17,7 @@ public class ReconnectionManager {
 	private int count;
 	private int step;
 	private int[] time = new int[]{5, 5, 5, 5, 10, 10, 10, 10, 30};
+	public static final String TAG = "RECONMANAGER";
 
 	public ReconnectionManager(XMPPService service, ChatConnection connection){
 		mService = service;
@@ -40,8 +45,11 @@ public class ReconnectionManager {
 		}
 		
 		if(!mConnection.isConnected() && mConnection.shouldConnect()){
-			if(count == time[step]){
-				mConnection.connect();
+			if(count >= time[step]){
+				Log.i(TAG , "ChatConnection.connect() called in ReconManager");
+				DebugNotification.notify(mService, "ReconManager is active!\n "+(new Date()).toString());
+				boolean temp = mConnection.connect();
+				Log.i(TAG , "ChatConnection.connect() result: "+temp);
 				count++;
 				count = 0;
 				step++;

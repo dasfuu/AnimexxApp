@@ -52,10 +52,6 @@ public class DebugNotification {
 		final NotificationCompat.Builder builder = new NotificationCompat.Builder(
 				context)
 
-				// Set appropriate defaults for the notification light, sound,
-				// and vibration.
-				.setDefaults(Notification.DEFAULT_ALL)
-
 				// Set required fields, including the small icon, the
 				// notification title, and text.
 				.setSmallIcon(R.drawable.ic_stat_debug).setContentTitle(title)
@@ -72,7 +68,7 @@ public class DebugNotification {
 				.setLargeIcon(picture)
 
 				// Set ticker text (preview) information for this notification.
-				.setTicker(ticker)
+				.setTicker(ticker);
 
 				// If this notification relates to a past or upcoming event, you
 				// should set the relevant time information using the setWhen
@@ -83,8 +79,6 @@ public class DebugNotification {
 				// the notification timestamp in milliseconds.
 				// .setWhen(...)
 
-				// Automatically dismiss the notification when it is touched.
-				.setAutoCancel(true);
 
 		notify(context, builder.build());
 	}

@@ -17,12 +17,12 @@ public class XMPPService extends Service {
 
 	Handler mHandler, mTHandler;
 	Thread mThread;
-	static XMPPService mThis;
+	private static XMPPService mThis;
 	
-	ArrayList<String> rooster;
+	private ArrayList<String> rooster;
 
-	private ReconnectionManager mReconManager;
-	private ChatConnection mConnection;
+	private static ReconnectionManager mReconManager;
+	private static ChatConnection mConnection;
 	
 	public static final String TAG = "XMPP";
 
@@ -54,6 +54,10 @@ public class XMPPService extends Service {
 
 		mHandler = new Handler();
 		mThis = this;
+		
+		Notification notification = getNotification("");		
+		this.startForeground(42, notification);
+		
 
 	}
 	
@@ -73,10 +77,6 @@ public class XMPPService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-
-		Notification notification = getNotification("");		
-		this.startForeground(42, notification);
-		
 
 		
 		if(mThread == null || !mThread.isAlive()){
