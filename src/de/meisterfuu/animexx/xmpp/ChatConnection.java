@@ -8,6 +8,7 @@ import org.jivesoftware.smack.ChatManagerListener;
 import org.jivesoftware.smack.ConnectionCreationListener;
 import org.jivesoftware.smack.ConnectionListener;
 import org.jivesoftware.smack.MessageListener;
+import org.jivesoftware.smack.ReconnectionManager;
 import org.jivesoftware.smack.RosterEntry;
 import org.jivesoftware.smack.RosterListener;
 import org.jivesoftware.smack.SmackAndroid;
@@ -100,10 +101,11 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 			config.setReconnectionAllowed(true);
 			Log.i(TAG, "mConnection = new TCPConnection(config) called");
 			mConnection = new TCPConnection(config);
+			PingManager.setDefaultPingInterval(10);
 			mPingManager = PingManager.getInstanceFor(getConnection());
 			mPingManager.registerPingFailedListener(this);
-			mPingManager.setPingInterval(1000*10);
-			connectionState = true;
+			mPingManager.setPingInterval(10);
+			connectionState = true;			
 		}
 		
 		Log.i(TAG, "TCPConnection.connect() called");
