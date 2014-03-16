@@ -100,7 +100,7 @@ public class ENSApi {
 		return id;
 	}
 	
-	public static void sendENSDEBUG(final String string, Context c){		
+	public static void sendENSDEBUG(final String string, final String title, Context c){		
 				ENSApi api = new ENSApi(c);
 				ENSDraftObject draft = new ENSDraftObject();
 				ArrayList<Long> arr = new ArrayList<Long>();
@@ -108,7 +108,7 @@ public class ENSApi {
 				draft.setRecipients(arr);
 				draft.setMessage(string);
 				draft.setSignature("");
-				draft.setSubject("TEST");
+				draft.setSubject(title);
 				draft.setReferenceType(null);
 				ENSQueueObject qObj = new ENSQueueObject();
 				qObj.setDraft(draft);

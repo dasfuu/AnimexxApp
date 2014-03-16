@@ -3,6 +3,7 @@ package de.meisterfuu.animexx.xmpp;
 import java.util.Date;
 
 import de.meisterfuu.animexx.DebugNotification;
+import de.meisterfuu.animexx.utils.Helper;
 import android.os.Handler;
 import android.util.Log;
 
@@ -38,35 +39,47 @@ public class ReconnectionManager {
 	}
 	
 	public void check(int i){
-		if(!mActive) return;
-		if(mConnection == null){
-			mService.stopSelf();
-			return;
+		final int j = i+1;
+		if(j%60 == 0){
+			DebugNotification.notify(mService, "ReconManager working", 433962);
 		}
 		
-		if(!mConnection.isConnected() && mConnection.shouldConnect()){
-			if(count >= time[step]){
-				Log.i(TAG , "ChatConnection.connect() called in ReconManager");
-				DebugNotification.notify(mService, "ReconManager is active!\n "+(new Date()).toString());
-				boolean temp = mConnection.connect();
-				Log.i(TAG , "ChatConnection.connect() result: "+temp);
-				count++;
-				count = 0;
-				step++;
-				if(step >= time.length) step = time.length-1;
-			} else {
-				count++;
+		try{
+			if(!mActive) return;
+			if(mConnection == null){
+				mService.stopForeground(true);
+				mService.stopSelf();
+				return;
 			}
-		} else {
-			count = 0;
-			step = 0;
-		} 		
-		
+			
+			if(!mConnection.isConnected() && mConnection.shouldConnect()){
+				if(count >= time[step]){
+					Log.i(TAG , "ChatConnection.connect() called in ReconManager");
+					DebugNotification.notify(mService, "ReconManager is active!\n "+(new Date()).toString(), 433961);
+					boolean temp = mConnection.connect();
+					Log.i(TAG , "ChatConnection.connect() result: "+temp);
+					count++;
+					count = 0;
+					step++;
+					if(step >= time.length) step = time.length-1;
+				} else {
+					count++;
+				}
+			} else {
+				count = 0;
+				step = 0;
+			} 		
+		} catch (Exception e){
+			DebugNotification.notify(mService, "Exception in ReconManager", 433963);
+			e.printStackTrace();
+			Helper.sendStacTrace(e, mService);
+		}
+	
 		
 		mHandler.postDelayed(new Runnable() {			
 			@Override
 			public void run() {
-				 check(count);
+				 check(j);
 			}
 		}, 2000);		
 		

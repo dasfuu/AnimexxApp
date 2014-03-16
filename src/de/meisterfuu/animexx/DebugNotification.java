@@ -1,5 +1,7 @@
 package de.meisterfuu.animexx;
 
+import java.util.Random;
+
 import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -37,7 +39,7 @@ public class DebugNotification {
 	 * @see #cancel(Context)
 	 */
 	public static void notify(final Context context,
-			final String pString) {
+			final String pString, final int id) {
 		final Resources res = context.getResources();
 
 		// This image is used as the notification's large icon (thumbnail).
@@ -80,18 +82,19 @@ public class DebugNotification {
 				// .setWhen(...)
 
 
-		notify(context, builder.build());
+		notify(context, builder.build(), id);
 	}
 
 	@TargetApi(Build.VERSION_CODES.ECLAIR)
 	private static void notify(final Context context,
-			final Notification notification) {
+			final Notification notification, int id) {
 		final NotificationManager nm = (NotificationManager) context
 				.getSystemService(Context.NOTIFICATION_SERVICE);
+		Random r = new Random();
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR) {
-			nm.notify(NOTIFICATION_TAG, 0, notification);
+			nm.notify(NOTIFICATION_TAG, id, notification);
 		} else {
-			nm.notify(NOTIFICATION_TAG.hashCode(), notification);
+			nm.notify(id, notification);
 		}
 	}
 
@@ -100,13 +103,13 @@ public class DebugNotification {
 	 * {@link #notify(Context, String, int)}.
 	 */
 	@TargetApi(Build.VERSION_CODES.ECLAIR)
-	public static void cancel(final Context context) {
+	public static void cancel(final Context context, int id) {
 		final NotificationManager nm = (NotificationManager) context
 				.getSystemService(Context.NOTIFICATION_SERVICE);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR) {
-			nm.cancel(NOTIFICATION_TAG, 0);
+			nm.cancel(NOTIFICATION_TAG, id);
 		} else {
-			nm.cancel(NOTIFICATION_TAG.hashCode());
+			nm.cancel(id);
 		}
 	}
 }

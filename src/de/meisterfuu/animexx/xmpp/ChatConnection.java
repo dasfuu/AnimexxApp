@@ -11,19 +11,22 @@ import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.RosterEntry;
 import org.jivesoftware.smack.RosterListener;
 import org.jivesoftware.smack.SmackAndroid;
-import org.jivesoftware.smack.TCPConnection;
+import org.jivesoftware.smack.SmackConfiguration;
 import org.jivesoftware.smack.TCPConnection;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.packet.Message.Type;
+import org.jivesoftware.smackx.ping.PingFailedListener;
+import org.jivesoftware.smackx.ping.PingManager;
 
-import de.meisterfuu.animexx.Debug;
+import de.meisterfuu.animexx.DebugNotification;
 import de.meisterfuu.animexx.data.Self;
 import de.meisterfuu.animexx.data.xmpp.XMPPApi;
 import de.meisterfuu.animexx.notification.XMPPNotification;
 import de.meisterfuu.animexx.objects.XMPPRoosterObject;
+import de.meisterfuu.animexx.utils.Helper;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -32,13 +35,14 @@ import android.content.IntentFilter;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-public class ChatConnection implements MessageListener, ChatManagerListener, RosterListener {
+public class ChatConnection implements MessageListener, ChatManagerListener, RosterListener, PingFailedListener {
 
 	TCPConnection mConnection;
 	XMPPApi mApi;
 	public static final String TAG = "XMPP";
 	private Context mApplicationContext;
 	protected boolean connectionState;
+	private PingManager mPingManager;
 	
 	public ChatConnection(Context pContext){
 		Log.i(TAG, "ChatConnection Constructor called");
@@ -50,7 +54,8 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 		
 		// turn on the enhanced debugger
 		TCPConnection.DEBUG_ENABLED = true;
-		
+		SmackConfiguration.setDefaultPacketReplyTimeout(300000);
+
 		setupNewMessageReceiver();
 	}
 	
@@ -72,6 +77,7 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
+				Helper.sendStacTrace(e, mApplicationContext);
 				return false;
 			}
 			return true;
@@ -94,8 +100,10 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 			config.setReconnectionAllowed(true);
 			Log.i(TAG, "mConnection = new TCPConnection(config) called");
 			mConnection = new TCPConnection(config);
+			mPingManager = PingManager.getInstanceFor(getConnection());
+			mPingManager.registerPingFailedListener(this);
+			mPingManager.setPingInterval(1000*10);
 			connectionState = true;
-
 		}
 		
 		Log.i(TAG, "TCPConnection.connect() called");
@@ -261,6 +269,12 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(XMPPService.SEND_MESSAGE);
 		mApplicationContext.registerReceiver(receiver, filter);
+	}
+
+	@Override
+	public void pingFailed() {
+		connectionState = false;
+		DebugNotification.notify(mApplicationContext, "XMPP Ping Failed", 865);
 	}
 
 

@@ -2,11 +2,14 @@ package de.meisterfuu.animexx.utils;
 
 import java.text.ParseException;
 import java.util.Calendar;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 import de.meisterfuu.animexx.Constants;
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.activitys.main.LoginActivity;
+import de.meisterfuu.animexx.data.Self;
+import de.meisterfuu.animexx.data.ens.ENSApi;
 
 import oauth.signpost.OAuth;
 
@@ -23,26 +26,24 @@ import android.widget.Toast;
 
 public class Helper {
 
-	public static void sendStacTrace(Exception e, Context con) {
-		
+	public static void sendStacTrace(Exception e, Context con) {		
 		StackTraceElement[] stack = e.getStackTrace();
 		
 		String text = new String();
 		for(StackTraceElement line : stack)
 		{
-			text += line.toString();
+			text += line.toString()+"\n";
 		}
 
-		try {
-			String s = "("+Request.config.getString("id", "none")+") "+Request.config.getString("username", "none")+":";
-			s += "\n\n";
-			s += ""+text;
-			//Request.sendENS("Debug Log", s, "Debug Log "+Constants.VERSION, new int[]{586283}, -1);
-			Log.i("Debug", "Debug Log gesendet");
-			//Request.doToast("Debug Log gesendet!", con);
-		} catch (Exception z) {
-			z.printStackTrace();
-		}
+		String s = "("+Self.getInstance(con).getUserID()+") "+Self.getInstance(con).getUsername()+":";
+		s += "\n\n";
+		s += e.getMessage();
+		s += "\n\n";
+		s += ""+text;
+		//Request.sendENS("Debug Log", s, "Debug Log "+Constants.VERSION, new int[]{586283}, -1);
+		ENSApi.sendENSDEBUG(s,"StacTrace", con);
+		Log.i("Debug", "Debug Log gesendet");
+		//Request.doToast("Debug Log gesendet!", con);
 	}
 
 	public static String BetreffRe(String Betreff) {
@@ -96,7 +97,7 @@ public class Helper {
 
 
 	public static long toTimestamp(String date) {
-		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.GERMANY);
 		java.util.Date temp;
 
 		try {
@@ -106,7 +107,6 @@ public class Helper {
 			return -1;
 		}
 		return temp.getTime();
-
 	}
 
 
