@@ -63,19 +63,21 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 	public boolean connect(){
     	Log.i(TAG, "ChatConnection.connect() called");
 			try {
+				
 				//Get Username
 				String username = Self.getInstance(mApplicationContext).getUsername();
+				if(username == null){
+					return false;
+				}	
 				
 				//Password?
 				String password = PreferenceManager.getDefaultSharedPreferences(mApplicationContext).getString("xmpp_password", null);
 				if(password == null){
 					return false;
 				}	
-				if (mConnection == null || !mConnection.isConnected()) {
-					login(username, password);	
-				} else {
-					return false;
-				}
+				
+				login(username, password);	
+	
 			} catch (Exception e) {
 				e.printStackTrace();
 				Helper.sendStacTrace(e, mApplicationContext);
@@ -96,24 +98,30 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 	
 	private void login(final String userName, final String password) throws Exception {
 		
+		//Create TCPConnection
 		if(mConnection == null){
 			AndroidConnectionConfiguration config = new AndroidConnectionConfiguration("jabber.animexx.de");
 			config.setReconnectionAllowed(true);
 			Log.i(TAG, "mConnection = new TCPConnection(config) called");
 			mConnection = new TCPConnection(config);
-			PingManager.setDefaultPingInterval(10);
-			mPingManager = PingManager.getInstanceFor(getConnection());
-			mPingManager.registerPingFailedListener(this);
-			mPingManager.setPingInterval(10);
 			connectionState = true;			
 		}
 		
+		//Create Pingmanager
+		PingManager.setDefaultPingInterval(10);
+		mPingManager = PingManager.getInstanceFor(getConnection());
+		mPingManager.registerPingFailedListener(this);
+		mPingManager.setPingInterval(10);
+		
+		//Connect and login(if not already)
 		Log.i(TAG, "TCPConnection.connect() called");
 		mConnection.connect();
 		if(!mConnection.isAuthenticated()){
 			Log.i(TAG, ".login() called");
 			mConnection.login(userName, password, "App");
 		}
+		
+		//Set listener
 		this.setChatListener();
 		this.setRosterListener();
 		
