@@ -147,7 +147,12 @@ public class XMPPRoosterAdapter extends BaseAdapter {
 		}
 		
 		if(xmpp.latestMessage != null){
-			holder.Message.setText(xmpp.latestMessage.getBody().subSequence(0, Math.min(30, xmpp.latestMessage.getBody().length())));
+			if(xmpp.latestMessage.isMe()){
+				holder.Message.setText("> "+xmpp.latestMessage.getBody().subSequence(0, Math.min(30, xmpp.latestMessage.getBody().length())));
+			} else {
+				holder.Message.setText("< "+xmpp.latestMessage.getBody().subSequence(0, Math.min(30, xmpp.latestMessage.getBody().length())));
+			}
+
 		}else {
 			holder.Message.setText("");
 		}

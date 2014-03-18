@@ -108,7 +108,7 @@ public class ImageLoaderCustom {
 			// No? download it
 			if (bitmap == null) {
 				nullStrings.add(f.getPath());
-				imageView.setVisibility(View.GONE);
+//				imageView.setVisibility(View.GONE);
 			} else {
 				// Yes? set the image
 				imageView.setImageBitmap(bitmap);

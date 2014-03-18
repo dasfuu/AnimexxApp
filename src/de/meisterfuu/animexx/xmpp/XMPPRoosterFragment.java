@@ -2,6 +2,7 @@ package de.meisterfuu.animexx.xmpp;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 
 import org.jivesoftware.smack.RosterEntry;
@@ -66,6 +67,7 @@ public class XMPPRoosterFragment extends ListFragment {
 	public void onPause() {
 		super.onPause();
 		mApi.close();
+		mApi = null;
 		this.getActivity().unregisterReceiver(receiver);
 	}
 
@@ -105,9 +107,9 @@ public class XMPPRoosterFragment extends ListFragment {
 			@Override
 			public void onCallback(APIException pError, Object pObject) {
 				final ArrayList<XMPPRoosterObject> temp = (ArrayList<XMPPRoosterObject>) pObject;
-						
+				Collections.sort(temp);
 				list.clear();
-				list.addAll(temp);
+				list.addAll(temp);				
 				adapter.notifyDataSetChanged();
 			}
 			

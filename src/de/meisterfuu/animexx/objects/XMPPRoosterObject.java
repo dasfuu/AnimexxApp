@@ -4,7 +4,7 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable
-public class XMPPRoosterObject {
+public class XMPPRoosterObject implements Comparable<XMPPRoosterObject>{
 
 	@DatabaseField(id = true)
 	String jid;
@@ -59,6 +59,17 @@ public class XMPPRoosterObject {
 	@Override
 	public String toString() {
 		return getJid().replace("@jabber.animexx.de", "");
+	}
+
+	@Override
+	public int compareTo(XMPPRoosterObject another) {
+		if(latestMessage == null) return 1;
+		if(another.latestMessage == null) return -1;
+		if(this.latestMessage.getDate() >= another.latestMessage.getDate()){
+			return -1;
+		} else {
+			return 1;
+		}
 	}
 
 }

@@ -250,13 +250,13 @@ public class XMPPApi {
 	
 	public List<XMPPMessageObject> getMessageFromDB(String pJid){		
 		XMPPMessageObject args = new XMPPMessageObject();
-		args.setFromJID(pJid);
+		args.setTopicJID(pJid);
 		return getHelper().getXMPPMessageDataDao().queryForMatchingArgs(args);
 	}
 	
 	public XMPPMessageObject getLatestMessageFromDB(String pJid){		
 		XMPPMessageObject args = new XMPPMessageObject();
-		args.setFromJID(pJid);
+		args.setTopicJID(pJid);
 		List<XMPPMessageObject> x = getHelper().getXMPPMessageDataDao().queryForMatchingArgs(args);
 		if(x.size() > 0){
 			return getHelper().getXMPPMessageDataDao().queryForMatchingArgs(args).get(x.size()-1);

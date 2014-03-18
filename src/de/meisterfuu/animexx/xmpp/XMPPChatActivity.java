@@ -68,7 +68,7 @@ public class XMPPChatActivity extends Activity  {
 		swingBottomInAnimationAdapter.setAbsListView(lv);		
 		lv.setAdapter(swingBottomInAnimationAdapter);
 		
-
+		mApi = new XMPPApi(this);
 		
 //		Intent intent = new Intent(this, XMPPService.class);
 //		startService(intent);
@@ -88,6 +88,13 @@ public class XMPPChatActivity extends Activity  {
 				adapter.add(temp);
 				
 				mNewMessageTx.setText("");
+				
+				XMPPMessageObject msg = new XMPPMessageObject();
+				msg.setDate(System.currentTimeMillis());
+				msg.setTopicJID(mjabberName);
+				msg.setBody(temp.getBody());
+				msg.setMe(true);
+				mApi.insertMessageToDB(msg);
 			}
 		});
 	    
@@ -125,8 +132,8 @@ public class XMPPChatActivity extends Activity  {
 						ChatAdapter.Message msg = new ChatAdapter.Message();
 						msg.setBody(obj.getBody());
 						msg.setTime(obj.getDate());
-						msg.setLeft(true);
-						adapter.addTop(msg);
+						msg.setLeft(!obj.isMe());
+						adapter.add(msg);
 					}
 					adapter.notifyDataSetChanged();
 				}
@@ -140,7 +147,7 @@ public class XMPPChatActivity extends Activity  {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		mApi = new XMPPApi(this);
+		if(mApi == null)mApi = new XMPPApi(this);
 		XMPPNotification.d_from = mjabberName;
 
 		mReceiver = new BroadcastReceiver() {
@@ -173,6 +180,7 @@ public class XMPPChatActivity extends Activity  {
 	protected void onPause() {
 		super.onPause();
 		mApi.close();
+		mApi = null;
 		XMPPNotification.d_from = null;
 		this.unregisterReceiver(mReceiver);
 	}

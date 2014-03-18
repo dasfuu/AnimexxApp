@@ -97,7 +97,7 @@ public class MainActivity extends Activity {
 		
 		mDesign = 1;
 		if(this.getIntent().hasExtra("LANDING") && this.getIntent().getStringExtra("LANDING").equals("CHAT")){
-			selectItem(6);
+			selectItem(3);
 		} else {
 			selectItem(0);
 		}
@@ -107,7 +107,9 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
-		
+		if(intent.hasExtra("LANDING") && intent.getStringExtra("LANDING").equals("CHAT")){
+			selectItem(3);
+		} 
 	}
 
 

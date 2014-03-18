@@ -20,7 +20,7 @@ import de.meisterfuu.animexx.objects.XMPPRoosterObject;
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
 	private static final String DATABASE_NAME = "db.db";
-	private static final int DATABASE_VERSION = 4;
+	private static final int DATABASE_VERSION = 5123;
 
 	private RuntimeExceptionDao<ENSObject, Long> ENSRuntimeDao = null;
 	private RuntimeExceptionDao<ENSDraftObject, Long> ENSSendRuntimeDao = null;

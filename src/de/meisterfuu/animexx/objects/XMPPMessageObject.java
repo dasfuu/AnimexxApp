@@ -19,8 +19,19 @@ public class XMPPMessageObject implements Comparable{
 	long date;
 	
 	@DatabaseField
-	String fromJID;
+	String topicJID;
 	
+	@DatabaseField
+	boolean me;
+	
+
+	public boolean isMe() {
+		return me;
+	}
+
+	public void setMe(boolean me) {
+		this.me = me;
+	}
 
 	public long getId() {
 		return id;
@@ -54,12 +65,12 @@ public class XMPPMessageObject implements Comparable{
 		this.date = date;
 	}
 
-	public String getFromJID() {
-		return fromJID;
+	public String getTopicJID() {
+		return topicJID;
 	}
 
-	public void setFromJID(String fromJID) {
-		this.fromJID = fromJID;
+	public void setTopicJID(String fromJID) {
+		this.topicJID = fromJID;
 	}
 
 	@Override

@@ -88,6 +88,7 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 				
 				login(username, password);	
 	
+				newRoster();
 			} catch (Exception e) {
 				e.printStackTrace();
 				Helper.sendStacTrace(e, mApplicationContext);
@@ -100,6 +101,7 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
     	Log.i(TAG, ".disconnect() called");
 		mConnection.disconnect();
 		mApi.close();
+		mApi = null;
 	}
 	
 	public boolean shouldConnect(){
@@ -191,8 +193,9 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 				
 				XMPPMessageObject msg = new XMPPMessageObject();
 				msg.setDate(System.currentTimeMillis());
-				msg.setFromJID(chat.getParticipant());
+				msg.setTopicJID(chat.getParticipant());
 				msg.setBody(message.getBody());
+				msg.setMe(false);
 				mApi.insertMessageToDB(msg);
 			}
 		}
