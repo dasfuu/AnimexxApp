@@ -23,6 +23,7 @@ import org.jivesoftware.smack.packet.Message.Type;
 import org.jivesoftware.smackx.ping.PingFailedListener;
 import org.jivesoftware.smackx.ping.PingManager;
 
+import de.meisterfuu.animexx.Debug;
 import de.meisterfuu.animexx.DebugNotification;
 import de.meisterfuu.animexx.data.Self;
 import de.meisterfuu.animexx.data.xmpp.XMPPApi;
@@ -55,7 +56,7 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 		SmackAndroid.init(mApplicationContext);
 		
 		// turn on the enhanced debugger
-		TCPConnection.DEBUG_ENABLED = true;
+		TCPConnection.DEBUG_ENABLED = Debug.XMPP_DEBUG_ENABLE;
 		SmackConfiguration.setDefaultPacketReplyTimeout(300000);
 
 		setupNewMessageReceiver();
