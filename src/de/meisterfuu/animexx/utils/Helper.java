@@ -6,6 +6,7 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 import de.meisterfuu.animexx.Constants;
+import de.meisterfuu.animexx.Debug;
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.activitys.main.LoginActivity;
 import de.meisterfuu.animexx.data.Self;
@@ -26,7 +27,11 @@ import android.widget.Toast;
 
 public class Helper {
 
-	public static void sendStacTrace(Exception e, Context con) {		
+	public static void sendStacTrace(Exception e, Context con) {	
+		if(!Debug.SEND_STACKTRACE_ENS) {
+			return;
+		}
+		
 		StackTraceElement[] stack = e.getStackTrace();
 		
 		String text = new String();
