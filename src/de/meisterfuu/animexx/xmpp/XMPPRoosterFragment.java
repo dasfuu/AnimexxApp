@@ -12,8 +12,13 @@ import de.meisterfuu.animexx.R.menu;
 import de.meisterfuu.animexx.activitys.ens.SingleENSActivity;
 import de.meisterfuu.animexx.activitys.main.MainActivity;
 import de.meisterfuu.animexx.activitys.rpg.RPGListFragment;
+import de.meisterfuu.animexx.adapter.ChatAdapter;
+import de.meisterfuu.animexx.adapter.XMPPRoosterAdapter;
 import de.meisterfuu.animexx.data.APICallback;
+import de.meisterfuu.animexx.data.ens.ENSApi;
+import de.meisterfuu.animexx.data.profile.UserApi;
 import de.meisterfuu.animexx.data.xmpp.XMPPApi;
+import de.meisterfuu.animexx.objects.UserObject;
 import de.meisterfuu.animexx.objects.XMPPRoosterObject;
 import de.meisterfuu.animexx.utils.APIException;
 import android.os.Bundle;
@@ -33,7 +38,7 @@ import android.widget.ListView;
 public class XMPPRoosterFragment extends ListFragment {
 
 	ArrayList<XMPPRoosterObject> list;
-	ArrayAdapter<XMPPRoosterObject> adapter;
+	XMPPRoosterAdapter adapter;
 	BroadcastReceiver receiver;
 	XMPPApi mApi;
 	
@@ -51,7 +56,7 @@ public class XMPPRoosterFragment extends ListFragment {
 		super.onCreate(savedInstanceState);
 		
 		list = new ArrayList<XMPPRoosterObject>();
-		adapter = new ArrayAdapter<XMPPRoosterObject>(this.getActivity(),android.R.layout.simple_list_item_1, list);
+		adapter = new XMPPRoosterAdapter(list, this.getActivity());
 		setListAdapter(adapter);
 	}
 	
@@ -76,7 +81,7 @@ public class XMPPRoosterFragment extends ListFragment {
 			@Override
 			public void onReceive(Context context, Intent intent) {
 				String action = intent.getAction();
-				if (action.equals(XMPPService.NEW_ROOSTER)) {
+				if (action.equals(XMPPService.NEW_ROOSTER) || action.equals(XMPPService.NEW_MESSAGE)) {
 					getRooster();
 				}
 			}
@@ -87,6 +92,10 @@ public class XMPPRoosterFragment extends ListFragment {
 		filter.addAction(XMPPService.NEW_ROOSTER);
 		this.getActivity().registerReceiver(receiver, filter);
 		getRooster();
+		
+		IntentFilter filter2 = new IntentFilter();
+		filter.addAction(XMPPService.NEW_MESSAGE);
+		this.getActivity().registerReceiver(receiver, filter2);
 	}
 
 	
@@ -95,13 +104,16 @@ public class XMPPRoosterFragment extends ListFragment {
 			
 			@Override
 			public void onCallback(APIException pError, Object pObject) {
-				ArrayList<XMPPRoosterObject> temp = (ArrayList<XMPPRoosterObject>) pObject;
+				final ArrayList<XMPPRoosterObject> temp = (ArrayList<XMPPRoosterObject>) pObject;
+						
 				list.clear();
 				list.addAll(temp);
 				adapter.notifyDataSetChanged();
 			}
 			
 		}, true);
+		
+
 	}
 
 

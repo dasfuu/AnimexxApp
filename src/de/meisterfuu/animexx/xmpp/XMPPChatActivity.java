@@ -9,8 +9,10 @@ import de.meisterfuu.animexx.adapter.ChatAdapter;
 import de.meisterfuu.animexx.data.APICallback;
 import de.meisterfuu.animexx.data.profile.UserApi;
 import de.meisterfuu.animexx.data.xmpp.XMPPApi;
+import de.meisterfuu.animexx.notification.XMPPNotification;
 import de.meisterfuu.animexx.objects.UserObject;
 import de.meisterfuu.animexx.objects.XMPPHistoryObject;
+import de.meisterfuu.animexx.objects.XMPPMessageObject;
 import de.meisterfuu.animexx.utils.APIException;
 import android.os.Bundle;
 import android.os.Handler;
@@ -90,7 +92,7 @@ public class XMPPChatActivity extends Activity  {
 		});
 	    
 		if(mjabberName.split("@")[1].equalsIgnoreCase("jabber.animexx.de")){
-			(new UserApi(this)).SearchUserByName(mjabberName.split("@")[0], new APICallback() {
+			(new UserApi(this)).searchUserByName(mjabberName.split("@")[0], new APICallback() {
 				
 				@SuppressWarnings("unchecked")
 				@Override
@@ -113,6 +115,22 @@ public class XMPPChatActivity extends Activity  {
 					});
 				}
 			});
+		} else {
+			mApi.getOfflineHistory(mjabberName, new APICallback() {
+				
+				@Override
+				public void onCallback(APIException pError, Object pObject) {
+					ArrayList<XMPPMessageObject> temp = (ArrayList<XMPPMessageObject>) pObject;
+					for(XMPPMessageObject obj: temp){
+						ChatAdapter.Message msg = new ChatAdapter.Message();
+						msg.setBody(obj.getBody());
+						msg.setTime(obj.getDate());
+						msg.setLeft(true);
+						adapter.addTop(msg);
+					}
+					adapter.notifyDataSetChanged();
+				}
+			});
 		}
 		
 	}
@@ -123,7 +141,7 @@ public class XMPPChatActivity extends Activity  {
 	protected void onResume() {
 		super.onResume();
 		mApi = new XMPPApi(this);
-
+		XMPPNotification.d_from = mjabberName;
 
 		mReceiver = new BroadcastReceiver() {
 			@Override
@@ -133,6 +151,9 @@ public class XMPPChatActivity extends Activity  {
 					String from = intent.getStringExtra(XMPPService.BUNDLE_FROM);
 					String time = intent.getStringExtra(XMPPService.BUNDLE_TIME);
 					String message = intent.getStringExtra(XMPPService.BUNDLE_MESSAGE_BODY);
+					if(!from.split("/")[0].equalsIgnoreCase(XMPPNotification.d_from)){
+						return;
+					}
 					ChatAdapter.Message temp = new ChatAdapter.Message();
 					temp.setBody(message);
 					temp.setTime(System.currentTimeMillis());
@@ -152,6 +173,7 @@ public class XMPPChatActivity extends Activity  {
 	protected void onPause() {
 		super.onPause();
 		mApi.close();
+		XMPPNotification.d_from = null;
 		this.unregisterReceiver(mReceiver);
 	}
 

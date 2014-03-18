@@ -74,7 +74,7 @@ public class UsernameAutoCompleteTextView extends MultiAutoCompleteTextView impl
 					if(t.length > 0) last = t[t.length-1].trim();
             		if(last.length() == 0) return;
             		
-          		    mApi.SearchUserByName(last, new APICallback() {					
+          		    mApi.searchUserByName(last, new APICallback() {					
 						@SuppressWarnings("unchecked")
 						@Override
 						public void onCallback(APIException pError, Object pObject) {

@@ -85,7 +85,6 @@ public class ImageLoaderCustom {
 
 	// download function
 	public void download(final ImageSaveObject url, final ImageView imageView, boolean clickable) {
-		if (cancelPotentialDownload(url, imageView)) {
 			this.clickable = clickable;
 			// Caching code right here
 			String filename = url.getName();
@@ -98,12 +97,12 @@ public class ImageLoaderCustom {
 
 			if (bitmap == null) {
 
-				if(!nullStrings.contains(f.getPath()))
 				bitmap = BitmapFactory.decodeFile(f.getPath());
 
 				if (bitmap != null) {
 					imageCache.put(f.getPath(), bitmap);
 				}
+
 			}
 			
 			// No? download it
@@ -137,7 +136,6 @@ public class ImageLoaderCustom {
 				});
 
 			}
-		}
 	}
 
 

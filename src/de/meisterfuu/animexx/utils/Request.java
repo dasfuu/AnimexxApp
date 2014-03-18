@@ -130,7 +130,6 @@ public class Request {
 		OAuthConsumer consumer = getConsumer();
 		DefaultHttpClient httpclient = new DefaultHttpClient();		
 		httpclient.getParams().setParameter(CoreProtocolPNames.USER_AGENT, "Android App " + Constants.VERSION);
-		
 		consumer.sign(pRequest);		
 		if(!Debug.SILENT_NETWORK)Log.i("Animexx", "Request : " + pRequest.getURI());		
 		HttpResponse response = httpclient.execute(pRequest);

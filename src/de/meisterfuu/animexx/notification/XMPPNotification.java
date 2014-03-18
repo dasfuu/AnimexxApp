@@ -17,6 +17,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 
+
+
+
 /**
  * Helper class for showing and canceling xmpp notifications.
  * <p>
@@ -24,6 +27,9 @@ import android.support.v4.app.NotificationCompat;
  * class to create notifications in a backward-compatible way.
  */
 public class XMPPNotification {
+	
+	public static String d_from = null;
+	
 	/**
 	 * The unique identifier for this type of notification.
 	 */
@@ -45,6 +51,10 @@ public class XMPPNotification {
 	 */
 	public static void notify(final Context context,
 			final String message, final String from) {
+		
+
+		
+		
 		final Resources res = context.getResources();
 
 		// This image is used as the notification's large icon (thumbnail).

@@ -4,9 +4,15 @@ package de.meisterfuu.animexx.data.profile;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 
 import oauth.signpost.OAuth;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
 import android.content.Context;
@@ -73,7 +79,7 @@ public class UserApi {
 	 * @param pSearchString
 	 * @param pCallback (ArrayList<UserSearchResultObject>)
 	 */
-	public void SearchUserByName(final String pSearchString, final APICallback pCallback) {
+	public void searchUserByName(final String pSearchString, final APICallback pCallback) {
 		final Handler hand = new Handler();		
 		new Thread(new Runnable() {
 			public void run() {
@@ -98,7 +104,62 @@ public class UserApi {
 		}).start();
 	}
 	
+	/**
+	 * @param pUsernameList
+	 * @param pCallback (ArrayList<UserSearchResultObject>)
+	 */
+	public void getIDs(final ArrayList<String> pUsernameList, final APICallback pCallback) {
+		final Handler hand = new Handler();		
+		new Thread(new Runnable() {
+			public void run() {
+				APIException error = null;
+				ArrayList<UserObject> temp = null;
+				try {
+					temp = getIDsFromWeb(pUsernameList);
+				} catch (APIException e) {
+					error = e;
+				}
+				
+				final ArrayList<UserObject> retu = temp;
+				final APIException ferror = error;
+				
+				hand.post(new Runnable() {			
+					public void run() {
+						if(pCallback != null) pCallback.onCallback(ferror, retu);
+					}
+				});
+			}
+
+		}).start();
+	}
 	
+	/**
+	 * @param pUsernameList
+	 * @return 
+	 */
+	public ArrayList<UserObject> NTgetIDs(final ArrayList<String> pUsernameList) {
+
+				ArrayList<UserObject> temp = null;
+				try {
+					temp = getIDsFromWeb(pUsernameList);
+				} catch (APIException e) {
+				}				
+				return temp;
+	}
+	
+	/**
+	 * @param pSearchString
+	 * @return 
+	 */
+	public ArrayList<UserObject> NTsearchUserByName(final String pSearchString) {
+
+				ArrayList<UserObject> temp = null;
+				try {
+					temp = searchUserByNameWeb(pSearchString);
+				} catch (APIException e) {
+				}				
+				return temp;
+	}
 	
 	
 	//Web-Api Access
@@ -107,6 +168,46 @@ public class UserApi {
 		try {
 			
 			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/mitglieder/username_autocomplete/?api=2&str="+OAuth.percentEncode(pUsername));
+			JSONObject resultObj = new JSONObject(result);
+			if(resultObj.getBoolean("success")){				 
+					Type collectionType = new TypeToken<ArrayList<UserObject>>(){}.getType();
+					ArrayList<UserObject> list = gson.fromJson(resultObj.getString("return"), collectionType);	
+					return list;
+			} else {
+					throw new APIException("Error", APIException.OTHER);
+			}		
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new APIException("Request Failed", APIException.REQUEST_FAILED);
+		}	
+	}
+	
+	private ArrayList<UserObject> getIDsFromWeb(ArrayList<String> pUsername) throws APIException {
+		try {
+			String url = "https://ws.animexx.de/json/mitglieder/usernames2ids/?api=2&get_user_avatar=true";
+			
+			HttpPost request = new HttpPost(url);
+
+			String body = new String();
+			
+			body += "foo="+OAuth.percentEncode("bar");			
+			for (String name: pUsername){
+				body += "&usernames[]=" + OAuth.percentEncode(name);
+			}
+
+			StringEntity se = new StringEntity(body);
+			se.setContentType("application/x-www-form-urlencoded");
+			request.setEntity(se);
+			
+//			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+//			for (String name: pUsername){
+//				 nameValuePairs.add(new BasicNameValuePair("usernames[]", OAuth.percentEncode(name)));
+//			}
+//	        request.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+//	        request.addHeader("Content-Type", "");
+
+			String result = Request.SignSend(request);
+			
 			JSONObject resultObj = new JSONObject(result);
 			if(resultObj.getBoolean("success")){				 
 					Type collectionType = new TypeToken<ArrayList<UserObject>>(){}.getType();

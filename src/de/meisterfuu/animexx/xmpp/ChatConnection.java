@@ -1,5 +1,6 @@
 package de.meisterfuu.animexx.xmpp;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Random;
 
@@ -25,11 +26,19 @@ import org.jivesoftware.smackx.ping.PingManager;
 
 import de.meisterfuu.animexx.Debug;
 import de.meisterfuu.animexx.DebugNotification;
+import de.meisterfuu.animexx.data.APICallback;
 import de.meisterfuu.animexx.data.Self;
+import de.meisterfuu.animexx.data.profile.UserApi;
 import de.meisterfuu.animexx.data.xmpp.XMPPApi;
 import de.meisterfuu.animexx.notification.XMPPNotification;
+import de.meisterfuu.animexx.objects.UserObject;
+import de.meisterfuu.animexx.objects.XMPPMessageObject;
 import de.meisterfuu.animexx.objects.XMPPRoosterObject;
+import de.meisterfuu.animexx.utils.APIException;
 import de.meisterfuu.animexx.utils.Helper;
+import de.meisterfuu.animexx.utils.imageloader.ImageDownloaderCustom;
+import de.meisterfuu.animexx.utils.imageloader.ImageSaveObject;
+import de.meisterfuu.animexx.utils.imageloader.ImageSaverCustom;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -172,7 +181,19 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 				intent.putExtra(XMPPService.BUNDLE_FROM, chat.getParticipant());
 				intent.putExtra(XMPPService.BUNDLE_TIME, ""+System.currentTimeMillis());
 				mApplicationContext.sendBroadcast(intent);
-				XMPPNotification.notify(mApplicationContext, message.getBody(), chat.getParticipant().split("@")[0]);
+				
+				System.out.println(XMPPNotification.d_from+" "+chat.getParticipant());
+				if(XMPPNotification.d_from != null && XMPPNotification.d_from.equalsIgnoreCase(chat.getParticipant().split("/")[0])){
+				} else {
+					XMPPNotification.notify(mApplicationContext, message.getBody(), chat.getParticipant().split("@")[0]);
+				}
+	
+				
+				XMPPMessageObject msg = new XMPPMessageObject();
+				msg.setDate(System.currentTimeMillis());
+				msg.setFromJID(chat.getParticipant());
+				msg.setBody(message.getBody());
+				mApi.insertMessageToDB(msg);
 			}
 		}
 	}
@@ -195,8 +216,11 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 	@Override
 	public void presenceChanged(Presence arg0) {
 		
-		XMPPRoosterObject temp = new XMPPRoosterObject();
-		temp.setJid(arg0.getFrom().split("/")[0]);
+		XMPPRoosterObject temp = mApi.NTgetSingleRooster(arg0.getFrom().split("/")[0]);
+		if(temp == null){
+			newRoster();
+		}
+		
 		boolean online = arg0.isAvailable();
 		boolean away = arg0.isAway();
 		
@@ -208,12 +232,24 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 			temp.setStatus(XMPPRoosterObject.STATUS_AWAY);
 		}
 		mApi.insertSingleRoosterToDB(temp);
+		
+		Intent intent = new Intent(XMPPService.NEW_ROOSTER);
+		intent.setPackage(mApplicationContext.getPackageName());
+		mApplicationContext.sendBroadcast(intent);
 	}
 	
 	private void newRoster(){
-
+		ImageSaverCustom loader = new ImageSaverCustom("forenavatar");
+		
+		ArrayList<String> names = new ArrayList<String>();
+		for(RosterEntry obj: mConnection.getRoster().getEntries()){	
+			names.add(obj.getName());			
+		}		
+		
+		ArrayList<UserObject> user_list = (new UserApi(mApplicationContext).NTgetIDs(names));
+		
 		for(RosterEntry obj: mConnection.getRoster().getEntries()){
-
+			
 			XMPPRoosterObject temp = new XMPPRoosterObject();
 			temp.setJid(obj.getUser());
 			boolean online = mConnection.getRoster().getPresence(obj.getUser()).isAvailable();
@@ -226,6 +262,15 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 			} else if (online && away){
 				temp.setStatus(XMPPRoosterObject.STATUS_AWAY);
 			}
+			
+			if(user_list != null)
+			for(UserObject user_obj: user_list){	
+				if(user_obj.getUsername().equalsIgnoreCase(obj.getName())){
+					temp.setAnimexxID(user_obj.getId());
+					temp.setLastAvatarURL(user_obj.getAvatar().getUrl());
+					loader.download(new ImageSaveObject(temp.getLastAvatarURL(), temp.getAnimexxID()+""), mApplicationContext);
+				}
+			}	
 
 			mApi.insertSingleRoosterToDB(temp);
 		}

@@ -20,13 +20,13 @@ import de.meisterfuu.animexx.objects.XMPPRoosterObject;
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
 	private static final String DATABASE_NAME = "db.db";
-	private static final int DATABASE_VERSION = 3;
+	private static final int DATABASE_VERSION = 4;
 
 	private RuntimeExceptionDao<ENSObject, Long> ENSRuntimeDao = null;
 	private RuntimeExceptionDao<ENSDraftObject, Long> ENSSendRuntimeDao = null;
 	private RuntimeExceptionDao<ENSQueueObject, Long> ENSQueueRuntimeDao = null;
-	private RuntimeExceptionDao<XMPPMessageObject, Long> XMPPRuntimeDao = null;
-	private RuntimeExceptionDao<XMPPRoosterObject, Long> XMPPSendRuntimeDao = null;
+	private RuntimeExceptionDao<XMPPMessageObject, Long> XMPPHistoryRuntimeDao = null;
+	private RuntimeExceptionDao<XMPPRoosterObject, String> XMPPRoosterRuntimeDao = null;
 
 	public DatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -83,8 +83,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		ENSRuntimeDao = null;
 		ENSSendRuntimeDao = null;
 		ENSQueueRuntimeDao = null;
-		XMPPRuntimeDao = null;
-		XMPPSendRuntimeDao = null;
+		XMPPHistoryRuntimeDao = null;
+		XMPPRoosterRuntimeDao = null;
 	}
 	
 	
@@ -106,17 +106,17 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		}
 		return ENSQueueRuntimeDao;
 	}
-	public RuntimeExceptionDao<XMPPMessageObject, Long> getXMPPMessageDao() {
-		if (XMPPRuntimeDao == null) {
-			XMPPRuntimeDao = getRuntimeExceptionDao(XMPPMessageObject.class);
+	public RuntimeExceptionDao<XMPPMessageObject, Long> getXMPPMessageDataDao() {
+		if (XMPPHistoryRuntimeDao == null) {
+			XMPPHistoryRuntimeDao = getRuntimeExceptionDao(XMPPMessageObject.class);
 		}
-		return XMPPRuntimeDao;
+		return XMPPHistoryRuntimeDao;
 	}
-	public RuntimeExceptionDao<XMPPRoosterObject, Long> getXMPPRoosterDataDao() {
-		if (XMPPSendRuntimeDao == null) {
-			XMPPSendRuntimeDao = getRuntimeExceptionDao(XMPPRoosterObject.class);
+	public RuntimeExceptionDao<XMPPRoosterObject, String> getXMPPRoosterDataDao() {
+		if (XMPPRoosterRuntimeDao == null) {
+			XMPPRoosterRuntimeDao = getRuntimeExceptionDao(XMPPRoosterObject.class);
 		}
-		return XMPPSendRuntimeDao;
+		return XMPPRoosterRuntimeDao;
 	}
 
 }

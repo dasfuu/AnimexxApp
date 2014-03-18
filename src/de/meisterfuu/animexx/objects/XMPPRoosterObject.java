@@ -8,16 +8,21 @@ public class XMPPRoosterObject {
 
 	@DatabaseField(id = true)
 	String jid;
-	
+
 	@DatabaseField
 	long animexxID;
-	
+
 	public static final int STATUS_OFFLINE = 0;
 	public static final int STATUS_ONLINE = 1;
 	public static final int STATUS_AWAY = 2;
-	
+
 	@DatabaseField
 	int status;
+
+	@DatabaseField
+	String lastAvatarURL;
+	
+	public XMPPMessageObject latestMessage;
 
 	public String getJid() {
 		return jid;
@@ -25,6 +30,14 @@ public class XMPPRoosterObject {
 
 	public void setJid(String jid) {
 		this.jid = jid;
+	}
+
+	public String getLastAvatarURL() {
+		return lastAvatarURL;
+	}
+
+	public void setLastAvatarURL(String lastAvatarURL) {
+		this.lastAvatarURL = lastAvatarURL;
 	}
 
 	public long getAnimexxID() {
@@ -46,8 +59,6 @@ public class XMPPRoosterObject {
 	@Override
 	public String toString() {
 		return getJid().replace("@jabber.animexx.de", "");
-	} 
-	
-	
-		
+	}
+
 }

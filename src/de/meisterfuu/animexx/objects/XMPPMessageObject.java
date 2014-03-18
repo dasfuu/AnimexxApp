@@ -4,7 +4,7 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable
-public class XMPPMessageObject {
+public class XMPPMessageObject implements Comparable{
 
 	@DatabaseField(generatedId = true)
 	long id;
@@ -16,7 +16,7 @@ public class XMPPMessageObject {
 	String body;
 	
 	@DatabaseField
-	String date;
+	long date;
 	
 	@DatabaseField
 	String fromJID;
@@ -46,11 +46,11 @@ public class XMPPMessageObject {
 		this.body = body;
 	}
 
-	public String getDate() {
+	public long getDate() {
 		return date;
 	}
 
-	public void setDate(String date) {
+	public void setDate(long date) {
 		this.date = date;
 	}
 
@@ -60,6 +60,11 @@ public class XMPPMessageObject {
 
 	public void setFromJID(String fromJID) {
 		this.fromJID = fromJID;
+	}
+
+	@Override
+	public int compareTo(Object another) {
+		return 0;
 	}
 	
 	

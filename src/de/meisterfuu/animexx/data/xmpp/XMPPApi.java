@@ -26,6 +26,7 @@ import de.meisterfuu.animexx.objects.ENSObject;
 import de.meisterfuu.animexx.objects.ENSDraftObject;
 import de.meisterfuu.animexx.objects.ENSQueueObject;
 import de.meisterfuu.animexx.objects.XMPPHistoryObject;
+import de.meisterfuu.animexx.objects.XMPPMessageObject;
 import de.meisterfuu.animexx.objects.XMPPRoosterObject;
 import de.meisterfuu.animexx.services.ENSQueueService;
 import de.meisterfuu.animexx.utils.APIException;
@@ -96,6 +97,29 @@ public class XMPPApi {
 	/**
 	 * @param pCallback 
 	 */
+	public void getOfflineHistory(final String pJid, final APICallback pCallback){
+		final Handler hand = new Handler();		
+		new Thread(new Runnable() {
+			public void run() {
+				APIException error = null;				
+				List<XMPPMessageObject> obj = new ArrayList<XMPPMessageObject>();
+				
+				obj.addAll(getMessageFromDB(pJid));	
+				
+				final List<XMPPMessageObject> retu = obj;
+				final APIException ferror = error;
+				
+				hand.post(new Runnable() {			
+					public void run() {
+						if(pCallback != null) pCallback.onCallback(ferror, retu);
+					}
+				});
+			}
+		}).start();
+	}
+	/**
+	 * @param pCallback 
+	 */
 	public void getRooster(final APICallback pCallback, final boolean pOnlineOnly){
 		final Handler hand = new Handler();		
 		new Thread(new Runnable() {
@@ -103,15 +127,15 @@ public class XMPPApi {
 				APIException error = null;				
 				ArrayList<XMPPRoosterObject> list = new ArrayList<XMPPRoosterObject>();
 				
-				if(pOnlineOnly){
-					for(XMPPRoosterObject obj: getCompleteRoosterFromDB()){
-						if(obj.getStatus() != XMPPRoosterObject.STATUS_OFFLINE){
-							list.add(obj);
-						}
+			
+				for(XMPPRoosterObject obj: getCompleteRoosterFromDB()){
+					if((pOnlineOnly && obj.getStatus() == XMPPRoosterObject.STATUS_OFFLINE)){	
+						continue;
 					}
-				} else {
-					list.addAll(getCompleteRoosterFromDB());
+					obj.latestMessage = getLatestMessageFromDB(obj.getJid());
+					list.add(obj);
 				}
+				
 	
 				
 				final ArrayList<XMPPRoosterObject> retu = list;
@@ -130,14 +154,14 @@ public class XMPPApi {
 	/**
 	 * @param pCallback 
 	 */
-	public void getSingleRooster(final APICallback pCallback){
+	public void getSingleRooster(final String pJid, final APICallback pCallback){
 		final Handler hand = new Handler();		
 		new Thread(new Runnable() {
 			public void run() {
 				APIException error = null;				
 				XMPPRoosterObject obj = new XMPPRoosterObject();
 				
-				obj = null;	
+				obj = getSingleRoosterFromDB(pJid);	
 				
 				final XMPPRoosterObject retu = obj;
 				final APIException ferror = error;
@@ -151,6 +175,36 @@ public class XMPPApi {
 		}).start();
 	}
 	
+	/**
+	 * @param pCallback 
+	 */
+	public void getLatestMessage(final String pJid, final APICallback pCallback){
+		final Handler hand = new Handler();		
+		new Thread(new Runnable() {
+			public void run() {
+				APIException error = null;				
+				XMPPMessageObject obj = new XMPPMessageObject();
+				
+				obj = getLatestMessageFromDB(pJid);	
+				
+				final XMPPMessageObject retu = obj;
+				final APIException ferror = error;
+				
+				hand.post(new Runnable() {			
+					public void run() {
+						if(pCallback != null) pCallback.onCallback(ferror, retu);
+					}
+				});
+			}
+		}).start();
+	}
+	
+	/**
+	 * @param pCallback 
+	 */
+	public XMPPRoosterObject NTgetSingleRooster(final String pJid){				
+				return getSingleRoosterFromDB(pJid);					
+	}
 	
 	//Web-Api Access
 	
@@ -182,12 +236,32 @@ public class XMPPApi {
 		return getHelper().getXMPPRoosterDataDao().queryForAll();
 	}
 	
-	XMPPRoosterObject getSingleRoosterFromDB(long pID){		
+	XMPPRoosterObject getSingleRoosterFromDB(String pID){		
 		return getHelper().getXMPPRoosterDataDao().queryForId(pID);
 	}
 	
 	public void insertSingleRoosterToDB(XMPPRoosterObject pRoosterObj){		
 		getHelper().getXMPPRoosterDataDao().createOrUpdate(pRoosterObj);
+	}
+	
+	public void insertMessageToDB(XMPPMessageObject pMessageObj){		
+		getHelper().getXMPPMessageDataDao().createOrUpdate(pMessageObj);
+	}
+	
+	public List<XMPPMessageObject> getMessageFromDB(String pJid){		
+		XMPPMessageObject args = new XMPPMessageObject();
+		args.setFromJID(pJid);
+		return getHelper().getXMPPMessageDataDao().queryForMatchingArgs(args);
+	}
+	
+	public XMPPMessageObject getLatestMessageFromDB(String pJid){		
+		XMPPMessageObject args = new XMPPMessageObject();
+		args.setFromJID(pJid);
+		List<XMPPMessageObject> x = getHelper().getXMPPMessageDataDao().queryForMatchingArgs(args);
+		if(x.size() > 0){
+			return getHelper().getXMPPMessageDataDao().queryForMatchingArgs(args).get(x.size()-1);
+		}
+		return null;
 	}
 
 	public void close() {
