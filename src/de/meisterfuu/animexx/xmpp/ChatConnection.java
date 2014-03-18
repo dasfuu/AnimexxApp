@@ -1,6 +1,7 @@
 package de.meisterfuu.animexx.xmpp;
 
 import java.util.Collection;
+import java.util.Random;
 
 import org.jivesoftware.smack.AndroidConnectionConfiguration;
 import org.jivesoftware.smack.Chat;
@@ -36,7 +37,7 @@ import android.content.IntentFilter;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-public class ChatConnection implements MessageListener, ChatManagerListener, RosterListener, PingFailedListener {
+public class ChatConnection implements MessageListener, ChatManagerListener, RosterListener, PingFailedListener, ConnectionListener {
 
 	TCPConnection mConnection;
 	XMPPApi mApi;
@@ -108,74 +109,30 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 		}
 		
 		//Create Pingmanager
-		PingManager.setDefaultPingInterval(10);
-		mPingManager = PingManager.getInstanceFor(getConnection());
-		mPingManager.registerPingFailedListener(this);
-		mPingManager.setPingInterval(10);
-		
+		initKeepAlive();
+		Random r = new Random();
 		//Connect and login(if not already)
 		Log.i(TAG, "TCPConnection.connect() called");
 		mConnection.connect();
 		if(!mConnection.isAuthenticated()){
 			Log.i(TAG, ".login() called");
-			mConnection.login(userName, password, "App");
+			mConnection.login(userName, password, "AndroidApp_"+r.nextInt());
 		}
 		
 		//Set listener
 		this.setChatListener();
-		this.setRosterListener();
-		
-		TCPConnection.addConnectionCreationListener(new ConnectionCreationListener() {
-			
-			@Override
-			public void connectionCreated(XMPPConnection arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
-		
-		mConnection.addConnectionListener(new ConnectionListener() {
-			 
-            @Override
-            public void reconnectionSuccessful() {
-            	Log.i(TAG, "ConnectionListener.reconnectionSuccessful() called");
-            }
-            
-            @Override
-            public void reconnectionFailed(Exception arg0) {
-            }
- 
-            @Override
-            public void reconnectingIn(int seconds) {
-            }
-            
-            @Override
-            public void connectionClosedOnError(Exception arg0) {
-            	connectionState = false;
-            	Log.i(TAG, "ConnectionListener.connectionClosedOnError() called");
-            }
-            
-            @Override
-            public void connectionClosed() {
-            	connectionState = false;
-    			Log.i(TAG, "ConnectionListener.connectionClosed() called");
-            }
-
-			@Override
-			public void authenticated(XMPPConnection arg0) {
-				Log.i(TAG, "ConnectionListener.authenticated() called");				
-			}
-
-			@Override
-			public void connected(XMPPConnection arg0) {
-				connectionState = true;
-				Log.i(TAG, "ConnectionListener.connected() called");
-			}
-            
-        });
+		this.setRosterListener();		
+		mConnection.addConnectionListener(this);
 		
 	}
 	
+	private void initKeepAlive() {
+		PingManager.setDefaultPingInterval(10);
+		mPingManager = PingManager.getInstanceFor(getConnection());
+		mPingManager.registerPingFailedListener(this);
+		mPingManager.setPingInterval(10);
+	}
+
 	public TCPConnection getConnection(){
 		return mConnection;
 	}
@@ -285,6 +242,43 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 	public void pingFailed() {
 		connectionState = false;
 		DebugNotification.notify(mApplicationContext, "XMPP Ping Failed", 865);
+	}
+
+   @Override
+   public void reconnectionSuccessful() {
+   	Log.i(TAG, "ConnectionListener.reconnectionSuccessful() called");
+   	initKeepAlive();
+   }
+   
+   @Override
+   public void reconnectionFailed(Exception arg0) {
+   }
+
+   @Override
+   public void reconnectingIn(int seconds) {
+   }
+   
+   @Override
+   public void connectionClosedOnError(Exception arg0) {
+   	connectionState = false;
+   	Log.i(TAG, "ConnectionListener.connectionClosedOnError() called");
+   }
+   
+   @Override
+   public void connectionClosed() {
+   	connectionState = false;
+		Log.i(TAG, "ConnectionListener.connectionClosed() called");
+   }
+
+	@Override
+	public void authenticated(XMPPConnection arg0) {
+		Log.i(TAG, "ConnectionListener.authenticated() called");				
+	}
+
+	@Override
+	public void connected(XMPPConnection arg0) {
+		connectionState = true;
+		Log.i(TAG, "ConnectionListener.connected() called");
 	}
 
 

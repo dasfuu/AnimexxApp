@@ -40,6 +40,10 @@ public class DebugNotification {
 	 */
 	public static void notify(final Context context,
 			final String pString, final int id) {
+		
+		if(!Debug.SHOW_DEBUG_NOTIFICATION) {
+			return;
+		}
 		final Resources res = context.getResources();
 
 		// This image is used as the notification's large icon (thumbnail).

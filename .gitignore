@@ -29,4 +29,4 @@ proguard/
 .idea/
 /src/de/meisterfuu/animexx/KEYS.java
 google-play-services_lib
-src/de/meisterfuu/animexx/Debug.java
+src/de/meisterfuu/animexx/Beta.java
