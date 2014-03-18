@@ -55,7 +55,6 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
     	connectionState = false;
 		SmackAndroid.init(mApplicationContext);
 		
-		// turn on the enhanced debugger
 		TCPConnection.DEBUG_ENABLED = Debug.XMPP_DEBUG_ENABLE;
 		SmackConfiguration.setDefaultPacketReplyTimeout(300000);
 
@@ -195,14 +194,39 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 
 	@Override
 	public void presenceChanged(Presence arg0) {
-		newRoster();
+		
+		XMPPRoosterObject temp = new XMPPRoosterObject();
+		temp.setJid(arg0.getFrom().split("/")[0]);
+		boolean online = arg0.isAvailable();
+		boolean away = arg0.isAway();
+		
+		if(online && !away){
+			temp.setStatus(XMPPRoosterObject.STATUS_ONLINE);
+		} else if (!online){
+			temp.setStatus(XMPPRoosterObject.STATUS_OFFLINE);
+		} else if (online && away){
+			temp.setStatus(XMPPRoosterObject.STATUS_AWAY);
+		}
+		mApi.insertSingleRoosterToDB(temp);
 	}
 	
 	private void newRoster(){
-		
+
 		for(RosterEntry obj: mConnection.getRoster().getEntries()){
+
 			XMPPRoosterObject temp = new XMPPRoosterObject();
 			temp.setJid(obj.getUser());
+			boolean online = mConnection.getRoster().getPresence(obj.getUser()).isAvailable();
+			boolean away = mConnection.getRoster().getPresence(obj.getUser()).isAway();
+			
+			if(online && !away){
+				temp.setStatus(XMPPRoosterObject.STATUS_ONLINE);
+			} else if (!online){
+				temp.setStatus(XMPPRoosterObject.STATUS_OFFLINE);
+			} else if (online && away){
+				temp.setStatus(XMPPRoosterObject.STATUS_AWAY);
+			}
+
 			mApi.insertSingleRoosterToDB(temp);
 		}
 		

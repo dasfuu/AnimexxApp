@@ -96,14 +96,23 @@ public class XMPPApi {
 	/**
 	 * @param pCallback 
 	 */
-	public void getRooster(final APICallback pCallback){
+	public void getRooster(final APICallback pCallback, final boolean pOnlineOnly){
 		final Handler hand = new Handler();		
 		new Thread(new Runnable() {
 			public void run() {
 				APIException error = null;				
 				ArrayList<XMPPRoosterObject> list = new ArrayList<XMPPRoosterObject>();
 				
-				list.addAll(getCompleteRoosterFromDB());		
+				if(pOnlineOnly){
+					for(XMPPRoosterObject obj: getCompleteRoosterFromDB()){
+						if(obj.getStatus() != XMPPRoosterObject.STATUS_OFFLINE){
+							list.add(obj);
+						}
+					}
+				} else {
+					list.addAll(getCompleteRoosterFromDB());
+				}
+	
 				
 				final ArrayList<XMPPRoosterObject> retu = list;
 				final APIException ferror = error;

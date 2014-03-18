@@ -101,7 +101,7 @@ public class XMPPRoosterFragment extends ListFragment {
 				adapter.notifyDataSetChanged();
 			}
 			
-		});
+		}, true);
 	}
 
 
