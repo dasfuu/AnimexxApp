@@ -206,12 +206,12 @@ public class UserApi {
 //	        request.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 //	        request.addHeader("Content-Type", "");
 
-			String result = Request.SignSend(request);
+			String result = Request.SignSendScribePost(url, body);
 			
 			JSONObject resultObj = new JSONObject(result);
 			if(resultObj.getBoolean("success")){				 
 					Type collectionType = new TypeToken<ArrayList<UserObject>>(){}.getType();
-					ArrayList<UserObject> list = gson.fromJson(resultObj.getString("return"), collectionType);	
+					ArrayList<UserObject> list = gson.fromJson(resultObj.getJSONObject("return").getString("ids"), collectionType);	
 					return list;
 			} else {
 					throw new APIException("Error", APIException.OTHER);

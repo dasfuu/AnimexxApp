@@ -21,6 +21,14 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.CoreProtocolPNames;
 
 import org.json.JSONObject;
+import org.scribe.builder.ServiceBuilder;
+import org.scribe.builder.api.DefaultApi20;
+import org.scribe.model.OAuthConfig;
+import org.scribe.model.OAuthRequest;
+import org.scribe.model.Response;
+import org.scribe.model.Token;
+import org.scribe.model.Verb;
+import org.scribe.oauth.OAuthService;
 
 import de.meisterfuu.animexx.Constants;
 import de.meisterfuu.animexx.Debug;
@@ -149,7 +157,41 @@ public class Request {
 		return erg;
 	}
 	
+	public static String SignSendScribePost(String url, String body) throws Exception {
+		
+		OAuthService service = new ServiceBuilder()
+        .provider(AnimexxApi.class)
+        .apiKey(Constants.CONSUMER_KEY)
+        .apiSecret(Constants.CONSUMER_SECRET)
+        .build();
+		
+		String token = config.getString(OAuth.OAUTH_TOKEN, "");
+		String secret = config.getString(OAuth.OAUTH_TOKEN_SECRET, "");
+		
+		OAuthRequest request = new OAuthRequest(Verb.POST, url);
+		request.addPayload(body);
+
+		Token accessToken = new Token(token, secret);
+		service.signRequest(accessToken, request); // the access token from step 4
+		Response response = request.send();
+		System.out.println(response.getBody());
+		
+		return response.getBody();
+	}
 	
+	public static class AnimexxApi extends DefaultApi20 {
+
+		@Override
+		public String getAccessTokenEndpoint() {
+			return Constants.ACCESS_URL;
+		}
+
+		@Override
+		public String getAuthorizationUrl(OAuthConfig arg0) {
+			return Constants.AUTHORIZE_URL;
+		}
+		
+	}
 
 	// HttpPost request = new HttpPost(url);
 	// HttpParameters para = new HttpParameters();

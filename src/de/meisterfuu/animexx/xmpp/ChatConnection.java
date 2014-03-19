@@ -270,8 +270,10 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 			for(UserObject user_obj: user_list){	
 				if(user_obj.getUsername().equalsIgnoreCase(obj.getName())){
 					temp.setAnimexxID(user_obj.getId());
-					temp.setLastAvatarURL(user_obj.getAvatar().getUrl());
-					loader.download(new ImageSaveObject(temp.getLastAvatarURL(), temp.getAnimexxID()+""), mApplicationContext);
+					if(user_obj.getAvatar() != null){
+						temp.setLastAvatarURL(user_obj.getAvatar().getUrl());
+						loader.download(new ImageSaveObject(temp.getLastAvatarURL(), temp.getAnimexxID()+""), mApplicationContext);
+					}
 				}
 			}	
 
