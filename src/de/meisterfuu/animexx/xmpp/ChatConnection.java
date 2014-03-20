@@ -9,14 +9,13 @@ import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ChatManager;
 import org.jivesoftware.smack.ChatManagerListener;
 import org.jivesoftware.smack.ConnectionConfiguration;
-import org.jivesoftware.smack.ConnectionCreationListener;
 import org.jivesoftware.smack.ConnectionListener;
 import org.jivesoftware.smack.MessageListener;
-import org.jivesoftware.smack.ReconnectionManager;
 import org.jivesoftware.smack.RosterEntry;
 import org.jivesoftware.smack.RosterListener;
 import org.jivesoftware.smack.SmackAndroid;
 import org.jivesoftware.smack.SmackConfiguration;
+import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.TCPConnection;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
@@ -28,7 +27,6 @@ import org.jivesoftware.smackx.ping.PingManager;
 
 import de.meisterfuu.animexx.Debug;
 import de.meisterfuu.animexx.DebugNotification;
-import de.meisterfuu.animexx.data.APICallback;
 import de.meisterfuu.animexx.data.Self;
 import de.meisterfuu.animexx.data.profile.UserApi;
 import de.meisterfuu.animexx.data.xmpp.XMPPApi;
@@ -36,9 +34,7 @@ import de.meisterfuu.animexx.notification.XMPPNotification;
 import de.meisterfuu.animexx.objects.UserObject;
 import de.meisterfuu.animexx.objects.XMPPMessageObject;
 import de.meisterfuu.animexx.objects.XMPPRoosterObject;
-import de.meisterfuu.animexx.utils.APIException;
 import de.meisterfuu.animexx.utils.Helper;
-import de.meisterfuu.animexx.utils.imageloader.ImageDownloaderCustom;
 import de.meisterfuu.animexx.utils.imageloader.ImageSaveObject;
 import de.meisterfuu.animexx.utils.imageloader.ImageSaverCustom;
 
@@ -57,6 +53,8 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 	private Context mApplicationContext;
 	protected boolean connectionState;
 	private PingManager mPingManager;
+	private int res_attach;
+	private String ressource;
 	
 	public ChatConnection(Context pContext){
 		Log.i(TAG, "ChatConnection Constructor called");
@@ -67,12 +65,18 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 		SmackAndroid.init(mApplicationContext);
 		
 		TCPConnection.DEBUG_ENABLED = Debug.XMPP_DEBUG_ENABLE;
-		SmackConfiguration.setDefaultPacketReplyTimeout(300000);
-
+		SmackConfiguration.setDefaultPacketReplyTimeout(30000);
+		
+		Random r = new Random();
+		res_attach = r.nextInt();
+		ressource = "AndroidApp_"+res_attach;
+		
 		setupNewMessageReceiver();
 	}
 	
 	public boolean connect(){
+		if(mApi == null) mApi = new XMPPApi(mApplicationContext);
+		
     	Log.i(TAG, "ChatConnection.connect() called");
 			try {
 				
@@ -88,8 +92,7 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 					return false;
 				}	
 				
-				login(username, password);	
-	
+				login(username, password);		
 				newRoster();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -101,7 +104,9 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 	
 	public void disconnect(){
     	Log.i(TAG, ".disconnect() called");
-		mConnection.disconnect();
+		getConnection().disconnect();
+		mConnection = null;
+		connectionState = false;
 		mApi.close();
 		mApi = null;
 	}
@@ -113,7 +118,7 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 	private void login(final String userName, final String password) throws Exception {
 		
 		//Create TCPConnection
-		if(mConnection == null){
+		if(getConnection() == null){
 			ConnectionConfiguration config = new ConnectionConfiguration("jabber.animexx.de");
 			
 			config.setReconnectionAllowed(true);
@@ -124,19 +129,19 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 		
 		//Create Pingmanager
 		initKeepAlive();
-		Random r = new Random();
+
 		//Connect and login(if not already)
 		Log.i(TAG, "TCPConnection.connect() called");
-		mConnection.connect();
-		if(!mConnection.isAuthenticated()){
+		getConnection().connect();
+		if(!getConnection().isAuthenticated()){
 			Log.i(TAG, ".login() called");
-			mConnection.login(userName, password, "AndroidApp_"+r.nextInt());
+			getConnection().login(userName, password, ressource);
 		}
 		
 		//Set listener
 		this.setChatListener();
 		this.setRosterListener();		
-		mConnection.addConnectionListener(this);
+		getConnection().addConnectionListener(this);
 		
 	}
 	
@@ -155,12 +160,17 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 		return (getConnection().isConnected() && connectionState && !getConnection().isSocketClosed());
 	}
 	
-	public void sendMessage(String message, String to) throws XMPPException {
+	public void sendMessage(String message, String to) throws XMPPException, NotConnectedException {
 		System.out.println("this:"+this);
 		System.out.println("to:"+to);
 		System.out.println("message:"+message);
 		Chat chat = ChatManager.getInstanceFor(getConnection()).createChat(to, this);	
-		chat.sendMessage(message);
+		try {
+			chat.sendMessage(message);
+		} catch (NotConnectedException e) {
+			connectionState = false;
+			throw e;
+		}
 	}
 	
 	private void setChatListener(){
@@ -220,15 +230,14 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 	}
 
 	@Override
-	public void presenceChanged(Presence arg0) {
+	public void presenceChanged(Presence pNewPresence) {
 		
-		XMPPRoosterObject temp = mApi.NTgetSingleRooster(arg0.getFrom().split("/")[0]);
+		XMPPRoosterObject temp = mApi.NTgetSingleRooster(pNewPresence.getFrom().split("/")[0]);
 		if(temp == null){
 			newRoster();
 		}
-		
-		boolean online = arg0.isAvailable();
-		boolean away = arg0.isAway();
+		boolean online = getConnection().getRoster().getPresence(pNewPresence.getFrom()).isAvailable();
+		boolean away = pNewPresence.isAway();
 		
 		if(online && !away){
 			temp.setStatus(XMPPRoosterObject.STATUS_ONLINE);
@@ -248,18 +257,18 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 		ImageSaverCustom loader = new ImageSaverCustom("forenavatar");
 		
 		ArrayList<String> names = new ArrayList<String>();
-		for(RosterEntry obj: mConnection.getRoster().getEntries()){	
+		for(RosterEntry obj: getConnection().getRoster().getEntries()){	
 			names.add(obj.getName());			
 		}		
 		
 		ArrayList<UserObject> user_list = (new UserApi(mApplicationContext).NTgetIDs(names));
 		
-		for(RosterEntry obj: mConnection.getRoster().getEntries()){
+		for(RosterEntry obj: getConnection().getRoster().getEntries()){
 			
 			XMPPRoosterObject temp = new XMPPRoosterObject();
 			temp.setJid(obj.getUser());
-			boolean online = mConnection.getRoster().getPresence(obj.getUser()).isAvailable();
-			boolean away = mConnection.getRoster().getPresence(obj.getUser()).isAway();
+			boolean online = getConnection().getRoster().getPresence(obj.getUser()).isAvailable();
+			boolean away = getConnection().getRoster().getPresence(obj.getUser()).isAway();
 			if(online && !away){
 				temp.setStatus(XMPPRoosterObject.STATUS_ONLINE);
 			} else if (!online){
@@ -301,6 +310,10 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 						i.setPackage(mApplicationContext.getPackageName());	
 						mApplicationContext.sendBroadcast(i);
 					} catch (XMPPException e) {
+						Intent i = new Intent(XMPPService.SEND_MESSAGE_BAD);
+						i.setPackage(mApplicationContext.getPackageName());	
+						mApplicationContext.sendBroadcast(i);
+					} catch (NotConnectedException e) {
 						Intent i = new Intent(XMPPService.SEND_MESSAGE_BAD);
 						i.setPackage(mApplicationContext.getPackageName());	
 						mApplicationContext.sendBroadcast(i);

@@ -1,28 +1,15 @@
 package de.meisterfuu.animexx.xmpp;
 
-import java.util.ArrayList;
-
-
 import de.meisterfuu.animexx.R;
 
 import android.app.Notification;
 import android.app.Service;
 import android.content.Intent;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
 
 public class XMPPService extends Service {
 
-	Handler mHandler, mTHandler;
-	Thread mThread;
-	private static XMPPService mThis;
-	
-	private ArrayList<String> rooster;
-
-	private static ConnectionManager mReconManager;
-	
 	public static final String TAG = "XMPP";
 
 	public static final String NEW_MESSAGE = "de.meisterfuu.animexx.xmpp.newmessage";
@@ -36,25 +23,13 @@ public class XMPPService extends Service {
 	public static final String BUNDLE_TO = "b_from";
 	public static final String BUNDLE_TIME = "b_time";
 	public static final String BUNDLE_MESSAGE_BODY = "b_body";
-	
-	
-	public static XMPPService getInstance(){
-		return mThis;
-	}
-	
-	
-	
+		
 	@Override
 	public void onCreate() {
 		super.onCreate();
 
-		mHandler = new Handler();
-		mThis = this;
-		
 		Notification notification = getNotification("");		
 		this.startForeground(42, notification);
-		
-
 	}
 	
 	private Notification getNotification(String pTitle){
@@ -74,23 +49,11 @@ public class XMPPService extends Service {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 
-		
-		if(mThread == null || !mThread.isAlive()){
-			mThread = new Thread(new Runnable() {
-				@Override
-				public void run() {
-						Looper.prepare();
-						mTHandler = new Handler();
-						mReconManager = new ConnectionManager(XMPPService.this);
-						mReconManager.start();
-						Looper.loop();
-				}
-	
-			});
-			mThread.start();
-		} 
-		
-		
+		if(ConnectionManager.getInstance() == null){
+			ConnectionManager mReconManager = new ConnectionManager(XMPPService.this);
+			mReconManager.start();
+		}
+
 		return Service.START_STICKY;
 	}
 
@@ -102,15 +65,10 @@ public class XMPPService extends Service {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		mThis = null;
-		mTHandler.post(new Runnable() {
-			
-			@Override
-			public void run() {
-				mReconManager.stop();
-			}
-		});
+		if(ConnectionManager.getInstance() != null) ConnectionManager.getInstance().stop();
 		stopForeground(true);
 	}
 	
+	
+
 }

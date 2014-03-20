@@ -2,38 +2,73 @@ package de.meisterfuu.animexx.xmpp;
 
 import de.meisterfuu.animexx.DebugNotification;
 import de.meisterfuu.animexx.utils.Helper;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 
 public class ConnectionManager {
 
+	private static ConnectionManager mThis;
 	
 	private XMPPService mService;
 	private ChatConnection mConnection;
-	private Handler mHandler;
+
 	private boolean mActive = false;
+
+	private Thread mThread;
+	protected Handler mTHandler;
+	private Handler mHandler;
 
 	public static final String TAG = "RECONMANAGER";
 
 	public ConnectionManager(XMPPService service){
 		mService = service;
 		mHandler = new Handler();
-		initConnection();
-		start();
+		mThis = this;
+	}
+	
+	public static ConnectionManager getInstance(){
+		return mThis;
 	}
 	
 	public void start(){
 		if(!mActive){
 			mActive = true;
 			step = count = 0;
-			check();
+			
+			//Create ConnectionThread Loop
+			if(mThread == null || !mThread.isAlive()){
+				mThread = new Thread(new Runnable() {
+					@Override
+					public void run() {
+							Looper.prepare();
+							mTHandler = new Handler();							
+							checkTick();
+							Looper.loop();
+					}
+		
+				});
+				mThread.start();
+			} 
 		}
 	}
 	
 	public void stop(){
 		mActive = false;
-		mConnection.disconnect();
+		mThis = null;
+		mTHandler.post(new Runnable() {
+			
+			@Override
+			public void run() {
+				mConnection.disconnect();
+			}
+		});
 	}
 	
 	private void initConnection(){
@@ -44,13 +79,31 @@ public class ConnectionManager {
 	private int count;
 	private int step;
 	private long calls;
+	private long calls_count;
 	private int[] time = new int[]{5, 5, 5, 5, 10, 10, 10, 10, 30};
 	
-	public void check(){
+	public void checkTick(){
 		
 		//Debug Notification every ~10s
-		if((++calls)%5==0) DebugNotification.notify(mService, "ReconManager is alive "+calls, 433962);
+		if((calls++)%5 == 0)DebugNotification.notify(mService, "ReconManager is alive "+(++calls_count), 433962);
 		
+		//Check in ConnectionThread
+		mTHandler.post(new Runnable() {			
+			@Override
+			public void run() {
+				 check();
+			}
+		});	
+		
+
+	    Intent alarm = new Intent(mService, AlarmReceiver.class);
+	    PendingIntent pendingIntent = PendingIntent.getBroadcast(mService, 0, alarm, PendingIntent.FLAG_CANCEL_CURRENT);
+	    AlarmManager alarmManager = (AlarmManager) mService.getSystemService(Context.ALARM_SERVICE);
+	    alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+2000, pendingIntent); 
+		
+	}
+
+	private void check() {
 		try{
 			if(!mActive){
 				//return if stopped
@@ -58,7 +111,7 @@ public class ConnectionManager {
 			}
 			
 			if(mConnection == null){
-				//recreate connection
+				//(re)create connection
 				initConnection();
 			}
 			
@@ -68,6 +121,7 @@ public class ConnectionManager {
 				if(count >= time[step]){
 					Log.i(TAG , "ChatConnection.connect() called in ReconManager");
 					DebugNotification.notify(mService, "ReconManager is working", 433961);
+//					mConnection.disconnect();
 					mConnection.connect();
 					
 					count = 0;
@@ -94,14 +148,14 @@ public class ConnectionManager {
 			e.printStackTrace();
 			Helper.sendStacTrace(e, mService);
 		}
+	}
 	
-		//Recursiv call
-		mHandler.postDelayed(new Runnable() {			
-			@Override
-			public void run() {
-				 check();
-			}
-		}, 2000);		
-		
+	static public class AlarmReceiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			ConnectionManager.getInstance().checkTick();			
+		}
+
 	}
 }

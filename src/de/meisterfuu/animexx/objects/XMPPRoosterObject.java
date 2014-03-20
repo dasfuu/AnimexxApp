@@ -63,6 +63,9 @@ public class XMPPRoosterObject implements Comparable<XMPPRoosterObject>{
 
 	@Override
 	public int compareTo(XMPPRoosterObject another) {
+		if(this.getStatus() == XMPPRoosterObject.STATUS_OFFLINE && another.getStatus() == XMPPRoosterObject.STATUS_OFFLINE) return 0;
+		if(this.getStatus() == XMPPRoosterObject.STATUS_OFFLINE) return 1;
+		if(another.getStatus() == XMPPRoosterObject.STATUS_OFFLINE) return -1;
 		if(latestMessage == null) return 1;
 		if(another.latestMessage == null) return -1;
 		if(this.latestMessage.getDate() >= another.latestMessage.getDate()){
