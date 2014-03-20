@@ -71,10 +71,10 @@ public class DebugNotification {
 
 				// Provide a large icon, shown with the notification in the
 				// notification drawer on devices running Android 3.0 or later.
-				.setLargeIcon(picture)
+				.setLargeIcon(picture);
 
 				// Set ticker text (preview) information for this notification.
-				.setTicker(ticker);
+//				.setTicker(ticker);
 
 				// If this notification relates to a past or upcoming event, you
 				// should set the relevant time information using the setWhen

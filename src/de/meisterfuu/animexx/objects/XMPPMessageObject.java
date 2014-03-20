@@ -78,6 +78,10 @@ public class XMPPMessageObject implements Comparable{
 		return 0;
 	}
 	
+	@Override
+	public String toString() {
+		return topicJID;
+	}
 	
 	
 

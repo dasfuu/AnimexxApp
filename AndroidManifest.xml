@@ -152,6 +152,16 @@
             android:name="de.meisterfuu.animexx.services.ENSQueueService"
             android:exported="false" >
         </service>
+
+        <activity
+            android:name="de.meisterfuu.animexx.AnimexxDebugActivity"
+            android:label="@string/title_activity_animexx_debug" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

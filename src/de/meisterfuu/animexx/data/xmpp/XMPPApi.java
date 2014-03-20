@@ -249,6 +249,9 @@ public class XMPPApi {
 	}
 	
 	public List<XMPPMessageObject> getMessageFromDB(String pJid){		
+		if(pJid == null){
+			return getHelper().getXMPPMessageDataDao().queryForAll();
+		}
 		XMPPMessageObject args = new XMPPMessageObject();
 		args.setTopicJID(pJid);
 		return getHelper().getXMPPMessageDataDao().queryForMatchingArgs(args);

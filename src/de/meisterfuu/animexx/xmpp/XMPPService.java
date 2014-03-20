@@ -21,8 +21,7 @@ public class XMPPService extends Service {
 	
 	private ArrayList<String> rooster;
 
-	private static ReconnectionManager mReconManager;
-	private static ChatConnection mConnection;
+	private static ConnectionManager mReconManager;
 	
 	public static final String TAG = "XMPP";
 
@@ -43,9 +42,6 @@ public class XMPPService extends Service {
 		return mThis;
 	}
 	
-	public ChatConnection getConnection(){
-		return mConnection;
-	}
 	
 	
 	@Override
@@ -85,9 +81,7 @@ public class XMPPService extends Service {
 				public void run() {
 						Looper.prepare();
 						mTHandler = new Handler();
-						mConnection = new ChatConnection(XMPPService.this);
-						mConnection.connect();
-						mReconManager = new ReconnectionManager(XMPPService.this, mConnection);
+						mReconManager = new ConnectionManager(XMPPService.this);
 						mReconManager.start();
 						Looper.loop();
 				}
@@ -114,8 +108,6 @@ public class XMPPService extends Service {
 			@Override
 			public void run() {
 				mReconManager.stop();
-				mConnection.disconnect();
-
 			}
 		});
 		stopForeground(true);

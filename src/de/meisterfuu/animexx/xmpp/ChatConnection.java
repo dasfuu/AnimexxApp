@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Random;
 
-import org.jivesoftware.smack.AndroidConnectionConfiguration;
+
 import org.jivesoftware.smack.Chat;
+import org.jivesoftware.smack.ChatManager;
 import org.jivesoftware.smack.ChatManagerListener;
+import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.ConnectionCreationListener;
 import org.jivesoftware.smack.ConnectionListener;
 import org.jivesoftware.smack.MessageListener;
@@ -112,7 +114,8 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 		
 		//Create TCPConnection
 		if(mConnection == null){
-			AndroidConnectionConfiguration config = new AndroidConnectionConfiguration("jabber.animexx.de");
+			ConnectionConfiguration config = new ConnectionConfiguration("jabber.animexx.de");
+			
 			config.setReconnectionAllowed(true);
 			Log.i(TAG, "mConnection = new TCPConnection(config) called");
 			mConnection = new TCPConnection(config);
@@ -149,19 +152,19 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 	}
 	
 	public boolean isConnected(){		
-		return (mConnection.isConnected() && connectionState && !mConnection.isSocketClosed());
+		return (getConnection().isConnected() && connectionState && !getConnection().isSocketClosed());
 	}
 	
 	public void sendMessage(String message, String to) throws XMPPException {
 		System.out.println("this:"+this);
 		System.out.println("to:"+to);
 		System.out.println("message:"+message);
-		Chat chat = mConnection.getChatManager().createChat(to, this);
+		Chat chat = ChatManager.getInstanceFor(getConnection()).createChat(to, this);	
 		chat.sendMessage(message);
 	}
 	
 	private void setChatListener(){
-		getConnection().getChatManager().addChatListener(this);
+		ChatManager.getInstanceFor(getConnection()).addChatListener(this);
 	}
 	
 	private void setRosterListener(){
@@ -184,7 +187,7 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 				intent.putExtra(XMPPService.BUNDLE_TIME, ""+System.currentTimeMillis());
 				mApplicationContext.sendBroadcast(intent);
 				
-				System.out.println(XMPPNotification.d_from+" "+chat.getParticipant());
+				System.out.println("new message: "+XMPPNotification.d_from+" "+chat.getParticipant());
 				if(XMPPNotification.d_from != null && XMPPNotification.d_from.equalsIgnoreCase(chat.getParticipant().split("/")[0])){
 				} else {
 					XMPPNotification.notify(mApplicationContext, message.getBody(), chat.getParticipant().split("@")[0]);
@@ -193,7 +196,7 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 				
 				XMPPMessageObject msg = new XMPPMessageObject();
 				msg.setDate(System.currentTimeMillis());
-				msg.setTopicJID(chat.getParticipant());
+				msg.setTopicJID(chat.getParticipant().split("/")[0]);
 				msg.setBody(message.getBody());
 				msg.setMe(false);
 				mApi.insertMessageToDB(msg);
@@ -257,7 +260,6 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 			temp.setJid(obj.getUser());
 			boolean online = mConnection.getRoster().getPresence(obj.getUser()).isAvailable();
 			boolean away = mConnection.getRoster().getPresence(obj.getUser()).isAway();
-			
 			if(online && !away){
 				temp.setStatus(XMPPRoosterObject.STATUS_ONLINE);
 			} else if (!online){
@@ -316,6 +318,7 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 	@Override
 	public void pingFailed() {
 		connectionState = false;
+	   	Log.i(TAG, ".pingFailed() called");
 		DebugNotification.notify(mApplicationContext, "XMPP Ping Failed", 865);
 	}
 
