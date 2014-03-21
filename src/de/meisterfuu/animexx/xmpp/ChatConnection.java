@@ -15,6 +15,7 @@ import org.jivesoftware.smack.RosterEntry;
 import org.jivesoftware.smack.RosterListener;
 import org.jivesoftware.smack.SmackAndroid;
 import org.jivesoftware.smack.SmackConfiguration;
+import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.TCPConnection;
 import org.jivesoftware.smack.XMPPConnection;
@@ -151,6 +152,15 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 		mPingManager.registerPingFailedListener(this);
 		mPingManager.setPingInterval(10);
 	}
+	
+	public void ping(){
+		try {
+			mPingManager.pingMyServer();
+		} catch (SmackException e) {
+			connectionState = false;
+			e.printStackTrace();
+		}
+	}
 
 	public TCPConnection getConnection(){
 		return mConnection;
@@ -160,7 +170,7 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 		return (getConnection().isConnected() && connectionState && !getConnection().isSocketClosed());
 	}
 	
-	public void sendMessage(String message, String to) throws XMPPException, NotConnectedException {
+	public void sendMessage(String message, String to) throws NotConnectedException, XMPPException {
 		System.out.println("this:"+this);
 		System.out.println("to:"+to);
 		System.out.println("message:"+message);
@@ -169,6 +179,12 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 			chat.sendMessage(message);
 		} catch (NotConnectedException e) {
 			connectionState = false;
+			e.printStackTrace();
+			Helper.sendStacTrace(e, mApplicationContext);
+			throw e;
+		} catch (XMPPException e) {
+			e.printStackTrace();
+			Helper.sendStacTrace(e, mApplicationContext);
 			throw e;
 		}
 	}
@@ -310,6 +326,7 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 						i.setPackage(mApplicationContext.getPackageName());	
 						mApplicationContext.sendBroadcast(i);
 					} catch (XMPPException e) {
+						
 						Intent i = new Intent(XMPPService.SEND_MESSAGE_BAD);
 						i.setPackage(mApplicationContext.getPackageName());	
 						mApplicationContext.sendBroadcast(i);

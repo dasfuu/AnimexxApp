@@ -84,14 +84,15 @@ public class ConnectionManager {
 	
 	public void checkTick(){
 		
-		//Debug Notification every ~10s
+		//Debug Notification every ~50s
 		if((calls++)%5 == 0)DebugNotification.notify(mService, "ReconManager is alive "+(++calls_count), 433962);
 		
 		//Check in ConnectionThread
 		mTHandler.post(new Runnable() {			
 			@Override
 			public void run() {
-				 check();
+				if(mConnection != null) mConnection.ping();
+				check();
 			}
 		});	
 		
@@ -99,7 +100,7 @@ public class ConnectionManager {
 	    Intent alarm = new Intent(mService, AlarmReceiver.class);
 	    PendingIntent pendingIntent = PendingIntent.getBroadcast(mService, 0, alarm, PendingIntent.FLAG_CANCEL_CURRENT);
 	    AlarmManager alarmManager = (AlarmManager) mService.getSystemService(Context.ALARM_SERVICE);
-	    alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+2000, pendingIntent); 
+	    alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+10000, pendingIntent); 
 		
 	}
 
@@ -118,28 +119,28 @@ public class ConnectionManager {
 			//connection is not ok
 			if(!mConnection.isConnected() && mConnection.shouldConnect()){
 				//Reconnect at this interval
-				if(count >= time[step]){
+//				if(count >= time[step]){
 					Log.i(TAG , "ChatConnection.connect() called in ReconManager");
 					DebugNotification.notify(mService, "ReconManager is working", 433961);
 //					mConnection.disconnect();
 					mConnection.connect();
 					
-					count = 0;
-					step++;
-					if(step >= time.length) step = time.length-1;
-					
-					//Keep intervall small for testing
-					step = 0;
-					
-				//Skip this interval
-				} else {
-					count++;
-				}
-			
-			//connection is ok: Reset interval
-			} else {
-				count = 0;
-				step = 0;
+//					count = 0;
+//					step++;
+//					if(step >= time.length) step = time.length-1;
+//					
+//					//Keep intervall small for testing
+//					step = 0;
+//					
+//				//Skip this interval
+//				} else {
+//					count++;
+//				}
+//			
+//			//connection is ok: Reset interval
+//			} else {
+//				count = 0;
+//				step = 0;
 			} 		
 			
 		//Something bad happened
