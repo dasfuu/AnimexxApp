@@ -145,6 +145,23 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical" />
                         </LinearLayout>
+                        <LinearLayout
+                            android:id="@+id/activity_event_single_type"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" >
+
+                            <ImageView
+                                android:id="@+id/xmpp_test_send_bt"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/ens_flags_forwarded_blue" />
+
+                            <TextView
+                                android:id="@+id/activity_event_single_type_text"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical" />
+                        </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
             </FrameLayout>
@@ -175,13 +192,12 @@
             </FrameLayout>
 
             <FrameLayout
-                android:id="@+id/activity_event_single_body"
+                android:id="@+id/activity_event_single_map"
                 android:layout_width="match_parent"
-                android:layout_height="0dip"
-                android:layout_marginTop="10dp"
+                android:layout_height="400dp"
                 android:layout_weight="2"
                 android:background="@drawable/card_background_shadow"
-                android:padding="10dp" >
+                android:paddingTop="2dp" >
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -189,16 +205,12 @@
                     android:layout_marginTop="10dp"
                     android:orientation="vertical" >
 
-                    <TextView
-                        android:id="@+id/activity_event_single_message"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="" />
-
-                    <WebView
-                        android:id="@+id/activity_event_single_webview"
+                    <fragment
+                        android:id="@+id/activity_event_single_map_fragment"
+                        android:name="com.google.android.gms.maps.MapFragment"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="match_parent" />
+
                 </LinearLayout>
 
             </FrameLayout>

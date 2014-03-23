@@ -3,19 +3,20 @@ package de.meisterfuu.animexx.activitys.events;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-import com.google.android.gms.drive.internal.s;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import de.meisterfuu.animexx.R;
-import de.meisterfuu.animexx.R.layout;
-import de.meisterfuu.animexx.R.menu;
-import de.meisterfuu.animexx.activitys.ens.SingleENSActivity;
 import de.meisterfuu.animexx.data.APICallback;
 import de.meisterfuu.animexx.data.events.EventApi;
 import de.meisterfuu.animexx.objects.EventDescriptionObject;
 import de.meisterfuu.animexx.objects.EventObject;
 import de.meisterfuu.animexx.utils.APIException;
 import de.meisterfuu.animexx.utils.imageloader.ImageDownloaderCustom;
-import de.meisterfuu.animexx.utils.imageloader.ImageLoaderCustom;
 import de.meisterfuu.animexx.utils.imageloader.ImageSaveObject;
 import android.os.Bundle;
 import android.app.Activity;
@@ -43,11 +44,12 @@ public class SingleEventActivity extends Activity {
 	EventObject mEvent;
 	EventApi mAPI;
 	long mID;
+	private GoogleMap mMap;
 	
-	FrameLayout mHeader, mPages, mBody;
+	FrameLayout mHeader, mPages, mMapContainer;
 	LinearLayout mPagesList;
 	ImageView mLogo;
-	TextView mStart,mEnd,mAddress,mCount, mAnimexxStatus;
+	TextView mStart,mEnd,mAddress,mCount, mAnimexxStatus, mSection;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +58,7 @@ public class SingleEventActivity extends Activity {
 		// Show the Up button in the action bar.
 		mAPI = new EventApi(this);
 		mHeader = (FrameLayout) this.findViewById(R.id.activity_event_single_header);
-		mBody = (FrameLayout) this.findViewById(R.id.activity_event_single_body);
+		mMapContainer = (FrameLayout) this.findViewById(R.id.activity_event_single_map);
 		mPages = (FrameLayout) this.findViewById(R.id.activity_event_single_pagelist);
 		
 		mPagesList  = (LinearLayout) this.findViewById(R.id.activity_event_single_pagelist_list);
@@ -68,10 +70,10 @@ public class SingleEventActivity extends Activity {
 		mAddress = (TextView) this.findViewById(R.id.activity_event_single_address_text);
 		mAnimexxStatus = (TextView) this.findViewById(R.id.activity_event_single_animexx_text);
 		mCount = (TextView) this.findViewById(R.id.activity_event_single_atcount_text);
-		
+		mSection = (TextView) this.findViewById(R.id.activity_event_single_type_text);
 		
 		mHeader.setVisibility(View.GONE);
-		mBody.setVisibility(View.GONE);
+		mMapContainer.setVisibility(View.GONE);
 		mPages.setVisibility(View.GONE);
 		
 		SingleEventActivity.this.getActionBar().setTitle("");
@@ -103,10 +105,15 @@ public class SingleEventActivity extends Activity {
 				mCount.setText(mEvent.getAttendees()+" Teilnehmer");
 				mAnimexxStatus.setText(mEvent.getAnimexxString());
 				SingleEventActivity.this.getActionBar().setTitle(mEvent.getName());
-				
+				mSection.setText(mEvent.getSections().getName());
+					
 				mHeader.setVisibility(View.VISIBLE);
 				
 				showPages();
+				
+				showMap();
+				
+
 			}
 			
 		}, mID, EventApi.DETAIL_FULL);
@@ -114,6 +121,23 @@ public class SingleEventActivity extends Activity {
 		setupActionBar();
 	}
 	
+	protected void showMap() {
+		mMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.activity_event_single_map_fragment)).getMap();
+		 if (mMap != null) {
+	            // The Map is verified. It is now safe to manipulate the map.
+			 	mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+			 	CameraUpdate postion = CameraUpdateFactory.newLatLngZoom(new LatLng(mEvent.getLatitude(), mEvent.getLongitude()), 15);
+				mMap.moveCamera(postion);
+			 	mMap.addMarker(new MarkerOptions()
+		        .position(new LatLng(mEvent.getLatitude(), mEvent.getLongitude()))
+		        .draggable(false)
+		        .title(mEvent.getName()));
+			 	mMap.getUiSettings().setAllGesturesEnabled(false);
+			 	mMap.getUiSettings().setZoomControlsEnabled(true);
+				mMapContainer.setVisibility(View.VISIBLE);
+	     }
+	}
+
 	private void showPages() {
 
 		LayoutInflater inflater = (LayoutInflater)this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

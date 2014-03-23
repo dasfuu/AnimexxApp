@@ -106,6 +106,64 @@ public class EventObject {
 //	      ueberbereich: int: Überbereich (wird in der API nicht weiter verwendet)
 		@SerializedName("ueberbereich")
 		long parentSection;
+
+		public long getId() {
+			return id;
+		}
+
+		public void setId(long id) {
+			this.id = id;
+		}
+
+		public String getNameShort() {
+			return nameShort;
+		}
+
+		public void setNameShort(String nameShort) {
+			this.nameShort = nameShort;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		public String getNamePluralShort() {
+			return namePluralShort;
+		}
+
+		public void setNamePluralShort(String namePluralShort) {
+			this.namePluralShort = namePluralShort;
+		}
+
+		public String getNamePlural() {
+			return namePlural;
+		}
+
+		public void setNamePlural(String namePlural) {
+			this.namePlural = namePlural;
+		}
+
+		public String getDescription() {
+			return description;
+		}
+
+		public void setDescription(String description) {
+			this.description = description;
+		}
+
+		public long getParentSection() {
+			return parentSection;
+		}
+
+		public void setParentSection(long parentSection) {
+			this.parentSection = parentSection;
+		}
+		
+		
 		
 	}
 
