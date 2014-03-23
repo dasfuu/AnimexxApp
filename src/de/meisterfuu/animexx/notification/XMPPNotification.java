@@ -72,9 +72,6 @@ public class XMPPNotification {
 		final NotificationCompat.Builder builder = new NotificationCompat.Builder(
 				pContext)
 
-				// Set appropriate defaults for the notification light, sound,
-				// and vibration.
-				.setDefaults(Notification.DEFAULT_ALL)
 
 				// Set required fields, including the small icon, the
 				// notification title, and text.
