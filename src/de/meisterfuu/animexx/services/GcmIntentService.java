@@ -54,7 +54,7 @@ public class GcmIntentService extends IntentService {
 			// If it's a regular GCM message, do some work.
 			} else if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
 				if(extras.getString("type").equalsIgnoreCase("XXEventENS")){
-					ENSNotification.notify(this, extras.getString("title"), extras.getString("from_username"), extras.getString("from_id"), extras.getString("id"), extras.getString("from"), 1);
+					ENSNotification.notify(this, extras.getString("title"), extras.getString("from_username"), extras.getString("from_id"), System.currentTimeMillis()+"", extras.getString("from"), 1);
 				} else {
 					// Post notification of unknown received message.
 					// sendNotification("Received: " + extras.toString());

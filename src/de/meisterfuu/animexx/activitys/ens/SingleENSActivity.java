@@ -3,6 +3,7 @@ package de.meisterfuu.animexx.activitys.ens;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Random;
 
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.data.APICallback;
@@ -61,7 +62,7 @@ public class SingleENSActivity extends Activity {
 	     Bundle args = new Bundle();
 	     args.putLong("id", pID);
 	     intent.putExtras(args);
-	     return PendingIntent.getActivity(pContext, 0, intent, 0);
+	     return PendingIntent.getActivity(pContext, (new Random()).nextInt(), intent, PendingIntent.FLAG_CANCEL_CURRENT);
 	}
 	
 	@Override

@@ -3,6 +3,7 @@ package de.meisterfuu.animexx.notification;
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.R.drawable;
 import de.meisterfuu.animexx.R.string;
+import de.meisterfuu.animexx.utils.imageloader.BitmapLoaderCustom;
 import de.meisterfuu.animexx.xmpp.XMPPRoosterFragment;
 import android.annotation.TargetApi;
 import android.app.Notification;
@@ -15,6 +16,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 
 
@@ -49,13 +51,13 @@ public class XMPPNotification {
 	 * 
 	 * @see #cancel(Context)
 	 */
-	public static void notify(final Context context,
+	public static void notify(final Context pContext,
 			final String message, final String from) {
 		
 
 		
 		
-		final Resources res = context.getResources();
+		final Resources res = pContext.getResources();
 
 		// This image is used as the notification's large icon (thumbnail).
 		// TODO: Remove this if your notification has no relevant thumbnail.
@@ -68,7 +70,7 @@ public class XMPPNotification {
 		final String text = message;
 
 		final NotificationCompat.Builder builder = new NotificationCompat.Builder(
-				context)
+				pContext)
 
 				// Set appropriate defaults for the notification light, sound,
 				// and vibration.
@@ -84,10 +86,6 @@ public class XMPPNotification {
 				// Use a default priority (recognized on devices running Android
 				// 4.1 or later)
 				.setPriority(NotificationCompat.PRIORITY_DEFAULT)
-
-				// Provide a large icon, shown with the notification in the
-				// notification drawer on devices running Android 3.0 or later.
-//				.setLargeIcon(picture)
 
 				// Set ticker text (preview) information for this notification.
 				.setTicker(ticker)
@@ -107,12 +105,35 @@ public class XMPPNotification {
 
 				// Set the pending intent to be initiated when the user touches
 				// the notification.
-				.setContentIntent(XMPPRoosterFragment.getPendingIntent(context))
+				.setContentIntent(XMPPRoosterFragment.getPendingIntent(pContext))
 
 				// Automatically dismiss the notification when it is touched.
 				.setAutoCancel(true);
 
-		notify(context, builder.build());
+		
+		// Provide a large icon, shown with the notification in the
+		// notification drawer on devices running Android 3.0 or later.
+//		final Bitmap picture = BitmapLoaderCustom.getUserBitmap(pUserId, pContext);
+//		if(picture != null) builder.setLargeIcon(picture);
+		
+		Boolean loud = PreferenceManager.getDefaultSharedPreferences(pContext).getBoolean("notifications_new_message", true);
+		String sound_uri = PreferenceManager.getDefaultSharedPreferences(pContext).getString("notifications_new_message_ringtone", null);
+		Boolean vibrate = PreferenceManager.getDefaultSharedPreferences(pContext).getBoolean("notifications_new_message_vibrate", true);
+		
+		if(loud){
+			if(sound_uri != null){
+				builder.setSound(Uri.parse(sound_uri));
+			} else {
+				builder.setDefaults(Notification.DEFAULT_SOUND);
+			}
+			if(vibrate){
+				builder.setVibrate(new long[]{0,250,100,250});
+			}
+			builder.setLights(R.color.animexx_blue, 1000, 600);
+			
+		}
+		
+		notify(pContext, builder.build());
 	}
 
 	@TargetApi(Build.VERSION_CODES.ECLAIR)
