@@ -26,6 +26,7 @@ import de.meisterfuu.animexx.objects.ENSDraftObject;
 import de.meisterfuu.animexx.objects.ENSQueueObject;
 import de.meisterfuu.animexx.services.ENSQueueService;
 import de.meisterfuu.animexx.utils.APIException;
+import de.meisterfuu.animexx.utils.PostBodyFactory;
 import de.meisterfuu.animexx.utils.Request;
 
 
@@ -424,28 +425,30 @@ public class ENSApi {
 	private long sendENStoWeb(ENSDraftObject pENS)  throws APIException {
 		try {
 			String url = "https://ws.animexx.de/json/ens/ens_senden/?api=2";
-			HttpPost request = new HttpPost(url);
 
-			String body = new String();
+			PostBodyFactory factory = new PostBodyFactory();
 			
-			body += "betreff=" + OAuth.percentEncode(pENS.getSubject());
-			body += "&text=" + OAuth.percentEncode(pENS.getMessage());
-			body += "&sig=" + OAuth.percentEncode(pENS.getSignature());
 			
+			factory.putValue("betreff", pENS.getSubject());
+			factory.putValue("text", pENS.getMessage());
+			if(pENS.getSignature() == null){
+				factory.putValue("sig", "Android App");
+			} else {
+				factory.putValue("sig", pENS.getSignature());
+			}
+
+						
 			for (int i = 0; i < pENS.getRecipients().size(); i++){
-				body += "&an_users[]=" + pENS.getRecipients().get(i);
+				factory.putValue("an_users[]", pENS.getRecipients().get(i)+"");
 			}
 
 			if (pENS.getReferenceType() != null) {
-				body += "&referenz_typ=" + pENS.getReferenceType();
-				body += "&referenz_id=" + pENS.getReferenceID();
+				factory
+				.putValue("referenz_typ", pENS.getReferenceType())
+				.putValue("referenz_id", pENS.getReferenceID()+"");
 			}
 			
-			StringEntity se = new StringEntity(body);
-			se.setContentType("application/x-www-form-urlencoded");
-			request.setEntity(se);
-
-			String result = Request.SignSend(request);
+			String result = Request.SignSendScribePost(url, factory);
 			
 			JSONObject resultObj = new JSONObject(result);
 			if(resultObj.getBoolean("success")){

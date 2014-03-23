@@ -22,6 +22,7 @@ import org.apache.http.params.CoreProtocolPNames;
 
 import org.json.JSONObject;
 import org.scribe.builder.ServiceBuilder;
+import org.scribe.builder.api.DefaultApi10a;
 import org.scribe.builder.api.DefaultApi20;
 import org.scribe.model.OAuthConfig;
 import org.scribe.model.OAuthRequest;
@@ -40,11 +41,7 @@ import android.util.Log;
 public class Request {
 
 	public static SharedPreferences config;
-	
 
-
-
-	
 	public static OAuthConsumer getConsumer() {
 		String token = config.getString(OAuth.OAUTH_TOKEN, "");
 		String secret = config.getString(OAuth.OAUTH_TOKEN_SECRET, "");
@@ -55,83 +52,8 @@ public class Request {
 
 
 	public static String doHTTPGetRequest(String url) throws Exception {
-		HttpGet request = new HttpGet(url);
-		return SignSend(request);
-	}
-
-	
-	public static String sendGCMID(String id, String collapse) throws Exception {
-		String url = "https://ws.animexx.de/json/cloud2device/registration_id_set/?api=2";
-		HttpPost request = new HttpPost(url);
-		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-		nameValuePairs.add(new BasicNameValuePair("registration_id", id));
-		nameValuePairs.add(new BasicNameValuePair("collapse_by_type", collapse));
-		request.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-
-		return SignSend(request);
-	}
-
-	public static String setGCMEvents() throws Exception {
-		String url = "https://ws.animexx.de/json/cloud2device/set_active_events/?api=2";
-		HttpPost request = new HttpPost(url);
-
-		// String s="dummy=dummy";
-		// s += "&events[]=XXEventENS";
-		// s += "&events[]=XXEventGeburtstag";
-		// s += "&events[]=XXEventGaestebuch";
-
-		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
-		nameValuePairs.add(new BasicNameValuePair("events[]", "XXEventENS"));
-		nameValuePairs.add(new BasicNameValuePair("events[]", "XXEventGeburtstag"));
-		nameValuePairs.add(new BasicNameValuePair("events[]", "XXEventGaestebuch"));
-		nameValuePairs.add(new BasicNameValuePair("events[]", "XXEventRPGPosting"));
-		request.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-
-		// StringEntity se = new StringEntity(s);
-		// se.setContentType("application/x-www-form-urlencoded");
-
-		// request.setEntity(se);
-
-		return SignSend(request);
-	}
-
-
-	public static String deleteGCMID(String id) throws Exception {
-		String url = "https://ws.animexx.de/json/cloud2device/registration_id_del/?api=2";
-		HttpPost request = new HttpPost(url);
-		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-		nameValuePairs.add(new BasicNameValuePair("registration_id", id));
-		request.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-
-		return SignSend(request);
-	}
-
-
-
-
-
-
-	public static boolean checkpush(Context con) {
-		try {
-			String jsonOutput = doHTTPGetRequest("https://ws.animexx.de/json/cloud2device/registration_id_get/?api=2");
-			String jsonResponse = new JSONObject(jsonOutput).getJSONObject("return").getJSONArray("registration_ids").getString(0);
-			Log.i("GCM-Server", jsonResponse);
-
-			//GCMRegistrar.checkDevice(con);
-			//GCMRegistrar.checkManifest(con);
-			final String regId = "";//GCMRegistrar.getRegistrationId(con);
-			Log.i("GCM-Device", regId);
-
-			if (jsonResponse.equals(regId)) {
-				Log.i("GCM", "Active");
-				return true;
-			} else {
-				Log.i("GCM", "Inactive");
-				return false;
-			}
-		} catch (Exception e) {
-			return false;
-		}
+		return SignSendScribeGet(url);
+//		return SignSend(new HttpGet(url));
 	}
 
 	public static String SignSend(HttpRequestBase pRequest) throws Exception {
@@ -157,7 +79,7 @@ public class Request {
 		return erg;
 	}
 	
-	public static String SignSendScribePost(String url, String body) throws Exception {
+	private static String SignSendScribeGet(String url) throws Exception {
 		
 		OAuthService service = new ServiceBuilder()
         .provider(AnimexxApi.class)
@@ -168,18 +90,52 @@ public class Request {
 		String token = config.getString(OAuth.OAUTH_TOKEN, "");
 		String secret = config.getString(OAuth.OAUTH_TOKEN_SECRET, "");
 		
+		OAuthRequest request = new OAuthRequest(Verb.GET, url);
+
+		Token accessToken = new Token(token, secret);
+		service.signRequest(accessToken, request); 
+		
+		if(!Debug.SILENT_NETWORK)Log.i("Animexx", "Request : " + request.toString());
+		if(!Debug.SILENT_NETWORK)Log.i("Animexx", "Request URL: " + request.getUrl());		
+		Response response = request.send();
+		if(!Debug.SILENT_NETWORK)Log.i("Animexx", "Statusline : " + response.getCode());
+		
+		String erg = response.getBody();
+		if(!Debug.SILENT_NETWORK)Log.i("Animexx", "Response : " +  erg.substring(0, Math.min(Debug.NETWORK_ANSWER_LOG_LENGTH, erg.length()-1)));
+		return erg;
+	}
+	
+	public static String SignSendScribePost(String url, PostBodyFactory factorybody) throws Exception {
+		
+		OAuthService service = new ServiceBuilder()
+        .provider(new AnimexxApi())
+        .apiKey(Constants.CONSUMER_KEY)
+        .apiSecret(Constants.CONSUMER_SECRET)
+        .debug()
+        .build();
+		
+		String token = config.getString(OAuth.OAUTH_TOKEN, "");
+		String secret = config.getString(OAuth.OAUTH_TOKEN_SECRET, "");
+		
 		OAuthRequest request = new OAuthRequest(Verb.POST, url);
-		request.addPayload(body);
+		
+		request.addHeader("Content-Type", "application/x-www-form-urlencoded");
+		factorybody.build(request);
 
 		Token accessToken = new Token(token, secret);
 		service.signRequest(accessToken, request); // the access token from step 4
+
+		if(!Debug.SILENT_NETWORK)Log.i("Animexx", "Request : " + request.toString());
+		if(!Debug.SILENT_NETWORK)Log.i("Animexx", "Request URL: " + request.getUrl());		
 		Response response = request.send();
-		System.out.println(response.getBody());
+		if(!Debug.SILENT_NETWORK)Log.i("Animexx", "Statusline : " + response.getCode());
 		
-		return response.getBody();
+		String erg = response.getBody();
+		if(!Debug.SILENT_NETWORK)Log.i("Animexx", "Response : " +  erg.substring(0, Math.min(Debug.NETWORK_ANSWER_LOG_LENGTH, erg.length()-1)));
+		return erg;
 	}
 	
-	public static class AnimexxApi extends DefaultApi20 {
+	public static class AnimexxApi extends DefaultApi10a {
 
 		@Override
 		public String getAccessTokenEndpoint() {
@@ -187,13 +143,14 @@ public class Request {
 		}
 
 		@Override
-		public String getAuthorizationUrl(OAuthConfig arg0) {
-			return Constants.AUTHORIZE_URL;
+		public String getAuthorizationUrl(Token arg0) {
+			return Constants.AUTHORIZE_URL+"?oauth_token="+arg0.getToken();
+		}
+
+		@Override
+		public String getRequestTokenEndpoint() {
+			return Constants.REQUEST_URL;
 		}
 		
 	}
-
-	// HttpPost request = new HttpPost(url);
-	// HttpParameters para = new HttpParameters();
-	// para.put("msg", msg)
 }

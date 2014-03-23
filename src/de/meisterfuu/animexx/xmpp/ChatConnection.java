@@ -23,6 +23,8 @@ import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.packet.Message.Type;
+import org.jivesoftware.smackx.carbons.CarbonManager;
+import org.jivesoftware.smackx.carbons.packet.CarbonExtension;
 import org.jivesoftware.smackx.ping.PingFailedListener;
 import org.jivesoftware.smackx.ping.PingManager;
 
@@ -122,7 +124,7 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 		if(getConnection() == null){
 			ConnectionConfiguration config = new ConnectionConfiguration("jabber.animexx.de");
 			
-			config.setReconnectionAllowed(true);
+			config.setReconnectionAllowed(false);
 			Log.i(TAG, "mConnection = new TCPConnection(config) called");
 			mConnection = new TCPConnection(config);
 			connectionState = true;			
@@ -130,6 +132,7 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 		
 		//Create Pingmanager
 		initKeepAlive();
+		initCarbonManager();
 
 		//Connect and login(if not already)
 		Log.i(TAG, "TCPConnection.connect() called");
@@ -146,11 +149,22 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 		
 	}
 	
+	private void initCarbonManager() {
+		try {
+			if(CarbonManager.getInstanceFor(getConnection()).isSupportedByServer()){
+				CarbonManager.getInstanceFor(getConnection()).enableCarbons();
+			}
+		} catch (XMPPException e) {
+			e.printStackTrace();
+		} catch (SmackException e) {
+			e.printStackTrace();
+		}
+	}
+
 	private void initKeepAlive() {
 		PingManager.setDefaultPingInterval(10);
 		mPingManager = PingManager.getInstanceFor(getConnection());
 		mPingManager.registerPingFailedListener(this);
-		mPingManager.setPingInterval(10);
 	}
 	
 	public void ping(){
@@ -204,6 +218,11 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 
 	@Override
 	public void processMessage(Chat chat, Message message) {
+		CarbonExtension c = CarbonManager.getCarbon(message);
+		if(c != null){
+			
+		}
+		
 		if(message.getType().equals(Type.chat) || message.getType().equals(Type.normal)) {
 			if(message.getBody() != null && !chat.getParticipant().startsWith("animexx")) {
 				Intent intent = new Intent(XMPPService.NEW_MESSAGE);
@@ -251,6 +270,7 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 		XMPPRoosterObject temp = mApi.NTgetSingleRooster(pNewPresence.getFrom().split("/")[0]);
 		if(temp == null){
 			newRoster();
+			return;
 		}
 		boolean online = getConnection().getRoster().getPresence(pNewPresence.getFrom()).isAvailable();
 		boolean away = pNewPresence.isAway();

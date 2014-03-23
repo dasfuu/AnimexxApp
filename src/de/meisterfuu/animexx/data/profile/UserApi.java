@@ -25,6 +25,7 @@ import com.google.gson.reflect.TypeToken;
 import de.meisterfuu.animexx.data.APICallback;
 import de.meisterfuu.animexx.objects.UserObject;
 import de.meisterfuu.animexx.utils.APIException;
+import de.meisterfuu.animexx.utils.PostBodyFactory;
 import de.meisterfuu.animexx.utils.Request;
 
 
@@ -186,27 +187,13 @@ public class UserApi {
 		try {
 			String url = "https://ws.animexx.de/json/mitglieder/usernames2ids/?api=2&get_user_avatar=true";
 			
-			HttpPost request = new HttpPost(url);
-
-			String body = new String();
 			
-			body += "foo="+OAuth.percentEncode("bar");			
+			PostBodyFactory factory = new PostBodyFactory();
 			for (String name: pUsername){
-				body += "&usernames[]=" + OAuth.percentEncode(name);
+				factory.putValue("usernames[]", name);
 			}
 
-			StringEntity se = new StringEntity(body);
-			se.setContentType("application/x-www-form-urlencoded");
-			request.setEntity(se);
-			
-//			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-//			for (String name: pUsername){
-//				 nameValuePairs.add(new BasicNameValuePair("usernames[]", OAuth.percentEncode(name)));
-//			}
-//	        request.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-//	        request.addHeader("Content-Type", "");
-
-			String result = Request.SignSendScribePost(url, body);
+			String result = Request.SignSendScribePost(url, factory);
 			
 			JSONObject resultObj = new JSONObject(result);
 			if(resultObj.getBoolean("success")){				 
@@ -241,7 +228,28 @@ public class UserApi {
 
 	}
 
+	private JSONObject getProfilefromWeb(long pUserID, boolean pAllPictures) throws APIException{
 
+		try {
+			int allPictures = 0;
+			if(pAllPictures){
+				allPictures = 1;
+			}
+			
+			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/mitglieder/steckbrief/?api=2&user_id="+ pUserID +"&allefotos="+ allPictures +"&mit_selbstbeschreibung=1&img_max_x=800&img_max_y=800&img_quality=90&img_format=jpg");
+			JSONObject resultObj = new JSONObject(result);
+			if(resultObj.getBoolean("success")){
+				return resultObj.getJSONObject("return");
+			} else {
+				throw new APIException("Error", APIException.OTHER);
+			}		
+	
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new APIException("Request Failed", APIException.REQUEST_FAILED);
+		}	
+
+	}
 
 		
 

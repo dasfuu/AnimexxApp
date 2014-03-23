@@ -30,6 +30,7 @@ import com.google.gson.GsonBuilder;
 import de.meisterfuu.animexx.KEYS;
 import de.meisterfuu.animexx.data.APICallback;
 import de.meisterfuu.animexx.utils.APIException;
+import de.meisterfuu.animexx.utils.PostBodyFactory;
 import de.meisterfuu.animexx.utils.Request;
 
 
@@ -180,30 +181,13 @@ public class GCMApi {
 	private void activateGCMEventsWeb()  throws APIException {
 		try {
 			String url = "https://ws.animexx.de/json/cloud2device/set_active_events/?api=2";
-			HttpPost request = new HttpPost(url);
 
-//			String body = new String();
-//						
-//			body += "foo=bar";
-//	
-//			for (int i = 0; i < EventCodes.size(); i++){
-//				body += "&"+OAuth.percentEncode("events[]")+ "=" + EventCodes.get(i);
-//			}
-//			
-//			StringEntity se = new StringEntity(body);
-//			se.setContentType("application/x-www-form-urlencoded");
-//			request.setEntity(se);
-			
-			
-			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+			PostBodyFactory factory = new PostBodyFactory();
 			for (int i = 0; i < EventCodes.size(); i++){
-				nameValuePairs.add(new BasicNameValuePair("events[]", EventCodes.get(i)));
+				factory.putValue("events[]", EventCodes.get(i));
 			}
-			request.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-
-
-		
-			String result = Request.SignSend(request);
+					
+			String result = Request.SignSendScribePost(url, factory);
 			
 			JSONObject resultObj = new JSONObject(result);
 			if(resultObj.getBoolean("success")){
@@ -222,14 +206,12 @@ public class GCMApi {
 		try {
 			
 			String url = "https://ws.animexx.de/json/cloud2device/registration_id_set/?api=2";
-			HttpPost request = new HttpPost(url);
-			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-			nameValuePairs.add(new BasicNameValuePair("registration_id", id));
-			nameValuePairs.add(new BasicNameValuePair("collapse_by_type", "0"));
-			request.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-
-		
-			String result = Request.SignSend(request);
+			
+			PostBodyFactory factory = new PostBodyFactory();
+			factory.putValue("registration_id", id);
+			factory.putValue("collapse_by_type", "0");
+					
+			String result = Request.SignSendScribePost(url, factory);
 			
 			JSONObject resultObj = new JSONObject(result);
 			if(resultObj.getBoolean("success")){
