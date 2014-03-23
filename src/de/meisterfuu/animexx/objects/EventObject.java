@@ -81,9 +81,9 @@ public class EventObject {
 	
 //	- bereich: objekt: Assoziatives Array: {
 	@SerializedName("bereich")
-	ArrayList<Section> sections;
+	Section sections;
 	
-	static class Section{
+	public static class Section{
 		
 //	      id: int: Bereichs-ID
 		@SerializedName("id")
@@ -152,83 +152,9 @@ public class EventObject {
 	
 //	- beschreibungsseiten, array, Assoziatives Array: {
 	@SerializedName("beschreibungsseiten")
-	ArrayList<DescriptionPage> pages;
+	ArrayList<EventDescriptionObject> pages;
 	
-	static class DescriptionPage{
-		
-//	      id: int: ID der Beschreibungsseite
-		@SerializedName("id")
-		long id;
-//	      sprache: string: ISO-Code der Sprache (meistens "de")
-		@SerializedName("sprache")
-		String language;
-		
-//	      seite: int: Nummer der Seite innerhalb der Sprache; nur zum Sortieren wichtig, das beschreibungsseiten-array ist aber auch bereits nach diesem Wert vorsortiert.
-		@SerializedName("seite")
-		int pageNumber;
-		
-//	      seitenname: string: Name der Seite
-		@SerializedName("seitenname")
-		String pageName;
-		
-//	      html: int: 1, falls die Seite HTML-formatiert ist, ansonsten BBCode.
-		@SerializedName("html")
-		String html;
 	
-//	      status: int: 0, falls sichtbar. 1, falls unsichtbar (unsichtbare Seiten tauchen nur bei Events auf, bei denen der aktuelle Nutzer Admin-Rechte hat)
-		@SerializedName("status")
-		int status;
-
-		public long getId() {
-			return id;
-		}
-
-		public void setId(long id) {
-			this.id = id;
-		}
-
-		public String getLanguage() {
-			return language;
-		}
-
-		public void setLanguage(String language) {
-			this.language = language;
-		}
-
-		public int getPageNumber() {
-			return pageNumber;
-		}
-
-		public void setPageNumber(int pageNumber) {
-			this.pageNumber = pageNumber;
-		}
-
-		public String getPageName() {
-			return pageName;
-		}
-
-		public void setPageName(String pageName) {
-			this.pageName = pageName;
-		}
-
-		public String getHtml() {
-			return html;
-		}
-
-		public void setHtml(String html) {
-			this.html = html;
-		}
-
-		public int getStatus() {
-			return status;
-		}
-
-		public void setStatus(int status) {
-			this.status = status;
-		}
-		
-		
-	}
 	
 //	Falls man eingeloggt ist:
 //	- admin, int, 1, wenn der aktuelle Nutzer Admin des Event-Eintrags ist.
@@ -539,6 +465,22 @@ public class EventObject {
 		this.participationSpecial = participationSpecial;
 	}
 	
+	public Section getSections() {
+		return sections;
+	}
+
+	public void setSections(Section sections) {
+		this.sections = sections;
+	}
+
+	public ArrayList<EventDescriptionObject> getPages() {
+		return pages;
+	}
+
+	public void setPages(ArrayList<EventDescriptionObject> pages) {
+		this.pages = pages;
+	}
+
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.GERMANY);
 	
 	public Date getStartTS(){

@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_event_scrollview"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true" >
 
     <LinearLayout
         android:id="@+id/LinearLayout1"
@@ -13,7 +14,8 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
-        tools:context=".SingleeventActivity" >
+        tools:context=".SingleeventActivity"
+        android:animateLayoutChanges="true" >
 
         <LinearLayout
             android:id="@+id/activity_event_single_base"
@@ -27,7 +29,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/card_background_shadow"
-                android:padding="10dp" >
+                android:padding="10dp" 
+                android:animateLayoutChanges="true">
 
                 <LinearLayout
                     android:id="@+id/activity_single_header_container2"
@@ -147,6 +150,31 @@
             </FrameLayout>
 
             <FrameLayout
+                android:id="@+id/activity_event_single_pagelist"
+                android:layout_width="match_parent"
+                android:layout_height="0dip"
+                android:layout_marginTop="10dp"
+                android:layout_weight="2"
+                android:background="@drawable/card_background_shadow"
+                android:padding="10dp" >
+
+                <LinearLayout
+                    android:id="@+id/activity_event_single_pagelist_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical" >
+
+                    <TextView
+                        android:id="@+id/textView1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Beschreibungsseiten:" />
+
+                </LinearLayout>
+            </FrameLayout>
+
+            <FrameLayout
                 android:id="@+id/activity_event_single_body"
                 android:layout_width="match_parent"
                 android:layout_height="0dip"
@@ -172,6 +200,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
                 </LinearLayout>
+
             </FrameLayout>
         </LinearLayout>
     </LinearLayout>

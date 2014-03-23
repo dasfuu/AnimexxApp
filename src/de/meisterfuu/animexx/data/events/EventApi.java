@@ -17,6 +17,7 @@ import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.data.APICallback;
 import de.meisterfuu.animexx.data.ens.ENSApi;
 import de.meisterfuu.animexx.objects.ENSDraftObject;
+import de.meisterfuu.animexx.objects.EventDescriptionObject;
 import de.meisterfuu.animexx.objects.EventObject;
 import de.meisterfuu.animexx.utils.APIException;
 import de.meisterfuu.animexx.utils.Request;
@@ -122,6 +123,34 @@ public class EventApi {
 		}).start();
 	}
 	
+	/**
+	 * @param pCallback
+	 */
+	public void getEventDescription(final APICallback pCallback, final long pEventID, final long pPageID){
+		final Handler hand = new Handler();		
+		new Thread(new Runnable() {
+			public void run() {
+				APIException error = null;				
+				EventDescriptionObject list = null;
+				
+				try {
+						list = getEventDescriptionfromWeb(pEventID, pPageID);
+				} catch (APIException e) {
+					error = e;
+				}			
+				
+				final EventDescriptionObject retu = list;
+				final APIException ferror = error;
+				
+				hand.post(new Runnable() {			
+					public void run() {
+						if(pCallback != null) pCallback.onCallback(ferror, retu);
+					}
+				});
+			}
+		}).start();
+	}
+	
 	//Web-Api Access
 	
 	private EventObject getEventfromWeb(long pID) throws APIException{
@@ -133,6 +162,28 @@ public class EventApi {
 			if(resultObj.getBoolean("success")){
 				//ENSApi.sendENSDEBUG("s", mContext);
 				EventObject obj = gson.fromJson(resultObj.getJSONObject("return").toString(1), EventObject.class);
+				//ENSObject[] x = gson.fromJson(resultObj.getString("return"), ENSObject[].class);
+
+				return obj;
+			} else {
+				throw new APIException("Error", APIException.OTHER);
+			}		
+	
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new APIException("Request Failed", APIException.REQUEST_FAILED);
+		}	
+	}
+	
+	private EventDescriptionObject getEventDescriptionfromWeb(long pEventID, long pPageID) throws APIException{
+		// TODO Auto-generated method stub
+		try {
+			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/events/event/beschreibung_get/?api=2&event_id="+pEventID+"&beschreibung_id="+pPageID);
+			//result = mContext.getResources().getString(R.string.testJSON);
+			JSONObject resultObj = new JSONObject(result);
+			if(resultObj.getBoolean("success")){
+				//ENSApi.sendENSDEBUG("s", mContext);
+				EventDescriptionObject obj = gson.fromJson(resultObj.getJSONObject("return").toString(1), EventDescriptionObject.class);
 				//ENSObject[] x = gson.fromJson(resultObj.getString("return"), ENSObject[].class);
 
 				return obj;
