@@ -13,9 +13,12 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import de.meisterfuu.animexx.data.APICallback;
+import de.meisterfuu.animexx.objects.ENSDraftObject;
+import de.meisterfuu.animexx.objects.RPGDraftObject;
 import de.meisterfuu.animexx.objects.RPGObject;
 import de.meisterfuu.animexx.objects.RPGPostObject;
 import de.meisterfuu.animexx.utils.APIException;
+import de.meisterfuu.animexx.utils.PostBodyFactory;
 import de.meisterfuu.animexx.utils.Request;
 
 public class RPGApi {
@@ -84,6 +87,34 @@ public class RPGApi {
 				hand.post(new Runnable() {			
 					public void run() {
 						if(pCallback != null) pCallback.onCallback(ferror, retu);
+					}
+				});
+			}
+
+
+		}).start();
+	}
+	
+	/**
+	 * @param pCallback
+	 */
+	public void sendRPGDraft(final RPGDraftObject pDraft, final APICallback pCallback){
+		final Handler hand = new Handler();		
+		new Thread(new Runnable() {
+			public void run() {
+				APIException error = null;				
+				
+				try {
+					sendRPGPosttoWeb(pDraft);
+				} catch (APIException e) {
+					error = e;
+				}			
+				
+				final APIException ferror = error;
+				
+				hand.post(new Runnable() {			
+					public void run() {
+						if(pCallback != null) pCallback.onCallback(ferror, null);
 					}
 				});
 			}
@@ -177,6 +208,37 @@ public class RPGApi {
 				//ENSObject[] x = gson.fromJson(resultObj.getString("return"), ENSObject[].class);
 
 				return list;
+			} else {
+				throw new APIException("Error", APIException.OTHER);
+			}		
+	
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new APIException("Request Failed", APIException.REQUEST_FAILED);
+		}	
+	}
+	
+	private boolean sendRPGPosttoWeb(RPGDraftObject pPost)  throws APIException {
+		try {
+			String url = "https://ws.animexx.de/json/rpg/erstelle_posting/?api=2";
+
+			PostBodyFactory factory = new PostBodyFactory();
+			
+			
+			factory.putValue("rpg", pPost.getRpgID()+"");
+			factory.putValue("charakter", pPost.getCharaID()+"");
+			factory.putValue("text", pPost.getText());
+			if(pPost.getAvatarID() != -1){
+				factory.putValue("avatar", pPost.getAvatarID()+"");
+			}
+			factory.putValue("kursiv", pPost.getKursiv()+"");
+			factory.putValue("intime", pPost.getInTime()+"");
+			
+			String result = Request.SignSendScribePost(url, factory);
+			
+			JSONObject resultObj = new JSONObject(result);
+			if(resultObj.getBoolean("success")){
+				return true;
 			} else {
 				throw new APIException("Error", APIException.OTHER);
 			}		

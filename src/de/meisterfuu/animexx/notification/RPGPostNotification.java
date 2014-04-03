@@ -1,73 +1,101 @@
 package de.meisterfuu.animexx.notification;
 
 import de.meisterfuu.animexx.R;
-import de.meisterfuu.animexx.activitys.ens.SingleENSActivity;
+import de.meisterfuu.animexx.R.drawable;
 import de.meisterfuu.animexx.utils.imageloader.BitmapLoaderCustom;
+import de.meisterfuu.animexx.xmpp.XMPPService;
 import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 
 /**
- * Helper class for showing and canceling ens
- * notifications.
+ * Helper class for showing and canceling rpgpost notifications.
  * <p>
- * This class makes heavy use of the {@link NotificationCompat.Builder} helper class to create notifications in a backward-compatible way.
+ * This class makes heavy use of the {@link NotificationCompat.Builder} helper
+ * class to create notifications in a backward-compatible way.
  */
-public class ENSNotification {
-
+public class RPGPostNotification {
+	
+	public static String filter;
+	
 	/**
 	 * The unique identifier for this type of notification.
 	 */
-	private static final String NOTIFICATION_TAG = "ENS";
+	private static final String NOTIFICATION_TAG = "RPGPost";
 
+	public static final String NEW_POST = "de.meisterfuu.animexx.new";
 
 	/**
 	 * Shows the notification, or updates a previously shown notification of
 	 * this type, with the given parameters.
 	 * <p>
-	 * TODO: Customize this method's arguments to present relevant content in the notification.
+	 * TODO: Customize this method's arguments to present relevant content in
+	 * the notification.
 	 * <p>
-	 * TODO: Customize the contents of this method to tweak the behavior and presentation of ens notifications. Make sure to follow the <a
-	 * href="https://developer.android.com/design/patterns/notifications.html"> Notification design guidelines</a> when doing so.
+	 * TODO: Customize the contents of this method to tweak the behavior and
+	 * presentation of rpgpost notifications. Make sure to follow the <a
+	 * href="https://developer.android.com/design/patterns/notifications.html">
+	 * Notification design guidelines</a> when doing so.
 	 * 
 	 * @see #cancel(Context)
 	 */
 	public static void notify(final Context pContext, final String pTitle, final String pUserName, final String pUserId, final String pId, final String pFrom, final int pNumber) {
-
-
+		if(filter != null && pId.equalsIgnoreCase(filter)){
+			
+			Intent intent = new Intent(RPGPostNotification.NEW_POST);
+			intent.setPackage(pContext.getPackageName());
+			pContext.sendBroadcast(intent);
+			
+			return;
+		}
 		
+
 		// This image is used as the notification's large icon (thumbnail).
 		// TODO: Remove this if your notification has no relevant thumbnail.
 		final Bitmap picture = BitmapLoaderCustom.getUserBitmap(pUserId, pContext);
 
-		final String ticker = "Neue ENS";
-		final String title =  pTitle;
-		final String text = "ENS von "+pUserName;
+		final String ticker = "Neuer RPG Eintrag von "+pUserName;
+		final String title = pTitle;
+		final String text = "Von "+pUserName;
 
 		final NotificationCompat.Builder builder = new NotificationCompat.Builder(pContext)
 
+				// Set appropriate defaults for the notification light, sound,
+				// and vibration.
+				.setDefaults(Notification.DEFAULT_ALL)
+
 				// Set required fields, including the small icon, the
 				// notification title, and text.
-				.setSmallIcon(R.drawable.ic_stat_ens).setContentTitle(title).setContentText(text)
+				.setSmallIcon(R.drawable.ic_stat_rpgpost)
+				.setContentTitle(title)
+				.setContentText(text)
 
 				// All fields below this line are optional.
 
 				// Use a default priority (recognized on devices running Android
 				// 4.1 or later)
-				.setPriority(NotificationCompat.PRIORITY_HIGH)
+				.setPriority(NotificationCompat.PRIORITY_DEFAULT)
+
+				// Provide a large icon, shown with the notification in the
+				// notification drawer on devices running Android 3.0 or later.
+				//.setLargeIcon(picture)
 
 				// Set ticker text (preview) information for this notification.
 				.setTicker(ticker)
 
 				// Show a number. This is useful when stacking notifications of
 				// a single type.
-				.setNumber(pNumber)
+			    //.setNumber(number)
 
 				// If this notification relates to a past or upcoming event, you
 				// should set the relevant time information using the setWhen
@@ -75,12 +103,18 @@ public class ENSNotification {
 				// timestamp will by set to the time at which it was shown.
 				// TODO: Call setWhen if this notification relates to a past or
 				// upcoming event. The sole argument to this method should be
-				// the notification timestamp in milliseconds.				
-				.setWhen(System.currentTimeMillis())
+				// the notification timestamp in milliseconds.
+				// .setWhen(...)
 
 				// Set the pending intent to be initiated when the user touches
 				// the notification.
-				.setContentIntent(SingleENSActivity.getPendingIntent(pContext, Long.valueOf(pId)))
+//				.setContentIntent(
+//						PendingIntent.getActivity(
+//								context,
+//								0,
+//								new Intent(Intent.ACTION_VIEW, Uri
+//										.parse("http://www.google.com")),
+//								PendingIntent.FLAG_UPDATE_CURRENT))
 
 				// Example additional actions for this notification. These will
 				// only show on devices running Android 4.1 or later, so you
@@ -90,17 +124,20 @@ public class ENSNotification {
 //				.addAction(
 //						R.drawable.ic_action_stat_share,
 //						res.getString(R.string.action_share),
-//						PendingIntent.getActivity(pContext, 0,
-//								Intent.createChooser(new Intent(Intent.ACTION_SEND).setType("text/plain").putExtra(Intent.EXTRA_TEXT, "Dummy text"), "Dummy title"),
+//						PendingIntent.getActivity(context, 0, Intent
+//								.createChooser(
+//										new Intent(Intent.ACTION_SEND).setType(
+//												"text/plain")
+//												.putExtra(Intent.EXTRA_TEXT,
+//														"Dummy text"),
+//										"Dummy title"),
 //								PendingIntent.FLAG_UPDATE_CURRENT))
-				
-//				.addAction(R.drawable.ic_action_stat_reply, res.getString(R.string.action_reply), null)
+//				.addAction(R.drawable.ic_action_stat_reply,
+//						res.getString(R.string.action_reply), null)
 
 				// Automatically dismiss the notification when it is touched.
 				.setAutoCancel(true);
-		
-		// Provide a large icon, shown with the notification in the
-		// notification drawer on devices running Android 3.0 or later.
+
 		if(picture != null)builder.setLargeIcon(picture);
 		
 		Boolean loud = PreferenceManager.getDefaultSharedPreferences(pContext).getBoolean("notifications_new_message", true);
@@ -124,40 +161,28 @@ public class ENSNotification {
 
 	}
 
-
 	@TargetApi(Build.VERSION_CODES.ECLAIR)
-	private static void notify(final Context context, final int id, final Notification notification) {
-		final NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+	private static void notify(final Context context,
+			int pID, final Notification notification) {
+		final NotificationManager nm = (NotificationManager) context
+				.getSystemService(Context.NOTIFICATION_SERVICE);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR) {
-			nm.notify(NOTIFICATION_TAG, id, notification);
+			nm.notify(NOTIFICATION_TAG, pID, notification);
 		} else {
 			nm.notify(NOTIFICATION_TAG.hashCode(), notification);
 		}
 	}
 
-
 	/**
-	 * Cancels any notifications of this type previously shown using {@link #notify(Context, String, int)}.
+	 * Cancels any notifications of this type previously shown using
+	 * {@link #notify(Context, String, int)}.
 	 */
 	@TargetApi(Build.VERSION_CODES.ECLAIR)
-	public static void cancel(final Context context) {
-		final NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+	public static void cancel(final Context context, long pID) {
+		final NotificationManager nm = (NotificationManager) context
+				.getSystemService(Context.NOTIFICATION_SERVICE);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR) {
-			nm.cancel(NOTIFICATION_TAG, 0);
-		} else {
-			nm.cancel(NOTIFICATION_TAG.hashCode());
-		}
-	}
-	
-	
-	/**
-	 * Cancels any notifications of this type previously shown using {@link #notify(Context, String, int)}.
-	 */
-	@TargetApi(Build.VERSION_CODES.ECLAIR)
-	public static void cancel(final Context context, long id) {
-		final NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR) {
-			nm.cancel(NOTIFICATION_TAG, (""+id).hashCode());
+			nm.cancel(NOTIFICATION_TAG, (""+pID).hashCode());
 		} else {
 			nm.cancel(NOTIFICATION_TAG.hashCode());
 		}
