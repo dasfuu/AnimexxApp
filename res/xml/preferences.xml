@@ -23,6 +23,11 @@
             android:dependency="notifications_new_message"
             android:key="notifications_new_message_vibrate"
             android:title="@string/pref_title_vibrate" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:dependency="notifications_new_message"
+            android:key="notifications_new_message_ens_collapse"
+            android:title="@string/pref_title_ringtone" />
     </PreferenceCategory>
     <PreferenceCategory android:title="Chat" >
         <EditTextPreference

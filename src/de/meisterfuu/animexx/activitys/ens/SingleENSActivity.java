@@ -62,7 +62,7 @@ public class SingleENSActivity extends Activity {
 	     Bundle args = new Bundle();
 	     args.putLong("id", pID);
 	     intent.putExtras(args);
-	     return PendingIntent.getActivity(pContext, (new Random()).nextInt(), intent, PendingIntent.FLAG_CANCEL_CURRENT);
+	     return PendingIntent.getActivity(pContext, (new Random()).nextInt(), intent, PendingIntent.FLAG_ONE_SHOT);
 	}
 	
 	@Override
