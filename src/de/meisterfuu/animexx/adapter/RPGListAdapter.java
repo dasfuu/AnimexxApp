@@ -4,12 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.meisterfuu.animexx.R;
+import de.meisterfuu.animexx.activitys.rpg.RPGDetailActivity;
 import de.meisterfuu.animexx.objects.RPGObject;
+import de.meisterfuu.animexx.utils.Helper;
 import de.meisterfuu.animexx.utils.imageloader.ImageDownloaderCustom;
 import de.meisterfuu.animexx.utils.imageloader.ImageLoaderCustom;
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
@@ -37,7 +40,7 @@ public class RPGListAdapter extends BaseAdapter {
 
 	
 	static class ViewHolder {
-		public TextView Title, Subtitle, Color;
+		public TextView Title, Count, Date, Topic, Detail;
 	}
 
 	@Override
@@ -87,8 +90,11 @@ public class RPGListAdapter extends BaseAdapter {
 			rowView = inflater.inflate(R.layout.listitem_rpg, null);
 			ViewHolder viewHolder = new ViewHolder();
 			viewHolder.Title = (TextView) rowView.findViewById(R.id.rpg_list_item_title);
-			viewHolder.Subtitle = (TextView) rowView.findViewById(R.id.rpg_list_item_subtitle);
-			viewHolder.Color = (TextView) rowView.findViewById(R.id.rpg_list_item_color);
+			viewHolder.Date = (TextView) rowView.findViewById(R.id.rpg_list_item_lastpost);
+			viewHolder.Count = (TextView) rowView.findViewById(R.id.rpg_list_item_postcount);
+			viewHolder.Topic = (TextView) rowView.findViewById(R.id.rpg_list_item_topic);
+			viewHolder.Detail = (TextView) rowView.findViewById(R.id.rpg_list_item_detail);
+			
 			rowView.setTag(viewHolder);
 		}
 
@@ -96,12 +102,20 @@ public class RPGListAdapter extends BaseAdapter {
 		final RPGObject RPG = mItems.get(position);
 		
 		//Init
-		holder.Color.setBackgroundResource(R.color.animexx_blue);
 		
 		//Subject
 		holder.Title.setText(RPG.getName());
-		holder.Subtitle.setText("Letzter Post: "+RPG.getLastPostDate());
-
+		holder.Date.setText("Letzter Post "+Helper.TimestampToString(Helper.toTimestamp(RPG.getLastPostDate(), "yyyy-MM-dd hh:mm:ss"), false));
+		holder.Count.setText(RPG.getPostCount()+" Posts");
+		holder.Topic.setText(RPG.getTopicName());
+		
+		holder.Detail.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				RPGDetailActivity.getInstance(mContext, RPG.getId());		
+			}
+		});
 		
 		return rowView;
 	}

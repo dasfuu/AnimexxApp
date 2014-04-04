@@ -67,7 +67,7 @@ public class ENSNotification {
 
 				// Show a number. This is useful when stacking notifications of
 				// a single type.
-				.setNumber(pNumber)
+//				.setNumber(pNumber)
 
 				// If this notification relates to a past or upcoming event, you
 				// should set the relevant time information using the setWhen
@@ -76,7 +76,7 @@ public class ENSNotification {
 				// TODO: Call setWhen if this notification relates to a past or
 				// upcoming event. The sole argument to this method should be
 				// the notification timestamp in milliseconds.				
-				.setWhen(System.currentTimeMillis())
+//				.setWhen(System.currentTimeMillis())
 
 				// Set the pending intent to be initiated when the user touches
 				// the notification.
@@ -128,38 +128,17 @@ public class ENSNotification {
 	@TargetApi(Build.VERSION_CODES.ECLAIR)
 	private static void notify(final Context context, final int id, final Notification notification) {
 		final NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR) {
-			nm.notify(NOTIFICATION_TAG, id, notification);
-		} else {
-			nm.notify(NOTIFICATION_TAG.hashCode(), notification);
-		}
+		nm.notify(NOTIFICATION_TAG, id, notification);
 	}
 
 
 	/**
-	 * Cancels any notifications of this type previously shown using {@link #notify(Context, String, int)}.
-	 */
-	@TargetApi(Build.VERSION_CODES.ECLAIR)
-	public static void cancel(final Context context) {
-		final NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR) {
-			nm.cancel(NOTIFICATION_TAG, 0);
-		} else {
-			nm.cancel(NOTIFICATION_TAG.hashCode());
-		}
-	}
-	
-	
-	/**
-	 * Cancels any notifications of this type previously shown using {@link #notify(Context, String, int)}.
+	 * Cancels any notifications of this type previously shown using 
+	 * {@link #notify(Context, String, int)}.
 	 */
 	@TargetApi(Build.VERSION_CODES.ECLAIR)
 	public static void cancel(final Context context, long id) {
 		final NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR) {
-			nm.cancel(NOTIFICATION_TAG, (""+id).hashCode());
-		} else {
-			nm.cancel(NOTIFICATION_TAG.hashCode());
-		}
+		nm.cancel(NOTIFICATION_TAG, (""+id).hashCode());
 	}
 }

@@ -70,9 +70,6 @@ public class RPGPostNotification {
 
 		final NotificationCompat.Builder builder = new NotificationCompat.Builder(pContext)
 
-				// Set appropriate defaults for the notification light, sound,
-				// and vibration.
-				.setDefaults(Notification.DEFAULT_ALL)
 
 				// Set required fields, including the small icon, the
 				// notification title, and text.
@@ -162,15 +159,9 @@ public class RPGPostNotification {
 	}
 
 	@TargetApi(Build.VERSION_CODES.ECLAIR)
-	private static void notify(final Context context,
-			int pID, final Notification notification) {
-		final NotificationManager nm = (NotificationManager) context
-				.getSystemService(Context.NOTIFICATION_SERVICE);
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR) {
-			nm.notify(NOTIFICATION_TAG, pID, notification);
-		} else {
-			nm.notify(NOTIFICATION_TAG.hashCode(), notification);
-		}
+	private static void notify(final Context context, int pID, final Notification notification) {
+		final NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+		nm.notify(NOTIFICATION_TAG, pID, notification);
 	}
 
 	/**
@@ -179,12 +170,7 @@ public class RPGPostNotification {
 	 */
 	@TargetApi(Build.VERSION_CODES.ECLAIR)
 	public static void cancel(final Context context, long pID) {
-		final NotificationManager nm = (NotificationManager) context
-				.getSystemService(Context.NOTIFICATION_SERVICE);
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR) {
-			nm.cancel(NOTIFICATION_TAG, (""+pID).hashCode());
-		} else {
-			nm.cancel(NOTIFICATION_TAG.hashCode());
-		}
+		final NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+		nm.cancel(NOTIFICATION_TAG, (""+pID).hashCode());
 	}
 }

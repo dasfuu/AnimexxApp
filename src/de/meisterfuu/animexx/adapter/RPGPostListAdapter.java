@@ -4,16 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.meisterfuu.animexx.R;
+import de.meisterfuu.animexx.R.color;
 import de.meisterfuu.animexx.objects.RPGPostObject;
+import de.meisterfuu.animexx.utils.Helper;
 import de.meisterfuu.animexx.utils.imageloader.ImageDownloaderCustom;
 import de.meisterfuu.animexx.utils.imageloader.ImageSaveObject;
 import android.app.Activity;
+import android.graphics.Color;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
@@ -42,6 +46,7 @@ public class RPGPostListAdapter extends BaseAdapter {
 	static class ViewHolder {
 		public TextView Title, Subtitle, Post;
 		public ImageView Avatar;
+		public LinearLayout Container;
 	}
 
 	@Override
@@ -94,20 +99,28 @@ public class RPGPostListAdapter extends BaseAdapter {
 			viewHolder.Subtitle = (TextView) rowView.findViewById(R.id.rpgpost_item_subtitle);
 			viewHolder.Post = (TextView) rowView.findViewById(R.id.rpgpost_item_post);
 			viewHolder.Avatar = (ImageView) rowView.findViewById(R.id.rpgpost_item_avatar);
+			viewHolder.Container = (LinearLayout) rowView.findViewById(R.id.rpgpost_container);
 			rowView.setTag(viewHolder);
 		}
 
 		ViewHolder holder = (ViewHolder) rowView.getTag();
 		final RPGPostObject RPG = mItems.get(position);
 		
+		//Color
+		if(position%2 == 0){
+			holder.Container.setBackgroundColor(Color.parseColor("#E8E8FF"));
+		} else {
+			holder.Container.setBackgroundColor(Color.WHITE);
+		}
+
 		
 		//Subject
 		if(RPG.getAuthor() != null){
-			holder.Title.setText(RPG.getCharacterName() + "(" + RPG.getAuthor().getUsername() + ")");
+			holder.Title.setText(RPG.getCharacterName() + " (" + RPG.getAuthor().getUsername() + ")");
 		} else {
 			holder.Title.setText(RPG.getCharacterName());
 		}
-		holder.Subtitle.setText(RPG.getDate());
+		holder.Subtitle.setText(Helper.TimestampToString(Helper.toTimestamp(RPG.getDate(), "yyyy-MM-dd hh:mm:ss"), false));
 		holder.Post.setText(Html.fromHtml(RPG.getPost()));
 		
 		if(RPG.getAvatarURL() != null){

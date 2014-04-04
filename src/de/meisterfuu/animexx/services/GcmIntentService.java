@@ -2,6 +2,7 @@ package de.meisterfuu.animexx.services;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import de.meisterfuu.animexx.Debug;
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.activitys.main.MainActivity;
 import de.meisterfuu.animexx.notification.ENSNotification;
@@ -60,8 +61,8 @@ public class GcmIntentService extends IntentService {
 					RPGPostNotification.notify(this, extras.getString("title"), extras.getString("from_username"), extras.getString("from_id"),  extras.getString("id"), extras.getString("from"), 1);
 				} else {
 					// Post notification of unknown received message.
-					sendNotification("Received: " + extras.toString());
-					Log.i(TAG, "Received: " + extras.toString());
+					if(Debug.SHOW_DEBUG_NOTIFICATION)sendNotification("Received: " + extras.toString());
+					if(!Debug.SILENT_NETWORK)Log.i(TAG, "Received: " + extras.toString());
 				}
 
 

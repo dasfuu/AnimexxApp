@@ -34,7 +34,7 @@ public class EventAdapter extends BaseAdapter {
 	
 	static class ViewHolder {
 
-		public TextView Title, Subtitle, Color;
+		public TextView Title, Subtitle;
 	}
 
 	@Override
@@ -86,7 +86,6 @@ public class EventAdapter extends BaseAdapter {
 			ViewHolder viewHolder = new ViewHolder();
 			viewHolder.Title = (TextView) rowView.findViewById(R.id.event_list_item_title);
 			viewHolder.Subtitle = (TextView) rowView.findViewById(R.id.event_list_item_subtitle);
-			viewHolder.Color = (TextView) rowView.findViewById(R.id.event_list_item_color);
 			rowView.setTag(viewHolder);
 		}
 

@@ -3,6 +3,7 @@ package de.meisterfuu.animexx.utils;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.TimeZone;
 import java.util.regex.Pattern;
 
 import de.meisterfuu.animexx.Constants;
@@ -101,8 +102,9 @@ public class Helper {
 	}
 
 
-	public static long toTimestamp(String date) {
-		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.GERMANY);
+	public static long toTimestamp(String date, String format) {
+		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat(format, Locale.GERMANY);
+		sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
 		java.util.Date temp;
 
 		try {
@@ -120,7 +122,8 @@ public class Helper {
 		if(date.equalsIgnoreCase("Aktuell")){
 			return "Aktuell";
 		}
-		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.GERMANY);
+		sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
 		java.util.Date temp;
 
 		try {

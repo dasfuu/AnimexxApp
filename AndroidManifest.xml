@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.meisterfuu.animexx"
-    android:versionCode="64"
+    android:versionCode="65"
     android:versionName="2.0" >
 
     <uses-sdk
@@ -143,8 +143,12 @@
         <activity
             android:name="de.meisterfuu.animexx.activitys.rpg.RPGPostListActivity"
             android:label="@string/title_activity_rpgpost_list"
+            android:parentActivityName="de.meisterfuu.animexx.activitys.main.MainActivity"
             android:theme="@style/AnimexxThemeActionBarOverlay"
             android:windowSoftInputMode="stateHidden" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.meisterfuu.animexx.activitys.main.MainActivity" />
         </activity>
         <activity
             android:name="de.meisterfuu.animexx.activitys.events.SingleEventActivity"
@@ -156,7 +160,11 @@
         </activity>
         <activity
             android:name="de.meisterfuu.animexx.xmpp.XMPPChatActivity"
-            android:label="@string/title_activity_xmpptest" >
+            android:label="@string/title_activity_xmpptest"
+            android:parentActivityName="de.meisterfuu.animexx.activitys.main.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.meisterfuu.animexx.activitys.main.MainActivity" />
         </activity>
 
         <service
@@ -172,11 +180,11 @@
         <activity
             android:name="de.meisterfuu.animexx.AnimexxDebugActivity"
             android:label="@string/title_activity_animexx_debug" >
-            <intent-filter>
+<!--             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            </intent-filter> -->
         </activity>
 
         <receiver android:name="de.meisterfuu.animexx.xmpp.ConnectionManager$AlarmReceiver" >
