@@ -6,6 +6,7 @@ import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.activitys.ens.ENSFolderFragment;
 import de.meisterfuu.animexx.activitys.ens.NewENSActivity;
 import de.meisterfuu.animexx.activitys.events.EventListFragment;
+import de.meisterfuu.animexx.activitys.home.HomeObjectFragment;
 import de.meisterfuu.animexx.activitys.rpg.RPGListFragment;
 import de.meisterfuu.animexx.adapter.ENSFolderSpinnerAdapter;
 import de.meisterfuu.animexx.adapter.MainDrawerAdapter;
@@ -99,7 +100,11 @@ public class MainActivity extends Activity {
 		if(this.getIntent().hasExtra("LANDING") && this.getIntent().getStringExtra("LANDING").equals("CHAT")){
 			selectItem(3);
 		} else {
-			selectItem(0);
+			if(mLastPosition != -1){
+				selectItem(mLastPosition);
+			} else {
+				selectItem(0);
+			}
 		}
 	}
 
@@ -109,7 +114,9 @@ public class MainActivity extends Activity {
 		super.onNewIntent(intent);
 		if(intent.hasExtra("LANDING") && intent.getStringExtra("LANDING").equals("CHAT")){
 			selectItem(3);
-		} 
+		} else {
+			selectItem(mLastPosition);
+		}
 	}
 
 
@@ -191,6 +198,9 @@ public class MainActivity extends Activity {
 			MenuInflater inflater = getMenuInflater();
 			inflater.inflate(R.menu.main_ens, menu);
 		} else if (mSelected.equals("RPG")) {
+			MenuInflater inflater = getMenuInflater();
+			inflater.inflate(R.menu.main_rpg, menu);
+		} else if (mSelected.equals("EVENT")) {
 			MenuInflater inflater = getMenuInflater();
 			inflater.inflate(R.menu.main_rpg, menu);
 		} else if (mSelected.equals("EVENT")) {
@@ -279,6 +289,10 @@ public class MainActivity extends Activity {
 			selectEvent();
 		} else if(pPosition == 3) {
 			selectChat();
+		} else if(pPosition == 4){
+			selectHome();
+		} else if(pPosition == 5){
+			SettingsActivity.getInstance(this);
 		}
 	}
 
@@ -351,7 +365,18 @@ public class MainActivity extends Activity {
 		this.setTitle("Events");
 		Fragment fragment = EventListFragment.getInstance();
 		FragmentManager fragmentManager = getFragmentManager();
-		fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, "RPGList").commit();
+		fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, "EventList").commit();
+		getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+		invalidateOptionsMenu();
+	}
+	
+
+	private void selectHome() {
+		mSelected = "HOME";
+		this.setTitle("Home");
+		Fragment fragment = HomeObjectFragment.getInstance();
+		FragmentManager fragmentManager = getFragmentManager();
+		fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, "Home").commit();
 		getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 		invalidateOptionsMenu();
 	}

@@ -1,8 +1,11 @@
 package de.meisterfuu.animexx.activitys.home;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
+import android.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +16,17 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import de.meisterfuu.animexx.R;
+import de.meisterfuu.animexx.activitys.events.EventListFragment;
+import de.meisterfuu.animexx.adapter.EventAdapter;
+import de.meisterfuu.animexx.adapter.HomeContactAdapter;
+import de.meisterfuu.animexx.data.APICallback;
+import de.meisterfuu.animexx.data.events.EventApi;
+import de.meisterfuu.animexx.data.home.HomeApi;
 import de.meisterfuu.animexx.dummy.DummyContent;
+import de.meisterfuu.animexx.objects.EventObject;
+import de.meisterfuu.animexx.objects.home.ContactHomeObject;
+import de.meisterfuu.animexx.utils.APIException;
+import de.meisterfuu.animexx.utils.Request;
 
 /**
  * A fragment representing a list of Items.
@@ -34,12 +47,15 @@ public class HomeObjectFragment extends Fragment implements AbsListView.OnItemCl
 	 * The Adapter which will be used to populate the ListView/GridView with
 	 * Views.
 	 */
-	private ListAdapter mAdapter;
+	private HomeContactAdapter mAdapter;
+
+	private HomeApi mAPI;
+
+	private ArrayList<ContactHomeObject> mList;
 
 
-	// TODO: Rename and change types of parameters
-	public static HomeObjectFragment newInstance() {
-		HomeObjectFragment fragment = new HomeObjectFragment();
+	public static Fragment getInstance() {
+		Fragment fragment = new HomeObjectFragment();
 		return fragment;
 	}
 
@@ -61,21 +77,17 @@ public class HomeObjectFragment extends Fragment implements AbsListView.OnItemCl
 //		}
 
 		// TODO: Change Adapter to display your content
-		mAdapter = new ArrayAdapter<DummyContent.DummyItem>(getActivity(), android.R.layout.simple_list_item_1, android.R.id.text1, DummyContent.ITEMS);
 	}
 
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		Request.config = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
 		View view = inflater.inflate(R.layout.fragment_homeobject, container, false);
-
-		// Set the adapter
 		mListView = (AbsListView) view.findViewById(android.R.id.list);
-		((AdapterView<ListAdapter>) mListView).setAdapter(mAdapter);
-
-		// Set OnItemClickListener so we can be notified on item clicks
-		mListView.setOnItemClickListener(this);
-
+		mAPI = new HomeApi(this.getActivity());
+		init();
+		
 		return view;
 	}
 
@@ -104,27 +116,63 @@ public class HomeObjectFragment extends Fragment implements AbsListView.OnItemCl
 	 * the list is empty. If you would like to change the text, call this method
 	 * to supply the text it should use.
 	 */
-	public void setEmptyText(CharSequence emptyText) {
-		View emptyView = mListView.getEmptyView();
+//	public void setEmptyText(CharSequence emptyText) {
+//		View emptyView = mListView.getEmptyView();
+//
+//		if (emptyText instanceof TextView) {
+//			((TextView) emptyView).setText(emptyText);
+//		}
+//	}
 
-		if (emptyText instanceof TextView) {
-			((TextView) emptyView).setText(emptyText);
-		}
+	@Override
+	public void onResume() {
+
+//		mAPI = new HomeApi(this.getActivity());
+//		init();
+		
+		super.onResume();
+	}
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
 	}
 
-	/**
-	 * This interface must be implemented by activities that contain this
-	 * fragment to allow an interaction in this fragment to be communicated
-	 * to the activity and potentially other fragments contained in that
-	 * activity.
-	 * <p>
-	 * See the Android Training lesson <a href= "http://developer.android.com/training/basics/fragments/communicating.html" >Communicating with Other
-	 * Fragments</a> for more information.
-	 */
-	public interface OnFragmentInteractionListener {
+	private void init(){
+		// Set OnItemClickListener so we can be notified on item clicks
+		mListView.setOnItemClickListener(this);
+		
+		mList = new ArrayList<ContactHomeObject>();
+		mAdapter = new HomeContactAdapter(mList, HomeObjectFragment.this.getActivity());
+		mListView.setAdapter(mAdapter);
+//		mListView.setDivider(null);
+		mListView.setPadding(15, 0, 15, 0);
+		loadEntries();		
+	}
 
-		// TODO: Update argument type and name
-		public void onFragmentInteraction(String id);
+	
+	private void loadEntries(){
+				
+		mAPI.getContactWidgetList(HomeApi.LIST_ALL ,new APICallback(){
+
+			@SuppressWarnings("unchecked")
+			@Override
+			public void onCallback(APIException pError, Object pObject) {
+				ArrayList<ContactHomeObject> list = (ArrayList<ContactHomeObject>) pObject;
+				ArrayList<ContactHomeObject> list_ = new ArrayList<ContactHomeObject>();
+				for(ContactHomeObject obj: list){
+					if(obj.isMultiItem() == false){
+						list_.add(obj);
+					} else {
+						for(ContactHomeObject obj_: obj.getChildItems()){
+								list_.add(obj_);
+						}
+					}
+				}
+				mAdapter.addAll(list_);			
+			}
+		});
+
 	}
 
 }

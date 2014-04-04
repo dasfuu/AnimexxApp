@@ -114,6 +114,7 @@
             android:padding="8dp"
             android:clickable="true"
             android:text="@string/rpg_detail"
+            android:background="@android:drawable/list_selector_background"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@color/animexx_blue" />
 

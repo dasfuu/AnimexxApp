@@ -11,8 +11,8 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
-import de.meisterfuu.animexx.objects.ENSObject;
 import de.meisterfuu.animexx.objects.ENSDraftObject;
+import de.meisterfuu.animexx.objects.ENSObject;
 import de.meisterfuu.animexx.objects.ENSQueueObject;
 import de.meisterfuu.animexx.objects.XMPPMessageObject;
 import de.meisterfuu.animexx.objects.XMPPRoosterObject;
