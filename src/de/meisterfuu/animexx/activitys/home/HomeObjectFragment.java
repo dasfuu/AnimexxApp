@@ -1,6 +1,7 @@
 package de.meisterfuu.animexx.activitys.home;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -169,6 +170,7 @@ public class HomeObjectFragment extends Fragment implements AbsListView.OnItemCl
 						}
 					}
 				}
+				Collections.sort(list_);
 				mAdapter.addAll(list_);			
 			}
 		});

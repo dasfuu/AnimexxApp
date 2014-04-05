@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import de.meisterfuu.animexx.objects.UserObject;
 
-public class BasicHomeObject {
+public class BasicHomeObject implements Comparable<BasicHomeObject> {
 
 //	- multi_item: bool: bei einzelnen Objekten immer "false" bei Sammel Objekten immer "true"
 	@SerializedName("multi_item")
@@ -13,7 +13,7 @@ public class BasicHomeObject {
 //		Einzelnes Objekt:
 //		- item_id: string / null: die ID des Items, wird z.B. beim Kommentieren benötigt. "null" bei Multi-Items.
 	@SerializedName("item_id")
-	long itemID;
+	String itemID;
 	
 //		- event_typ: string: der interne Name des Eventtyps. Die genaue Liste der möglichen Typen steht jeweils weiter unten.
 	@SerializedName("event_typ")
@@ -26,6 +26,9 @@ public class BasicHomeObject {
 //		- date_server, date_server_ts, date_utc: Datum/Zeit, wann der Eintrag angelegt wurde
 	@SerializedName("date_utc")
 	String date;
+	
+	@SerializedName("date_server_ts")
+	long serverTS;
 	
 //		- von: User-Objekt: Von wem das Ereignis ausgelöst wurde
 	@SerializedName("von")
@@ -57,7 +60,7 @@ public class BasicHomeObject {
 	
 //		- fanwork_id: int: Fanwork-ID (nur gesetzt, falls es eine Fanwork-Zuordnung gibt).
 	@SerializedName("fanwork_id")
-	int fanworkID;
+	long fanworkID;
 	
 //		- fanwork_kommentierbar: bool: Ist das Fanwork kommentierbar? (nur gesetzt, falls es eine Fanwork-Zuordnung gibt).
 	@SerializedName("fanwork_kommentierbar")
@@ -77,11 +80,11 @@ public class BasicHomeObject {
 		this.multiItem = multiItem;
 	}
 
-	public long getItemID() {
+	public String getItemID() {
 		return itemID;
 	}
 
-	public void setItemID(long itemID) {
+	public void setItemID(String itemID) {
 		this.itemID = itemID;
 	}
 
@@ -165,11 +168,11 @@ public class BasicHomeObject {
 		this.fanworkClass = fanworkClass;
 	}
 
-	public int getFanworkID() {
+	public long getFanworkID() {
 		return fanworkID;
 	}
 
-	public void setFanworkID(int fanworkID) {
+	public void setFanworkID(long fanworkID) {
 		this.fanworkID = fanworkID;
 	}
 
@@ -187,6 +190,11 @@ public class BasicHomeObject {
 
 	public void setGroupedBy(int groupedBy) {
 		this.groupedBy = groupedBy;
+	}
+
+	@Override
+	public int compareTo(BasicHomeObject another) {
+		return ((Long)this.serverTS).compareTo(another.serverTS)*-1;
 	}
 		
 	

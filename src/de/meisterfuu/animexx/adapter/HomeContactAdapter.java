@@ -55,8 +55,8 @@ public class HomeContactAdapter extends BaseAdapter {
 		return mItems.get(position);
 	}
 
-	@Override
-	public long getItemId(int position) {		
+
+	public String getId(int position) {		
 		return mItems.get(position).getItemID();
 	}
 
@@ -96,16 +96,12 @@ public class HomeContactAdapter extends BaseAdapter {
 		
 		//Init
 		
-		//Subject
-		if(obj.getItemName() != null){
-			holder.Title.setText(obj.getItemName()+"\n"+obj.getVon().getUsername());
-		} else {
-			holder.Title.setText(obj.getEventName()+"\n"+obj.getVon().getUsername());
-		}
+		//Text
+		holder.Title.setText(obj.toString());
 		
 		if(obj.getBigImageURL() != null){
 			System.out.println(obj.getBigImageURL());
-			ImageLoader.download(new ImageSaveObject(obj.getBigImageURL(), obj.getItemID()+""), holder.Image);
+			ImageLoader.download(new ImageSaveObject(obj.getBigImageURL(), obj.getItemID()), holder.Image);
 			holder.Image.setVisibility(View.VISIBLE);
 		} else {
 			holder.Image.setVisibility(View.GONE);
@@ -125,6 +121,11 @@ public class HomeContactAdapter extends BaseAdapter {
 	public void addAll(ArrayList<ContactHomeObject> list) {
 		mItems.addAll(list);
 		this.notifyDataSetChanged();		
+	}
+
+	@Override
+	public long getItemId(int position) {
+		return position;
 	}
 	
 	

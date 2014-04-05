@@ -2,6 +2,7 @@ package de.meisterfuu.animexx.data.home;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import org.json.JSONObject;
 
@@ -74,9 +75,11 @@ public class HomeApi {
 	//Web-Api Access
 	
 	private ArrayList<ContactHomeObject> getContactListfromWeb() throws APIException {
-		// TODO Auto-generated method stub
+		Calendar c = Calendar.getInstance();
+		c.add(Calendar.DAY_OF_MONTH, -7);
+		long from = c.getTimeInMillis()/1000;
 		try {
-			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/persstart5/get_widget_data/?api=2&widget_id=kontakte&img_max_x=800&img_max_y=800&img_quality=90&img_format=jpg");
+			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/persstart5/get_widget_data/?api=2&widget_id=kontakte&zeit_von="+from+"&img_max_x=800&img_max_y=800&img_quality=90&img_format=jpg");
 			JSONObject resultObj = new JSONObject(result);
 			if(resultObj.getBoolean("success")){
 				Type collectionType = new TypeToken<ArrayList<ContactHomeObject>>(){}.getType();

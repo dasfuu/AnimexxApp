@@ -27,7 +27,7 @@
             android:defaultValue="false"
             android:dependency="notifications_new_message"
             android:key="notifications_new_message_ens_collapse"
-            android:title="@string/pref_title_ringtone" />
+            android:title="@string/pref_title_ens_collapse" />
     </PreferenceCategory>
     <PreferenceCategory android:title="Chat" >
         <EditTextPreference

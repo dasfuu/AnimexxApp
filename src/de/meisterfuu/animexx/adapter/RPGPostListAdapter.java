@@ -11,6 +11,7 @@ import de.meisterfuu.animexx.utils.imageloader.ImageDownloaderCustom;
 import de.meisterfuu.animexx.utils.imageloader.ImageSaveObject;
 import android.app.Activity;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -121,6 +122,18 @@ public class RPGPostListAdapter extends BaseAdapter {
 			holder.Title.setText(RPG.getCharacterName());
 		}
 		holder.Subtitle.setText(Helper.TimestampToString(Helper.toTimestamp(RPG.getDate(), "yyyy-MM-dd hh:mm:ss"), false));
+		
+		if(RPG.isAction()){
+			holder.Post.setTypeface(null, Typeface.ITALIC);
+		} else {
+			holder.Post.setTypeface(null, Typeface.NORMAL);
+		}
+		if(!RPG.isInTime()){
+			holder.Post.setTextColor(Color.GRAY);
+		} else {
+			holder.Post.setTextColor(Color.BLACK);
+		}
+		
 		holder.Post.setText(Html.fromHtml(RPG.getPost()));
 		
 		if(RPG.getAvatarURL() != null){

@@ -86,5 +86,18 @@ public class ContactHomeObject extends BasicHomeObject {
 	}
 
 	
+	public String toString(){
+		if(this.getEventType().equalsIgnoreCase("eventteilnahme")){
+			return this.getVon().getUsername()+" nimmt am Event \""+this.getItemName()+"\" teil.";
+		} else if(this.getEventType().equalsIgnoreCase("mb")){
+			return this.getComment()+"\n"+this.getVon().getUsername();
+		} else if(this.getAuthor() != null && this.getEventType().contains("mag")){
+			return this.getVon().getUsername()+" empfiehlt \""+this.getItemName()+"\" von "+this.getAuthor().getUsername()+".";
+		} else if(this.getAuthor() != null) {
+			return this.getItemName()+"\n"+this.getAuthor().getUsername();
+		} else {
+			return this.getEventName()+"\n"+this.getVon().getUsername();
+		}
+	}
 	
 }

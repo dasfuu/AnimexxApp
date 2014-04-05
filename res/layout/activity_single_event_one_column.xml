@@ -9,13 +9,13 @@
         android:id="@+id/LinearLayout1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
         android:orientation="vertical"
         android:paddingBottom="@dimen/activity_vertical_margin"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
-        tools:context=".SingleeventActivity"
-        android:animateLayoutChanges="true" >
+        tools:context=".SingleeventActivity" >
 
         <LinearLayout
             android:id="@+id/activity_event_single_base"
@@ -28,9 +28,9 @@
                 android:id="@+id/activity_event_single_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:animateLayoutChanges="true"
                 android:background="@drawable/card_background_shadow"
-                android:padding="10dp" 
-                android:animateLayoutChanges="true">
+                android:padding="10dp" >
 
                 <LinearLayout
                     android:id="@+id/activity_single_header_container2"
@@ -145,6 +145,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical" />
                         </LinearLayout>
+
                         <LinearLayout
                             android:id="@+id/activity_event_single_type"
                             android:layout_width="match_parent"
@@ -187,7 +188,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Beschreibungsseiten:" />
-
                 </LinearLayout>
             </FrameLayout>
 
@@ -209,10 +209,9 @@
                         android:id="@+id/activity_event_single_map_fragment"
                         android:name="com.google.android.gms.maps.MapFragment"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
-
+                        android:layout_height="match_parent"
+                        android:layout_margin="10dp" />
                 </LinearLayout>
-
             </FrameLayout>
         </LinearLayout>
     </LinearLayout>
