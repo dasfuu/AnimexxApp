@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Picasso.RequestTransformer;
+import com.squareup.picasso.Request;
+import com.squareup.picasso.Picasso.Builder;
 
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.objects.home.ContactHomeObject;
@@ -24,14 +27,17 @@ public class HomeContactAdapter extends BaseAdapter {
 	List<ContactHomeObject> mItems;
 	Activity mContext;
 	ImageDownloaderCustom ImageLoader = new ImageDownloaderCustom("home_contact");
+	private Picasso mPicasso;
 	
 	public HomeContactAdapter(List<ContactHomeObject> pList, Activity pContext){
 		this.mItems = pList;
 		this.mContext = pContext;
-		Picasso.with(mContext).setDebugging(true);
+		mPicasso = Picasso.with(mContext);
+		mPicasso.setDebugging(false);
 	}
 	
 	boolean mLoading;
+
 	
 	@Override
 	public void notifyDataSetChanged() {
@@ -103,12 +109,12 @@ public class HomeContactAdapter extends BaseAdapter {
 		holder.Title.setText(obj.toString());
 		
 		if(obj.getBigImageURL() != null && !obj.getBigImageURL().equals("null")){
-			System.out.println(obj.getBigImageURL());
+//			System.out.println(obj.getBigImageURL());
 			holder.Image.setVisibility(View.VISIBLE);
 			holder.Image.getLayoutParams().height = obj.getBigImageHeight();
 //			ImageLoader.download(new ImageSaveObject(obj.getBigImageURL(), obj.getItemID()), holder.Image);
 
-			Picasso.with(mContext).load(obj.getBigImageURL()).into(holder.Image);
+			mPicasso.load(obj.getBigImageURL()).into(holder.Image);
 		} else {
 			holder.Image.setVisibility(View.GONE);
 		}
