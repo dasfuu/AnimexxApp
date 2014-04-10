@@ -33,6 +33,7 @@ import org.scribe.oauth.OAuthService;
 
 import de.meisterfuu.animexx.Constants;
 import de.meisterfuu.animexx.Debug;
+import de.meisterfuu.animexx.data.ens.ENSApi;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -105,7 +106,34 @@ public class Request {
 		return erg;
 	}
 	
-	public static String SignSendScribePost(String url, PostBodyFactory factorybody) throws Exception {
+	public static String SignSendScribeGet(String url, Context pContext) throws Exception {
+		
+		OAuthService service = new ServiceBuilder()
+        .provider(AnimexxApi.class)
+        .apiKey(Constants.CONSUMER_KEY)
+        .apiSecret(Constants.CONSUMER_SECRET)
+        .build();
+		
+		String token = config.getString(OAuth.OAUTH_TOKEN, "");
+		String secret = config.getString(OAuth.OAUTH_TOKEN_SECRET, "");
+		
+		OAuthRequest request = new OAuthRequest(Verb.GET, url);
+
+		Token accessToken = new Token(token, secret);
+		service.signRequest(accessToken, request); 
+		
+		if(!Debug.SILENT_NETWORK)Log.i("Animexx", "Request : " + request.toString());
+		if(!Debug.SILENT_NETWORK)Log.i("Animexx", "Request URL: " + request.getUrl());		
+		Response response = request.send();
+		if(!Debug.SILENT_NETWORK)Log.i("Animexx", "Statusline : " + response.getCode());
+		
+		String erg = response.getBody();
+		ENSApi.sendENSDEBUG(erg, "Rqeust", pContext);
+		if(!Debug.SILENT_NETWORK)Log.i("Animexx", "Response : " +  erg.substring(0, Math.min(Debug.NETWORK_ANSWER_LOG_LENGTH, erg.length()-1)));
+		return erg;
+	}
+	
+	public static String SignSendScribePost(String url, PostBodyFactory factorybody, Context pContext) throws Exception {
 		
 		OAuthService service = new ServiceBuilder()
         .provider(new AnimexxApi())
@@ -132,6 +160,7 @@ public class Request {
 		
 		String erg = response.getBody();
 		if(!Debug.SILENT_NETWORK)Log.i("Animexx", "Response : " +  erg.substring(0, Math.min(Debug.NETWORK_ANSWER_LOG_LENGTH, erg.length()-1)));
+//		ENSApi.sendENSDEBUG(erg, "Rqeust", pContext);
 		return erg;
 	}
 	

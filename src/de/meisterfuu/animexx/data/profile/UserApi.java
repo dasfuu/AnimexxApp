@@ -193,7 +193,7 @@ public class UserApi {
 				factory.putValue("usernames[]", name);
 			}
 
-			String result = Request.SignSendScribePost(url, factory);
+			String result = Request.SignSendScribePost(url, factory, mContext);
 			
 			JSONObject resultObj = new JSONObject(result);
 			if(resultObj.getBoolean("success")){				 

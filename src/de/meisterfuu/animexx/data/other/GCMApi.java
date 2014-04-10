@@ -187,7 +187,7 @@ public class GCMApi {
 				factory.putValue("events[]", EventCodes.get(i));
 			}
 					
-			String result = Request.SignSendScribePost(url, factory);
+			String result = Request.SignSendScribePost(url, factory, mContext);
 			
 			JSONObject resultObj = new JSONObject(result);
 			if(resultObj.getBoolean("success")){
@@ -211,7 +211,7 @@ public class GCMApi {
 			factory.putValue("registration_id", id);
 			factory.putValue("collapse_by_type", "0");
 					
-			String result = Request.SignSendScribePost(url, factory);
+			String result = Request.SignSendScribePost(url, factory, mContext);
 			
 			JSONObject resultObj = new JSONObject(result);
 			if(resultObj.getBoolean("success")){

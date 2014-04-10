@@ -38,7 +38,7 @@ public class XMPPService extends Service {
 			.setOngoing(true)
 			.setTicker("Animexxenger")
 			.setContentTitle("Animexxenger")
-			.setContentText("XMPP Aktiv")
+			.setContentText("Online")
 			.setSmallIcon(R.drawable.ic_launcher)
 			.setContentIntent(XMPPRoosterFragment.getPendingIntent(this))
 			.build();

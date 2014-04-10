@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.PowerManager;
 import android.util.Log;
 
 
@@ -148,15 +149,23 @@ public class ConnectionManager {
 			DebugNotification.notify(mService, "Exception in ReconManager", 433963);
 			e.printStackTrace();
 			Helper.sendStacTrace(e, mService);
-		}
+		} 
 	}
 	
+
 	static public class AlarmReceiver extends BroadcastReceiver {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			ConnectionManager.getInstance().checkTick();			
-		}
+			try {
+				// Recon
+				ConnectionManager.getInstance().checkTick();
+			} catch (Exception e) {
+				DebugNotification.notify(context, "Exception in ReconManager Alarm", 433964);
+				e.printStackTrace();
+				Helper.sendStacTrace(e, context);
+			}
 
+		}
 	}
 }

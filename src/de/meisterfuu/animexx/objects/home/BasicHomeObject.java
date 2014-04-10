@@ -46,6 +46,12 @@ public class BasicHomeObject implements Comparable<BasicHomeObject> {
 	@SerializedName("item_image_big")
 	String bigImageURL;
 	
+	@SerializedName("item_image_big_width")
+	int bigImageWidth;
+	
+	@SerializedName("item_image_big_height")
+	int bigImageHeight;
+	
 //		- item_name: string / null: Name des Objekts/Fanworks, oder "null", falls keines vorhanden ist.
 	@SerializedName("item_name")
 	String itemName;
@@ -72,6 +78,30 @@ public class BasicHomeObject implements Comparable<BasicHomeObject> {
 	int groupedBy;
 
 	
+	public long getServerTS() {
+		return serverTS;
+	}
+
+	public void setServerTS(long serverTS) {
+		this.serverTS = serverTS;
+	}
+
+	public int getBigImageWidth() {
+		return bigImageWidth;
+	}
+
+	public void setBigImageWidth(int bigImageWidth) {
+		this.bigImageWidth = bigImageWidth;
+	}
+
+	public int getBigImageHeight() {
+		return bigImageHeight;
+	}
+
+	public void setBigImageHeight(int bigImageHeight) {
+		this.bigImageHeight = bigImageHeight;
+	}
+
 	public boolean isMultiItem() {
 		return multiItem;
 	}

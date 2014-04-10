@@ -3,6 +3,8 @@ package de.meisterfuu.animexx.adapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.squareup.picasso.Picasso;
+
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.objects.home.ContactHomeObject;
 import de.meisterfuu.animexx.utils.imageloader.ImageDownloaderCustom;
@@ -26,6 +28,7 @@ public class HomeContactAdapter extends BaseAdapter {
 	public HomeContactAdapter(List<ContactHomeObject> pList, Activity pContext){
 		this.mItems = pList;
 		this.mContext = pContext;
+		Picasso.with(mContext).setDebugging(true);
 	}
 	
 	boolean mLoading;
@@ -99,10 +102,13 @@ public class HomeContactAdapter extends BaseAdapter {
 		//Text
 		holder.Title.setText(obj.toString());
 		
-		if(obj.getBigImageURL() != null){
+		if(obj.getBigImageURL() != null && !obj.getBigImageURL().equals("null")){
 			System.out.println(obj.getBigImageURL());
-			ImageLoader.download(new ImageSaveObject(obj.getBigImageURL(), obj.getItemID()), holder.Image);
 			holder.Image.setVisibility(View.VISIBLE);
+			holder.Image.getLayoutParams().height = obj.getBigImageHeight();
+//			ImageLoader.download(new ImageSaveObject(obj.getBigImageURL(), obj.getItemID()), holder.Image);
+
+			Picasso.with(mContext).load(obj.getBigImageURL()).into(holder.Image);
 		} else {
 			holder.Image.setVisibility(View.GONE);
 		}

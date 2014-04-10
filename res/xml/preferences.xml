@@ -30,10 +30,6 @@
             android:title="@string/pref_title_ens_collapse" />
     </PreferenceCategory>
     <PreferenceCategory android:title="Chat" >
-        <EditTextPreference
-            android:key="xmpp_password"
-            android:summary="@string/pref_text_xmpp_password"
-            android:title="@string/pref_title_xmpp_password" />
     </PreferenceCategory>
 
 </PreferenceScreen>

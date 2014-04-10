@@ -200,10 +200,16 @@ public class XMPPApi {
 	}
 	
 	/**
-	 * @param pCallback 
 	 */
 	public XMPPRoosterObject NTgetSingleRooster(final String pJid){				
 				return getSingleRoosterFromDB(pJid);					
+	}
+	
+	/**
+	 * @throws APIException 
+	 */
+	public String NTgetNewChatAuth() throws APIException{				
+				return getChatAuthfromWeb();					
 	}
 	
 	//Web-Api Access
@@ -211,11 +217,28 @@ public class XMPPApi {
 	
 	private ArrayList<XMPPHistoryObject> getHistoryfromWeb(long pUserID, long pLimit)  throws APIException{
 		try {
-			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/xmpp/log_user_animexx/?user_id=" + pUserID + "&limit=" + pLimit);
+			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/xmpp/log_user_animexx/?api=2&user_id=" + pUserID + "&limit=" + pLimit);
 			JSONObject resultObj = new JSONObject(result);
 			if(resultObj.getBoolean("success")){
 				Type collectionType = new TypeToken<ArrayList<XMPPHistoryObject>>(){}.getType();
 				ArrayList<XMPPHistoryObject> list = gson.fromJson(resultObj.getString("return"), collectionType);		
+				return list;
+			} else {
+				throw new APIException("Error", APIException.OTHER);
+			}		
+	
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new APIException("Request Failed", APIException.REQUEST_FAILED);
+		}	
+	}
+	
+	private String getChatAuthfromWeb()  throws APIException{
+		try {
+			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/xmpp/get_chat_auth/?api=2");
+			JSONObject resultObj = new JSONObject(result);
+			if(resultObj.getBoolean("success")){
+				String list = resultObj.getJSONObject("return")	.getString("chat_auth");
 				return list;
 			} else {
 				throw new APIException("Error", APIException.OTHER);

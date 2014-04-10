@@ -92,7 +92,8 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 				//Password?
 				String password = PreferenceManager.getDefaultSharedPreferences(mApplicationContext).getString("xmpp_password", null);
 				if(password == null){
-					return false;
+					password = mApi.NTgetNewChatAuth();
+					PreferenceManager.getDefaultSharedPreferences(mApplicationContext).edit().putString("xmpp_password", password).apply();
 				}	
 				
 				login(username, password);		
@@ -139,7 +140,12 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 		getConnection().connect();
 		if(!getConnection().isAuthenticated()){
 			Log.i(TAG, ".login() called");
-			getConnection().login(userName, password, ressource);
+			try{
+				getConnection().login(userName, password, ressource);
+			} catch (XMPPException e){
+				PreferenceManager.getDefaultSharedPreferences(mApplicationContext).edit().putString("xmpp_password", null).apply();
+				throw e;
+			}
 		}
 		
 		//Set listener
@@ -181,6 +187,7 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 	}
 	
 	public boolean isConnected(){		
+		ping();
 		return (getConnection().isConnected() && connectionState && !getConnection().isSocketClosed());
 	}
 	

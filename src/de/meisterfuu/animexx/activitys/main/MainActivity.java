@@ -219,14 +219,9 @@ public class MainActivity extends Activity {
 					PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit().putBoolean("xmpp_status", isChecked).commit();
 					if(isChecked){
 						String password = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("xmpp_password", null);
-						if(password != null){
-							Intent intent = new Intent(MainActivity.this, XMPPService.class);
-							MainActivity.this.startService(intent);
-							selectChat();
-						} else {
-							sw.setChecked(false);
-							Toast.makeText(MainActivity.this, "Kein Passwort", Toast.LENGTH_LONG).show();
-						}
+						Intent intent = new Intent(MainActivity.this, XMPPService.class);
+						MainActivity.this.startService(intent);
+						selectChat();	
 					} else {
 						Intent intent = new Intent(MainActivity.this, XMPPService.class);
 						MainActivity.this.stopService(intent);
