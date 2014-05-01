@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import com.google.gson.annotations.SerializedName;
 
-public class RPGObject {
+public class RPGObject implements Comparable<RPGObject> {
 	
 //		  "id":425985,	
 	@SerializedName("id")
@@ -324,6 +324,7 @@ public class RPGObject {
 //		     2 = Das unter "mitglied" angegebene Mitglied wurde eingeladen
 		@SerializedName("status")
 		int status;
+		
 		public static final int STATUS_CLOSED = -1;
 		public static final int STATUS_OPEN = 1;
 		public static final int STATUS_INVITED = 2;
@@ -341,6 +342,11 @@ public class RPGObject {
 //		      "y":160
 //		    }
 //		  ],
+		
+		@SerializedName("avatare")
+		ArrayList<PlayerAvatarObject> avatars;
+		
+		
 //		  "eigenschaften":[
 //		    [
 //		     "Bli",
@@ -356,8 +362,7 @@ public class RPGObject {
 //		  "hauptbild_x":129,
 //		  "hauptbild_y":200		
 		
-		@SerializedName("avatare")
-		ArrayList<PlayerAvatarObject> avatars;
+
 		
 		
 		public PlayerObject() {
@@ -437,6 +442,9 @@ public class RPGObject {
 //	      "id":1450427, Avatar-ID
 //	      "x":160, Breite des Avatars
 //	      "y":120  Höhe des Avatars
+		
+//		media.animexx.onlinewelten.com/rpgs/charaktere/85/RPG-Id/charakterID_avatarID.jpg 
+//		85 ist RPG-ID Modulo 100
 
 		@SerializedName("id")
 		long id;
@@ -447,10 +455,11 @@ public class RPGObject {
 		
 		
 		public PlayerAvatarObject() {
-			
+			id = -1;
+			x = 0;
+			y = 0;
 		}
-
-
+				
 		public long getId() {
 			return id;
 		}
@@ -481,5 +490,10 @@ public class RPGObject {
 		}
 		
 		
+	}
+
+	@Override
+	public int compareTo(RPGObject another) {
+		return -1*this.getLastPostDate().compareTo(another.getLastPostDate());
 	}
 }

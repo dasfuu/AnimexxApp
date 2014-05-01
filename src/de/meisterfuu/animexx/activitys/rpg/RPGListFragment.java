@@ -1,6 +1,7 @@
 package de.meisterfuu.animexx.activitys.rpg;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import de.meisterfuu.animexx.adapter.RPGListAdapter;
 import de.meisterfuu.animexx.data.APICallback;
@@ -75,6 +76,7 @@ public class RPGListFragment extends ListFragment  {
 			@Override
 			public void onCallback(APIException pError, Object pObject) {
 				ArrayList<RPGObject> list = (ArrayList<RPGObject>) pObject;
+				Collections.sort(list);
 				mAdapter.addAll(list);			
 			}
 		});

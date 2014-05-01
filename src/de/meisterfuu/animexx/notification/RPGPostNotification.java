@@ -2,6 +2,7 @@ package de.meisterfuu.animexx.notification;
 
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.R.drawable;
+import de.meisterfuu.animexx.data.Self;
 import de.meisterfuu.animexx.utils.imageloader.BitmapLoaderCustom;
 import de.meisterfuu.animexx.xmpp.XMPPService;
 import android.annotation.TargetApi;
@@ -59,14 +60,18 @@ public class RPGPostNotification {
 			return;
 		}
 		
+		if(pUserId.equals(""+Self.getInstance(pContext).getUserID())){
+			return;
+		}
+		
 
 		// This image is used as the notification's large icon (thumbnail).
 		// TODO: Remove this if your notification has no relevant thumbnail.
 		final Bitmap picture = BitmapLoaderCustom.getUserBitmap(pUserId, pContext);
 
 		final String ticker = "Neuer RPG Eintrag von "+pUserName;
-		final String title = pTitle;
-		final String text = "Von "+pUserName;
+		final String title = pUserName;
+		final String text = pTitle;
 
 		final NotificationCompat.Builder builder = new NotificationCompat.Builder(pContext)
 
@@ -148,7 +153,7 @@ public class RPGPostNotification {
 				builder.setDefaults(Notification.DEFAULT_SOUND);
 			}
 			if(vibrate){
-				builder.setVibrate(new long[]{0,250,100,250});
+				builder.setVibrate(new long[]{0,150,100,150});
 			}
 			builder.setLights(R.color.animexx_blue, 1000, 600);
 			

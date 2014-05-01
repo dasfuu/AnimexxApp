@@ -114,11 +114,11 @@ public class ENSNotification {
 				builder.setDefaults(Notification.DEFAULT_SOUND);
 			}
 			if(vibrate){
-				builder.setVibrate(new long[]{0,250,100,250});
+				builder.setVibrate(new long[]{0,150,100,150});
 			}
 			builder.setLights(R.color.animexx_blue, 1000, 600);
 			
-			notify(pContext, pId.hashCode(),builder.build());
+			notify(pContext, pUserId.hashCode(),builder.build());
 		}
 		
 

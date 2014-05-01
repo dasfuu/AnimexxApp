@@ -36,17 +36,36 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
 
-                <CheckBox
-                    android:id="@+id/activity_rpgpost_new_intime"
+                <LinearLayout
+                    android:id="@+id/ch_container"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="InTime" />
+                    android:layout_margin="5dp"
+                    android:orientation="vertical" >
 
-                <CheckBox
-                    android:id="@+id/activity_rpgpost_new_action"
+                    <CheckBox
+                        android:id="@+id/activity_rpgpost_new_intime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:text="InTime" />
+
+                    <CheckBox
+                        android:id="@+id/activity_rpgpost_new_action"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Aktion" />
+
+                </LinearLayout>
+
+
+                <Spinner
+                    android:id="@+id/activity_rpgpost_new_avatar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Aktion" />
+                    android:layout_margin="5dp"
+                    android:layout_weight="1" />
+
             </LinearLayout>
 
             <EditText

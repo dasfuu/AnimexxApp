@@ -12,6 +12,7 @@ import de.meisterfuu.animexx.activitys.ens.NewENSActivity;
 import de.meisterfuu.animexx.activitys.main.MainActivity;
 import de.meisterfuu.animexx.activitys.main.SettingsActivity;
 import de.meisterfuu.animexx.adapter.ChatAdapter;
+import de.meisterfuu.animexx.adapter.RPGAvatarSpinnerAdapter;
 import de.meisterfuu.animexx.adapter.RPGPostListAdapter;
 import de.meisterfuu.animexx.adapter.RPGSpinnerAdapter;
 import de.meisterfuu.animexx.data.APICallback;
@@ -41,7 +42,9 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -69,6 +72,7 @@ public class RPGPostListActivity extends ListActivity implements PanelSlideListe
 	CheckBox mCBAction, mCBInTime;
 	TextView mToggleLabel;
 	private BroadcastReceiver mReceiver;
+	private Spinner mSpinnerAvatar;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +83,7 @@ public class RPGPostListActivity extends ListActivity implements PanelSlideListe
 		mToggleLabel = (TextView) this.findViewById(R.id.activity_rpgpost_new_toggle);
 		mCBAction = (CheckBox) this.findViewById(R.id.activity_rpgpost_new_action);
 		mCBInTime = (CheckBox) this.findViewById(R.id.activity_rpgpost_new_intime);
+		mSpinnerAvatar = (Spinner) this.findViewById(R.id.activity_rpgpost_new_avatar);
 		mEditPost = (EditText) this.findViewById(R.id.activity_rpgpost_new_text);
 		
 		mSlidingLayout.setPanelSlideListener(this);
@@ -154,8 +159,10 @@ public class RPGPostListActivity extends ListActivity implements PanelSlideListe
 					@Override
 					public boolean onNavigationItemSelected(int itemPosition, long itemId) {
 						mCharaID = itemId;
+						initChara();
 						return true;
 					}
+
 				};
 
 				RPGPostListActivity.this.getActionBar().setListNavigationCallbacks(spinnerAdapter, listener);
@@ -225,11 +232,23 @@ public class RPGPostListActivity extends ListActivity implements PanelSlideListe
 		invalidateOptionsMenu();
 	}
 	
+	private void initChara() {
+		for(RPGObject.PlayerObject obj: mRPG.getPlayer()){
+			if(obj.getId() == mCharaID){
+				mSpinnerAvatar.setAdapter(new RPGAvatarSpinnerAdapter(obj, mRPG, this));
+				if(mSpinnerAvatar.getAdapter().getCount() > 1){
+					mSpinnerAvatar.setSelection(1);
+				}
+				break;
+			}
+		}
+	}
+	
 	public void post() {
 		final ProgressDialog dialog = new ProgressDialog(this);
 		dialog.setTitle("Sende...");
 		RPGDraftObject draft = new RPGDraftObject();
-		draft.setAvatarID(-1);
+		draft.setAvatarID(mSpinnerAvatar.getSelectedItemId());
 		draft.setCharaID(mCharaID);
 		if(mCBInTime.isChecked()){
 			draft.setInTime(1);

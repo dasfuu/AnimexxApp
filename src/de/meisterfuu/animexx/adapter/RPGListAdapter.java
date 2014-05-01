@@ -105,7 +105,7 @@ public class RPGListAdapter extends BaseAdapter {
 		
 		//Subject
 		holder.Title.setText(RPG.getName());
-		holder.Date.setText("Letzter Post "+Helper.TimestampToString(Helper.toTimestamp(RPG.getLastPostDate(), "yyyy-MM-dd hh:mm:ss"), false));
+		holder.Date.setText("Letzter Post von "+RPG.getLastPlayer()+" "+Helper.TimestampToString(Helper.toTimestamp(RPG.getLastPostDate(), "yyyy-MM-dd hh:mm:ss"), false));
 		holder.Count.setText(RPG.getPostCount()+" Posts");
 		holder.Topic.setText(RPG.getTopicName());
 		
