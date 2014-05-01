@@ -103,7 +103,7 @@ public class MainActivity extends Activity {
 			if(mLastPosition != -1){
 				selectItem(mLastPosition);
 			} else {
-				selectItem(0);
+				selectItem(4);
 			}
 		}
 	}
