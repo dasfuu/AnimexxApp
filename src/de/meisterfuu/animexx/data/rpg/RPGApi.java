@@ -156,7 +156,7 @@ public class RPGApi {
 	private RPGObject getRPGfromWeb(long pID) throws APIException{
 		// TODO Auto-generated method stub
 		try {
-			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/rpg/rpg_details_alles/?api=2&rpg="+pID);
+			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/rpg/rpg_details_alles/?api=2&rpg="+pID,mContext);
 			JSONObject resultObj = new JSONObject(result);
 			if(resultObj.getBoolean("success")){
 				RPGObject obj = gson.fromJson(resultObj.getString("return"), RPGObject.class);
@@ -177,7 +177,7 @@ public class RPGApi {
 	private ArrayList<RPGObject> getRPGListfromWeb() throws APIException {
 		// TODO Auto-generated method stub
 		try {
-			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/rpg/meine_rpgs/?api=2&alles=1");
+			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/rpg/meine_rpgs/?api=2&alles=1", mContext);
 			JSONObject resultObj = new JSONObject(result);
 			if(resultObj.getBoolean("success")){
 				Type collectionType = new TypeToken<ArrayList<RPGObject>>(){}.getType();
@@ -199,7 +199,7 @@ public class RPGApi {
 	private ArrayList<RPGPostObject> getRPGPostListfromWeb(long pID, long pFromPos) throws APIException {
 		// TODO Auto-generated method stub
 		try {
-			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/rpg/get_postings/?api=2&limit=30&text_format=html&rpg="+pID+"&from_pos="+pFromPos);
+			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/rpg/get_postings/?api=2&limit=30&text_format=html&rpg="+pID+"&from_pos="+pFromPos,mContext);
 			JSONObject resultObj = new JSONObject(result);
 			if(resultObj.getBoolean("success")){
 				Type collectionType = new TypeToken<ArrayList<RPGPostObject>>(){}.getType();

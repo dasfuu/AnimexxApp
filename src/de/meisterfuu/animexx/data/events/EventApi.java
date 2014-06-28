@@ -156,7 +156,7 @@ public class EventApi {
 	private EventObject getEventfromWeb(long pID) throws APIException{
 		// TODO Auto-generated method stub
 		try {
-			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/events/event/details/?api=2&id="+pID);
+			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/events/event/details/?api=2&id="+pID,mContext);
 			//result = mContext.getResources().getString(R.string.testJSON);
 			JSONObject resultObj = new JSONObject(result);
 			if(resultObj.getBoolean("success")){
@@ -178,7 +178,7 @@ public class EventApi {
 	private EventDescriptionObject getEventDescriptionfromWeb(long pEventID, long pPageID) throws APIException{
 		// TODO Auto-generated method stub
 		try {
-			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/events/event/beschreibung_get/?api=2&event_id="+pEventID+"&beschreibung_id="+pPageID);
+			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/events/event/beschreibung_get/?api=2&event_id="+pEventID+"&beschreibung_id="+pPageID,mContext);
 			//result = mContext.getResources().getString(R.string.testJSON);
 			JSONObject resultObj = new JSONObject(result);
 			if(resultObj.getBoolean("success")){
@@ -200,7 +200,7 @@ public class EventApi {
 	private EventObject getBasicEventfromWeb(long pID) throws APIException{
 		// TODO Auto-generated method stub
 		try {
-			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/events/event/grunddaten/?api=2&id="+pID);
+			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/events/event/grunddaten/?api=2&id="+pID,mContext);
 			JSONObject resultObj = new JSONObject(result);
 			if(resultObj.getBoolean("success")){
 				EventObject obj = gson.fromJson(resultObj.getString("return"), EventObject.class);
@@ -221,7 +221,7 @@ public class EventApi {
 	private ArrayList<EventObject> getEventListfromWeb() throws APIException {
 		// TODO Auto-generated method stub
 		try {
-			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/events/event/dabei_events/?api=2&alles=1");
+			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/events/event/dabei_events/?api=2&alles=1", mContext);
 			JSONObject resultObj = new JSONObject(result);
 			if(resultObj.getBoolean("success")){
 				Type collectionType = new TypeToken<ArrayList<EventObject>>(){}.getType();
@@ -243,7 +243,7 @@ public class EventApi {
 	private ArrayList<EventObject> getHighlightEventListfromWeb() throws APIException {
 		// TODO Auto-generated method stub
 		try {
-			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/events/event/startseitenevents/?api=2&alles=1");
+			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/events/event/startseitenevents/?api=2&alles=1", mContext);
 			JSONObject resultObj = new JSONObject(result);
 			if(resultObj.getBoolean("success")){
 				Type collectionType = new TypeToken<ArrayList<EventObject>>(){}.getType();

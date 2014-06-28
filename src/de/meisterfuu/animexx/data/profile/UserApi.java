@@ -168,7 +168,7 @@ public class UserApi {
 	private ArrayList<UserObject> searchUserByNameWeb(String pUsername) throws APIException {
 		try {
 			
-			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/mitglieder/username_autocomplete/?api=2&str="+OAuth.percentEncode(pUsername));
+			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/mitglieder/username_autocomplete/?api=2&str="+OAuth.percentEncode(pUsername),mContext);
 			JSONObject resultObj = new JSONObject(result);
 			if(resultObj.getBoolean("success")){				 
 					Type collectionType = new TypeToken<ArrayList<UserObject>>(){}.getType();
@@ -213,7 +213,7 @@ public class UserApi {
 
 		try {
 			
-			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/mitglieder/ich/?api=2");
+			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/mitglieder/ich/?api=2", mContext);
 			JSONObject resultObj = new JSONObject(result);
 			if(resultObj.getBoolean("success")){
 				return resultObj.getJSONObject("return");
@@ -236,7 +236,7 @@ public class UserApi {
 				allPictures = 1;
 			}
 			
-			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/mitglieder/steckbrief/?api=2&user_id="+ pUserID +"&allefotos="+ allPictures +"&mit_selbstbeschreibung=1&img_max_x=800&img_max_y=800&img_quality=90&img_format=jpg");
+			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/mitglieder/steckbrief/?api=2&user_id="+ pUserID +"&allefotos="+ allPictures +"&mit_selbstbeschreibung=1&img_max_x=800&img_max_y=800&img_quality=90&img_format=jpg", mContext);
 			JSONObject resultObj = new JSONObject(result);
 			if(resultObj.getBoolean("success")){
 				return resultObj.getJSONObject("return");

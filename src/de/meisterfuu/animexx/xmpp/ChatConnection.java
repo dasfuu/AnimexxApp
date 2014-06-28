@@ -58,11 +58,13 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 	private PingManager mPingManager;
 	private int res_attach;
 	private String ressource;
+	private ConnectionManager mManager;
 	
-	public ChatConnection(Context pContext){
+	public ChatConnection(Context pContext, ConnectionManager pManager){
 		Log.i(TAG, "ChatConnection Constructor called");
 		mApplicationContext = pContext.getApplicationContext();
 		mApi = new XMPPApi(mApplicationContext);
+		mManager = pManager;
 		
     	connectionState = false;
 		SmackAndroid.init(mApplicationContext);
@@ -71,7 +73,7 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 		SmackConfiguration.setDefaultPacketReplyTimeout(30000);
 		
 		Random r = new Random();
-		res_attach = r.nextInt();
+		res_attach = 1;//r.nextInt();
 		ressource = "AndroidApp_"+res_attach;
 		
 		setupNewMessageReceiver();
@@ -125,7 +127,7 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 		if(getConnection() == null){
 			ConnectionConfiguration config = new ConnectionConfiguration("jabber.animexx.de");
 			
-			config.setReconnectionAllowed(false);
+			config.setReconnectionAllowed(true);
 			Log.i(TAG, "mConnection = new TCPConnection(config) called");
 			mConnection = new TCPConnection(config);
 			connectionState = true;			
@@ -237,6 +239,9 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 				intent.putExtra(XMPPService.BUNDLE_MESSAGE_BODY, message.getBody());
 				intent.putExtra(XMPPService.BUNDLE_FROM, chat.getParticipant());
 				intent.putExtra(XMPPService.BUNDLE_TIME, ""+System.currentTimeMillis());
+			    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+				    intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
+			    }
 				mApplicationContext.sendBroadcast(intent);
 				
 				System.out.println("new message: "+XMPPNotification.d_from+" "+chat.getParticipant());
@@ -293,6 +298,9 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 		
 		Intent intent = new Intent(XMPPService.NEW_ROOSTER);
 		intent.setPackage(mApplicationContext.getPackageName());
+	    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+		    intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
+	    }
 		mApplicationContext.sendBroadcast(intent);
 	}
 	
@@ -337,6 +345,9 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 		
 		Intent intent = new Intent(XMPPService.NEW_ROOSTER);
 		intent.setPackage(mApplicationContext.getPackageName());
+	    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+		    intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
+	    }
 		mApplicationContext.sendBroadcast(intent);
 	}
 	
@@ -381,8 +392,8 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 
    @Override
    public void reconnectionSuccessful() {
-   	Log.i(TAG, "ConnectionListener.reconnectionSuccessful() called");
-   	initKeepAlive();
+	   	Log.i(TAG, "ConnectionListener.reconnectionSuccessful() called");
+	   	initKeepAlive();
    }
    
    @Override
@@ -395,13 +406,15 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
    
    @Override
    public void connectionClosedOnError(Exception arg0) {
-   	connectionState = false;
-   	Log.i(TAG, "ConnectionListener.connectionClosedOnError() called");
+	   	connectionState = false;
+   		mManager.scheduleCheck();
+	   	Log.i(TAG, "ConnectionListener.connectionClosedOnError() called");
    }
    
    @Override
    public void connectionClosed() {
-   	connectionState = false;
+   		connectionState = false;
+   		mManager.scheduleCheck();
 		Log.i(TAG, "ConnectionListener.connectionClosed() called");
    }
 
@@ -414,6 +427,7 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 	public void connected(XMPPConnection arg0) {
 		connectionState = true;
 		Log.i(TAG, "ConnectionListener.connected() called");
+	   	initKeepAlive();
 	}
 
 

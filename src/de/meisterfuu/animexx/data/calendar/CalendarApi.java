@@ -89,7 +89,7 @@ public class CalendarApi {
 	
 	private ArrayList<CalendarEntryObject> getEntryListfromWeb(String pDay) throws APIException {
 		try {
-			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/kalender/list/?api=2&zuord_typ=user_private&zuord_id="+Self.getInstance(mContext).getUserID()+"&zeitraum=month&show_gebs=1&tag="+pDay);
+			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/kalender/list/?api=2&zuord_typ=user_private&zuord_id="+Self.getInstance(mContext).getUserID()+"&zeitraum=month&show_gebs=1&tag="+pDay, mContext);
 			JSONObject resultObj = new JSONObject(result);
 			if(resultObj.getBoolean("success")){
 				Type collectionType = new TypeToken<ArrayList<CalendarEntryObject>>(){}.getType();

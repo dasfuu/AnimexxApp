@@ -320,7 +320,7 @@ public class ENSApi {
 		}
 		
 		try {
-			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/ens/an_check/?api=2"+names);
+			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/ens/an_check/?api=2"+names, mContext);
 			JSONObject resultObj = new JSONObject(result);
 			if(resultObj.getBoolean("success")){
 				anCheckObject arr = gson.fromJson(resultObj.getString("return"), ENSApi.anCheckObject.class);
@@ -356,7 +356,7 @@ public class ENSApi {
 	private ENSObject getENSfromWeb(long pID) throws APIException{
 
 		try {
-			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/ens/ens_open/?ens_id=" + pID + "&text_format=both&api=2&get_user_avatar=true");
+			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/ens/ens_open/?ens_id=" + pID + "&text_format=both&api=2&get_user_avatar=true", mContext);
 			JSONObject resultObj = new JSONObject(result);
 			if(resultObj.getBoolean("success")){
 				ENSObject ENS = gson.fromJson(resultObj.getString("return"), ENSObject.class);
@@ -374,7 +374,7 @@ public class ENSApi {
 	
 	private ArrayList<ENSObject> getENSListfromWeb(long pPage, long pFolder, String pType)  throws APIException{
 		try {
-			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/ens/ordner_ens_liste/?ordner_id=" + pFolder + "&ordner_typ=" + pType + "&seite=" + pPage + "&api=2&get_user_avatar=true");
+			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/ens/ordner_ens_liste/?ordner_id=" + pFolder + "&ordner_typ=" + pType + "&seite=" + pPage + "&api=2&get_user_avatar=true", mContext);
 			JSONObject resultObj = new JSONObject(result);
 			if(resultObj.getBoolean("success")){
 				Type collectionType = new TypeToken<ArrayList<ENSObject>>(){}.getType();
@@ -394,7 +394,7 @@ public class ENSApi {
 	
 	private ArrayList<ENSFolderObject> getFolderfromWeb()  throws APIException{
 		try {
-			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/ens/ordner_liste/?api=2");
+			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/ens/ordner_liste/?api=2", mContext);
 			JSONObject resultObj = new JSONObject(result);
 			if(resultObj.getBoolean("success")){
 				Type collectionType = new TypeToken<ArrayList<ENSFolderObject>>(){}.getType();

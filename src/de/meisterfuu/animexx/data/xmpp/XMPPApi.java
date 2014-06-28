@@ -62,6 +62,9 @@ public class XMPPApi {
 		intent.setPackage(pContext.getPackageName());
 		intent.putExtra(XMPPService.BUNDLE_MESSAGE_BODY, pMessage);
 		intent.putExtra(XMPPService.BUNDLE_TO, pToJID);
+	    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+		    intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
+	    }
 		pContext.sendBroadcast(intent);		
 	}
 	
@@ -217,7 +220,7 @@ public class XMPPApi {
 	
 	private ArrayList<XMPPHistoryObject> getHistoryfromWeb(long pUserID, long pLimit)  throws APIException{
 		try {
-			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/xmpp/log_user_animexx/?api=2&user_id=" + pUserID + "&limit=" + pLimit);
+			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/xmpp/log_user_animexx/?api=2&user_id=" + pUserID + "&limit=" + pLimit, mContext);
 			JSONObject resultObj = new JSONObject(result);
 			if(resultObj.getBoolean("success")){
 				Type collectionType = new TypeToken<ArrayList<XMPPHistoryObject>>(){}.getType();
@@ -235,7 +238,7 @@ public class XMPPApi {
 	
 	private String getChatAuthfromWeb()  throws APIException{
 		try {
-			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/xmpp/get_chat_auth/?api=2");
+			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/xmpp/get_chat_auth/?api=2", mContext);
 			JSONObject resultObj = new JSONObject(result);
 			if(resultObj.getBoolean("success")){
 				String list = resultObj.getJSONObject("return")	.getString("chat_auth");
