@@ -1,0 +1,30 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="?android:attr/actionBarSize"
+    tools:context=".RPGPostListActivity" xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.sothree.slidinguppanel.SlidingUpPanelLayout
+        android:id="@+id/activity_rpgpost_list_slide"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:dragView="@+id/activity_rpgpost_new_drag"
+        app:panelHeight="50dp"
+        android:gravity="bottom" >
+
+        <ListView
+            android:id="@android:id/list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:stackFromBottom="true"
+            android:transcriptMode="alwaysScroll" />
+
+        <include
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            layout="@layout/activity_rpgpost_new" />
+    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+
+</RelativeLayout>

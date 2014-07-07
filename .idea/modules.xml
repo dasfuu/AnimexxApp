@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/AnimexxApp.iml" filepath="$PROJECT_DIR$/AnimexxApp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/animexxApp/animexxApp.iml" filepath="$PROJECT_DIR$/animexxApp/animexxApp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/slidingUpPanel/slidingUpPanel.iml" filepath="$PROJECT_DIR$/slidingUpPanel/slidingUpPanel.iml" />
+    </modules>
+  </component>
+</project>
+
