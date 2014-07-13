@@ -6,7 +6,6 @@ import de.meisterfuu.animexx.Debug;
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.activitys.main.MainActivity;
 import de.meisterfuu.animexx.notification.ENSCollapseNotification;
-import de.meisterfuu.animexx.notification.ENSNotification;
 import de.meisterfuu.animexx.notification.RPGPostNotification;
 import de.meisterfuu.animexx.receiver.GcmBroadcastReceiver;
 
@@ -16,7 +15,6 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.Context;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -58,7 +56,8 @@ public class GcmIntentService extends IntentService {
 			// If it's a regular GCM message, do some work.
 			} else if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
 				if(extras.getString("type").equalsIgnoreCase("XXEventENS")){
-						ENSCollapseNotification.notify(this, extras.getString("title"), extras.getString("from_username"), extras.getString("from_id"),  extras.getString("id"), extras.getString("from"));
+					System.out.println("ENS GCM!!!");
+					ENSCollapseNotification.notify(this, extras.getString("title"), extras.getString("from_username"), extras.getString("from_id"),  extras.getString("id"), extras.getString("from"));
 				} else if(extras.getString("type").equalsIgnoreCase("XXEventRPGPosting")) {
 					RPGPostNotification.notify(this, extras.getString("title"), extras.getString("from_username"), extras.getString("from_id"),  extras.getString("id"), extras.getString("from"), 1);
 				} else {

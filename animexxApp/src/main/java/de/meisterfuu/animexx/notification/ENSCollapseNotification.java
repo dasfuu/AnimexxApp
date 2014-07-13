@@ -1,6 +1,7 @@
 package de.meisterfuu.animexx.notification;
 
 import de.meisterfuu.animexx.R;
+import de.meisterfuu.animexx.activitys.ens.ENSFolderFragment;
 import de.meisterfuu.animexx.activitys.ens.SingleENSActivity;
 import de.meisterfuu.animexx.data.ens.ENSApi;
 import de.meisterfuu.animexx.objects.ENSNotifyObject;
@@ -13,10 +14,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,10 +56,16 @@ public class ENSCollapseNotification {
 		if(list.size() == 1){
 			notifyFirst(pContext, pTitle, pUserName, pUserId, pId, pFrom);
 		} else {
-			ArrayList<String> lines = new ArrayList<String>();
+			ArrayList<SpannableStringBuilder> lines = new ArrayList<SpannableStringBuilder>();
 //			lines.add(obj.getFromUsername() + ": " + obj.getSubject());
 			for (int i = list.size()-1; i >= 0; i--) {
-				lines.add(list.get(i).getFromUsername() + ": " + list.get(i).getSubject());
+
+				final SpannableStringBuilder exampleItem = new SpannableStringBuilder();
+				exampleItem.append(list.get(i).getFromUsername());
+				exampleItem.setSpan(new ForegroundColorSpan(Color.WHITE), 0, exampleItem.length(), 0);
+				exampleItem.append("   "+list.get(i).getSubject());
+
+				lines.add(exampleItem);
 			}
 			notifyMultiple(pContext, pTitle, lines, lines.size());
 		}
@@ -71,7 +81,7 @@ public class ENSCollapseNotification {
 
 		final String ticker = "Neue ENS";
 		final String title =  pTitle;
-		final String text = "ENS von "+pUserName;
+		final String text = pUserName;
 
 		final NotificationCompat.Builder builder = new NotificationCompat.Builder(pContext)
 
@@ -140,7 +150,7 @@ public class ENSCollapseNotification {
 
 	}
 
-	private static void notifyMultiple(final Context pContext, final String pTicker, ArrayList<String> lines, final int count) {
+	private static void notifyMultiple(final Context pContext, final String pTicker, ArrayList<SpannableStringBuilder> lines, final int count) {
 
 		final String ticker = pTicker;
 
@@ -160,10 +170,11 @@ public class ENSCollapseNotification {
 
 		final NotificationCompat.Builder builder  = new NotificationCompat.Builder(pContext)
 				.setContentTitle(count + " neue ENS")
-				.setContentText(ticker)
+				.setContentText(lines.get(0))
 				.setTicker(ticker)
 				.setSmallIcon(R.drawable.ic_stat_ens)
 				.setPriority(NotificationCompat.PRIORITY_HIGH)
+				.setContentIntent(ENSFolderFragment.getPendingIntent(pContext))
 				.setAutoCancel(true)
 				.setNumber(count)
 				.setStyle(inbox);
@@ -196,8 +207,9 @@ public class ENSCollapseNotification {
 
 	@TargetApi(Build.VERSION_CODES.ECLAIR)
 	private static void notify(final Context context, final Notification notification) {
+		System.out.println("ENS NOTIFY!");
 		final NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-		nm.notify(NOTIFICATION_TAG, 1, notification);
+		nm.notify(NOTIFICATION_TAG, 0, notification);
 	}
 
 

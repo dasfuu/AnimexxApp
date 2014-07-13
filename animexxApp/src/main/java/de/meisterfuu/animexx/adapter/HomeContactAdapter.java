@@ -33,7 +33,7 @@ public class HomeContactAdapter extends BaseAdapter {
 		this.mItems = pList;
 		this.mContext = pContext;
 		mPicasso = Picasso.with(mContext);
-		mPicasso.setDebugging(false);
+		mPicasso.setIndicatorsEnabled(false);
 	}
 	
 	boolean mLoading;

@@ -4,6 +4,7 @@ package de.meisterfuu.animexx.objects;
 public class DrawerObject {
 	
 	String title;
+	String code;
 	String subtitle;
 	int iconId;
 	
@@ -40,7 +41,13 @@ public class DrawerObject {
 	public void setIconId(int iconId) {
 		this.iconId = iconId;
 	}
-	
-	
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(final String pCode) {
+		code = pCode;
+	}
 
 }

@@ -2,6 +2,7 @@ package de.meisterfuu.animexx.notification;
 
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.R.drawable;
+import de.meisterfuu.animexx.activitys.rpg.RPGListFragment;
 import de.meisterfuu.animexx.data.Self;
 import de.meisterfuu.animexx.utils.imageloader.BitmapLoaderCustom;
 import de.meisterfuu.animexx.xmpp.XMPPService;
@@ -18,6 +19,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+
+import com.google.android.gms.drive.internal.p;
 
 /**
  * Helper class for showing and canceling rpgpost notifications.
@@ -110,13 +113,7 @@ public class RPGPostNotification {
 
 				// Set the pending intent to be initiated when the user touches
 				// the notification.
-//				.setContentIntent(
-//						PendingIntent.getActivity(
-//								context,
-//								0,
-//								new Intent(Intent.ACTION_VIEW, Uri
-//										.parse("http://www.google.com")),
-//								PendingIntent.FLAG_UPDATE_CURRENT))
+				.setContentIntent(RPGListFragment.getPendingIntent(pContext))
 
 				// Example additional actions for this notification. These will
 				// only show on devices running Android 4.1 or later, so you

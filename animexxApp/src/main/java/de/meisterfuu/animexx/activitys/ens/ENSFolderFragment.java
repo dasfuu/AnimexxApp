@@ -3,6 +3,7 @@ package de.meisterfuu.animexx.activitys.ens;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import de.meisterfuu.animexx.activitys.main.MainActivity;
 import de.meisterfuu.animexx.adapter.ENSFolderAdapter;
 import de.meisterfuu.animexx.data.APICallback;
 import de.meisterfuu.animexx.data.ens.ENSApi;
@@ -10,6 +11,9 @@ import de.meisterfuu.animexx.objects.ENSObject;
 import de.meisterfuu.animexx.utils.APIException;
 import de.meisterfuu.animexx.utils.Request;
 import android.app.ListFragment;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
@@ -44,9 +48,13 @@ public class ENSFolderFragment extends ListFragment implements OnScrollListener 
 	     result.setArguments(args);
 		return result;
 	}
-	
 
 
+	public static PendingIntent getPendingIntent(Context pContext) {
+		Intent intent = new Intent(pContext, MainActivity.class);
+		intent.putExtra("LANDING", "ENS");
+		return PendingIntent.getActivity(pContext, 0, intent, 0);
+	}
 
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
@@ -70,7 +78,9 @@ public class ENSFolderFragment extends ListFragment implements OnScrollListener 
 	@Override
 	public void onResume() {
 		Request.config = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
+
 		mAPI = new ENSApi(this.getActivity());
+		mAPI.clearNotification();
 
 		if(ENSFolderFragment.saveAdapter == null){
 			init();

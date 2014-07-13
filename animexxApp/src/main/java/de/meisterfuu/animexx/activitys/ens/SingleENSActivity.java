@@ -8,7 +8,6 @@ import java.util.Random;
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.data.APICallback;
 import de.meisterfuu.animexx.data.ens.ENSApi;
-import de.meisterfuu.animexx.notification.ENSNotification;
 import de.meisterfuu.animexx.objects.ENSDraftObject;
 import de.meisterfuu.animexx.objects.ENSObject;
 import de.meisterfuu.animexx.objects.UserObject;
@@ -96,8 +95,7 @@ public class SingleENSActivity extends Activity {
 		Bundle extras = this.getIntent().getExtras();
 		mID = extras.getLong("id");
 		
-		ENSNotification.cancel(this, mID);
-		
+
 		mAPI = new ENSApi(this);
 		mAPI.getENS(mID, new APICallback() {
 			
@@ -145,7 +143,8 @@ public class SingleENSActivity extends Activity {
 				
 				
 				mLoaded = true;
-	
+
+				mAPI.clearNotification();
 				//mWebView.loadDataWithBaseURL("fake://fake.de", getFullMessage(), "text/html", "UTF-8", null);				
 			}
 		});

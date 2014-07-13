@@ -13,6 +13,7 @@ import de.meisterfuu.animexx.adapter.MainDrawerAdapter;
 import de.meisterfuu.animexx.data.APICallback;
 import de.meisterfuu.animexx.data.Self;
 import de.meisterfuu.animexx.data.ens.ENSApi;
+import de.meisterfuu.animexx.objects.DrawerObject;
 import de.meisterfuu.animexx.objects.ENSFolderObject;
 import de.meisterfuu.animexx.utils.APIException;
 import de.meisterfuu.animexx.utils.Helper;
@@ -51,7 +52,7 @@ public class MainActivity extends Activity {
 	private ActionBarDrawerToggle mDrawerToggle;
 	private MainDrawerAdapter mAdapter;
 	private String mSelected = "ENS";
-	private int mLastPosition = -1;
+	private String mLastCode = "";
 	private long mDesign;
 
 
@@ -97,13 +98,13 @@ public class MainActivity extends Activity {
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 		
 		mDesign = 1;
-		if(this.getIntent().hasExtra("LANDING") && this.getIntent().getStringExtra("LANDING").equals("CHAT")){
-			selectItem(3);
-		} else {
-			if(mLastPosition != -1){
-				selectItem(mLastPosition);
+		if(this.getIntent().hasExtra("LANDING")){
+			selectItem(this.getIntent().getStringExtra("LANDING"));
+		}  else {
+			if(!mLastCode.isEmpty()){
+				selectItem(mLastCode);
 			} else {
-				selectItem(4);
+				selectItem("HOME");
 			}
 		}
 	}
@@ -112,10 +113,10 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
-		if(intent.hasExtra("LANDING") && intent.getStringExtra("LANDING").equals("CHAT")){
-			selectItem(3);
-		} else {
-			selectItem(mLastPosition);
+		if(this.getIntent().hasExtra("LANDING")){
+			selectItem(this.getIntent().getStringExtra("LANDING"));
+		}  else {
+			selectItem(mLastCode);
 		}
 	}
 
@@ -132,7 +133,7 @@ public class MainActivity extends Activity {
 		super.onResume();
 		Request.config = PreferenceManager.getDefaultSharedPreferences(this);
 		System.out.println("RESUME");
-		selectItem(mLastPosition);
+		selectItem(mLastCode);
 	}
 
 
@@ -203,9 +204,6 @@ public class MainActivity extends Activity {
 		} else if (mSelected.equals("EVENT")) {
 			MenuInflater inflater = getMenuInflater();
 			inflater.inflate(R.menu.main_rpg, menu);
-		} else if (mSelected.equals("EVENT")) {
-			MenuInflater inflater = getMenuInflater();
-			inflater.inflate(R.menu.main_rpg, menu);
 		} else if (mSelected.equals("XMPP")) {
 			MenuInflater inflater = getMenuInflater();
 			inflater.inflate(R.menu.main_xmpp, menu);
@@ -213,19 +211,19 @@ public class MainActivity extends Activity {
 			final Switch sw = ((Switch)v.findViewById(R.id.ac_switch_actionbar));			
 			sw.setChecked(PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getBoolean("xmpp_status", false));
 			sw.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-				
+
 				@Override
 				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 					PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit().putBoolean("xmpp_status", isChecked).commit();
-					if(isChecked){
+					if (isChecked) {
 						String password = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("xmpp_password", null);
 						Intent intent = new Intent(MainActivity.this, XMPPService.class);
 						MainActivity.this.startService(intent);
-						selectChat();	
+//						selectChat();
 					} else {
 						Intent intent = new Intent(MainActivity.this, XMPPService.class);
 						MainActivity.this.stopService(intent);
-						selectChat();
+//						selectChat();
 					}
 				}
 			});
@@ -266,29 +264,32 @@ public class MainActivity extends Activity {
 			// update selected item and title, then close the drawer
 			mDrawerList.setItemChecked(position, true);
 			mDrawerLayout.closeDrawer(mDrawerList);
-
-			selectItem(position);
+			DrawerObject obj = (DrawerObject) parent.getAdapter().getItem(position);
+			selectItem(obj.getCode());
 		}
 	}
 
 
-	private void selectItem(int pPosition) {
-		if(mLastPosition == pPosition) return;
-		mLastPosition = pPosition;
-		if (pPosition == 0) {
+	private void selectItem(String pCode) {
+		if(mLastCode.equals(pCode)) return;
+
+		mLastCode = pCode;
+
+		if (pCode.equals("ENS")) {
 			mDesign = 1;
 			selectENS();
-		} else if(pPosition == 1) {
+		} else if (pCode.equals("RPG")) {
 			selectRPG();
-		} else if(pPosition == 2) {
+		} else if (pCode.equals("EVENT")) {
 			selectEvent();
-		} else if(pPosition == 3) {
+		} else if (pCode.equals("CHAT")) {
 			selectChat();
-		} else if(pPosition == 4){
+		} else if (pCode.equals("HOME")) {
 			selectHome();
-		} else if(pPosition == 5){
+		} else if (pCode.equals("SETTINGS")) {
 			SettingsActivity.getInstance(this);
 		}
+
 	}
 
 
@@ -297,11 +298,11 @@ public class MainActivity extends Activity {
 		this.setTitle("Chat");
 		Fragment fragment;
 		boolean chat = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("xmpp_status", false);
-		if(chat){
+//		if(chat){
 			fragment = XMPPRoosterFragment.getInstance();
-		} else {
-			fragment = EmptyRoosterFragment.getInstance();
-		}
+//		} else {
+//			fragment = EmptyRoosterFragment.getInstance();
+//		}
 
 		FragmentManager fragmentManager = getFragmentManager();
 		fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, "Rooster").commit();

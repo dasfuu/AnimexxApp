@@ -4,6 +4,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.meisterfuu.animexx.notification.ENSCollapseNotification;
 import de.meisterfuu.animexx.objects.ENSNotifyObject;
 import oauth.signpost.OAuth;
 
@@ -527,6 +528,7 @@ public class ENSApi {
 		for(ENSNotifyObject obj: this.getNotifications()){
 			getHelper().getENSNotifyDataDao().delete(obj);
 		}
+		ENSCollapseNotification.cancel(mContext);
 	}
 
 	private DatabaseHelper databaseHelper = null;

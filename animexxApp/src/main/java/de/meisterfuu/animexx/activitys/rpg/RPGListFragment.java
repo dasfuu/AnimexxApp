@@ -3,6 +3,7 @@ package de.meisterfuu.animexx.activitys.rpg;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import de.meisterfuu.animexx.activitys.main.MainActivity;
 import de.meisterfuu.animexx.adapter.RPGListAdapter;
 import de.meisterfuu.animexx.data.APICallback;
 import de.meisterfuu.animexx.data.rpg.RPGApi;
@@ -10,6 +11,9 @@ import de.meisterfuu.animexx.objects.RPGObject;
 import de.meisterfuu.animexx.utils.APIException;
 import de.meisterfuu.animexx.utils.Request;
 import android.app.ListFragment;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.ListView;
@@ -28,6 +32,12 @@ public class RPGListFragment extends ListFragment  {
 //	     args.putString("mType", pType);
 //	     result.setArguments(args);
 		return result;
+	}
+
+	public static PendingIntent getPendingIntent(Context pContext) {
+		Intent intent = new Intent(pContext, MainActivity.class);
+		intent.putExtra("LANDING", "RPG");
+		return PendingIntent.getActivity(pContext, 0, intent, 0);
 	}
 
 	@Override

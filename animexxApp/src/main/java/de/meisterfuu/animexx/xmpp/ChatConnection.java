@@ -73,7 +73,7 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 		SmackConfiguration.setDefaultPacketReplyTimeout(30000);
 		
 		Random r = new Random();
-		res_attach = 1;//r.nextInt();
+		res_attach = r.nextInt();
 		ressource = "AndroidApp_"+res_attach;
 		
 		setupNewMessageReceiver();
@@ -119,6 +119,13 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 		connectionState = false;
 		mApi.close();
 		mApi = null;
+
+		Intent intent = new Intent(XMPPService.NEW_ROOSTER);
+		intent.setPackage(mApplicationContext.getPackageName());
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+			intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
+		}
+		mApplicationContext.sendBroadcast(intent);
 	}
 	
 	public boolean shouldConnect(){
