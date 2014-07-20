@@ -59,6 +59,13 @@ public class MainDrawerAdapter extends BaseAdapter {
 		temp.setSubtitle("");
 		temp.setCode("HOME");
 		this.addItem(temp);
+
+		temp = new DrawerObject();
+		temp.setIconId(R.drawable.ic_action_stat_share);
+		temp.setTitle("GB (Debug)");
+		temp.setSubtitle("");
+		temp.setCode("GB");
+		this.addItem(temp);
 		
 		temp = new DrawerObject();
 		temp.setIconId(R.drawable.ic_stat_ens);

@@ -41,7 +41,15 @@ public class ENSObject implements Comparable<ENSObject> {
 	@DatabaseField(dataType = DataType.SERIALIZABLE)
 	@SerializedName("von")
 	UserObject von;
-	
+
+	@DatabaseField(dataType = DataType.SERIALIZABLE)
+	@SerializedName("von_benachrichtigung")
+	UserObject reply_to;
+
+	@DatabaseField
+	@SerializedName("noreply")
+	boolean noreply;
+
 	@DatabaseField(dataType = DataType.SERIALIZABLE)
 	@SerializedName("an")
 	ArrayList<UserObject> an;
@@ -263,6 +271,24 @@ public class ENSObject implements Comparable<ENSObject> {
 	}
 
 
+	public UserObject getReply_to() {
+		return reply_to;
+	}
+
+
+	public void setReply_to(final UserObject pReply_to) {
+		reply_to = pReply_to;
+	}
+
+
+	public boolean isNoreply() {
+		return noreply;
+	}
+
+
+	public void setNoreply(final boolean pNoreply) {
+		noreply = pNoreply;
+	}
 
 	
 	public String getMessage_raw() {

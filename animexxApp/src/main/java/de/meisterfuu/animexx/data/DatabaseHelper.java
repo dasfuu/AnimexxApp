@@ -23,7 +23,7 @@ import de.meisterfuu.animexx.objects.XMPPRoosterObject;
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
 	private static final String DATABASE_NAME = "db.db";
-	private static final int DATABASE_VERSION = 5126;
+	private static final int DATABASE_VERSION = 5127;
 
 	private HashMap<Class, RuntimeExceptionDao> daos = null;
 

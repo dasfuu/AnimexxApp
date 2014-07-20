@@ -154,15 +154,21 @@ public class ENSFolderAdapter extends BaseAdapter {
 		//Username / Avatar
 		UserObject target= new UserObject();
 		if(ENS.getAn_ordner() > 0) {
-			target = ENS.getVon();
+
+			target = ENS.getReply_to();
+			if(target == null) target = ENS.getVon();
 			if(target == null) target = new UserObject();
+
 			holder.Subtitle.setText("Von "+target.getUsername());
 			if(ENS.isRead()){
 				holder.Color.setBackgroundResource(R.color.bg_blue2);
 			}
 		} else {
-			if(ENS.getAn().size() > 0){
-				target = ENS.getAn().get(0);
+			target = ENS.getReply_to();
+			if(target == null){
+				if(ENS.getAn().size() > 0){
+					target = ENS.getAn().get(0);
+				}
 			}
 			if(target == null) target = new UserObject();
 			holder.Subtitle.setText("An "+target.getUsername());

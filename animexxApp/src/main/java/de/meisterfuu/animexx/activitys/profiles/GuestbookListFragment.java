@@ -1,19 +1,18 @@
 package de.meisterfuu.animexx.activitys.profiles;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.app.ListFragment;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import de.meisterfuu.animexx.activitys.profiles.dummy.DummyContent;
+import de.meisterfuu.animexx.adapter.GBListAdapter;
 
 public class GuestbookListFragment extends ListFragment {
 
     private static final String USER_ID = "mUserID";
 
     private long mUserID;
+	private GBListAdapter mAdapter;
 
     public static GuestbookListFragment newInstance(long pUserID) {
         GuestbookListFragment fragment = new GuestbookListFragment();
@@ -38,9 +37,8 @@ public class GuestbookListFragment extends ListFragment {
             mUserID = getArguments().getLong(USER_ID);
         }
 
-        // TODO: Change Adapter to display your content
-        setListAdapter(new ArrayAdapter<DummyContent.DummyItem>(getActivity(),
-                android.R.layout.simple_list_item_1, android.R.id.text1, DummyContent.ITEMS));
+	    mAdapter = new GBListAdapter(this.getActivity(), mUserID);
+        setListAdapter(mAdapter);
     }
 
     @Override
@@ -52,6 +50,8 @@ public class GuestbookListFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-
     }
+
+
+
 }

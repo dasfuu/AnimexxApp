@@ -3,8 +3,8 @@ package de.meisterfuu.animexx.data;
 import de.meisterfuu.animexx.utils.APIException;
 
 
-public abstract class APICallback {
+public abstract interface APICallback<T> {
 	
-	public abstract void onCallback(APIException pError, Object pObject);
+	public abstract void onCallback(APIException pError, T pObject);
 
 }

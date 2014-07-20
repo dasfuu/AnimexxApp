@@ -49,7 +49,7 @@ public class GBApi {
 	 * @param pPage
 	 * @param pCallback (ArrayList<GBEntryObject>)
 	 */
-	public void getIDs(final long pUserID, final int pPage, final APICallback pCallback) {
+	public void getGBList(final long pUserID, final int pPage, final APICallback<ArrayList<GBEntryObject>> pCallback) {
 		final Handler hand = new Handler();
 		new Thread(new Runnable() {
 			public void run() {
@@ -85,7 +85,7 @@ public class GBApi {
 			JSONObject resultObj = new JSONObject(result);
 			if(resultObj.getBoolean("success")){
 				Type collectionType = new TypeToken<ArrayList<GBEntryObject>>(){}.getType();
-				ArrayList<GBEntryObject> list = gson.fromJson(resultObj.getString("return"), collectionType);
+				ArrayList<GBEntryObject> list = gson.fromJson(resultObj.getJSONObject("return").getString("eintraege"), collectionType);
 				//ENSObject[] x = gson.fromJson(resultObj.getString("return"), ENSObject[].class);
 
 				return list;

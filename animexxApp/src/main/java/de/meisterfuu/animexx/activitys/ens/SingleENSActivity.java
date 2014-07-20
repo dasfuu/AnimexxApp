@@ -34,13 +34,15 @@ public class SingleENSActivity extends Activity {
 
 	long mID;
 	ENSObject mENS;
-	
+	UserObject target;
+
 	WebView mWebView;
 	TextView mSubject, mUserLabel, mUser, mDate, mMessage;
 	ImageView mAvatar;
 	FrameLayout mHeader, mBody;
 	ENSApi mAPI;
 	Boolean mLoaded = false;
+
 	
 	ImageDownloaderCustom ImageLoader = new ImageDownloaderCustom("forenavatar");
 	ImageLoaderCustom ImageLoaderProfile = new ImageLoaderCustom("profilbild");
@@ -107,15 +109,19 @@ public class SingleENSActivity extends Activity {
 				SingleENSActivity.this.getActionBar().setTitle(mENS.getSubject());
 				
 				mDate.setText(sdf.format(mENS.getDateObject()));
-				UserObject target= new UserObject();
+				target = new UserObject();
 				if(mENS.getAn_ordner() > 0) {
-					target = mENS.getVon();
+					target = mENS.getReply_to();
+					if(target == null) target = mENS.getVon();
 					if(target == null) target = new UserObject();
 					mUserLabel.setText("Von:");
 					mUser.setText(target.getUsername());
 				} else {
-					if(mENS.getAn().size() > 0){
-						target = mENS.getAn().get(0);
+					target = mENS.getReply_to();
+					if(target == null) {
+						if(mENS.getAn().size() > 0){
+							target = mENS.getAn().get(0);
+						}
 					}
 					if(target == null) target = new UserObject();
 					mUserLabel.setText("An:");
@@ -198,9 +204,9 @@ public class SingleENSActivity extends Activity {
 		final ENSDraftObject draft = new ENSDraftObject();
 		draft.setMessage(mENS.getMessage_raw());
 		ArrayList<Long> recip = new ArrayList<Long>();
-		recip.add(mENS.getVon().getId());
+		recip.add(target.getId());
 		ArrayList<String> recip_name = new ArrayList<String>();
-		recip_name.add(mENS.getVon().getUsername());
+		recip_name.add(target.getUsername());
 		draft.setRecipients(recip);
 		draft.setRecipients_name(recip_name);
 		draft.setSubject(Helper.BetreffRe(mENS.getSubject()));
@@ -219,9 +225,9 @@ public class SingleENSActivity extends Activity {
 		final ENSDraftObject draft = new ENSDraftObject();
 		draft.setMessage("");
 		ArrayList<Long> recip = new ArrayList<Long>();
-		recip.add(mENS.getVon().getId());
+		recip.add(target.getId());
 		ArrayList<String> recip_name = new ArrayList<String>();
-		recip_name.add(mENS.getVon().getUsername());
+		recip_name.add(target.getUsername());
 		draft.setRecipients(recip);
 		draft.setRecipients_name(recip_name);
 		draft.setSubject(Helper.BetreffRe(mENS.getSubject()));
@@ -240,9 +246,9 @@ public class SingleENSActivity extends Activity {
 		final ENSDraftObject draft = new ENSDraftObject();
 		draft.setMessage(mENS.getMessage_raw());
 		ArrayList<Long> recip = new ArrayList<Long>();
-		recip.add(mENS.getVon().getId());
+		recip.add(target.getId());
 		ArrayList<String> recip_name = new ArrayList<String>();
-		recip_name.add(mENS.getVon().getUsername());
+		recip_name.add(target.getUsername());
 		draft.setRecipients(recip);
 		draft.setRecipients_name(recip_name);
 		draft.setSubject(Helper.BetreffRe(mENS.getSubject()));
