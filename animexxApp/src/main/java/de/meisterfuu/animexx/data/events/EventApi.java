@@ -13,10 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
-import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.data.APICallback;
-import de.meisterfuu.animexx.data.ens.ENSApi;
-import de.meisterfuu.animexx.objects.ENSDraftObject;
 import de.meisterfuu.animexx.objects.EventDescriptionObject;
 import de.meisterfuu.animexx.objects.EventObject;
 import de.meisterfuu.animexx.utils.APIException;

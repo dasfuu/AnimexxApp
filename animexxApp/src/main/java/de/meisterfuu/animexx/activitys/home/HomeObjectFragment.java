@@ -12,21 +12,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
-import android.widget.TextView;
 
 import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 
 import de.meisterfuu.animexx.R;
-import de.meisterfuu.animexx.activitys.events.EventListFragment;
-import de.meisterfuu.animexx.adapter.EventAdapter;
 import de.meisterfuu.animexx.adapter.HomeContactAdapter;
 import de.meisterfuu.animexx.data.APICallback;
-import de.meisterfuu.animexx.data.events.EventApi;
 import de.meisterfuu.animexx.data.home.HomeApi;
-import de.meisterfuu.animexx.dummy.DummyContent;
-import de.meisterfuu.animexx.objects.EventObject;
 import de.meisterfuu.animexx.objects.home.ContactHomeObject;
 import de.meisterfuu.animexx.utils.APIException;
 import de.meisterfuu.animexx.utils.Request;

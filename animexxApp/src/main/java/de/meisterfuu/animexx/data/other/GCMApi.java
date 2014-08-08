@@ -3,15 +3,7 @@ package de.meisterfuu.animexx.data.other;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
-import oauth.signpost.OAuth;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
 import android.content.Context;
@@ -183,8 +175,8 @@ public class GCMApi {
 			String url = "https://ws.animexx.de/json/cloud2device/set_active_events/?api=2";
 
 			PostBodyFactory factory = new PostBodyFactory();
-			for (int i = 0; i < EventCodes.size(); i++){
-				factory.putValue("events[]", EventCodes.get(i));
+			for (String EventCode : EventCodes) {
+				factory.putValue("events[]", EventCode);
 			}
 					
 			String result = Request.SignSendScribePost(url, factory, mContext);

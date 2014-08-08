@@ -7,7 +7,6 @@ import de.meisterfuu.animexx.data.xmpp.XMPPApi;
 import de.meisterfuu.animexx.objects.XMPPMessageObject;
 import de.meisterfuu.animexx.utils.APIException;
 import android.os.Bundle;
-import android.app.Activity;
 import android.app.ListActivity;
 import android.view.Menu;
 import android.widget.ArrayAdapter;

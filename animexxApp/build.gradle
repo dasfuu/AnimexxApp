@@ -22,12 +22,11 @@ dependencies {
 
     compile files('libs/asmack-android-8-4.0.1-SNAPSHOT-2014-06-22.jar')
     compile files('libs/dnsjava-2.1.6.jar')
+    compile 'com.sothree.slidinguppanel:library:+'
 
     // You must install or update the Support Repository through the SDK manager to use this dependency.
-    compile 'com.sothree.slidinguppanel:library:+'
-    // You must install or update the Support Repository through the SDK manager to use this dependency.
-    compile 'com.android.support:support-v4:19.0.0'
-    compile 'com.google.android.gms:play-services:5.0.77'
+    compile 'com.android.support:support-v4:19.1.0'
+    compile 'com.google.android.gms:play-services:+'
     compile 'com.etsy.android.grid:library:1.0.5'
     compile 'com.nhaarman.listviewanimations:library:2.6.0'
     compile 'commons-codec:commons-codec:+'
@@ -42,5 +41,5 @@ dependencies {
     compile 'oauth.signpost:signpost-commonshttp4:1.2.1.2'
     compile 'oauth.signpost:signpost-core:1.2.1.2'
     // You must install or update the Support Repository through the SDK manager to use this dependency.
-    compile 'com.android.support:support-v13:19.+'
+    compile 'com.android.support:support-v13:19.1.+'
 }

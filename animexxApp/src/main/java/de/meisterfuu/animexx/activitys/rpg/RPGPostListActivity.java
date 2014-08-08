@@ -2,29 +2,22 @@ package de.meisterfuu.animexx.activitys.rpg;
 
 import java.util.ArrayList;
 
-import org.apache.harmony.javax.security.auth.Refreshable;
-
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelSlideListener;
 
 import de.meisterfuu.animexx.R;
-import de.meisterfuu.animexx.activitys.ens.NewENSActivity;
-import de.meisterfuu.animexx.activitys.main.MainActivity;
-import de.meisterfuu.animexx.activitys.main.SettingsActivity;
-import de.meisterfuu.animexx.adapter.ChatAdapter;
 import de.meisterfuu.animexx.adapter.RPGAvatarSpinnerAdapter;
 import de.meisterfuu.animexx.adapter.RPGPostListAdapter;
 import de.meisterfuu.animexx.adapter.RPGSpinnerAdapter;
 import de.meisterfuu.animexx.data.APICallback;
 import de.meisterfuu.animexx.data.rpg.RPGApi;
 import de.meisterfuu.animexx.notification.RPGPostNotification;
-import de.meisterfuu.animexx.notification.XMPPNotification;
 import de.meisterfuu.animexx.objects.RPGDraftObject;
 import de.meisterfuu.animexx.objects.RPGObject;
 import de.meisterfuu.animexx.objects.RPGPostObject;
 import de.meisterfuu.animexx.utils.APIException;
 import de.meisterfuu.animexx.utils.Request;
-import de.meisterfuu.animexx.xmpp.XMPPService;
+
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.app.ActionBar;
@@ -40,15 +33,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 
 public class RPGPostListActivity extends ListActivity implements PanelSlideListener {
 	

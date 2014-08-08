@@ -222,6 +222,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.meisterfuu.animexx.activitys.main.MainActivity" />
         </activity>
+        <activity
+            android:name=".activitys.profiles.GuestbookPostActivity"
+            android:label="@string/title_activity_guestbook_post" >
+        </activity>
     </application>
 
 </manifest>

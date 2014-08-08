@@ -1,9 +1,6 @@
 package de.meisterfuu.animexx.activitys.events;
 
 import de.meisterfuu.animexx.R;
-import de.meisterfuu.animexx.R.id;
-import de.meisterfuu.animexx.R.layout;
-import de.meisterfuu.animexx.R.menu;
 import de.meisterfuu.animexx.data.APICallback;
 import de.meisterfuu.animexx.data.events.EventApi;
 import de.meisterfuu.animexx.objects.EventDescriptionObject;

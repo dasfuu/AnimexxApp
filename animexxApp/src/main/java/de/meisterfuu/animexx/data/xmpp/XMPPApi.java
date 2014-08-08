@@ -4,15 +4,10 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import oauth.signpost.OAuth;
-
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
 import org.json.JSONObject;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
@@ -21,17 +16,11 @@ import android.content.Intent;
 import android.os.Handler;
 import de.meisterfuu.animexx.data.APICallback;
 import de.meisterfuu.animexx.data.DatabaseHelper;
-import de.meisterfuu.animexx.objects.ENSDraftObject;
-import de.meisterfuu.animexx.objects.ENSFolderObject;
-import de.meisterfuu.animexx.objects.ENSObject;
-import de.meisterfuu.animexx.objects.ENSQueueObject;
 import de.meisterfuu.animexx.objects.XMPPHistoryObject;
 import de.meisterfuu.animexx.objects.XMPPMessageObject;
 import de.meisterfuu.animexx.objects.XMPPRoosterObject;
-import de.meisterfuu.animexx.services.ENSQueueService;
 import de.meisterfuu.animexx.utils.APIException;
 import de.meisterfuu.animexx.utils.Request;
-import de.meisterfuu.animexx.xmpp.XMPPChatActivity;
 import de.meisterfuu.animexx.xmpp.XMPPService;
 
 

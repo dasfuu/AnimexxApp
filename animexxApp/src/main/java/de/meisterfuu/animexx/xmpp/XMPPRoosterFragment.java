@@ -1,39 +1,22 @@
 package de.meisterfuu.animexx.xmpp;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 
-import org.jivesoftware.smack.RosterEntry;
-
-import de.meisterfuu.animexx.R;
-import de.meisterfuu.animexx.R.layout;
-import de.meisterfuu.animexx.R.menu;
-import de.meisterfuu.animexx.activitys.ens.SingleENSActivity;
 import de.meisterfuu.animexx.activitys.main.MainActivity;
-import de.meisterfuu.animexx.activitys.rpg.RPGListFragment;
-import de.meisterfuu.animexx.adapter.ChatAdapter;
 import de.meisterfuu.animexx.adapter.XMPPRoosterAdapter;
 import de.meisterfuu.animexx.data.APICallback;
-import de.meisterfuu.animexx.data.ens.ENSApi;
-import de.meisterfuu.animexx.data.profile.UserApi;
 import de.meisterfuu.animexx.data.xmpp.XMPPApi;
-import de.meisterfuu.animexx.objects.UserObject;
 import de.meisterfuu.animexx.objects.XMPPRoosterObject;
 import de.meisterfuu.animexx.utils.APIException;
 import android.os.Bundle;
-import android.app.Activity;
-import android.app.ListActivity;
 import android.app.ListFragment;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.view.Menu;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 public class XMPPRoosterFragment extends ListFragment {

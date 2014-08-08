@@ -1,6 +1,12 @@
 package de.meisterfuu.animexx.activitys.rpg;
 
 import de.meisterfuu.animexx.R;
+import de.meisterfuu.animexx.data.APICallback;
+import de.meisterfuu.animexx.data.rpg.RPGApi;
+import de.meisterfuu.animexx.objects.RPGObject;
+import de.meisterfuu.animexx.utils.APIException;
+import de.meisterfuu.animexx.utils.views.TableDataView;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
@@ -9,7 +15,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
 
-public class RPGDetailActivity extends Activity {
+public class RPGDetailActivity extends Activity implements APICallback<RPGObject> {
+
+	private long mRPGID;
+	private RPGApi mAPI;
+	private RPGObject mRPG;
+	private TableDataView mTableView;
 
 	public static void getInstance(Context pContext, long pID){
 		Intent i = new Intent().setClass(pContext, RPGDetailActivity.class);
@@ -26,6 +37,14 @@ public class RPGDetailActivity extends Activity {
 		setContentView(R.layout.activity_rpgdetail);
 		// Show the Up button in the action bar.
 		setupActionBar();
+
+		mTableView = (TableDataView) this.findViewById(R.id.activity_rpg_single_body_table);
+
+		Bundle extras = this.getIntent().getExtras();
+		mRPGID = extras.getLong("id");
+		mAPI = new RPGApi(this);
+		
+		mAPI.getRPG(mRPGID, this);
 	}
 
 	/**
@@ -61,4 +80,12 @@ public class RPGDetailActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
+	@Override
+	public void onCallback(final APIException pError, final RPGObject pObject) {
+		mRPG = pObject;
+		mTableView.add(new TableDataView.TableDataEntity(mRPG.getName(), R.drawable.ens_flags_forwarded_blue));
+		mTableView.add(new TableDataView.TableDataEntity(mRPG.getTopicName(), R.drawable.ens_flags_answered_blue));
+		mTableView.add(new TableDataView.TableDataEntity(mRPG.getLastCharacter(), R.drawable.ens_flags_forwarded_blue));
+
+	}
 }

@@ -6,10 +6,7 @@ import java.util.List;
 
 import de.meisterfuu.animexx.notification.ENSCollapseNotification;
 import de.meisterfuu.animexx.objects.ENSNotifyObject;
-import oauth.signpost.OAuth;
 
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
 import org.json.JSONObject;
 
 import com.google.gson.Gson;

@@ -17,9 +17,7 @@ import de.meisterfuu.animexx.data.ens.ENSApi;
 import de.meisterfuu.animexx.objects.DrawerObject;
 import de.meisterfuu.animexx.objects.ENSFolderObject;
 import de.meisterfuu.animexx.utils.APIException;
-import de.meisterfuu.animexx.utils.Helper;
 import de.meisterfuu.animexx.utils.Request;
-import de.meisterfuu.animexx.xmpp.EmptyRoosterFragment;
 import de.meisterfuu.animexx.xmpp.XMPPRoosterFragment;
 import de.meisterfuu.animexx.xmpp.XMPPService;
 
@@ -44,7 +42,6 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ListView;
 import android.widget.Switch;
-import android.widget.Toast;
 
 public class MainActivity extends Activity {
 

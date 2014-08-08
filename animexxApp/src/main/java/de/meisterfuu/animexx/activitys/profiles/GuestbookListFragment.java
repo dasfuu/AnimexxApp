@@ -29,7 +29,8 @@ public class GuestbookListFragment extends ListFragment {
     public GuestbookListFragment() {
     }
 
-    @Override
+
+	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 

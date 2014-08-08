@@ -1,8 +1,7 @@
 package de.meisterfuu.animexx.activitys.share;
 
 import de.meisterfuu.animexx.R;
-import de.meisterfuu.animexx.R.layout;
-import de.meisterfuu.animexx.R.menu;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;

@@ -1,6 +1,5 @@
 package de.meisterfuu.animexx.objects;
 
-import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;

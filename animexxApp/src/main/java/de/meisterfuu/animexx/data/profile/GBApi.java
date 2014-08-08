@@ -13,13 +13,12 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import de.meisterfuu.animexx.data.APICallback;
-import de.meisterfuu.animexx.objects.ENSObject;
+import de.meisterfuu.animexx.objects.GBDraftObject;
 import de.meisterfuu.animexx.objects.GBEntryObject;
-import de.meisterfuu.animexx.objects.UserObject;
+import de.meisterfuu.animexx.objects.GBInfoObject;
 import de.meisterfuu.animexx.utils.APIException;
 import de.meisterfuu.animexx.utils.PostBodyFactory;
 import de.meisterfuu.animexx.utils.Request;
-import oauth.signpost.OAuth;
 
 /**
  * Created by Furuha on 14.07.2014.
@@ -74,6 +73,55 @@ public class GBApi {
 		}).start();
 	}
 
+	public void getGBInfo(final long pUserID, final APICallback<GBInfoObject> pCallback) {
+		final Handler hand = new Handler();
+		new Thread(new Runnable() {
+			public void run() {
+				APIException error = null;
+				GBInfoObject temp = null;
+				try {
+					temp = getGBInfofromWeb(pUserID);
+				} catch (APIException e) {
+					error = e;
+				}
+
+				final GBInfoObject retu = temp;
+				final APIException ferror = error;
+
+				hand.post(new Runnable() {
+					public void run() {
+						if(pCallback != null) pCallback.onCallback(ferror, retu);
+					}
+				});
+			}
+
+		}).start();
+	}
+
+	public void postGBEntry(final GBDraftObject pDraft, final APICallback<Object> pCallback) {
+		final Handler hand = new Handler();
+		new Thread(new Runnable() {
+			public void run() {
+				APIException error = null;
+
+				try {
+					postGBEntryToWeb(pDraft);
+				} catch (APIException e) {
+					error = e;
+				}
+
+				final APIException ferror = error;
+
+				hand.post(new Runnable() {
+					public void run() {
+						if(pCallback != null) pCallback.onCallback(ferror, null);
+					}
+				});
+			}
+
+		}).start();
+	}
+
 
 
 	//Web-Api Access
@@ -98,6 +146,53 @@ public class GBApi {
 			throw new APIException("Request Failed", APIException.REQUEST_FAILED);
 		}
 	}
+
+	private GBInfoObject getGBInfofromWeb(long pUserID)  throws APIException{
+		try {
+
+			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/mitglieder/gaestebuch_info/?user_id=" + pUserID +"&api=2", mContext);
+			JSONObject resultObj = new JSONObject(result);
+			if(resultObj.getBoolean("success")){
+				GBInfoObject erg = gson.fromJson(resultObj.getString("return"), GBInfoObject.class);
+				return erg;
+			} else {
+				throw new APIException("Error", APIException.OTHER);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new APIException("Request Failed", APIException.REQUEST_FAILED);
+		}
+	}
+
+	private boolean postGBEntryToWeb(GBDraftObject pDraft)  throws APIException{
+		try {
+			String url = "https://ws.animexx.de/json/mitglieder/gaestebuch_schreiben/?api=2";
+
+			PostBodyFactory factory = new PostBodyFactory();
+
+
+			factory.putValue("user_id", ""+pDraft.getRecipient().getId());
+			factory.putValue("text", pDraft.getText());
+			if(pDraft.getAvatar() != -1){
+				factory.putValue("avatar_id", ""+pDraft.getAvatar());
+			}
+
+			String result = Request.SignSendScribePost(url, factory, mContext);
+
+			JSONObject resultObj = new JSONObject(result);
+			if(resultObj.getBoolean("success")){
+				return true;
+			} else {
+				throw new APIException("Error", APIException.OTHER);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new APIException("Request Failed", APIException.REQUEST_FAILED);
+		}
+	}
+
 
 
 	//DB Access

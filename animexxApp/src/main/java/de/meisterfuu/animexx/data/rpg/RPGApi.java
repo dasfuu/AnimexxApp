@@ -13,7 +13,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import de.meisterfuu.animexx.data.APICallback;
-import de.meisterfuu.animexx.objects.ENSDraftObject;
 import de.meisterfuu.animexx.objects.RPGDraftObject;
 import de.meisterfuu.animexx.objects.RPGObject;
 import de.meisterfuu.animexx.objects.RPGPostObject;
@@ -68,7 +67,7 @@ public class RPGApi {
 	/**
 	 * @param pCallback
 	 */
-	public void getRPG(final long pID, final APICallback pCallback){
+	public void getRPG(final long pID, final APICallback<RPGObject> pCallback){
 		final Handler hand = new Handler();		
 		new Thread(new Runnable() {
 			public void run() {

@@ -46,12 +46,12 @@
                 android:background="@drawable/card_background_shadow"
                 android:padding="10dp" >
 
-                <LinearLayout
+                <de.meisterfuu.animexx.utils.views.TableDataView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="10dp"
-                    android:orientation="vertical" >
-                </LinearLayout>
+                    android:layout_height="wrap_content"
+                    android:id="@+id/activity_rpg_single_body_table">
+
+                    </de.meisterfuu.animexx.utils.views.TableDataView>
             </FrameLayout>
         </LinearLayout>
     </LinearLayout>

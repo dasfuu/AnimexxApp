@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.meisterfuu.animexx.R;
-import de.meisterfuu.animexx.data.profile.UserApi;
-import de.meisterfuu.animexx.objects.UserObject;
 import de.meisterfuu.animexx.objects.XMPPRoosterObject;
 import de.meisterfuu.animexx.utils.imageloader.ImageLoaderCustom;
 import de.meisterfuu.animexx.utils.imageloader.ImageSaveObject;

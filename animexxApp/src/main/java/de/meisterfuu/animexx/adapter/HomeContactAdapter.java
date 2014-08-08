@@ -4,14 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Picasso.RequestTransformer;
-import com.squareup.picasso.Request;
-import com.squareup.picasso.Picasso.Builder;
 
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.objects.home.ContactHomeObject;
 import de.meisterfuu.animexx.utils.imageloader.ImageDownloaderCustom;
-import de.meisterfuu.animexx.utils.imageloader.ImageSaveObject;
+
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;

@@ -22,7 +22,7 @@
     <item
         android:drawable="@drawable/progress_6"
         android:duration="150"/>
-    <ite
+    <item
         android:drawable="@drawable/progress_7"
         android:duration="150"/>
 

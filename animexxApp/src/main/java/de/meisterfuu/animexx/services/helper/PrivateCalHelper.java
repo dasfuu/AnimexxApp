@@ -1,11 +1,8 @@
 package de.meisterfuu.animexx.services.helper;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -22,7 +19,6 @@ import android.provider.BaseColumns;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Calendars;
 import android.provider.CalendarContract.Events;
-import android.text.format.Time;
 import android.util.Log;
 import de.meisterfuu.animexx.Constants;
 import de.meisterfuu.animexx.data.calendar.CalendarApi;

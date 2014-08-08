@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.TextView;
+
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.data.Self;
 import de.meisterfuu.animexx.objects.RPGObject;
