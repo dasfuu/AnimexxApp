@@ -5,6 +5,7 @@ package de.meisterfuu.animexx.data.profile;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
+import de.meisterfuu.animexx.objects.ProfileObject;
 import oauth.signpost.OAuth;
 
 import org.json.JSONObject;
@@ -43,10 +44,38 @@ public class UserApi {
 	//Public Methods
 	
 	/**
+	 * @param pUserID
+	 * @param pCallback
+	 */
+	public void getProfile(final long pUserID, final APICallback<ProfileObject> pCallback){
+		final Handler hand = new Handler();		
+		new Thread(new Runnable() {
+			public void run() {
+				APIException error = null;
+				ProfileObject temp = null;
+				try {
+					temp = getProfilefromWeb(pUserID, true);
+				} catch (APIException e) {
+					error = e;
+				}
+				
+				final ProfileObject retu = temp;
+				final APIException ferror = error;
+				
+				hand.post(new Runnable() {			
+					public void run() {
+						if(pCallback != null) pCallback.onCallback(ferror, retu);
+					}
+				});
+			}
+		}).start();
+	}
+
+	/**
 	 * @param pCallback
 	 */
 	public void getMe(final APICallback pCallback){
-		final Handler hand = new Handler();		
+		final Handler hand = new Handler();
 		new Thread(new Runnable() {
 			public void run() {
 				APIException error = null;
@@ -56,11 +85,11 @@ public class UserApi {
 				} catch (APIException e) {
 					error = e;
 				}
-				
+
 				final JSONObject retu = temp;
 				final APIException ferror = error;
-				
-				hand.post(new Runnable() {			
+
+				hand.post(new Runnable() {
 					public void run() {
 						if(pCallback != null) pCallback.onCallback(ferror, retu);
 					}
@@ -222,7 +251,7 @@ public class UserApi {
 
 	}
 
-	private JSONObject getProfilefromWeb(long pUserID, boolean pAllPictures) throws APIException{
+	private ProfileObject getProfilefromWeb(long pUserID, boolean pAllPictures) throws APIException{
 
 		try {
 			int allPictures = 0;
@@ -230,10 +259,10 @@ public class UserApi {
 				allPictures = 1;
 			}
 			
-			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/mitglieder/steckbrief/?api=2&user_id="+ pUserID +"&allefotos="+ allPictures +"&mit_selbstbeschreibung=1&img_max_x=800&img_max_y=800&img_quality=90&img_format=jpg", mContext);
+			String result = Request.doHTTPGetRequest("https://ws.animexx.de/json/mitglieder/steckbrief/?api=2&user_id="+ pUserID +"&allefotos="+ allPictures +"&mit_selbstbeschreibung=1&mit_boxen_infos=1&mit_statistiken=1&mit_gb=1&img_max_x=800&img_max_y=800&img_quality=90&img_format=jpg", mContext);
 			JSONObject resultObj = new JSONObject(result);
 			if(resultObj.getBoolean("success")){
-				return resultObj.getJSONObject("return");
+				return gson.fromJson(resultObj.getString("return"), ProfileObject.class);
 			} else {
 				throw new APIException("Error", APIException.OTHER);
 			}		

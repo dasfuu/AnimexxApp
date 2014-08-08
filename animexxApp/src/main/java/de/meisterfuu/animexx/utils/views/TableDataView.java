@@ -96,8 +96,14 @@ public class TableDataView extends LinearLayout {
 				vContainer = (LinearLayout) pInflater.inflate(R.layout.table_data_entity, null);
 				vText = (TextView) vContainer.findViewById(R.id.table_item_text);
 				vText.setText(text);
+
 				vImage = (ImageView) vContainer.findViewById(R.id.table_item_image);
-				vImage.setImageResource(icon_rid);
+				if(icon_rid != -1){
+					vImage.setImageResource(icon_rid);
+				} else {
+					vImage.setVisibility(View.GONE);
+				}
+
 			}
 			return vContainer;
 		}

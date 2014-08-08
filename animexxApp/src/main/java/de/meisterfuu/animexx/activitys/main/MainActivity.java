@@ -8,6 +8,7 @@ import de.meisterfuu.animexx.activitys.ens.NewENSActivity;
 import de.meisterfuu.animexx.activitys.events.EventListFragment;
 import de.meisterfuu.animexx.activitys.home.HomeObjectFragment;
 import de.meisterfuu.animexx.activitys.profiles.GuestbookListFragment;
+import de.meisterfuu.animexx.activitys.profiles.ProfileActivity;
 import de.meisterfuu.animexx.activitys.rpg.RPGListFragment;
 import de.meisterfuu.animexx.adapter.ENSFolderSpinnerAdapter;
 import de.meisterfuu.animexx.adapter.MainDrawerAdapter;
@@ -361,11 +362,12 @@ public class MainActivity extends Activity {
 	private void selectGB() {
 		mSelected = "GB";
 		this.setTitle("Gästebuch");
-		Fragment fragment = GuestbookListFragment.newInstance(Self.getInstance(this).getUserID());
-		FragmentManager fragmentManager = getFragmentManager();
-		fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, "GBList").commit();
-		getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-		invalidateOptionsMenu();
+		ProfileActivity.getInstance(this, Self.getInstance(this).getUserID());
+//		Fragment fragment = GuestbookListFragment.newInstance(Self.getInstance(this).getUserID());
+//		FragmentManager fragmentManager = getFragmentManager();
+//		fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, "GBList").commit();
+//		getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+//		invalidateOptionsMenu();
 	}
 
 	private void selectEvent() {

@@ -186,5 +186,6 @@
     <string name="send">Absenden</string>
     <string name="back">Zurück</string>
     <string name="title_activity_guestbook_post">Neuer Eintrag</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

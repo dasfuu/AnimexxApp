@@ -67,7 +67,7 @@ public class ProfileObject {
 	@SerializedName("fotos")
 	ArrayList<ProfilePictureObject> pictures;
 	
-	static class ProfilePictureObject{
+	public static class ProfilePictureObject{
 		@SerializedName("url")
 		String url;
 			
@@ -95,9 +95,9 @@ public class ProfileObject {
 //	- kontaktdaten: Array / Ein Array an zweiteiligen assoziativen Arrays mit jeweils einem "name"- und "wert"-Feld, z.B. "name" = Homepage, "wert" = http://www.animexx.de/.
 	@SerializedName("kontaktdaten")
 	ArrayList<ProfileContactEntry> contactData;
-	
-	static class ProfileContactEntry{
-		@SerializedName("name")
+
+	public static class ProfileContactEntry{
+		@SerializedName("typ")
 		String name;
 			
 		@SerializedName("wert")
@@ -119,9 +119,72 @@ public class ProfileObject {
 			this.value = value;
 		}
 		
-		
 	}
 
+//	- boxen: Array / Ein Array bestehend aus Objekten mit folgenden Eigenschaften:
+	@SerializedName("boxen")
+	ArrayList<ProfileBoxEntry> boxes;
+
+	public static class ProfileBoxEntry{
+
+//	- "typ": einer der folgenden Typen:
+//			- "sb" = Selbstbeschreibung
+//	        - "eig" = Tabellarische Daten
+//	        - "conventions" = Besuchte Events
+//	        - "fanlisten" = Fanlisten
+
+		@SerializedName("typ")
+		String type;
+
+		public static final String TYPE_BESCHREIBUNG = "sb";
+		public static final String TYPE_EIGENSCHAFTEN = "eig";
+		public static final String TYPE_EVENTS = "conventions";
+		public static final String TYPE_FAVS= "fanlisten";
+
+//	- "id": die ID der Box
+		@SerializedName("id")
+		String id;
+
+//	- "titel"
+		@SerializedName("titel")
+		String title;
+
+//	- "anzahl"
+		@SerializedName("anzahl")
+		String count;
+
+		public String getType() {
+			return type;
+		}
+
+		public void setType(final String pType) {
+			type = pType;
+		}
+
+		public String getTitle() {
+			return title;
+		}
+
+		public void setTitle(final String pTitle) {
+			title = pTitle;
+		}
+
+		public String getCount() {
+			return count;
+		}
+
+		public void setCount(final String pCount) {
+			count = pCount;
+		}
+
+		public String getId() {
+			return id;
+		}
+
+		public void setId(final String pId) {
+			id = pId;
+		}
+	}
 	
 	
 	public long getId() {
@@ -244,6 +307,11 @@ public class ProfileObject {
 		this.contactData = contactData;
 	}
 
-	
-	
+	public ArrayList<ProfileBoxEntry> getBoxes() {
+		return boxes;
+	}
+
+	public void setBoxes(final ArrayList<ProfileBoxEntry> pBoxes) {
+		boxes = pBoxes;
+	}
 }

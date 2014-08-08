@@ -5,6 +5,8 @@ import java.util.Locale;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Context;
+import android.content.Intent;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -21,7 +23,13 @@ public class ProfileActivity extends Activity {
 	long mUserID;
 	String mUserName;
 
-
+	public static void getInstance(Context pContext, long pUserID){
+		Intent i = new Intent().setClass(pContext, ProfileActivity.class);
+		Bundle args = new Bundle();
+		args.putLong("id", pUserID);
+		i.putExtras(args);
+		pContext.startActivity(i);
+	}
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -43,7 +51,9 @@ public class ProfileActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-
+	    Bundle extras = this.getIntent().getExtras();
+	    mUserID = extras.getLong("id");
+	    mUserName = "Steckbrief";
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -93,11 +103,11 @@ public class ProfileActivity extends Activity {
             // Return a PlaceholderFragment (defined as a static inner class below).
 	        switch (position) {
 		        case 0:
-			        return PlaceholderFragment.newInstance(1);
+			        return ProfileFragment.newInstance(mUserID);
 		        case 1:
 			        return GuestbookListFragment.newInstance(mUserID);
 		        default:
-			        return PlaceholderFragment.newInstance(1);
+			        return ProfileFragment.newInstance(mUserID);
 	        }
         }
 
@@ -119,37 +129,6 @@ public class ProfileActivity extends Activity {
         }
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
 
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
-            return rootView;
-        }
-    }
 
 }
