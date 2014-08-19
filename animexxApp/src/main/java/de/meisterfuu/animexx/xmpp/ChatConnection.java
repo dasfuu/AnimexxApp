@@ -11,6 +11,7 @@ import org.jivesoftware.smack.ChatManagerListener;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.ConnectionListener;
 import org.jivesoftware.smack.MessageListener;
+import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.RosterEntry;
 import org.jivesoftware.smack.RosterListener;
 import org.jivesoftware.smack.SmackAndroid;
@@ -19,12 +20,16 @@ import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.filter.PacketFilter;
+import org.jivesoftware.smack.filter.PacketTypeFilter;
 import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.packet.Packet;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.packet.Message.Type;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smackx.carbons.CarbonManager;
 import org.jivesoftware.smackx.carbons.packet.CarbonExtension;
+import org.jivesoftware.smackx.forward.Forwarded;
 import org.jivesoftware.smackx.ping.PingFailedListener;
 import org.jivesoftware.smackx.ping.PingManager;
 
@@ -48,7 +53,7 @@ import android.content.IntentFilter;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-public class ChatConnection implements MessageListener, ChatManagerListener, RosterListener, PingFailedListener, ConnectionListener {
+public class ChatConnection implements MessageListener, ChatManagerListener, RosterListener, PingFailedListener, ConnectionListener, PacketListener {
 
 	XMPPTCPConnection mConnection;
 	XMPPApi mApi;
@@ -133,7 +138,7 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 	}
 	
 	private void login(final String userName, final String password) throws Exception {
-		
+
 		//Create TCPConnection
 		if(getConnection() == null){
 			ConnectionConfiguration config = new ConnectionConfiguration("jabber.animexx.de");
@@ -146,7 +151,6 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 		
 		//Create Pingmanager
 		initKeepAlive();
-		initCarbonManager();
 
 		//Connect and login(if not already)
 		Log.i(TAG, "TCPConnection.connect() called");
@@ -160,17 +164,22 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 				throw e;
 			}
 		}
-		
+
+//		initCarbonManager();
+
 		//Set listener
 		this.setChatListener();
-		this.setRosterListener();		
+		this.setRosterListener();
+//		this.setPacketListener();
 		getConnection().addConnectionListener(this);
 		
 	}
-	
+
+
 	private void initCarbonManager() {
 		try {
 			if(CarbonManager.getInstanceFor(getConnection()).isSupportedByServer()){
+				Log.i(TAG, "MESSAGE CARBONS!!!!!!");
 				CarbonManager.getInstanceFor(getConnection()).enableCarbons();
 			}
 		} catch (XMPPException e) {
@@ -222,7 +231,12 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 			throw e;
 		}
 	}
-	
+
+	private void setPacketListener() {
+//		getConnection().addPacketListener(this, new PacketTypeFilter());
+	}
+
+
 	private void setChatListener(){
 		ChatManager.getInstanceFor(getConnection()).addChatListener(this);
 	}
@@ -237,10 +251,14 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 	}
 
 	@Override
-	public void processMessage(Chat chat, Message message) {
-		CarbonExtension c = CarbonManager.getCarbon(message);
+	public void processMessage(Chat chat, final Message pMessage) {
+		Message message = pMessage;
+		boolean carbonCopied = false;
+		CarbonExtension c = CarbonManager.getCarbon(pMessage);
 		if(c != null){
-			
+			carbonCopied = true;
+			Forwarded fwd = c.getForwarded();
+			message = (Message)fwd.getForwardedPacket();
 		}
 		
 		if(message.getType().equals(Type.chat) || message.getType().equals(Type.normal)) {
@@ -258,7 +276,8 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 				Long id = mApi.getSingleRoosterFromDB(chat.getParticipant().split("/")[0]).getAnimexxID();
 
 				System.out.println("new message: "+XMPPNotification.d_from+" "+chat.getParticipant());
-				if(XMPPNotification.d_from != null && XMPPNotification.d_from.equalsIgnoreCase(chat.getParticipant().split("/")[0])){
+				if(carbonCopied || (XMPPNotification.d_from != null && XMPPNotification.d_from.equalsIgnoreCase(chat.getParticipant().split("/")[0]))){
+					//No Notification
 				} else {
 					XMPPNotification.notify(mApplicationContext, message.getBody(), chat.getParticipant().split("@")[0], ""+id);
 				}
@@ -455,4 +474,8 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 	}
 
 
+	@Override
+	public void processPacket(final Packet pPacket) throws NotConnectedException {
+
+	}
 }

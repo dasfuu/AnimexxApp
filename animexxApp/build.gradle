@@ -20,7 +20,7 @@ android {
 
 dependencies {
 
-    compile files('libs/asmack-android-8-4.0.1-SNAPSHOT-2014-06-22.jar')
+    compile files('libs/asmack-android-8-4.0.4-SNAPSHOT-2014-08-18.jar')
     compile files('libs/dnsjava-2.1.6.jar')
     compile 'com.sothree.slidinguppanel:library:+'
 

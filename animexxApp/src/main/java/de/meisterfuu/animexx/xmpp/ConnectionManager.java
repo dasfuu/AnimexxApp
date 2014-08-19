@@ -122,22 +122,25 @@ public class ConnectionManager {
 		}
 
 		// Check in ConnectionThread
-		mTHandler.post(new Runnable() {
-			@Override
-			public void run() {
-				if (mConnection != null){
-					mConnection.ping();
-				}
-				
-				if(!check()){
-					scheduleCheck();					
-				} else {
-					step = 0;
-				}
-				
-			}
-		});
+		if(mTHandler != null) {
+			mTHandler.post(new Runnable() {
+				@Override
+				public void run() {
+					if (mConnection != null) {
+						mConnection.ping();
+					}
 
+					if (!check()) {
+						scheduleCheck();
+					} else {
+						step = 0;
+					}
+
+				}
+			});
+		} else {
+			Log.d(TAG, "Chat mTHandler is NULL");
+		}
 
 
 	}
