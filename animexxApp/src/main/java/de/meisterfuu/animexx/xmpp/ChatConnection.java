@@ -1,7 +1,9 @@
 package de.meisterfuu.animexx.xmpp;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Random;
 
 
@@ -79,7 +81,7 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 		
 		Random r = new Random();
 		res_attach = r.nextInt();
-		ressource = "AndroidApp_"+res_attach;
+		ressource = "AndroidApp_2";//+res_attach;
 		
 		setupNewMessageReceiver();
 	}
@@ -295,6 +297,9 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 
 	@Override
 	public void entriesAdded(Collection<String> arg0) {
+		for (String s: arg0){
+			Log.i(TAG, "entriesAdded: "+ s);
+		}
 		newRoster();
 	}
 
@@ -314,12 +319,18 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 
 	@Override
 	public void entriesUpdated(Collection<String> arg0) {
+		for (String s: arg0){
+			Log.i(TAG, "entriesUpdated: "+ s);
+		}
+
         newRoster();
 	}
 
 	@Override
 	public void presenceChanged(Presence pNewPresence) {
-		
+
+		Log.i(TAG, "presenceChanged: "+pNewPresence.getFrom());
+
 		XMPPRoosterObject temp = mApi.NTgetSingleRooster(pNewPresence.getFrom().split("/")[0]);
 		if(temp == null){
 			newRoster();
@@ -350,6 +361,7 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 		
 		ArrayList<String> names = new ArrayList<String>();
 		for(RosterEntry obj: getConnection().getRoster().getEntries()){
+			Log.i(TAG, "newRoster: "+obj.getName() +" "+getConnection().getRoster().getPresence(obj.getUser()).isAvailable());
             if(obj.getUser().contains("@jabber.animexx.de")){
                 names.add(obj.getName());
             }
