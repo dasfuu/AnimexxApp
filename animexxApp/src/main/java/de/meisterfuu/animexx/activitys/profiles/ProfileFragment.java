@@ -99,7 +99,7 @@ public class ProfileFragment extends Fragment implements APICallback<ProfileObje
 		boxTable.clear();
 
 		if(!pObject.getPictures().isEmpty()){
-			mImageLoader.download(new ImageSaveObject(pObject.getPictures().get(0).getUrlBig(), mUserID+"_0"),profileImage);
+			mImageLoader.download(new ImageSaveObject(pObject.getPictures().get(0).getUrl(), mUserID+"_0"),profileImage);
 			this.profileImage.setVisibility(View.VISIBLE);
 		} else {
 			this.profileImage.setVisibility(View.GONE);

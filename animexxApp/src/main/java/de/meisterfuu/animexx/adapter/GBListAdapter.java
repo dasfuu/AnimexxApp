@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.meisterfuu.animexx.R;
+import de.meisterfuu.animexx.activitys.profiles.ProfileActivity;
 import de.meisterfuu.animexx.data.APICallback;
 import de.meisterfuu.animexx.data.profile.GBApi;
 import de.meisterfuu.animexx.objects.GBEntryObject;
@@ -61,7 +62,7 @@ public class GBListAdapter extends BaseAdapter implements APICallback<ArrayList<
 	static class ViewHolder {
 		public TextView Title, Subtitle, Post;
 		public ImageView Avatar;
-		public LinearLayout Container;
+		public LinearLayout Container, Header;
 	}
 
 	@Override
@@ -102,7 +103,7 @@ public class GBListAdapter extends BaseAdapter implements APICallback<ArrayList<
 	}
 
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
+	public View getView(final int position, View convertView, ViewGroup parent) {
 
 		if(this.getCount()-position < 3 && !mLoading){
 			if(!mEnd){
@@ -121,11 +122,19 @@ public class GBListAdapter extends BaseAdapter implements APICallback<ArrayList<
 			viewHolder.Post = (TextView) rowView.findViewById(R.id.gbentry_item_post);
 			viewHolder.Avatar = (ImageView) rowView.findViewById(R.id.gbentry_item_avatar);
 			viewHolder.Container = (LinearLayout) rowView.findViewById(R.id.gbentry_container);
+			viewHolder.Header = (LinearLayout) rowView.findViewById(R.id.gbentry_item_header);
 			rowView.setTag(viewHolder);
 		}
 
 		ViewHolder holder = (ViewHolder) rowView.getTag();
 		final GBEntryObject gb_entry = mItems.get(position);
+
+		holder.Header.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(final View pView) {
+				ProfileActivity.getInstance(mContext, mItems.get(position).getAuthor().getId());
+			}
+		});
 		
 		//Color
 		if(position%2 == 0){
