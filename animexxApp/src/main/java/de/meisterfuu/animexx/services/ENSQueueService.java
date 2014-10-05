@@ -3,7 +3,7 @@ package de.meisterfuu.animexx.services;
 import java.util.Calendar;
 import java.util.List;
 
-import de.meisterfuu.animexx.data.ens.ENSApi;
+import de.meisterfuu.animexx.api.ens.ENSApi;
 import de.meisterfuu.animexx.objects.ENSQueueObject;
 import android.app.AlarmManager;
 import android.app.IntentService;

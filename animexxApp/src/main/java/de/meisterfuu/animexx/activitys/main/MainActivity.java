@@ -7,14 +7,13 @@ import de.meisterfuu.animexx.activitys.ens.ENSFolderFragment;
 import de.meisterfuu.animexx.activitys.ens.NewENSActivity;
 import de.meisterfuu.animexx.activitys.events.EventListFragment;
 import de.meisterfuu.animexx.activitys.home.HomeObjectFragment;
-import de.meisterfuu.animexx.activitys.profiles.GuestbookListFragment;
 import de.meisterfuu.animexx.activitys.profiles.ProfileActivity;
 import de.meisterfuu.animexx.activitys.rpg.RPGListFragment;
 import de.meisterfuu.animexx.adapter.ENSFolderSpinnerAdapter;
 import de.meisterfuu.animexx.adapter.MainDrawerAdapter;
-import de.meisterfuu.animexx.data.APICallback;
-import de.meisterfuu.animexx.data.Self;
-import de.meisterfuu.animexx.data.ens.ENSApi;
+import de.meisterfuu.animexx.api.APICallback;
+import de.meisterfuu.animexx.api.Self;
+import de.meisterfuu.animexx.api.ens.ENSApi;
 import de.meisterfuu.animexx.objects.DrawerObject;
 import de.meisterfuu.animexx.objects.ENSFolderObject;
 import de.meisterfuu.animexx.utils.APIException;
@@ -272,7 +271,7 @@ public class MainActivity extends Activity {
 	private void selectItem(String pCode) {
 		if(mLastCode.equals(pCode)) return;
 
-		if(!pCode.equals("SETTINGS")){
+		if(!pCode.equals("SETTINGS") && !pCode.equals("GB")){
 			mLastCode = pCode;
 		}
 
@@ -360,8 +359,8 @@ public class MainActivity extends Activity {
 	}
 
 	private void selectGB() {
-		mSelected = "GB";
-		this.setTitle("Gästebuch");
+//		mSelected = "GB";
+//		this.setTitle("Gästebuch");
 		ProfileActivity.getInstance(this, Self.getInstance(this).getUserID());
 //		Fragment fragment = GuestbookListFragment.newInstance(Self.getInstance(this).getUserID());
 //		FragmentManager fragmentManager = getFragmentManager();

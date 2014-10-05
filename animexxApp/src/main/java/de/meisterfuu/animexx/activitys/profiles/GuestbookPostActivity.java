@@ -10,8 +10,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import de.meisterfuu.animexx.R;
-import de.meisterfuu.animexx.data.APICallback;
-import de.meisterfuu.animexx.data.profile.GBApi;
+import de.meisterfuu.animexx.api.APICallback;
+import de.meisterfuu.animexx.api.profile.GBApi;
 import de.meisterfuu.animexx.objects.GBDraftObject;
 import de.meisterfuu.animexx.objects.GBInfoObject;
 import de.meisterfuu.animexx.objects.UserObject;

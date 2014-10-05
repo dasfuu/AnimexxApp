@@ -5,8 +5,8 @@ import java.util.Collections;
 
 import de.meisterfuu.animexx.activitys.main.MainActivity;
 import de.meisterfuu.animexx.adapter.XMPPRoosterAdapter;
-import de.meisterfuu.animexx.data.APICallback;
-import de.meisterfuu.animexx.data.xmpp.XMPPApi;
+import de.meisterfuu.animexx.api.APICallback;
+import de.meisterfuu.animexx.api.xmpp.XMPPApi;
 import de.meisterfuu.animexx.objects.XMPPRoosterObject;
 import de.meisterfuu.animexx.utils.APIException;
 import android.os.Bundle;

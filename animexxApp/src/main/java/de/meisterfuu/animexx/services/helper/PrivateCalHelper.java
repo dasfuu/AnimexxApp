@@ -21,7 +21,7 @@ import android.provider.CalendarContract.Calendars;
 import android.provider.CalendarContract.Events;
 import android.util.Log;
 import de.meisterfuu.animexx.Constants;
-import de.meisterfuu.animexx.data.calendar.CalendarApi;
+import de.meisterfuu.animexx.api.calendar.CalendarApi;
 import de.meisterfuu.animexx.objects.CalendarEntryObject;
 import de.meisterfuu.animexx.utils.Request;
 

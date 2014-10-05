@@ -9,7 +9,9 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 
 /**
@@ -24,32 +26,27 @@ public class DebugNotification {
 	 */
 	private static final String NOTIFICATION_TAG = "Debug";
 
-	/**
-	 * Shows the notification, or updates a previously shown notification of
-	 * this type, with the given parameters.
-	 * <p>
-	 * TODO: Customize this method's arguments to present relevant content in
-	 * the notification.
-	 * <p>
-	 * TODO: Customize the contents of this method to tweak the behavior and
-	 * presentation of debug notifications. Make sure to follow the <a
-	 * href="https://developer.android.com/design/patterns/notifications.html">
-	 * Notification design guidelines</a> when doing so.
-	 * 
-	 * @see #cancel(Context)
-	 */
+
 	public static void notify(final Context context,
-			final String pString, final int id) {
-		
-		if(!Debug.SHOW_DEBUG_NOTIFICATION) {
-			return;
+	                          final String pString, final int id) {
+		notify(context, pString, id, false);
+	}
+
+	public static void notify(final Context context,
+			final String pString, final int id, boolean force) {
+
+		if(!force) {
+			if (!Debug.SHOW_DEBUG_NOTIFICATION) {
+				return;
+			}
 		}
+
 		final Resources res = context.getResources();
 
 		// This image is used as the notification's large icon (thumbnail).
 		// TODO: Remove this if your notification has no relevant thumbnail.
 		final Bitmap picture = BitmapFactory.decodeResource(res,
-				R.drawable.example_picture);
+				R.drawable.test1);
 
 		final String ticker = pString;
 		final String title = pString;
@@ -86,6 +83,19 @@ public class DebugNotification {
 				// .setWhen(...)
 
 
+		if(force){
+			String sound_uri = PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_new_message_ringtone", null);
+
+			if(sound_uri != null){
+				builder.setSound(Uri.parse(sound_uri));
+			} else {
+				builder.setDefaults(Notification.DEFAULT_SOUND);
+			}
+
+			builder.setVibrate(new long[]{0,250,100,250});
+
+			builder.setLights(R.color.bg_red, 1000, 600);
+		}
 		notify(context, builder.build(), id);
 	}
 

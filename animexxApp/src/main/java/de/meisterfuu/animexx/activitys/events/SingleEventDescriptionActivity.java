@@ -1,8 +1,8 @@
 package de.meisterfuu.animexx.activitys.events;
 
 import de.meisterfuu.animexx.R;
-import de.meisterfuu.animexx.data.APICallback;
-import de.meisterfuu.animexx.data.events.EventApi;
+import de.meisterfuu.animexx.api.APICallback;
+import de.meisterfuu.animexx.api.events.EventApi;
 import de.meisterfuu.animexx.objects.EventDescriptionObject;
 import de.meisterfuu.animexx.utils.APIException;
 import android.os.Bundle;

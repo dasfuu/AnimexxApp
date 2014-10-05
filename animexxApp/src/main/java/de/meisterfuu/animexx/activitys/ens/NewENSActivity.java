@@ -3,8 +3,8 @@ package de.meisterfuu.animexx.activitys.ens;
 import java.util.ArrayList;
 
 import de.meisterfuu.animexx.R;
-import de.meisterfuu.animexx.data.APICallback;
-import de.meisterfuu.animexx.data.ens.ENSApi;
+import de.meisterfuu.animexx.api.APICallback;
+import de.meisterfuu.animexx.api.ens.ENSApi;
 import de.meisterfuu.animexx.objects.ENSDraftObject;
 import de.meisterfuu.animexx.objects.UserObject;
 import de.meisterfuu.animexx.utils.APIException;

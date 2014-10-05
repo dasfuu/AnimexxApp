@@ -86,6 +86,11 @@ public class ProfileObject {
 			return urlBig;
 		}
 
+		public String getGoodUrl() {
+			if(getUrlBig() != null && !getUrlBig().isEmpty()) return getUrlBig();
+			return getUrl();
+		}
+
 		public void setUrlBig(String urlBig) {
 			this.urlBig = urlBig;
 		}	

@@ -2,7 +2,7 @@ package de.meisterfuu.animexx.notification;
 
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.activitys.rpg.RPGListFragment;
-import de.meisterfuu.animexx.data.Self;
+import de.meisterfuu.animexx.api.Self;
 import de.meisterfuu.animexx.utils.imageloader.BitmapLoaderCustom;
 
 import android.annotation.TargetApi;

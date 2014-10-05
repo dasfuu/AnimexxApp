@@ -79,7 +79,6 @@
             android:launchMode="singleTask" >
             <intent-filter>
                 <data
-                    android:host="callback"
                     android:scheme="animexx" />
 
                 <action android:name="android.intent.action.VIEW" />
@@ -192,7 +191,9 @@
             -->
         </activity>
 
-        <receiver android:name=".xmpp.ConnectionManager$AlarmReceiver" >
+        <receiver
+            android:name=".xmpp.ConnectionManager$AlarmReceiver"
+            android:process=":AnimexxChat" >
         </receiver>
         <receiver android:name=".notification.ENSCollapseNotification$ENSNotificationDismissedReceiver" >
         </receiver>
@@ -225,6 +226,22 @@
         <activity
             android:name=".activitys.profiles.GuestbookPostActivity"
             android:label="@string/title_activity_guestbook_post" >
+        </activity>
+        <activity
+            android:name=".activitys.profiles.ProfilePageTableActivity"
+            android:label="@string/title_activity_profile_page_table" >
+        </activity>
+        <activity
+            android:name=".activitys.profiles.ProfilePageEventActivity"
+            android:label="@string/title_activity_profile_page_event" >
+        </activity>
+        <activity
+            android:name=".activitys.profiles.ProfilePageFanActivity"
+            android:label="@string/title_activity_profile_page_fan" >
+        </activity>
+        <activity
+            android:name=".activitys.profiles.ProfilePageHTMLActivity"
+            android:label="@string/title_activity_profile_page_html" >
         </activity>
     </application>
 

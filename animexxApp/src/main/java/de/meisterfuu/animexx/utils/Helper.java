@@ -9,8 +9,8 @@ import java.util.regex.Pattern;
 import de.meisterfuu.animexx.Debug;
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.activitys.main.LoginActivity;
-import de.meisterfuu.animexx.data.Self;
-import de.meisterfuu.animexx.data.ens.ENSApi;
+import de.meisterfuu.animexx.api.Self;
+import de.meisterfuu.animexx.api.ens.ENSApi;
 
 import oauth.signpost.OAuth;
 

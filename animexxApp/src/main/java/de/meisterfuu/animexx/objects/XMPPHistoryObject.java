@@ -11,7 +11,7 @@ import android.content.Context;
 import com.google.gson.annotations.SerializedName;
 import com.j256.ormlite.field.DatabaseField;
 
-import de.meisterfuu.animexx.data.Self;
+import de.meisterfuu.animexx.api.Self;
 
 public class XMPPHistoryObject {
 

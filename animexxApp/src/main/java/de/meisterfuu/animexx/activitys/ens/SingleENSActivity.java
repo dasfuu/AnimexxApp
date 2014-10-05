@@ -6,8 +6,8 @@ import java.util.Locale;
 import java.util.Random;
 
 import de.meisterfuu.animexx.R;
-import de.meisterfuu.animexx.data.APICallback;
-import de.meisterfuu.animexx.data.ens.ENSApi;
+import de.meisterfuu.animexx.api.APICallback;
+import de.meisterfuu.animexx.api.ens.ENSApi;
 import de.meisterfuu.animexx.objects.ENSDraftObject;
 import de.meisterfuu.animexx.objects.ENSObject;
 import de.meisterfuu.animexx.objects.UserObject;

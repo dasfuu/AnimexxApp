@@ -11,7 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import de.meisterfuu.animexx.R;
-import de.meisterfuu.animexx.data.ens.ENSApi;
+import de.meisterfuu.animexx.api.ens.ENSApi;
 import de.meisterfuu.animexx.objects.ENSFolderObject;
 
 public class ENSFolderSpinnerAdapter extends BaseAdapter {

@@ -11,8 +11,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import de.meisterfuu.animexx.R;
-import de.meisterfuu.animexx.data.APICallback;
-import de.meisterfuu.animexx.data.events.EventApi;
+import de.meisterfuu.animexx.api.APICallback;
+import de.meisterfuu.animexx.api.events.EventApi;
 import de.meisterfuu.animexx.objects.EventDescriptionObject;
 import de.meisterfuu.animexx.objects.EventObject;
 import de.meisterfuu.animexx.utils.APIException;
@@ -23,6 +23,7 @@ import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -123,6 +124,7 @@ public class SingleEventActivity extends Activity {
 	
 	protected void showMap() {
 		mMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.activity_event_single_map_fragment)).getMap();
+		Log.i("MAP", "mMap = "+mMap );
 		 if (mMap != null) {
 	            // The Map is verified. It is now safe to manipulate the map.
 			 	mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
@@ -144,7 +146,11 @@ public class SingleEventActivity extends Activity {
 		for(EventDescriptionObject page: mEvent.getPages()){
 			LinearLayout view = (LinearLayout) inflater.inflate(R.layout.activity_single_event_desc_item, null);
 			TextView tx = (TextView) view.findViewById(R.id.activity_single_event_desc_item_title);
-			tx.setText(page.getPageName());
+			if(!page.getPageName().isEmpty()){
+				tx.setText(page.getPageName());
+			} else {
+				tx.setText("Allgemein");
+			}
 			final EventDescriptionObject fpage = page;
 			view.setOnClickListener(new OnClickListener() {
 				

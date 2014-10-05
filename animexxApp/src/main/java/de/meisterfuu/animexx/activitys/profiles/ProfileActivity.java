@@ -2,7 +2,6 @@ package de.meisterfuu.animexx.activitys.profiles;
 
 import java.util.Locale;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
@@ -10,18 +9,28 @@ import android.content.Intent;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
+
+import com.squareup.otto.Subscribe;
 
 import de.meisterfuu.animexx.R;
+import de.meisterfuu.animexx.activitys.AnimexxBaseActivity;
+import de.meisterfuu.animexx.api.ApiEvent;
+import de.meisterfuu.animexx.api.EventBus;
+import de.meisterfuu.animexx.api.profile.UserApi;
+import de.meisterfuu.animexx.objects.ENSObject;
+import de.meisterfuu.animexx.objects.ProfileObject;
 
-public class ProfileActivity extends Activity {
+public class ProfileActivity extends AnimexxBaseActivity{
 
 	long mUserID;
 	String mUserName;
+	private UserApi mApi;
+
+	ProfileFragment profileFrag;
+	GuestbookListFragment gbFrag;
 
 	public static void getInstance(Context pContext, long pUserID){
 		Intent i = new Intent().setClass(pContext, ProfileActivity.class);
@@ -63,8 +72,20 @@ public class ProfileActivity extends Activity {
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
+	    mApi = new UserApi(this);
+
+	    profileFrag = ProfileFragment.newInstance(mUserID);
+	    gbFrag = GuestbookListFragment.newInstance(mUserID);
+	    mApi.getProfile(mUserID, this.getCallerID());
     }
 
+	@SuppressWarnings("unused")
+	@Subscribe
+	public void retrieveProfile(ApiEvent.ProfileEvent pEvent) {
+		mUserName = pEvent.getObj().getUsername();
+		this.getActionBar().setTitle(mUserName);
+		profileFrag.onCallback(null, pEvent.getObj());
+	}
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -85,9 +106,7 @@ public class ProfileActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    
-
-    /**
+	/**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
@@ -103,9 +122,9 @@ public class ProfileActivity extends Activity {
             // Return a PlaceholderFragment (defined as a static inner class below).
 	        switch (position) {
 		        case 0:
-			        return ProfileFragment.newInstance(mUserID);
+			        return profileFrag;
 		        case 1:
-			        return GuestbookListFragment.newInstance(mUserID);
+			        return gbFrag;
 		        default:
 			        return ProfileFragment.newInstance(mUserID);
 	        }
@@ -121,7 +140,7 @@ public class ProfileActivity extends Activity {
             Locale l = Locale.getDefault();
             switch (position) {
                 case 0:
-                    return mUserName;
+                    return "Steckbrief";
                 case 1:
                     return "Gästebuch";
             }

@@ -22,7 +22,7 @@
             android:animateLayoutChanges="true"
             android:orientation="vertical" >
 
-            <ImageView
+            <de.meisterfuu.animexx.utils.views.FitImageView
                 android:id="@+id/activity_profile_single_image"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

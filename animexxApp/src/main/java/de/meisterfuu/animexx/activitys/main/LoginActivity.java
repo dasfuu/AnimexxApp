@@ -4,9 +4,9 @@ package de.meisterfuu.animexx.activitys.main;
 
 import de.meisterfuu.animexx.Constants;
 import de.meisterfuu.animexx.R;
-import de.meisterfuu.animexx.data.APICallback;
-import de.meisterfuu.animexx.data.Self;
-import de.meisterfuu.animexx.data.other.GCMApi;
+import de.meisterfuu.animexx.api.APICallback;
+import de.meisterfuu.animexx.api.Self;
+import de.meisterfuu.animexx.api.other.GCMApi;
 import de.meisterfuu.animexx.utils.APIException;
 import de.meisterfuu.animexx.utils.Request;
 import de.meisterfuu.animexx.xmpp.XMPPService;

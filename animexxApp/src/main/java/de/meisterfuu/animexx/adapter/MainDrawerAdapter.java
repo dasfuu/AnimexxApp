@@ -34,35 +34,35 @@ public class MainDrawerAdapter extends BaseAdapter {
 				
 		temp = new DrawerObject();
 		temp.setIconId(R.drawable.ic_stat_ens);
-		temp.setTitle("RPG (WIP)");
+		temp.setTitle("RPG");
 		temp.setSubtitle("");
 		temp.setCode("RPG");
 		this.addItem(temp);
 		
 		temp = new DrawerObject();
 		temp.setIconId(R.drawable.ic_stat_ens);
-		temp.setTitle("Events (WIP)");
+		temp.setTitle("Events");
 		temp.setSubtitle("");
 		temp.setCode("EVENT");
 		this.addItem(temp);
 		
 		temp = new DrawerObject();
 		temp.setIconId(R.drawable.ic_stat_ens);
-		temp.setTitle("Chat (WIP)");
+		temp.setTitle("Chat");
 		temp.setSubtitle("");
 		temp.setCode("CHAT");
 		this.addItem(temp);
 		
 		temp = new DrawerObject();
 		temp.setIconId(R.drawable.ic_stat_ens);
-		temp.setTitle("Home (WIP)");
+		temp.setTitle("Home");
 		temp.setSubtitle("");
 		temp.setCode("HOME");
 		this.addItem(temp);
 
 		temp = new DrawerObject();
 		temp.setIconId(R.drawable.ic_action_stat_share);
-		temp.setTitle("GB (Debug)");
+		temp.setTitle("Steckbrief");
 		temp.setSubtitle("");
 		temp.setCode("GB");
 		this.addItem(temp);

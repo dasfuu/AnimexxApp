@@ -2,8 +2,8 @@ package de.meisterfuu.animexx;
 
 import java.util.ArrayList;
 
-import de.meisterfuu.animexx.data.APICallback;
-import de.meisterfuu.animexx.data.xmpp.XMPPApi;
+import de.meisterfuu.animexx.api.APICallback;
+import de.meisterfuu.animexx.api.xmpp.XMPPApi;
 import de.meisterfuu.animexx.objects.XMPPMessageObject;
 import de.meisterfuu.animexx.utils.APIException;
 import android.os.Bundle;

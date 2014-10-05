@@ -12,8 +12,15 @@ public class Constants {
 	public static final String ACCESS_URL = "https://ws.animexx.de/oauth/access_token";
 	public static final String AUTHORIZE_URL = "https://ssl.animexx.de/oauth/authorize";
 
+	//OAuth2
+	public static final String CLIENT_ID = KEYS.OAUTH_CLIENT_ID;
+	public static final String CLIENT_SECRET = KEYS.OAUTH_CLIENT_SECRET;
+	public static final String GRANT_TYPE = "authorization_code";
+
+	public static final String OAUTH_URL = "https://ssl.animexx.de/oauth2/authorize/?client_id="+Constants.CLIENT_ID+"&response_type=code";
+
 	public static final String OAUTH_CALLBACK_SCHEME = "animexx";
-	public static final String OAUTH_CALLBACK_HOST = "callback/";
+	public static final String OAUTH_CALLBACK_HOST = "www.animexx.de/";
 	public static final String OAUTH_CALLBACK_URL = OAUTH_CALLBACK_SCHEME	+ "://" + OAUTH_CALLBACK_HOST;
 
     public static final String FULL_PACKAGE_NAME = "de.meisterfuu.animexx";

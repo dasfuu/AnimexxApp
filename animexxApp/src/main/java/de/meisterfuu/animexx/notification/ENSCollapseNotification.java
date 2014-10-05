@@ -3,7 +3,7 @@ package de.meisterfuu.animexx.notification;
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.activitys.ens.ENSFolderFragment;
 import de.meisterfuu.animexx.activitys.ens.SingleENSActivity;
-import de.meisterfuu.animexx.data.ens.ENSApi;
+import de.meisterfuu.animexx.api.ens.ENSApi;
 import de.meisterfuu.animexx.objects.ENSNotifyObject;
 import de.meisterfuu.animexx.utils.imageloader.BitmapLoaderCustom;
 import android.annotation.TargetApi;

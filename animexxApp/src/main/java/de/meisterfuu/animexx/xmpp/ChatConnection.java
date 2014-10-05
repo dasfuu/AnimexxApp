@@ -1,9 +1,7 @@
 package de.meisterfuu.animexx.xmpp;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Random;
 
 
@@ -22,8 +20,6 @@ import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smack.filter.PacketFilter;
-import org.jivesoftware.smack.filter.PacketTypeFilter;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Packet;
 import org.jivesoftware.smack.packet.Presence;
@@ -35,11 +31,12 @@ import org.jivesoftware.smackx.forward.Forwarded;
 import org.jivesoftware.smackx.ping.PingFailedListener;
 import org.jivesoftware.smackx.ping.PingManager;
 
+import de.meisterfuu.animexx.Beta;
 import de.meisterfuu.animexx.Debug;
 import de.meisterfuu.animexx.DebugNotification;
-import de.meisterfuu.animexx.data.Self;
-import de.meisterfuu.animexx.data.profile.UserApi;
-import de.meisterfuu.animexx.data.xmpp.XMPPApi;
+import de.meisterfuu.animexx.api.Self;
+import de.meisterfuu.animexx.api.profile.UserApi;
+import de.meisterfuu.animexx.api.xmpp.XMPPApi;
 import de.meisterfuu.animexx.notification.XMPPNotification;
 import de.meisterfuu.animexx.objects.UserObject;
 import de.meisterfuu.animexx.objects.XMPPMessageObject;
@@ -104,7 +101,8 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 					password = mApi.NTgetNewChatAuth();
 					PreferenceManager.getDefaultSharedPreferences(mApplicationContext).edit().putString("xmpp_password", password).apply();
 				}	
-				
+//				username = "flo2";
+//				password = "123";
 				login(username, password);		
 				newRoster();
 			} catch (Exception e) {
@@ -144,7 +142,12 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 		//Create TCPConnection
 		if(getConnection() == null){
 			ConnectionConfiguration config = new ConnectionConfiguration("jabber.animexx.de");
-			
+
+//			ConnectionConfiguration config = new ConnectionConfiguration("192.168.1.116");
+//			config.setSecurityMode(ConnectionConfiguration.SecurityMode.disabled);
+
+			config.setRosterLoadedAtLogin(true);
+
 			config.setReconnectionAllowed(false);
 			Log.i(TAG, "mConnection = new TCPConnection(config) called");
 			mConnection = new XMPPTCPConnection(config);
@@ -167,21 +170,21 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 			}
 		}
 
-//		initCarbonManager();
+
 
 		//Set listener
 		this.setChatListener();
 		this.setRosterListener();
-//		this.setPacketListener();
 		getConnection().addConnectionListener(this);
+
+		initCarbonManager();
 		
 	}
 
 
-	private void initCarbonManager() {
+	public void initCarbonManager() {
 		try {
 			if(CarbonManager.getInstanceFor(getConnection()).isSupportedByServer()){
-				Log.i(TAG, "MESSAGE CARBONS!!!!!!");
 				CarbonManager.getInstanceFor(getConnection()).enableCarbons();
 			}
 		} catch (XMPPException e) {
@@ -234,10 +237,6 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 		}
 	}
 
-	private void setPacketListener() {
-//		getConnection().addPacketListener(this, new PacketTypeFilter());
-	}
-
 
 	private void setChatListener(){
 		ChatManager.getInstanceFor(getConnection()).addChatListener(this);
@@ -252,15 +251,31 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 		chat.addMessageListener(this);
 	}
 
+	private String getBareJID(String from) {
+		String[] res = from.split("/");
+		return res[0].toLowerCase();
+	}
+
 	@Override
 	public void processMessage(Chat chat, final Message pMessage) {
 		Message message = pMessage;
 		boolean carbonCopied = false;
+		String fromJID;
+		String direction = XMPPService.BUNDLE_DIRECTION_IN;
 		CarbonExtension c = CarbonManager.getCarbon(pMessage);
 		if(c != null){
 			carbonCopied = true;
 			Forwarded fwd = c.getForwarded();
 			message = (Message)fwd.getForwardedPacket();
+
+			if (c.getDirection() == CarbonExtension.Direction.sent) {
+				fromJID = getBareJID(message.getTo());
+				direction = XMPPService.BUNDLE_DIRECTION_OUT;
+			} else {
+				fromJID = getBareJID(message.getFrom());
+			}
+		} else {
+			fromJID = getBareJID(message.getFrom());
 		}
 		
 		if(message.getType().equals(Type.chat) || message.getType().equals(Type.normal)) {
@@ -268,28 +283,33 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 				Intent intent = new Intent(XMPPService.NEW_MESSAGE);
 				intent.setPackage(mApplicationContext.getPackageName());
 				intent.putExtra(XMPPService.BUNDLE_MESSAGE_BODY, message.getBody());
-				intent.putExtra(XMPPService.BUNDLE_FROM, chat.getParticipant());
+				intent.putExtra(XMPPService.BUNDLE_FROM, fromJID);
+				intent.putExtra(XMPPService.BUNDLE_DIRECTION, direction);
 				intent.putExtra(XMPPService.BUNDLE_TIME, ""+System.currentTimeMillis());
 			    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
 				    intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
 			    }
 				mApplicationContext.sendBroadcast(intent);
 
-				Long id = mApi.getSingleRoosterFromDB(chat.getParticipant().split("/")[0]).getAnimexxID();
+				Long id = mApi.getSingleRoosterFromDB(fromJID).getAnimexxID();
 
 				System.out.println("new message: "+XMPPNotification.d_from+" "+chat.getParticipant());
-				if(carbonCopied || (XMPPNotification.d_from != null && XMPPNotification.d_from.equalsIgnoreCase(chat.getParticipant().split("/")[0]))){
+				if(carbonCopied || (XMPPNotification.d_from != null && XMPPNotification.d_from.equalsIgnoreCase(fromJID))){
 					//No Notification
 				} else {
-					XMPPNotification.notify(mApplicationContext, message.getBody(), chat.getParticipant().split("@")[0], ""+id);
+					XMPPNotification.notify(mApplicationContext, message.getBody(), fromJID, ""+id);
 				}
 	
 				
 				XMPPMessageObject msg = new XMPPMessageObject();
 				msg.setDate(System.currentTimeMillis());
-				msg.setTopicJID(chat.getParticipant().split("/")[0]);
+				msg.setTopicJID(fromJID);
 				msg.setBody(message.getBody());
-				msg.setMe(false);
+				if(direction.equals(XMPPService.BUNDLE_DIRECTION_IN)){
+					msg.setMe(false);
+				} else {
+					msg.setMe(true);
+				}
 				mApi.insertMessageToDB(msg);
 			}
 		}
@@ -336,6 +356,8 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 			newRoster();
 			return;
 		}
+
+
 		boolean online = getConnection().getRoster().getPresence(pNewPresence.getFrom()).isAvailable();
 		boolean away = pNewPresence.isAway();
 		
@@ -346,6 +368,9 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 		} else if (online && away){
 			temp.setStatus(XMPPRoosterObject.STATUS_AWAY);
 		}
+
+		Beta.notifyOnline(temp, mApplicationContext);
+
 		mApi.insertSingleRoosterToDB(temp);
 		
 		Intent intent = new Intent(XMPPService.NEW_ROOSTER);
@@ -382,7 +407,8 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 			} else if (online && away){
 				temp.setStatus(XMPPRoosterObject.STATUS_AWAY);
 			}
-			
+			Beta.notifyOnline(temp, mApplicationContext);
+
 			if(user_list != null)
 			for(UserObject user_obj: user_list){	
 				if(user_obj.getUsername().equalsIgnoreCase(obj.getName())){
@@ -449,6 +475,7 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
    public void reconnectionSuccessful() {
 	   	Log.i(TAG, "ConnectionListener.reconnectionSuccessful() called");
 	   	initKeepAlive();
+	    initCarbonManager();
    }
    
    @Override
@@ -483,6 +510,7 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 		connectionState = true;
 		Log.i(TAG, "ConnectionListener.connected() called");
 	   	initKeepAlive();
+		initCarbonManager();
 	}
 
 

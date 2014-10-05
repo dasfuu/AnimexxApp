@@ -187,5 +187,9 @@
     <string name="back">Zurück</string>
     <string name="title_activity_guestbook_post">Neuer Eintrag</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_profile_page_table">ProfilePageTableActivity</string>
+    <string name="title_activity_profile_page_event">ProfilePageEventActivity</string>
+    <string name="title_activity_profile_page_fan">ProfilePageFanActivity</string>
+    <string name="title_activity_profile_page_html">ProfilePageHTMLActivity</string>
 
 </resources>

@@ -18,8 +18,8 @@ import java.util.List;
 
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.activitys.profiles.ProfileActivity;
-import de.meisterfuu.animexx.data.APICallback;
-import de.meisterfuu.animexx.data.profile.GBApi;
+import de.meisterfuu.animexx.api.APICallback;
+import de.meisterfuu.animexx.api.profile.GBApi;
 import de.meisterfuu.animexx.objects.GBEntryObject;
 import de.meisterfuu.animexx.objects.UserObject;
 import de.meisterfuu.animexx.utils.APIException;

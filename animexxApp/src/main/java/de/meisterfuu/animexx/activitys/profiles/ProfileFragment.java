@@ -8,15 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 
 import de.meisterfuu.animexx.R;
-import de.meisterfuu.animexx.data.APICallback;
-import de.meisterfuu.animexx.data.profile.UserApi;
+import de.meisterfuu.animexx.api.APICallback;
 import de.meisterfuu.animexx.objects.ProfileObject;
 import de.meisterfuu.animexx.utils.APIException;
 import de.meisterfuu.animexx.utils.imageloader.ImageDownloaderCustom;
 import de.meisterfuu.animexx.utils.imageloader.ImageSaveObject;
+import de.meisterfuu.animexx.utils.views.FitImageView;
 import de.meisterfuu.animexx.utils.views.TableDataView;
 
 /**
@@ -34,11 +33,13 @@ public class ProfileFragment extends Fragment implements APICallback<ProfileObje
 
 	private FrameLayout commonFrame, contactFrame, boxFrame;
 	private TableDataView commonTable, contactTable, boxTable;
-	private ImageView profileImage;
+	private FitImageView profileImage;
+	boolean created = false;
 
-	private UserApi mApi;
+//	private UserApi mApi;
 
 	private ImageDownloaderCustom mImageLoader;
+	private ProfileObject mUser;
 
 	public static ProfileFragment newInstance(long pUserID) {
         ProfileFragment fragment = new ProfileFragment();
@@ -59,7 +60,7 @@ public class ProfileFragment extends Fragment implements APICallback<ProfileObje
 	        mUserID = getArguments().getLong(USER_ID);
         }
 
-	    mApi = new UserApi(this.getActivity());
+//	    mApi = new UserApi(this.getActivity());
 	    mImageLoader = new ImageDownloaderCustom("profilbild");
 
     }
@@ -71,7 +72,7 @@ public class ProfileFragment extends Fragment implements APICallback<ProfileObje
         // Inflate the layout for this fragment
 	    View v = inflater.inflate(R.layout.fragment_profile, container, false);
 
-	    profileImage = (ImageView) v.findViewById(R.id.activity_profile_single_image);
+	    profileImage = (FitImageView) v.findViewById(R.id.activity_profile_single_image);
 
 	    commonFrame = (FrameLayout) v.findViewById(R.id.activity_profile_single_common);
 	    contactFrame = (FrameLayout) v.findViewById(R.id.activity_profile_single_contact);
@@ -81,18 +82,29 @@ public class ProfileFragment extends Fragment implements APICallback<ProfileObje
 	    contactTable = (TableDataView) v.findViewById(R.id.activity_profile_single_contact_table);
 	    boxTable = (TableDataView) v.findViewById(R.id.activity_profile_single_pages_table);
 
+	    v.setVisibility(View.GONE);
         return v;
     }
 
 	@Override
 	public void onResume() {
 		super.onResume();
-
-		mApi.getProfile(mUserID, this);
+		created = true;
+		if(mUser != null){
+			onCallback(null, mUser);
+			mUser = null;
+		}
+//		mApi.getProfile(mUserID, this);
 	}
 
 	@Override
 	public void onCallback(final APIException pError, final ProfileObject pObject) {
+
+		if(!created){
+			mUser = pObject;
+			return;
+		}
+
 
 		commonTable.clear();
 		contactTable.clear();
@@ -126,6 +138,6 @@ public class ProfileFragment extends Fragment implements APICallback<ProfileObje
 			this.boxFrame.setVisibility(View.VISIBLE);
 		}
 
-
+		this.getView().setVisibility(View.VISIBLE);
 	}
 }

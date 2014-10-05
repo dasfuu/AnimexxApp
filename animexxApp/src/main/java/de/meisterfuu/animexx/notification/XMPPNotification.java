@@ -7,7 +7,6 @@ import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
@@ -24,11 +23,11 @@ import android.support.v4.app.NotificationCompat;
  * class to create notifications in a backward-compatible way.
  */
 public class XMPPNotification {
-	
+
 	public static String d_from = null;
-	
+
 	/**
-	 * The unique identifier for this type of notification.
+	 * The unique identifier for this type of notification.321
 	 */
 	private static final String NOTIFICATION_TAG = "XMPP";
 
@@ -46,21 +45,17 @@ public class XMPPNotification {
 	 * 
 	 * @see #cancel(Context)
 	 */
-	public static void notify(final Context pContext,
-			final String message, final String from, final String pUserId) {
-		
+	public static void notify(final Context pContext, final String message, final String from, final String pUserId) {
 
-		
-		
-		final Resources res = pContext.getResources();
-
-		// This image is used as the notification's large icon (thumbnail).
-		// TODO: Remove this if your notification has no relevant thumbnail.
-//		final Bitmap picture = BitmapFactory.decodeResource(res,
-//				R.drawable.example_picture);
 
 		final String ticker = message;
-		final String title = from;//res.getString(R.string.xmpp_notification_title_template, from);
+		final String title;
+		if(from.contains("animexx")){
+			title = from.split("@")[0];
+		} else {
+			title = from;
+		}
+
 		final String text = message;
 
 		final NotificationCompat.Builder builder = new NotificationCompat.Builder(
@@ -139,10 +134,7 @@ public class XMPPNotification {
 		}
 	}
 
-	/**
-	 * Cancels any notifications of this type previously shown using
-	 * {@link #notify(Context, String, int)}.
-	 */
+
 	@TargetApi(Build.VERSION_CODES.ECLAIR)
 	public static void cancel(final Context context) {
 		final NotificationManager nm = (NotificationManager) context

@@ -20,9 +20,13 @@ public class XMPPService extends Service {
 	public static final String NEW_ROOSTER = "de.meisterfuu.animexx.xmpp.newrooster";
 	
 	public static final String BUNDLE_FROM = "b_from";
-	public static final String BUNDLE_TO = "b_from";
+	public static final String BUNDLE_DIRECTION = "b_direc";
+	public static final String BUNDLE_TO = "b_to";
 	public static final String BUNDLE_TIME = "b_time";
 	public static final String BUNDLE_MESSAGE_BODY = "b_body";
+
+	public static final String BUNDLE_DIRECTION_OUT = "OUT";
+	public static final String BUNDLE_DIRECTION_IN = "IN";
 		
 	@Override
 	public void onCreate() {

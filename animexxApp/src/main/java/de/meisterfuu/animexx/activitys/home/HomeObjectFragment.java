@@ -17,8 +17,8 @@ import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAni
 
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.adapter.HomeContactAdapter;
-import de.meisterfuu.animexx.data.APICallback;
-import de.meisterfuu.animexx.data.home.HomeApi;
+import de.meisterfuu.animexx.api.APICallback;
+import de.meisterfuu.animexx.api.home.HomeApi;
 import de.meisterfuu.animexx.objects.home.ContactHomeObject;
 import de.meisterfuu.animexx.utils.APIException;
 import de.meisterfuu.animexx.utils.Request;
