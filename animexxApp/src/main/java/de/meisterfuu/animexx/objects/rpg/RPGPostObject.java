@@ -1,6 +1,8 @@
-package de.meisterfuu.animexx.objects;
+package de.meisterfuu.animexx.objects.rpg;
 
 import com.google.gson.annotations.SerializedName;
+
+import de.meisterfuu.animexx.objects.UserObject;
 
 public class RPGPostObject {
 
@@ -27,7 +29,7 @@ public class RPGPostObject {
 //		    "steckbrief_freigabe":true
 //		  },
 	@SerializedName("mitglied")
-	UserObject author;
+UserObject author;
 	
 //		  "aktion":0,  0 = keine Aktion (Standard), 1 = Aktion (wird kursiv dargestellt)
 	@SerializedName("aktion")

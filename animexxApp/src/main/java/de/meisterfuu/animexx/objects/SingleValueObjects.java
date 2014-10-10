@@ -2,10 +2,17 @@ package de.meisterfuu.animexx.objects;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 /**
  * Created by Furuha on 05.10.2014.
  */
 public class SingleValueObjects {
+
+	public static class Empty {
+
+
+	}
 
 	public static class ENSSignatureObject {
 
@@ -60,6 +67,20 @@ public class SingleValueObjects {
 
 		public void setToken(final String pToken) {
 			token = pToken;
+		}
+	}
+
+	public static class GCMIdObject {
+
+		@SerializedName("registration_ids")
+		List<String> Ids;
+
+		public List<String> getIds() {
+			return Ids;
+		}
+
+		public void setIds(final List<String> pIds) {
+			Ids = pIds;
 		}
 	}
 

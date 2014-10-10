@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.meisterfuu.animexx.R;
-import de.meisterfuu.animexx.objects.RPGPostObject;
+import de.meisterfuu.animexx.objects.rpg.RPGPostObject;
 import de.meisterfuu.animexx.utils.Helper;
 import de.meisterfuu.animexx.utils.imageloader.ImageDownloaderCustom;
 import de.meisterfuu.animexx.utils.imageloader.ImageSaveObject;

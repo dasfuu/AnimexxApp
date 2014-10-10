@@ -2,16 +2,16 @@ package de.meisterfuu.animexx.api;
 
 import java.util.List;
 
-import de.meisterfuu.animexx.objects.ENSFolderObject;
-import de.meisterfuu.animexx.objects.ENSObject;
-import de.meisterfuu.animexx.objects.EventDescriptionObject;
-import de.meisterfuu.animexx.objects.EventObject;
-import de.meisterfuu.animexx.objects.GBEntryObject;
-import de.meisterfuu.animexx.objects.GBInfoObject;
-import de.meisterfuu.animexx.objects.GBListObject;
-import de.meisterfuu.animexx.objects.ProfileObject;
-import de.meisterfuu.animexx.objects.RPGObject;
-import de.meisterfuu.animexx.objects.RPGPostObject;
+import de.meisterfuu.animexx.objects.ens.ENSFolderObject;
+import de.meisterfuu.animexx.objects.ens.ENSObject;
+import de.meisterfuu.animexx.objects.event.EventDescriptionObject;
+import de.meisterfuu.animexx.objects.event.EventObject;
+import de.meisterfuu.animexx.objects.profile.GBEntryObject;
+import de.meisterfuu.animexx.objects.profile.GBInfoObject;
+import de.meisterfuu.animexx.objects.profile.GBListObject;
+import de.meisterfuu.animexx.objects.profile.ProfileObject;
+import de.meisterfuu.animexx.objects.rpg.RPGObject;
+import de.meisterfuu.animexx.objects.rpg.RPGPostObject;
 import de.meisterfuu.animexx.objects.UserObject;
 import de.meisterfuu.animexx.objects.UserSearchResultObject;
 import de.meisterfuu.animexx.objects.home.BasicHomeObject;

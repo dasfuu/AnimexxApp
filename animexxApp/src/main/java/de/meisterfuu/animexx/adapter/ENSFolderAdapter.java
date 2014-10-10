@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.meisterfuu.animexx.R;
-import de.meisterfuu.animexx.objects.ENSObject;
+import de.meisterfuu.animexx.objects.ens.ENSObject;
 import de.meisterfuu.animexx.objects.UserObject;
 import de.meisterfuu.animexx.utils.imageloader.ImageDownloaderCustom;
 import de.meisterfuu.animexx.utils.imageloader.ImageLoaderCustom;

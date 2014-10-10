@@ -12,8 +12,8 @@ import android.widget.ImageView;
 
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.api.Self;
-import de.meisterfuu.animexx.objects.RPGObject;
-import de.meisterfuu.animexx.objects.RPGObject.PlayerAvatarObject;
+import de.meisterfuu.animexx.objects.rpg.RPGObject;
+import de.meisterfuu.animexx.objects.rpg.RPGObject.PlayerAvatarObject;
 import de.meisterfuu.animexx.utils.imageloader.ImageDownloaderCustom;
 import de.meisterfuu.animexx.utils.imageloader.ImageSaveObject;
 

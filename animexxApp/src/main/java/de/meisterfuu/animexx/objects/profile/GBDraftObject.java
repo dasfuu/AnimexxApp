@@ -1,4 +1,6 @@
-package de.meisterfuu.animexx.objects;
+package de.meisterfuu.animexx.objects.profile;
+
+import de.meisterfuu.animexx.objects.UserObject;
 
 /**
  * Created by Furuha on 25.07.2014.

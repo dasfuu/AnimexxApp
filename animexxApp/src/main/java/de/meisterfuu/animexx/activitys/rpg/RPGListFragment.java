@@ -7,7 +7,7 @@ import de.meisterfuu.animexx.activitys.main.MainActivity;
 import de.meisterfuu.animexx.adapter.RPGListAdapter;
 import de.meisterfuu.animexx.api.APICallback;
 import de.meisterfuu.animexx.api.rpg.RPGApi;
-import de.meisterfuu.animexx.objects.RPGObject;
+import de.meisterfuu.animexx.objects.rpg.RPGObject;
 import de.meisterfuu.animexx.utils.APIException;
 import de.meisterfuu.animexx.utils.Request;
 import android.app.ListFragment;

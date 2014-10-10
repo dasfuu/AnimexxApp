@@ -16,24 +16,26 @@ import retrofit.client.OkClient;
  */
 public class WebAPI implements ErrorHandler {
 
-	private WebApiInterface mRApi;
+	private static WebApiInterface sRApi;
 	private OAuthInterface mROauthApi;
 
 	public WebAPI(Context pContext){
 
-		RestAdapter.Builder builder = new RestAdapter.Builder()
-				.setEndpoint(WebApiInterface.API_ENDPOINT)
-				.setClient(new OkClient(new OkHttpClient()))
-				.setErrorHandler(this)
-				.setRequestInterceptor(new InterceptorSigner(pContext));
+		if(sRApi ==  null) {
+			RestAdapter.Builder builder = new RestAdapter.Builder()
+					.setEndpoint(WebApiInterface.API_ENDPOINT)
+					.setClient(new OkClient(new OkHttpClient()))
+					.setErrorHandler(this)
+					.setRequestInterceptor(new InterceptorSigner(pContext.getApplicationContext()));
 
-		RestAdapter adapter = builder.build();
+			RestAdapter adapter = builder.build();
 
-		mRApi = adapter.create(WebApiInterface.class);
+			sRApi = adapter.create(WebApiInterface.class);
+		}
 	}
 
 	public WebApiInterface getApi(){
-		return mRApi;
+		return sRApi;
 	}
 
 	public OAuthInterface getOAuthApi(){

@@ -13,9 +13,9 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import de.meisterfuu.animexx.api.APICallback;
-import de.meisterfuu.animexx.objects.RPGDraftObject;
-import de.meisterfuu.animexx.objects.RPGObject;
-import de.meisterfuu.animexx.objects.RPGPostObject;
+import de.meisterfuu.animexx.objects.rpg.RPGDraftObject;
+import de.meisterfuu.animexx.objects.rpg.RPGObject;
+import de.meisterfuu.animexx.objects.rpg.RPGPostObject;
 import de.meisterfuu.animexx.utils.APIException;
 import de.meisterfuu.animexx.utils.PostBodyFactory;
 import de.meisterfuu.animexx.utils.Request;

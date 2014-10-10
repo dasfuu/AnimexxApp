@@ -1,25 +1,32 @@
 package de.meisterfuu.animexx.api.web;
 
+import com.google.gson.JsonElement;
+
 import java.util.List;
 import java.util.Map;
 
 import de.meisterfuu.animexx.objects.CalendarEntryObject;
-import de.meisterfuu.animexx.objects.ENSCheckRecipientsObject;
-import de.meisterfuu.animexx.objects.ENSFolderObject;
-import de.meisterfuu.animexx.objects.ENSObject;
-import de.meisterfuu.animexx.objects.EventDescriptionObject;
-import de.meisterfuu.animexx.objects.EventObject;
-import de.meisterfuu.animexx.objects.EventRoomProgramObject;
-import de.meisterfuu.animexx.objects.GBInfoObject;
-import de.meisterfuu.animexx.objects.GBListObject;
-import de.meisterfuu.animexx.objects.ProfileObject;
+import de.meisterfuu.animexx.objects.KarotalerStatsObject;
+import de.meisterfuu.animexx.objects.aidb.MangaObject;
+import de.meisterfuu.animexx.objects.contacts.ContactGroupObject;
+import de.meisterfuu.animexx.objects.ens.ENSCheckRecipientsObject;
+import de.meisterfuu.animexx.objects.ens.ENSFolderObject;
+import de.meisterfuu.animexx.objects.ens.ENSObject;
+import de.meisterfuu.animexx.objects.event.EventDescriptionObject;
+import de.meisterfuu.animexx.objects.event.EventObject;
+import de.meisterfuu.animexx.objects.event.EventRoomProgramObject;
+import de.meisterfuu.animexx.objects.home.HomeCommentObject;
+import de.meisterfuu.animexx.objects.photos.PhotoSeriesObject;
+import de.meisterfuu.animexx.objects.profile.GBInfoObject;
+import de.meisterfuu.animexx.objects.profile.GBListObject;
+import de.meisterfuu.animexx.objects.profile.ProfileObject;
 import static de.meisterfuu.animexx.objects.SingleValueObjects.*;
-import de.meisterfuu.animexx.objects.RPGObject;
-import de.meisterfuu.animexx.objects.RPGPostObject;
+import de.meisterfuu.animexx.objects.rpg.RPGObject;
+import de.meisterfuu.animexx.objects.rpg.RPGPostObject;
 import de.meisterfuu.animexx.objects.UserObject;
-import de.meisterfuu.animexx.objects.WeblogCommentObject;
-import de.meisterfuu.animexx.objects.WeblogEntryObject;
-import de.meisterfuu.animexx.objects.XMPPHistoryObject;
+import de.meisterfuu.animexx.objects.weblog.WeblogCommentObject;
+import de.meisterfuu.animexx.objects.weblog.WeblogEntryObject;
+import de.meisterfuu.animexx.objects.xmpp.XMPPHistoryObject;
 import de.meisterfuu.animexx.objects.home.ContactHomeObject;
 
 import retrofit.Callback;
@@ -101,14 +108,14 @@ public interface WebApiInterface {
 	@POST("/mitglieder/gaestebuch_schreiben/")
 	@FormUrlEncoded
 	ReturnObject<Boolean> sendGBEntry(@Field("user_id") long pUserId,
-                                     @Field("text") int pText,
-                                     @Field("avatar_id") int pAvatarId);
+                                     @Field("text") String pText,
+                                     @Field("avatar_id") long pAvatarId);
 
 	@POST("/mitglieder/gaestebuch_schreiben/")
 	@FormUrlEncoded
 	void sendGBEntry(@Field("user_id") long pUserId,
-	                @Field("text") int pText,
-	                @Field("avatar_id") int pAvatarId,
+	                @Field("text") String pText,
+	                @Field("avatar_id") long pAvatarId,
 	                Callback<ReturnObject<Boolean>> pCallback);
 
 	@POST("/mitglieder/gaestebuch_info/?get_user_avatar=true")
@@ -235,22 +242,22 @@ public interface WebApiInterface {
 	//PERS START
 	//-------------------------------
 
-	@POST("/persstart5/get_item_data/?get_user_avatar=true")
+	@POST("/persstart5/get_widget_kommentare/?get_user_avatar=true")
 	@FormUrlEncoded
-	ReturnObject<Object> getWidgetComments(@Field("widget_id") String pWidget, @Field("item_id") long pItemId);
+	ReturnObject<HomeCommentObject> getWidgetComments(@Field("widget_id") String pWidget, @Field("item_id") long pItemId);
 
-	@POST("/persstart5/get_item_data/?get_user_avatar=true")
+	@POST("/persstart5/get_widget_kommentare/?get_user_avatar=true")
 	@FormUrlEncoded
-	void getWidgetComments(@Field("widget_id") String pWidget, @Field("item_id") long pItemId, Callback<ReturnObject<Object>> pCallback);
+	void getWidgetComments(@Field("widget_id") String pWidget, @Field("item_id") long pItemId, Callback<ReturnObject<HomeCommentObject>> pCallback);
 
-
-	@POST("/persstart5/post_item_kommentar/")
-	@FormUrlEncoded
-	ReturnObject<Object> sendWidgetComment(@Field("widget_id") String pWidget, @Field("item_id") long pItemId, @Field("text") String pComment);
 
 	@POST("/persstart5/post_item_kommentar/")
 	@FormUrlEncoded
-	void sendWidgetComment(@Field("widget_id") String pWidget, @Field("item_id") long pItemId, @Field("text") String pComment, Callback<ReturnObject<Object>> pCallback);
+	ReturnObject<HomeCommentObject> sendWidgetComment(@Field("widget_id") String pWidget, @Field("item_id") long pItemId, @Field("text") String pComment);
+
+	@POST("/persstart5/post_item_kommentar/")
+	@FormUrlEncoded
+	void sendWidgetComment(@Field("widget_id") String pWidget, @Field("item_id") long pItemId, @Field("text") String pComment, Callback<ReturnObject<HomeCommentObject>> pCallback);
 
 
 	//Contact Widget Start
@@ -608,11 +615,11 @@ public interface WebApiInterface {
 
 	@POST("/kontakte/get_gruppen/")
 	@FormUrlEncoded
-	ReturnObject<List<Object>> getContactGroups();
+	ReturnObject<List<ContactGroupObject>> getContactGroups();
 
 	@POST("/kontakte/get_gruppen/")
 	@FormUrlEncoded
-	void getContactGroups(Callback<ReturnObject<List<Object>>> pCallback);
+	void getContactGroups(Callback<ReturnObject<List<ContactGroupObject>>> pCallback);
 
 	@POST("/kontakte/get_kontakte/")
 	@FormUrlEncoded
@@ -659,11 +666,11 @@ public interface WebApiInterface {
 
 	@POST("/items/kt_statistik/")
 	@FormUrlEncoded
-	ReturnObject<Object> getKarotalerStats();
+	ReturnObject<KarotalerStatsObject> getKarotalerStats();
 
 	@POST("/items/kt_statistik/")
 	@FormUrlEncoded
-	void getKarotalerStats(Callback<ReturnObject<Object>> pCallback);
+	void getKarotalerStats(Callback<ReturnObject<KarotalerStatsObject>> pCallback);
 
 	@POST("/items/kt_abholen/")
 	@FormUrlEncoded
@@ -701,19 +708,19 @@ public interface WebApiInterface {
 
 	@POST("/aidb/mangas/meine_detailliert/")
 	@FormUrlEncoded
-	ReturnObject<Object> getMangaOwned();
+	ReturnObject<JsonElement> getMangaOwned();
 
 	@POST("/aidb/mangas/meine_detailliert/")
 	@FormUrlEncoded
-	void getMangaOwned(Callback<ReturnObject<Object>> pCallback);
+	void getMangaOwned(Callback<ReturnObject<JsonElement>> pCallback);
 
 	@POST("/aidb/mangas/details/")
 	@FormUrlEncoded
-	ReturnObject<Object> getMangaDetail(@Field("id") String pMangaId);
+	ReturnObject<MangaObject> getMangaDetail(@Field("id") String pMangaId);
 
 	@POST("/aidb/mangas/details/")
 	@FormUrlEncoded
-	void getMangaDetail(@Field("id") String pMangaId, Callback<ReturnObject<Object>> pCallback);
+	void getMangaDetail(@Field("id") String pMangaId, Callback<ReturnObject<MangaObject>> pCallback);
 
 	@POST("/aidb/mangas/serie/")
 	@FormUrlEncoded
@@ -738,27 +745,27 @@ public interface WebApiInterface {
 
 	@POST("/cloud2device/registration_id_set/")
 	@FormUrlEncoded
-	ReturnObject<Object> setGCMId(@Field("registration_id") String pDeviceToken, @Field("collapse_by_type") int pCollapse);
+	ReturnObject<Empty> setGCMId(@Field("registration_id") String pDeviceToken, @Field("collapse_by_type") int pCollapse);
 
 	@POST("/cloud2device/registration_id_set/")
 	@FormUrlEncoded
-	void setGCMId(@Field("registration_id") String pDeviceToken, @Field("collapse_by_type") int pCollapse, Callback<ReturnObject<Object>> pCallback);
+	void setGCMId(@Field("registration_id") String pDeviceToken, @Field("collapse_by_type") int pCollapse, Callback<ReturnObject<Empty>> pCallback);
 
 	@POST("/cloud2device/registration_id_get/")
 	@FormUrlEncoded
-	ReturnObject<Object> getGCMId();
+	ReturnObject<GCMIdObject> getGCMId();
 
 	@POST("/cloud2device/registration_id_get/")
 	@FormUrlEncoded
-	void getGCMId(Callback<ReturnObject<Object>> pCallback);
+	void getGCMId(Callback<ReturnObject<GCMIdObject>> pCallback);
 
 	@POST("/cloud2device/set_active_events/")
 	@FormUrlEncoded
-	ReturnObject<Object> setGCMEvents(@Field("events[]") List<String> pEventse);
+	ReturnObject<Empty> setGCMEvents(@Field("events[]") List<String> pEventse);
 
 	@POST("/cloud2device/set_active_events/")
 	@FormUrlEncoded
-	void setGCMEvents(@Field("events[]") List<String> pEvents, Callback<ReturnObject<Object>> pCallback);
+	void setGCMEvents(@Field("events[]") List<String> pEvents, Callback<ReturnObject<Empty>> pCallback);
 
 
 	//-------------------------------
@@ -799,11 +806,59 @@ public interface WebApiInterface {
 
 	@POST("/weblog/post_eintrag/")
 	@FormUrlEncoded
-	ReturnObject<Long> createWeblogEntry(@Field("weblog_id") String pWeblogId);
+	ReturnObject<Long> createWeblogEntry(@Field("weblog_id") long pWeblogId, @Field("titel") String pTitle, @Field("text") String pText, @Field("entwurf") int pDraft, @Field("html") int pHtml, @Field("adult") int pAdult, @Field("tags") String pTags);
 
 	@POST("/weblog/post_eintrag/")
 	@FormUrlEncoded
-	void createWeblogEntry(@Field("weblog_id") String pWeblogId, Callback<ReturnObject<Long>> pCallback);
+	void createWeblogEntry(@Field("weblog_id") long pWeblogId, @Field("titel") String pTitle, @Field("text") String pText, @Field("entwurf") int pDraft, @Field("html") int pHtml, @Field("adult") int pAdult, @Field("tags") String pTags, Callback<ReturnObject<Long>> pCallback);
+
+	@POST("/weblog/post_eintrag/")
+	@FormUrlEncoded
+	ReturnObject<Long> createWeblogEntry(@Field("weblog_id") long pWeblogId, @Field("zuordnung_event") long pEventId, @Field("titel") String pTitle, @Field("text") String pText, @Field("entwurf") int pDraft, @Field("html") int pHtml, @Field("adult") int pAdult, @Field("tags") String pTags);
+
+	@POST("/weblog/post_eintrag/")
+	@FormUrlEncoded
+	void createWeblogEntry(@Field("weblog_id") long pWeblogId, @Field("zuordnung_event") long pEventId, @Field("titel") String pTitle, @Field("text") String pText, @Field("entwurf") int pDraft, @Field("html") int pHtml, @Field("adult") int pAdult, @Field("tags") String pTags, Callback<ReturnObject<Long>> pCallback);
+
+
+	@POST("/weblog/post_eintrag/")
+	@FormUrlEncoded
+	ReturnObject<Long> deleteWeblogEntry(@Field("weblog_id") long pWeblogId, @Field("eintrag_id") long pEntryId);
+
+	@POST("/weblog/post_eintrag/")
+	@FormUrlEncoded
+	void deleteWeblogEntry(@Field("weblog_id") long pWeblogId, @Field("eintrag_id") long pEntryId, Callback<ReturnObject<Long>> pCallback);
+
+
+	//-------------------------------
+	//Fotoreihen
+	//-------------------------------
+
+	@POST("/fotos/reihe/get_reihen_by_mitglied/")
+	@FormUrlEncoded
+	ReturnObject<PhotoSeriesObject.PhotoSeriesListObject> getPhotoSeriesByUser(@Field("mitglied") String pUserId, @Field("offset") int pOffset, @Field("limit") int pLimit);
+
+	@POST("/fotos/reihe/get_reihen_by_mitglied/")
+	@FormUrlEncoded
+	void getPhotoSeriesByUser(@Field("mitglied") String pUserId, @Field("offset") int pOffset, @Field("limit") int pLimit, Callback<ReturnObject<PhotoSeriesObject.PhotoSeriesListObject>> pCallback);
+
+	@POST("/fotos/reihe/get_reihen_by_event/")
+	@FormUrlEncoded
+	ReturnObject<PhotoSeriesObject.PhotoSeriesListObject> getPhotoSeriesByEvent(@Field("event") String pEventId, @Field("offset") int pOffset, @Field("limit") int pLimit);
+
+	@POST("/fotos/reihe/get_reihen_by_event/")
+	@FormUrlEncoded
+	void getPhotoSeriesByEvent(@Field("event") String pEventId, @Field("offset") int pOffset, @Field("limit") int pLimit, Callback<ReturnObject<PhotoSeriesObject.PhotoSeriesListObject>> pCallback);
+
+	@POST("/fotos/reihe/get_daten/?img_max_x=800&img_max_y=800&img_quality=90&img_format=jpg")
+	@FormUrlEncoded
+	ReturnObject<PhotoSeriesObject> getPhotoSeries(@Field("reihe") String pId);
+
+	@POST("/fotos/reihe/get_daten/?img_max_x=800&img_max_y=800&img_quality=90&img_format=jpg")
+	@FormUrlEncoded
+	void getPhotoSeries(@Field("reihe") String pId, Callback<ReturnObject<PhotoSeriesObject>> pCallback);
+
+
 }
 
 

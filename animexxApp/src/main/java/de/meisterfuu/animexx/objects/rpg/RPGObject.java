@@ -1,8 +1,10 @@
-package de.meisterfuu.animexx.objects;
+package de.meisterfuu.animexx.objects.rpg;
 
 import java.util.ArrayList;
 
 import com.google.gson.annotations.SerializedName;
+
+import de.meisterfuu.animexx.objects.UserObject;
 
 public class RPGObject implements Comparable<RPGObject> {
 	
@@ -307,7 +309,7 @@ public class RPGObject implements Comparable<RPGObject> {
 		
 //		  "mitglied":null, User-Objekt oder null, falls nicht besetzt
 		@SerializedName("mitglied")
-		UserObject user;
+UserObject user;
 		
 //		  "admin":false, true = Moderator-Rechte
 		@SerializedName("admin")

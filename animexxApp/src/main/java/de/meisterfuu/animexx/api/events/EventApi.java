@@ -14,8 +14,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import de.meisterfuu.animexx.api.APICallback;
-import de.meisterfuu.animexx.objects.EventDescriptionObject;
-import de.meisterfuu.animexx.objects.EventObject;
+import de.meisterfuu.animexx.objects.event.EventDescriptionObject;
+import de.meisterfuu.animexx.objects.event.EventObject;
 import de.meisterfuu.animexx.utils.APIException;
 import de.meisterfuu.animexx.utils.Request;
 

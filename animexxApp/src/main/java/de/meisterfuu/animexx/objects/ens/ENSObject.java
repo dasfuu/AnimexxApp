@@ -1,4 +1,4 @@
-package de.meisterfuu.animexx.objects;
+package de.meisterfuu.animexx.objects.ens;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -11,6 +11,8 @@ import com.google.gson.annotations.SerializedName;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+
+import de.meisterfuu.animexx.objects.UserObject;
 
 
 @DatabaseTable

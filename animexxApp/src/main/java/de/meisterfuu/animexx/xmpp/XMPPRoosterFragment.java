@@ -7,7 +7,7 @@ import de.meisterfuu.animexx.activitys.main.MainActivity;
 import de.meisterfuu.animexx.adapter.XMPPRoosterAdapter;
 import de.meisterfuu.animexx.api.APICallback;
 import de.meisterfuu.animexx.api.xmpp.XMPPApi;
-import de.meisterfuu.animexx.objects.XMPPRoosterObject;
+import de.meisterfuu.animexx.objects.xmpp.XMPPRoosterObject;
 import de.meisterfuu.animexx.utils.APIException;
 import android.os.Bundle;
 import android.app.ListFragment;

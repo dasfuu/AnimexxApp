@@ -1,4 +1,4 @@
-package de.meisterfuu.animexx.objects;
+package de.meisterfuu.animexx.objects.event;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -8,6 +8,8 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import com.google.gson.annotations.SerializedName;
+
+import de.meisterfuu.animexx.objects.UserObject;
 
 public class EventObject {
 

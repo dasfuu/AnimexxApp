@@ -1,6 +1,8 @@
-package de.meisterfuu.animexx.objects;
+package de.meisterfuu.animexx.objects.weblog;
 
 import com.google.gson.annotations.SerializedName;
+
+import de.meisterfuu.animexx.objects.UserObject;
 
 public class WeblogEntryObject {
 

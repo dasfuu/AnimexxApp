@@ -1,4 +1,4 @@
-package de.meisterfuu.animexx.objects;
+package de.meisterfuu.animexx.objects.rpg;
 
 public class RPGDraftObject {
 

@@ -22,7 +22,7 @@ import android.provider.CalendarContract.Events;
 import android.util.Log;
 import de.meisterfuu.animexx.Constants;
 import de.meisterfuu.animexx.api.events.EventApi;
-import de.meisterfuu.animexx.objects.EventObject;
+import de.meisterfuu.animexx.objects.event.EventObject;
 import de.meisterfuu.animexx.utils.APIException;
 import de.meisterfuu.animexx.utils.Request;
 

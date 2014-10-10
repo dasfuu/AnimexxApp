@@ -1,4 +1,4 @@
-package de.meisterfuu.animexx.objects;
+package de.meisterfuu.animexx.objects.xmpp;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

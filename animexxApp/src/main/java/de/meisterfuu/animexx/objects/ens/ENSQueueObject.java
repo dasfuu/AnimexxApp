@@ -1,4 +1,4 @@
-package de.meisterfuu.animexx.objects;
+package de.meisterfuu.animexx.objects.ens;
 
 import com.google.gson.annotations.SerializedName;
 import com.j256.ormlite.field.DataType;

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.meisterfuu.animexx.R;
-import de.meisterfuu.animexx.objects.EventObject;
+import de.meisterfuu.animexx.objects.event.EventObject;
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;

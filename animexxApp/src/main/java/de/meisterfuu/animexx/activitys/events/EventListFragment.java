@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import de.meisterfuu.animexx.adapter.EventAdapter;
 import de.meisterfuu.animexx.api.APICallback;
 import de.meisterfuu.animexx.api.events.EventApi;
-import de.meisterfuu.animexx.objects.EventObject;
+import de.meisterfuu.animexx.objects.event.EventObject;
 import de.meisterfuu.animexx.utils.APIException;
 import de.meisterfuu.animexx.utils.Request;
 import android.app.ListFragment;

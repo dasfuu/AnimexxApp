@@ -7,18 +7,15 @@ import java.util.ArrayList;
 
 import de.meisterfuu.animexx.api.ApiEvent;
 import de.meisterfuu.animexx.api.EventBus;
-import de.meisterfuu.animexx.api.web.RefreshTokenCallback;
 import de.meisterfuu.animexx.api.web.ReturnObject;
 import de.meisterfuu.animexx.api.web.WebAPI;
-import de.meisterfuu.animexx.api.web.oauth.AccessToken;
-import de.meisterfuu.animexx.objects.ProfileObject;
+import de.meisterfuu.animexx.objects.profile.ProfileObject;
 import oauth.signpost.OAuth;
 
 import org.json.JSONObject;
 
 import android.content.Context;
 import android.os.Handler;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -32,12 +29,6 @@ import de.meisterfuu.animexx.utils.Request;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-import rx.Notification;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 
 public class UserApi {

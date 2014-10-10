@@ -1,6 +1,8 @@
-package de.meisterfuu.animexx.objects;
+package de.meisterfuu.animexx.objects.profile;
 
 import com.google.gson.annotations.SerializedName;
+
+import de.meisterfuu.animexx.objects.UserObject;
 
 public class GBEntryObject {
 	
@@ -10,7 +12,7 @@ public class GBEntryObject {
 	
 //	- von, User-Objekt
 	@SerializedName("von")
-	UserObject author;
+UserObject author;
 	
 //	- datum_server, MySQL-Datum / ME(S)Z
 //	- datum_utc, MySQL-Datum / UTC

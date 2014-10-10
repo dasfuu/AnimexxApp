@@ -19,19 +19,24 @@ import java.util.List;
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.activitys.profiles.ProfileActivity;
 import de.meisterfuu.animexx.api.APICallback;
-import de.meisterfuu.animexx.api.profile.GBApi;
-import de.meisterfuu.animexx.objects.GBEntryObject;
+import de.meisterfuu.animexx.api.profile.GBBroker;
+import de.meisterfuu.animexx.api.web.ReturnObject;
+import de.meisterfuu.animexx.objects.profile.GBEntryObject;
 import de.meisterfuu.animexx.objects.UserObject;
+import de.meisterfuu.animexx.objects.profile.GBListObject;
 import de.meisterfuu.animexx.utils.APIException;
 import de.meisterfuu.animexx.utils.Helper;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 
-public class GBListAdapter extends BaseAdapter implements APICallback<ArrayList<GBEntryObject>> {
+public class GBListAdapter extends BaseAdapter implements Callback<ReturnObject<GBListObject>> {
 
 	List<GBEntryObject> mItems;
 	Activity mContext;
 	long mGBID;
-	GBApi mApi;
+	GBBroker mApi;
 	int page;
 	private boolean mEnd = false;
 	private boolean mLoading = false;
@@ -40,7 +45,7 @@ public class GBListAdapter extends BaseAdapter implements APICallback<ArrayList<
 		this.mItems = new ArrayList<GBEntryObject>();
 		this.mContext = pContext;
 		this.mGBID = pGBID;
-		mApi = new GBApi(pContext);
+		mApi = new GBBroker(pContext);
 		mApi.getGBList(mGBID,page++,this);
 	}
 
@@ -50,12 +55,17 @@ public class GBListAdapter extends BaseAdapter implements APICallback<ArrayList<
 	}
 
 	@Override
-	public void onCallback(final APIException pError, final ArrayList<GBEntryObject> pObject) {
+	public void success(final ReturnObject<GBListObject> t, final Response response) {
 		mLoading = false;
-		if(pObject.size() < 30){
+		if(t.getObj().getEntries().size() < 30){
 			mEnd = true;
 		}
-		this.addAll(pObject);
+		this.addAll(t.getObj().getEntries());
+	}
+
+	@Override
+	public void failure(final RetrofitError error) {
+		mLoading = false;
 	}
 
 

@@ -1,4 +1,4 @@
-package de.meisterfuu.animexx.objects;
+package de.meisterfuu.animexx.objects.profile;
 
 import com.google.gson.annotations.SerializedName;
 

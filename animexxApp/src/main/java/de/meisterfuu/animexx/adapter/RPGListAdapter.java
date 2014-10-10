@@ -5,7 +5,7 @@ import java.util.List;
 
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.activitys.rpg.RPGDetailActivity;
-import de.meisterfuu.animexx.objects.RPGObject;
+import de.meisterfuu.animexx.objects.rpg.RPGObject;
 import de.meisterfuu.animexx.utils.Helper;
 import de.meisterfuu.animexx.utils.imageloader.ImageDownloaderCustom;
 import de.meisterfuu.animexx.utils.imageloader.ImageLoaderCustom;

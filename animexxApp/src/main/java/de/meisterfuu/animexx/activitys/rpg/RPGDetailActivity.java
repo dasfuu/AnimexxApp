@@ -3,7 +3,7 @@ package de.meisterfuu.animexx.activitys.rpg;
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.api.APICallback;
 import de.meisterfuu.animexx.api.rpg.RPGApi;
-import de.meisterfuu.animexx.objects.RPGObject;
+import de.meisterfuu.animexx.objects.rpg.RPGObject;
 import de.meisterfuu.animexx.utils.APIException;
 import de.meisterfuu.animexx.utils.views.TableDataView;
 

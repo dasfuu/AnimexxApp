@@ -9,15 +9,21 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import java.util.List;
+
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.api.APICallback;
-import de.meisterfuu.animexx.api.profile.GBApi;
-import de.meisterfuu.animexx.objects.GBDraftObject;
-import de.meisterfuu.animexx.objects.GBInfoObject;
+import de.meisterfuu.animexx.api.profile.GBBroker;
+import de.meisterfuu.animexx.api.web.ReturnObject;
+import de.meisterfuu.animexx.objects.profile.GBDraftObject;
+import de.meisterfuu.animexx.objects.profile.GBInfoObject;
 import de.meisterfuu.animexx.objects.UserObject;
 import de.meisterfuu.animexx.utils.APIException;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
-public class GuestbookPostActivity extends Activity implements APICallback<GBInfoObject> {
+public class GuestbookPostActivity extends Activity implements Callback<ReturnObject<List<GBInfoObject>>> {
 
 
 	public static void getInstance(Context pContext, long pID){
@@ -32,7 +38,7 @@ public class GuestbookPostActivity extends Activity implements APICallback<GBInf
 	EditText mText;
 	Spinner mAvatarSpinner;
 
-	private GBApi mApi;
+	private GBBroker mApi;
 	private long mUserID;
 	private int mAvatarID;
 
@@ -56,18 +62,21 @@ public class GuestbookPostActivity extends Activity implements APICallback<GBInf
 		Bundle extras = this.getIntent().getExtras();
 		mUserID = extras.getLong("id");
 
-		mApi = new GBApi(this);
+		mApi = new GBBroker(this);
 		mApi.getGBInfo(mUserID, this);
 	}
 
-	@Override
-	public void onCallback(final APIException pError, final GBInfoObject pObject) {
-			if(pError != null){
 
-			} else {
-				this.finish();
-			}
+	@Override
+	public void success(final ReturnObject<List<GBInfoObject>> t, final Response response) {
+
 	}
+
+	@Override
+	public void failure(final RetrofitError error) {
+
+	}
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -99,6 +108,7 @@ public class GuestbookPostActivity extends Activity implements APICallback<GBInf
 		draft.setAvatar(mAvatarID);
 
 	}
+
 
 
 }

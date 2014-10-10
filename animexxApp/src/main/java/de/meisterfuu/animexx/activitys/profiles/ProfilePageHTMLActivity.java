@@ -11,7 +11,7 @@ import android.webkit.WebView;
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.api.APICallback;
 import de.meisterfuu.animexx.api.profile.UserApi;
-import de.meisterfuu.animexx.objects.EventDescriptionObject;
+import de.meisterfuu.animexx.objects.event.EventDescriptionObject;
 import de.meisterfuu.animexx.utils.APIException;
 
 public class ProfilePageHTMLActivity extends Activity {

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.meisterfuu.animexx.notification.ENSCollapseNotification;
-import de.meisterfuu.animexx.objects.ENSNotifyObject;
+import de.meisterfuu.animexx.objects.ens.ENSNotifyObject;
 
 import org.json.JSONObject;
 
@@ -19,10 +19,10 @@ import android.content.Context;
 import android.os.Handler;
 import de.meisterfuu.animexx.api.APICallback;
 import de.meisterfuu.animexx.api.DatabaseHelper;
-import de.meisterfuu.animexx.objects.ENSDraftObject;
-import de.meisterfuu.animexx.objects.ENSFolderObject;
-import de.meisterfuu.animexx.objects.ENSObject;
-import de.meisterfuu.animexx.objects.ENSQueueObject;
+import de.meisterfuu.animexx.objects.ens.ENSDraftObject;
+import de.meisterfuu.animexx.objects.ens.ENSFolderObject;
+import de.meisterfuu.animexx.objects.ens.ENSObject;
+import de.meisterfuu.animexx.objects.ens.ENSQueueObject;
 import de.meisterfuu.animexx.services.ENSQueueService;
 import de.meisterfuu.animexx.utils.APIException;
 import de.meisterfuu.animexx.utils.PostBodyFactory;

@@ -15,7 +15,7 @@ import de.meisterfuu.animexx.api.APICallback;
 import de.meisterfuu.animexx.api.Self;
 import de.meisterfuu.animexx.api.ens.ENSApi;
 import de.meisterfuu.animexx.objects.DrawerObject;
-import de.meisterfuu.animexx.objects.ENSFolderObject;
+import de.meisterfuu.animexx.objects.ens.ENSFolderObject;
 import de.meisterfuu.animexx.utils.APIException;
 import de.meisterfuu.animexx.utils.Request;
 import de.meisterfuu.animexx.xmpp.XMPPRoosterFragment;

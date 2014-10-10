@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -18,10 +17,7 @@ import com.squareup.otto.Subscribe;
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.activitys.AnimexxBaseActivity;
 import de.meisterfuu.animexx.api.ApiEvent;
-import de.meisterfuu.animexx.api.EventBus;
 import de.meisterfuu.animexx.api.profile.UserApi;
-import de.meisterfuu.animexx.objects.ENSObject;
-import de.meisterfuu.animexx.objects.ProfileObject;
 
 public class ProfileActivity extends AnimexxBaseActivity{
 

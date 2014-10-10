@@ -13,12 +13,12 @@ import com.j256.ormlite.table.TableUtils;
 import java.sql.SQLException;
 import java.util.HashMap;
 
-import de.meisterfuu.animexx.objects.ENSDraftObject;
-import de.meisterfuu.animexx.objects.ENSNotifyObject;
-import de.meisterfuu.animexx.objects.ENSObject;
-import de.meisterfuu.animexx.objects.ENSQueueObject;
-import de.meisterfuu.animexx.objects.XMPPMessageObject;
-import de.meisterfuu.animexx.objects.XMPPRoosterObject;
+import de.meisterfuu.animexx.objects.ens.ENSDraftObject;
+import de.meisterfuu.animexx.objects.ens.ENSNotifyObject;
+import de.meisterfuu.animexx.objects.ens.ENSObject;
+import de.meisterfuu.animexx.objects.ens.ENSQueueObject;
+import de.meisterfuu.animexx.objects.xmpp.XMPPMessageObject;
+import de.meisterfuu.animexx.objects.xmpp.XMPPRoosterObject;
 
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
@@ -46,13 +46,13 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db, ConnectionSource connectionSource) {
 		try {
-			Log.i(DatabaseHelperTest.class.getName(), "onCreate");
+			Log.i(DatabaseHelper.class.getName(), "onCreate");
 
 			for(DatabaseTables obj: DatabaseTables.values()){
 				TableUtils.createTable(getConnectionSource(), obj.getClasses().type);
 			}
 		} catch (SQLException e) {
-			Log.e(DatabaseHelperTest.class.getName(), "Can't create database", e);
+			Log.e(DatabaseHelper.class.getName(), "Can't create database", e);
 			throw new RuntimeException(e);
 		}
 	}
@@ -61,7 +61,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	public void onUpgrade(SQLiteDatabase db, ConnectionSource connectionSource, int oldVersion, int newVersion) {
 
 		try {
-			Log.i(DatabaseHelperTest.class.getName(), "onUpgrade");
+			Log.i(DatabaseHelper.class.getName(), "onUpgrade");
 
 			for(DatabaseTables obj: DatabaseTables.values()){
 				TableUtils.dropTable(getConnectionSource(), obj.getClasses().type, true);
@@ -69,7 +69,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			// after we drop the old databases, we create the new ones
 			onCreate(db, connectionSource);
 		} catch (SQLException e) {
-			Log.e(DatabaseHelperTest.class.getName(), "Can't drop databases", e);
+			Log.e(DatabaseHelper.class.getName(), "Can't drop databases", e);
 			throw new RuntimeException(e);
 		}
 	}

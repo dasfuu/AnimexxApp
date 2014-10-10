@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.meisterfuu.animexx.R;
-import de.meisterfuu.animexx.objects.XMPPRoosterObject;
+import de.meisterfuu.animexx.objects.xmpp.XMPPRoosterObject;
 import de.meisterfuu.animexx.utils.imageloader.ImageLoaderCustom;
 import de.meisterfuu.animexx.utils.imageloader.ImageSaveObject;
 import android.app.Activity;
