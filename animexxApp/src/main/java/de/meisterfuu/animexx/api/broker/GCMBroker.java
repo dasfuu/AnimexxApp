@@ -1,10 +1,8 @@
-package de.meisterfuu.animexx.api.other;
+package de.meisterfuu.animexx.api.broker;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-
-import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -16,21 +14,18 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import de.meisterfuu.animexx.KEYS;
 import de.meisterfuu.animexx.api.APICallback;
-import de.meisterfuu.animexx.utils.APIException;
-import de.meisterfuu.animexx.utils.PostBodyFactory;
-import de.meisterfuu.animexx.utils.Request;
+import de.meisterfuu.animexx.api.web.ReturnObject;
+import de.meisterfuu.animexx.objects.SingleValueObjects;
+import retrofit.Callback;
+import retrofit.RetrofitError;
 
 
-public class GCMApi {
+public class GCMBroker extends BasicWebBroker {
 	
 
-	Context mContext;
-	Gson gson;
 	ArrayList<String> EventCodes = new ArrayList<String>();
 	
 	String[] ev1 = new String[]{"XXEventENS", "XXEventGeburtstag", "XXEventGaestebuch"};
@@ -41,73 +36,26 @@ public class GCMApi {
 	
 	//Init
 	
-	public GCMApi(Context pContext){
-		this.mContext = pContext.getApplicationContext();
-		GsonBuilder b = new GsonBuilder();
-		gson = b.create();	
+	public GCMBroker(Context pContext){
+		super(pContext);
+
 		EventCodes.addAll(Arrays.asList(ev1));
 		EventCodes.addAll(Arrays.asList(ev2));
 		EventCodes.addAll(Arrays.asList(ev3));
 		EventCodes.addAll(Arrays.asList(ev4));
 	}
-	
-	
+
+
 	//Public Methods
-	
+
 	/**
 	 * @param pCallback
 	 */
-	public void activateGCMEvents(final APICallback pCallback){		
-		final Handler hand = new Handler();		
-		new Thread(new Runnable() {
-			public void run() {
-				APIException error = null;				
-
-				try {
-					activateGCMEventsWeb();
-				} catch (APIException e) {
-					error = e;
-				}
-				
-
-				final APIException ferror = error;
-				
-				hand.post(new Runnable() {			
-					public void run() {
-						if(pCallback != null) pCallback.onCallback(ferror, null);
-					}
-				});
-			}
-		}).start();
+	public void activateGCMEvents(final Callback<ReturnObject<SingleValueObjects.Empty>> pCallback){
+		getWebApi().getApi().setGCMEvents(EventCodes, pCallback);
 	}
 	
-	/**
-	 * @param pId
-	 * @param pCallback
-	 */
-	public void setGCMID(final String pId, final APICallback pCallback){		
-		final Handler hand = new Handler();		
-		new Thread(new Runnable() {
-			public void run() {
-				APIException error = null;				
 
-				try {
-					sentGCMIDWeb(pId);
-				} catch (APIException e) {
-					error = e;
-				}
-				
-
-				final APIException ferror = error;
-				
-				hand.post(new Runnable() {			
-					public void run() {
-						if(pCallback != null) pCallback.onCallback(ferror, null);
-					}
-				});
-			}
-		}).start();
-	}
 	
 	public void registerGCM(final APICallback pCallback){	
 		final Handler hand = new Handler();	
@@ -115,22 +63,17 @@ public class GCMApi {
 
 			public void run() {
 				Looper.prepare();
-				GoogleCloudMessaging gcm =  GoogleCloudMessaging.getInstance(mContext);
+				GoogleCloudMessaging gcm =  GoogleCloudMessaging.getInstance(getContext());
 				try {
 					String reg_id = gcm.register(KEYS.GCM_SENDER_ID);
 					Log.e("Animexx GCM", "NEW ID: "+reg_id);
 					saveGCM(reg_id);
 
+					sentGCMID(reg_id);
 
-					setGCMID(reg_id, new APICallback() {
-						
-						@Override
-						public void onCallback(final APIException pError, final Object pObject) {
-							hand.post(new Runnable() {			
-								public void run() {
-									if(pCallback != null) pCallback.onCallback(pError, pObject);
-								}
-							});
+					hand.post(new Runnable() {
+						public void run() {
+							if (pCallback != null) pCallback.onCallback(null, null);
 						}
 					});
 
@@ -148,7 +91,7 @@ public class GCMApi {
 	 * @param context
 	 */
 	public String getRegistrationId(Context context) {
-		    final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+		    final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
 		    String registrationId = prefs.getString("gcm_reg_id", "");
 		    
 		    Log.e("Animexx GCM", "getRegistrationId()");
@@ -166,56 +109,13 @@ public class GCMApi {
 		    }
 		    return registrationId;
 	}
-	
-	
-	//Web-Api Access
-	
-	private void activateGCMEventsWeb()  throws APIException {
-		try {
-			String url = "https://ws.animexx.de/json/cloud2device/set_active_events/?api=2";
 
-			PostBodyFactory factory = new PostBodyFactory();
-			for (String EventCode : EventCodes) {
-				factory.putValue("events[]", EventCode);
-			}
-					
-			String result = Request.SignSendScribePost(url, factory, mContext);
-			
-			JSONObject resultObj = new JSONObject(result);
-			if(resultObj.getBoolean("success")){
-				
-			} else {
-				throw new APIException("Error", APIException.OTHER);
-			}		
-	
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new APIException("Request Failed", APIException.REQUEST_FAILED);
-		}	
+	public void activateGCMEvents()  throws RetrofitError {
+		getWebApi().getApi().setGCMEvents(EventCodes);
 	}
-	
-	private void sentGCMIDWeb(String id)  throws APIException {
-		try {
-			
-			String url = "https://ws.animexx.de/json/cloud2device/registration_id_set/?api=2";
-			
-			PostBodyFactory factory = new PostBodyFactory();
-			factory.putValue("registration_id", id);
-			factory.putValue("collapse_by_type", "0");
-					
-			String result = Request.SignSendScribePost(url, factory, mContext);
-			
-			JSONObject resultObj = new JSONObject(result);
-			if(resultObj.getBoolean("success")){
-				
-			} else {
-				throw new APIException("Error", APIException.OTHER);
-			}		
-	
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new APIException("Request Failed", APIException.REQUEST_FAILED);
-		}	
+
+	public void sentGCMID(String id) throws RetrofitError {
+		getWebApi().getApi().setGCMId(id, 0);
 	}
 	
 	
@@ -223,15 +123,16 @@ public class GCMApi {
 	
 	private void saveGCM(String reg_id) {
 		Log.e("Animexx GCM","Saving GCM ID: "+reg_id.hashCode());
-		PreferenceManager.getDefaultSharedPreferences(mContext).edit().putString("gcm_reg_id", reg_id).commit();
-		int appVersion = getAppVersion(mContext);
-		PreferenceManager.getDefaultSharedPreferences(mContext).edit().putInt("gcm_app_ver", appVersion).commit();
+		PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putString("gcm_reg_id", reg_id).commit();
+		int appVersion = getAppVersion(getContext());
+		PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putInt("gcm_app_ver", appVersion).commit();
 	}
 	
 	private String getGCM() {
-		return PreferenceManager.getDefaultSharedPreferences(mContext).getString("gcm_reg_id", null);
+		return PreferenceManager.getDefaultSharedPreferences(getContext()).getString("gcm_reg_id", null);
 	}
-		
+
+
 	/**
 	 * @return Application's version code from the {@code PackageManager}.
 	 */

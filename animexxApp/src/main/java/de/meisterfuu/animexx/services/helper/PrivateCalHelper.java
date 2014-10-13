@@ -21,7 +21,7 @@ import android.provider.CalendarContract.Calendars;
 import android.provider.CalendarContract.Events;
 import android.util.Log;
 import de.meisterfuu.animexx.Constants;
-import de.meisterfuu.animexx.api.calendar.CalendarApi;
+import de.meisterfuu.animexx.api.broker.CalendarBroker;
 import de.meisterfuu.animexx.objects.CalendarEntryObject;
 import de.meisterfuu.animexx.utils.Request;
 
@@ -342,7 +342,7 @@ public class PrivateCalHelper {
 //        contentResolver.delete(getAdapterUri(Events.CONTENT_URI), Events.CALENDAR_ID + " = ?", new String[]{String.valueOf(calendarId)});
 
         
-        CalendarApi API = new CalendarApi(pContext);
+        CalendarBroker API = new CalendarBroker(pContext);
         
         ArrayList<CalendarEntryObject> events = new ArrayList<CalendarEntryObject>();
         ArrayList<CalendarEntryObject> _new = new ArrayList<CalendarEntryObject>();

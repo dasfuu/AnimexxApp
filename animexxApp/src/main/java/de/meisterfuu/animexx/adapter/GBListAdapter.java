@@ -18,13 +18,11 @@ import java.util.List;
 
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.activitys.profiles.ProfileActivity;
-import de.meisterfuu.animexx.api.APICallback;
-import de.meisterfuu.animexx.api.profile.GBBroker;
+import de.meisterfuu.animexx.api.broker.GBBroker;
 import de.meisterfuu.animexx.api.web.ReturnObject;
 import de.meisterfuu.animexx.objects.profile.GBEntryObject;
 import de.meisterfuu.animexx.objects.UserObject;
 import de.meisterfuu.animexx.objects.profile.GBListObject;
-import de.meisterfuu.animexx.utils.APIException;
 import de.meisterfuu.animexx.utils.Helper;
 import retrofit.Callback;
 import retrofit.RetrofitError;

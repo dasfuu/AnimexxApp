@@ -1,10 +1,13 @@
 package de.meisterfuu.animexx.activitys.events;
 
 import de.meisterfuu.animexx.R;
-import de.meisterfuu.animexx.api.APICallback;
-import de.meisterfuu.animexx.api.events.EventApi;
+import de.meisterfuu.animexx.api.broker.EventBroker;
+import de.meisterfuu.animexx.api.web.ReturnObject;
 import de.meisterfuu.animexx.objects.event.EventDescriptionObject;
-import de.meisterfuu.animexx.utils.APIException;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
@@ -27,7 +30,7 @@ public class SingleEventDescriptionActivity extends Activity {
 	private long mID;
 	private String mTitle;
 	private WebView mWebView;
-	private EventApi mApi;
+	private EventBroker mApi;
 	private long mEventID;
 	
 	@Override
@@ -40,7 +43,7 @@ public class SingleEventDescriptionActivity extends Activity {
 			mID = extras.getLong("id");
 			mEventID = extras.getLong("eventid");
 			mTitle = extras.getString("title");
-			mApi = new EventApi(this);
+			mApi = new EventBroker(this);
 		} else {
 			finish();
 			return;
@@ -49,14 +52,18 @@ public class SingleEventDescriptionActivity extends Activity {
 		this.getActionBar().setTitle(mTitle);
 		mWebView = (WebView) this.findViewById(R.id.activity_event_desc_html);
 
-		mApi.getEventDescription(new APICallback() {
-			
+		mApi.getEventDescription(mID, mEventID, new Callback<ReturnObject<EventDescriptionObject>>() {
 			@Override
-			public void onCallback(APIException pError, Object pObject) {
-				EventDescriptionObject obj = (EventDescriptionObject) pObject;
-				mWebView.loadDataWithBaseURL("https://animexx.de", obj.getHtml(), "text/html", "UTF-8", null);	
+			public void success(final ReturnObject<EventDescriptionObject> t, final Response response) {
+				EventDescriptionObject obj = t.getObj();
+				mWebView.loadDataWithBaseURL("https://animexx.de", obj.getHtml(), "text/html", "UTF-8", null);
 			}
-		}, mEventID, mID);
+
+			@Override
+			public void failure(final RetrofitError error) {
+
+			}
+		});
 		
 	}
 

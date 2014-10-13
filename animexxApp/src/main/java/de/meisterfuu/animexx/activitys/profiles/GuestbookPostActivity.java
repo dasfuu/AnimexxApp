@@ -12,13 +12,11 @@ import android.widget.Spinner;
 import java.util.List;
 
 import de.meisterfuu.animexx.R;
-import de.meisterfuu.animexx.api.APICallback;
-import de.meisterfuu.animexx.api.profile.GBBroker;
+import de.meisterfuu.animexx.api.broker.GBBroker;
 import de.meisterfuu.animexx.api.web.ReturnObject;
 import de.meisterfuu.animexx.objects.profile.GBDraftObject;
 import de.meisterfuu.animexx.objects.profile.GBInfoObject;
 import de.meisterfuu.animexx.objects.UserObject;
-import de.meisterfuu.animexx.utils.APIException;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;

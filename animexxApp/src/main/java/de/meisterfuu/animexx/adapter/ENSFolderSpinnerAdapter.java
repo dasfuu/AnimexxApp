@@ -11,7 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import de.meisterfuu.animexx.R;
-import de.meisterfuu.animexx.api.ens.ENSApi;
+import de.meisterfuu.animexx.api.broker.ENSBroker;
 import de.meisterfuu.animexx.objects.ens.ENSFolderObject;
 
 public class ENSFolderSpinnerAdapter extends BaseAdapter {
@@ -94,7 +94,7 @@ public class ENSFolderSpinnerAdapter extends BaseAdapter {
 		//Subject
 		holder.Title.setText(Folder.getName());
 		
-		if(Folder.getType().equals(ENSApi.TYPE_INBOX)) {
+		if(Folder.getType().equals(ENSBroker.TYPE_INBOX)) {
 			holder.Icon.setImageResource(R.drawable.ens_folder_in);
 		} else {
 			holder.Icon.setImageResource(R.drawable.ens_folder_out);

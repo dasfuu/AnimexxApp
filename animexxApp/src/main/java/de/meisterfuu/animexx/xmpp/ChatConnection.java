@@ -2,6 +2,7 @@ package de.meisterfuu.animexx.xmpp;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Random;
 
 
@@ -35,7 +36,7 @@ import de.meisterfuu.animexx.Beta;
 import de.meisterfuu.animexx.Debug;
 import de.meisterfuu.animexx.DebugNotification;
 import de.meisterfuu.animexx.api.Self;
-import de.meisterfuu.animexx.api.profile.UserApi;
+import de.meisterfuu.animexx.api.broker.UserBroker;
 import de.meisterfuu.animexx.api.xmpp.XMPPApi;
 import de.meisterfuu.animexx.notification.XMPPNotification;
 import de.meisterfuu.animexx.objects.UserObject;
@@ -392,7 +393,7 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
             }
 		}		
 		
-		ArrayList<UserObject> user_list = (new UserApi(mApplicationContext).NTgetIDs(names));
+		List<UserObject> user_list = (new UserBroker(mApplicationContext).NTgetIDs(names));
 		
 		for(RosterEntry obj: getConnection().getRoster().getEntries()){
 			

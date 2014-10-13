@@ -186,19 +186,19 @@ public interface WebApiInterface {
 
 	@POST("/ens/ordner_ens_liste/?get_user_avatar=true")
 	@FormUrlEncoded
-	ReturnObject<List<ENSObject>> getENSList(@Field("ordner_id") int pFolderId, @Field("ordner_typ") String pFolderType, @Field("seite") int pPage);
+	ReturnObject<List<ENSObject>> getENSList(@Field("ordner_id") long pFolderId, @Field("ordner_typ") String pFolderType, @Field("seite") int pPage);
 
 	@POST("/ens/ordner_ens_liste/?get_user_avatar=true")
 	@FormUrlEncoded
-	void getENSList(@Field("ordner_id") int pFolderId, @Field("ordner_typ") String pFolderType, @Field("seite") int pPage, Callback<ReturnObject<List<ENSObject>>> pCallback);
+	void getENSList(@Field("ordner_id") long pFolderId, @Field("ordner_typ") String pFolderType, @Field("seite") int pPage, Callback<ReturnObject<List<ENSObject>>> pCallback);
 
 	@POST("/ens/ordner_ens_liste/?get_user_avatar=true")
 	@FormUrlEncoded
-	ReturnObject<List<ENSObject>> getENSList(@Field("ordner_id") int pFolderId, @Field("ordner_typ") String pFolderType, @Field("seite") int pPage, @Field("anzahl") int pQuantity);
+	ReturnObject<List<ENSObject>> getENSList(@Field("ordner_id") long pFolderId, @Field("ordner_typ") String pFolderType, @Field("seite") int pPage, @Field("anzahl") int pQuantity);
 
 	@POST("/ens/ordner_ens_liste/?get_user_avatar=true")
 	@FormUrlEncoded
-	void getENSList(@Field("ordner_id") int pFolderId, @Field("ordner_typ") String pFolderType, @Field("seite") int pPage, @Field("anzahl") int pQuantity, Callback<ReturnObject<List<ENSObject>>> pCallback);
+	void getENSList(@Field("ordner_id") long pFolderId, @Field("ordner_typ") String pFolderType, @Field("seite") int pPage, @Field("anzahl") int pQuantity, Callback<ReturnObject<List<ENSObject>>> pCallback);
 
 
 	@POST("/ens/ens_open/?text_format=html&get_user_avatar=true")
@@ -307,6 +307,15 @@ public interface WebApiInterface {
 	//-------------------------------
 	//Microblog
 	//-------------------------------
+
+	@POST("/persstart5/get_widget_data/?get_user_avatar=true&img_max_x=800&img_max_y=800&img_quality=90&img_format=jpg&widget_id=kontakte_blog")
+	@FormUrlEncoded
+	ReturnObject<List<ContactHomeObject>> getMicroblogs();
+
+	@POST("/persstart5/get_widget_data/?get_user_avatar=true&img_max_x=800&img_max_y=800&img_quality=90&img_format=jpg&widget_id=kontakte_blog")
+	@FormUrlEncoded
+	void getMicroblogs(Callback<ReturnObject<List<ContactHomeObject>>> pCallback);
+
 
 	//Post Microblog Start
 	@POST("/persstart5/post_microblog_message/")
@@ -821,11 +830,11 @@ public interface WebApiInterface {
 	void createWeblogEntry(@Field("weblog_id") long pWeblogId, @Field("zuordnung_event") long pEventId, @Field("titel") String pTitle, @Field("text") String pText, @Field("entwurf") int pDraft, @Field("html") int pHtml, @Field("adult") int pAdult, @Field("tags") String pTags, Callback<ReturnObject<Long>> pCallback);
 
 
-	@POST("/weblog/post_eintrag/")
+	@POST("/weblog/del_eintrag/")
 	@FormUrlEncoded
 	ReturnObject<Long> deleteWeblogEntry(@Field("weblog_id") long pWeblogId, @Field("eintrag_id") long pEntryId);
 
-	@POST("/weblog/post_eintrag/")
+	@POST("/weblog/del_eintrag/")
 	@FormUrlEncoded
 	void deleteWeblogEntry(@Field("weblog_id") long pWeblogId, @Field("eintrag_id") long pEntryId, Callback<ReturnObject<Long>> pCallback);
 

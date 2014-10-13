@@ -3,7 +3,7 @@ package de.meisterfuu.animexx.services;
 import java.util.Calendar;
 import java.util.List;
 
-import de.meisterfuu.animexx.api.ens.ENSApi;
+import de.meisterfuu.animexx.api.broker.ENSBroker;
 import de.meisterfuu.animexx.objects.ens.ENSQueueObject;
 import android.app.AlarmManager;
 import android.app.IntentService;
@@ -50,7 +50,7 @@ public class ENSQueueService extends IntentService {
 	}
 
 	private void handleAction() {
-		ENSApi api = new ENSApi(this);
+		ENSBroker api = new ENSBroker(this);
 		int error_count = 0;
 		List<ENSQueueObject> queue = api.getFromQueue();
 		if (queue.size() > 0) {

@@ -1,14 +1,21 @@
 package de.meisterfuu.animexx.activitys.ens;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.api.APICallback;
-import de.meisterfuu.animexx.api.ens.ENSApi;
+import de.meisterfuu.animexx.api.broker.ENSBroker;
+import de.meisterfuu.animexx.api.web.ReturnObject;
+import de.meisterfuu.animexx.objects.ens.ENSCheckRecipientsObject;
 import de.meisterfuu.animexx.objects.ens.ENSDraftObject;
 import de.meisterfuu.animexx.objects.UserObject;
 import de.meisterfuu.animexx.utils.APIException;
 import de.meisterfuu.animexx.utils.views.UsernameAutoCompleteTextView;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -42,7 +49,7 @@ public class NewENSActivity extends Activity {
 		draft.setReferenceType(null);
 		draft.setSignature("");
 		
-		final ENSApi mAPI = new ENSApi(pContext);
+		final ENSBroker mAPI = new ENSBroker(pContext);
 		mAPI.saveENSDraft(draft, new APICallback() {
 			
 			@Override
@@ -66,7 +73,7 @@ public class NewENSActivity extends Activity {
 	
 	
 	long mDraftID;
-	ENSApi mAPI;
+	ENSBroker mAPI;
 	EditText mMessage, mSubject, mRecipient;
 	UsernameAutoCompleteTextView mSearch;
 	FrameLayout mHeader, mBody;
@@ -93,7 +100,7 @@ public class NewENSActivity extends Activity {
 
 		Bundle extras = this.getIntent().getExtras();
 		mDraftID = extras.getLong("ENSDraftObject");
-		mAPI = new ENSApi(this);
+		mAPI = new ENSBroker(this);
 		
 		mAPI.getENSDraft(mDraftID, new APICallback() {
 			
@@ -156,19 +163,22 @@ public class NewENSActivity extends Activity {
 			if(s.isEmpty()) continue;
 			names_.add(s);
 		}
-		mAPI.checkUserName(names_, new APICallback() {
-			
+		mAPI.checkUserName(names_, new Callback<ReturnObject<ENSCheckRecipientsObject>>() {
 			@Override
-			public void onCallback(APIException pError, Object pObject) {
-				ENSApi.anCheckObject ret = (ENSApi.anCheckObject)pObject;
-				if(ret.errors.size()> 0){
+			public void success(final ReturnObject<ENSCheckRecipientsObject> t, final Response response) {
+				if(t.getObj().getErrors().size() > 0){
 					mDialog.cancel();
-					Toast.makeText(NewENSActivity.this, ret.errors.toString(), Toast.LENGTH_SHORT).show();
+					Toast.makeText(NewENSActivity.this, Arrays.toString(t.getObj().getErrors().toArray()), Toast.LENGTH_SHORT).show();
 				} else {
-					mENSDraft.setRecipients(ret.IDs);
+					mENSDraft.setRecipients(t.getObj().getIDs());
 					mDialog.setTitle("Sende ENS");
 					send_();
 				}
+			}
+
+			@Override
+			public void failure(final RetrofitError error) {
+
 			}
 		});
 	}

@@ -1,6 +1,6 @@
 package de.meisterfuu.animexx.activitys.main;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.activitys.ens.ENSFolderFragment;
@@ -11,15 +11,17 @@ import de.meisterfuu.animexx.activitys.profiles.ProfileActivity;
 import de.meisterfuu.animexx.activitys.rpg.RPGListFragment;
 import de.meisterfuu.animexx.adapter.ENSFolderSpinnerAdapter;
 import de.meisterfuu.animexx.adapter.MainDrawerAdapter;
-import de.meisterfuu.animexx.api.APICallback;
 import de.meisterfuu.animexx.api.Self;
-import de.meisterfuu.animexx.api.ens.ENSApi;
+import de.meisterfuu.animexx.api.broker.ENSBroker;
+import de.meisterfuu.animexx.api.web.ReturnObject;
 import de.meisterfuu.animexx.objects.DrawerObject;
 import de.meisterfuu.animexx.objects.ens.ENSFolderObject;
-import de.meisterfuu.animexx.utils.APIException;
 import de.meisterfuu.animexx.utils.Request;
 import de.meisterfuu.animexx.xmpp.XMPPRoosterFragment;
 import de.meisterfuu.animexx.xmpp.XMPPService;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
@@ -321,13 +323,10 @@ public class MainActivity extends Activity {
 //		fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, "1_"+ENSApi.TYPE_INBOX).commit();
 		getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
-		new ENSApi(MainActivity.this).getFolderList(new APICallback() {
-
+		new ENSBroker(MainActivity.this).getFolderList(new Callback<ReturnObject<List<ENSFolderObject>>>() {
 			@Override
-			public void onCallback(APIException pError, Object pObject) {
-
-				@SuppressWarnings("unchecked")
-				final ENSFolderSpinnerAdapter spinnerAdapter = new ENSFolderSpinnerAdapter((ArrayList<ENSFolderObject>) pObject, MainActivity.this);
+			public void success(final ReturnObject<List<ENSFolderObject>> t, final Response response) {
+				final ENSFolderSpinnerAdapter spinnerAdapter = new ENSFolderSpinnerAdapter(t.getObj(), MainActivity.this);
 				OnNavigationListener listener = new OnNavigationListener() {
 
 					@Override
@@ -343,6 +342,10 @@ public class MainActivity extends Activity {
 				MainActivity.this.getActionBar().setListNavigationCallbacks(spinnerAdapter, listener);
 			}
 
+			@Override
+			public void failure(final RetrofitError error) {
+
+			}
 		});
 
 		invalidateOptionsMenu();

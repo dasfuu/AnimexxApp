@@ -21,10 +21,11 @@ import android.provider.CalendarContract.Calendars;
 import android.provider.CalendarContract.Events;
 import android.util.Log;
 import de.meisterfuu.animexx.Constants;
-import de.meisterfuu.animexx.api.events.EventApi;
+import de.meisterfuu.animexx.api.broker.EventBroker;
 import de.meisterfuu.animexx.objects.event.EventObject;
 import de.meisterfuu.animexx.utils.APIException;
 import de.meisterfuu.animexx.utils.Request;
+import retrofit.RetrofitError;
 
 public class EventCalHelper {
 	
@@ -328,15 +329,15 @@ public class EventCalHelper {
      
         
         
-        EventApi API = new EventApi(pContext);
-        ArrayList<EventObject> events = new ArrayList<EventObject>();
+        EventBroker API = new EventBroker(pContext);
+        List<EventObject> events = new ArrayList<EventObject>();
         ArrayList<EventObject> _new = new ArrayList<EventObject>();
         ArrayList<EventObject> _update = new ArrayList<EventObject>();
         ArrayList<CompareObject> not_delete = new ArrayList<CompareObject>();
         
 		try {
 	        Log.d(TAG, "Getting Events from Animexx");
-			events = API.getEventListNT(EventApi.LIST_PARTICIPATING);
+			events = API.getEventListNT();
 			
 			ArrayList<CompareObject> _arr = getCurrentEvents(pContext, calendarId);
 
@@ -364,7 +365,7 @@ public class EventCalHelper {
         	for(CompareObject obj: _arr){
         	       contentResolver.delete(getAdapterUri(Events.CONTENT_URI), Events.CALENDAR_ID + " = ? AND "+ Events._ID + " = ?", new String[]{String.valueOf(calendarId), String.valueOf(obj._id)});
         	}
-		} catch (APIException e1) {
+		} catch (RetrofitError e1) {
 			e1.printStackTrace();
 			return;
 		}

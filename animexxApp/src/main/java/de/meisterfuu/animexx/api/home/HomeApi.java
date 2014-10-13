@@ -41,6 +41,10 @@ public class HomeApi {
 	 * @param pCallback
 	 */
 	public void getContactWidgetList(final int pList, final APICallback pCallback){
+		Calendar c = Calendar.getInstance();
+		c.add(Calendar.DAY_OF_MONTH, -7);
+		long from = c.getTimeInMillis()/1000;
+
 		final Handler hand = new Handler();		
 		new Thread(new Runnable() {
 			public void run() {

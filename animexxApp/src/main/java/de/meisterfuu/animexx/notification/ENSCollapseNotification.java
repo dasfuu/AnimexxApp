@@ -3,7 +3,7 @@ package de.meisterfuu.animexx.notification;
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.activitys.ens.ENSFolderFragment;
 import de.meisterfuu.animexx.activitys.ens.SingleENSActivity;
-import de.meisterfuu.animexx.api.ens.ENSApi;
+import de.meisterfuu.animexx.api.broker.ENSBroker;
 import de.meisterfuu.animexx.objects.ens.ENSNotifyObject;
 import de.meisterfuu.animexx.utils.imageloader.BitmapLoaderCustom;
 import android.annotation.TargetApi;
@@ -41,7 +41,7 @@ public class ENSCollapseNotification {
 
 	public static void notify(final Context pContext, final String pTitle, final String pUserName, final String pUserId, final String pId, final String pFrom) {
 
-		ENSApi api = new ENSApi(pContext);
+		ENSBroker api = new ENSBroker(pContext);
 
 		ENSNotifyObject obj = new ENSNotifyObject();
 		obj.setFromID(Long.valueOf(pUserId));
@@ -223,7 +223,7 @@ public class ENSCollapseNotification {
 	public static class ENSNotificationDismissedReceiver extends BroadcastReceiver {
 		@Override
 		public void onReceive(Context pContext, Intent pIntent) {
-			ENSApi api = new ENSApi(pContext);
+			ENSBroker api = new ENSBroker(pContext);
 			api.clearNotification();
 		}
 	}

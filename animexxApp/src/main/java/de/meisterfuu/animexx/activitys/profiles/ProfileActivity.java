@@ -17,13 +17,13 @@ import com.squareup.otto.Subscribe;
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.activitys.AnimexxBaseActivity;
 import de.meisterfuu.animexx.api.ApiEvent;
-import de.meisterfuu.animexx.api.profile.UserApi;
+import de.meisterfuu.animexx.api.broker.UserBroker;
 
 public class ProfileActivity extends AnimexxBaseActivity{
 
 	long mUserID;
 	String mUserName;
-	private UserApi mApi;
+	private UserBroker mApi;
 
 	ProfileFragment profileFrag;
 	GuestbookListFragment gbFrag;
@@ -68,7 +68,7 @@ public class ProfileActivity extends AnimexxBaseActivity{
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-	    mApi = new UserApi(this);
+	    mApi = new UserBroker(this);
 
 	    profileFrag = ProfileFragment.newInstance(mUserID);
 	    gbFrag = GuestbookListFragment.newInstance(mUserID);

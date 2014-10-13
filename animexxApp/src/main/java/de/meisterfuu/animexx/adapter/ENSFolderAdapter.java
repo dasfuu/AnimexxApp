@@ -220,7 +220,7 @@ public class ENSFolderAdapter extends BaseAdapter {
 		return rowView;
 	}
 
-	public void addAll(ArrayList<ENSObject> list) {
+	public void addAll(List<ENSObject> list) {
 		mItems.addAll(list);
 		this.notifyDataSetChanged();		
 	}

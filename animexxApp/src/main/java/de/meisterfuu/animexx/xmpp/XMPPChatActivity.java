@@ -7,7 +7,7 @@ import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAni
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.adapter.ChatAdapter;
 import de.meisterfuu.animexx.api.APICallback;
-import de.meisterfuu.animexx.api.profile.UserApi;
+import de.meisterfuu.animexx.api.broker.UserBroker;
 import de.meisterfuu.animexx.api.xmpp.XMPPApi;
 import de.meisterfuu.animexx.notification.XMPPNotification;
 import de.meisterfuu.animexx.objects.UserObject;
@@ -103,7 +103,7 @@ public class XMPPChatActivity extends Activity  {
 	public void showHistory(){
 
 		if(mjabberName.split("@")[1].equalsIgnoreCase("jabber.animexx.de")){
-			(new UserApi(this)).searchUserByName(mjabberName.split("@")[0], new APICallback() {
+			(new UserBroker(this)).searchUserByName(mjabberName.split("@")[0], new APICallback() {
 
 				@SuppressWarnings("unchecked")
 				@Override

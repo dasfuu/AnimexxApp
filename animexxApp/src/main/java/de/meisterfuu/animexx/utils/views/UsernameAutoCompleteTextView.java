@@ -3,10 +3,12 @@ package de.meisterfuu.animexx.utils.views;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.meisterfuu.animexx.api.APICallback;
-import de.meisterfuu.animexx.api.profile.UserApi;
+import de.meisterfuu.animexx.api.broker.UserBroker;
+import de.meisterfuu.animexx.api.web.ReturnObject;
 import de.meisterfuu.animexx.objects.UserObject;
-import de.meisterfuu.animexx.utils.APIException;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 import android.content.Context;
 import android.text.Editable;
@@ -41,13 +43,13 @@ public class UsernameAutoCompleteTextView extends MultiAutoCompleteTextView impl
 	
 	private List<UserObject> mUser;	
     public ArrayAdapter<UserObject> mAdapter;
-    private UserApi mApi;
+    private UserBroker mApi;
 	private int seq = 0;
 
 
 	public void init() {
 
-		mApi = new UserApi(mContext);
+		mApi = new UserBroker(mContext);
 		mUser = new ArrayList<UserObject>();
 
 		
@@ -80,22 +82,25 @@ public class UsernameAutoCompleteTextView extends MultiAutoCompleteTextView impl
 	                seq++;
 	                final int current_seq = seq;
             		
-          		    mApi.searchUserByName(last, new APICallback() {					
-						@SuppressWarnings("unchecked")
-						@Override
-						public void onCallback(APIException pError, Object pObject) {
+          		    mApi.searchUserByName(last, new Callback<ReturnObject<List<UserObject>>>() {
+		                @Override
+		                public void success(final ReturnObject<List<UserObject>> t, final Response response) {
+			                if(current_seq != seq){
+				                return;
+			                }
+			                mUser =  t.getObj();
+			                //mAdapter = new ArrayAdapter<UserObject>(mContext, android.R.layout.simple_list_item_1 , mUser);
+			                mAdapter.clear();
+			                mAdapter.addAll(mUser);
+			                mAdapter.notifyDataSetChanged();
+			                System.out.println(mAdapter.getCount());
+		                }
 
-							if(current_seq != seq){
-								return;
-							}
-							mUser = (ArrayList<UserObject>)pObject;
-							//mAdapter = new ArrayAdapter<UserObject>(mContext, android.R.layout.simple_list_item_1 , mUser);
-							mAdapter.clear();
-							mAdapter.addAll(mUser);
-							mAdapter.notifyDataSetChanged();
-							System.out.println(mAdapter.getCount());
-						}
-                	});
+		                @Override
+		                public void failure(final RetrofitError error) {
+
+		                }
+	                });
             }
 
         });

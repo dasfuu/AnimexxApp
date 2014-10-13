@@ -6,10 +6,16 @@ import de.meisterfuu.animexx.Constants;
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.api.APICallback;
 import de.meisterfuu.animexx.api.Self;
-import de.meisterfuu.animexx.api.other.GCMApi;
+import de.meisterfuu.animexx.api.broker.GCMBroker;
+import de.meisterfuu.animexx.api.web.ReturnObject;
+import de.meisterfuu.animexx.objects.SingleValueObjects;
 import de.meisterfuu.animexx.utils.APIException;
 import de.meisterfuu.animexx.utils.Request;
 import de.meisterfuu.animexx.xmpp.XMPPService;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.accounts.Account;
@@ -25,12 +31,12 @@ import android.widget.ImageView;
 
 public class LoginActivity extends Activity implements OnClickListener {
 	
-	GCMApi gcm;
+	GCMBroker gcm;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		gcm = new GCMApi(this);
+		gcm = new GCMBroker(this);
 		Request.config = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
 		if(init()) return;
 		setContentView(R.layout.activity_login);
@@ -101,10 +107,15 @@ public class LoginActivity extends Activity implements OnClickListener {
 				public void onCallback(APIException pError, Object pObject) {
 				
 					//Activate Events after registration					
-					gcm.activateGCMEvents(new APICallback() {						
+					gcm.activateGCMEvents(new Callback<ReturnObject<SingleValueObjects.Empty>>() {
 						@Override
-						public void onCallback(APIException pError, Object pObject) {
-							//nothing to do here
+						public void success(final ReturnObject<SingleValueObjects.Empty> t, final Response response) {
+
+						}
+
+						@Override
+						public void failure(final RetrofitError error) {
+
 						}
 					});
 				}

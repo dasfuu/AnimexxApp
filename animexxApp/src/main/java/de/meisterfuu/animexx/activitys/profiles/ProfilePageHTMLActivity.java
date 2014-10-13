@@ -10,13 +10,13 @@ import android.webkit.WebView;
 
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.api.APICallback;
-import de.meisterfuu.animexx.api.profile.UserApi;
+import de.meisterfuu.animexx.api.broker.UserBroker;
 import de.meisterfuu.animexx.objects.event.EventDescriptionObject;
 import de.meisterfuu.animexx.utils.APIException;
 
 public class ProfilePageHTMLActivity extends Activity {
 
-	private UserApi mApi;
+	private UserBroker mApi;
 	private String mBoxID;
 	private long mID;
 	private String mTitle;
@@ -42,7 +42,7 @@ public class ProfilePageHTMLActivity extends Activity {
 			mID = extras.getLong("id");
 			mBoxID = extras.getString("boxid");
 			mTitle = extras.getString("title");
-			mApi = new UserApi(this);
+			mApi = new UserBroker(this);
 		} else {
 			finish();
 			return;

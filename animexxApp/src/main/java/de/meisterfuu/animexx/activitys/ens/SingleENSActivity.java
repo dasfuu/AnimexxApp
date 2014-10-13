@@ -7,7 +7,8 @@ import java.util.Random;
 
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.api.APICallback;
-import de.meisterfuu.animexx.api.ens.ENSApi;
+import de.meisterfuu.animexx.api.broker.ENSBroker;
+import de.meisterfuu.animexx.api.web.ReturnObject;
 import de.meisterfuu.animexx.objects.ens.ENSDraftObject;
 import de.meisterfuu.animexx.objects.ens.ENSObject;
 import de.meisterfuu.animexx.objects.UserObject;
@@ -16,6 +17,10 @@ import de.meisterfuu.animexx.utils.Helper;
 import de.meisterfuu.animexx.utils.imageloader.ImageDownloaderCustom;
 import de.meisterfuu.animexx.utils.imageloader.ImageLoaderCustom;
 import de.meisterfuu.animexx.utils.imageloader.ImageSaveObject;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.PendingIntent;
@@ -40,7 +45,7 @@ public class SingleENSActivity extends Activity {
 	TextView mSubject, mUserLabel, mUser, mDate, mMessage;
 	ImageView mAvatar;
 	FrameLayout mHeader, mBody;
-	ENSApi mAPI;
+	ENSBroker mAPI;
 	Boolean mLoaded = false;
 
 	
@@ -98,16 +103,15 @@ public class SingleENSActivity extends Activity {
 		mID = extras.getLong("id");
 		
 
-		mAPI = new ENSApi(this);
-		mAPI.getENS(mID, new APICallback() {
-			
+		mAPI = new ENSBroker(this);
+		mAPI.getENS(mID, new Callback<ReturnObject<ENSObject>>() {
 			@Override
-			public void onCallback(APIException pError, Object pObject) {
-				mENS = (ENSObject) pObject;	
-				
+			public void success(final ReturnObject<ENSObject> t, final Response response) {
+				mENS =  t.getObj();
+
 				mSubject.setText(mENS.getSubject());
 				SingleENSActivity.this.getActionBar().setTitle(mENS.getSubject());
-				
+
 				mDate.setText(sdf.format(mENS.getDateObject()));
 				target = new UserObject();
 				if(mENS.getAn_ordner() > 0) {
@@ -127,9 +131,9 @@ public class SingleENSActivity extends Activity {
 					mUserLabel.setText("An:");
 					mUser.setText(target.getUsername());
 				}
-				
+
 				if(ImageLoaderProfile.exists(new ImageSaveObject("", target.getId()+""), SingleENSActivity.this)){
-					ImageLoaderProfile.download(new ImageSaveObject("", target.getId()+""), mAvatar);			
+					ImageLoaderProfile.download(new ImageSaveObject("", target.getId()+""), mAvatar);
 				} else {
 					if(target.getAvatar() != null){
 						ImageSaveObject image = new ImageSaveObject(target.getAvatar().getUrl(), target.getId()+"");
@@ -139,19 +143,23 @@ public class SingleENSActivity extends Activity {
 						mAvatar.setVisibility(View.GONE);
 					}
 				}
-				
+
 				mMessage.setText(Html.fromHtml(getFullMessage()));
-				
-				
+
+
 				mHeader.setVisibility(View.VISIBLE);
 				mBody.setVisibility(View.VISIBLE);
-				
-				
-				
+
+
+
 				mLoaded = true;
 
 				mAPI.clearNotification();
-				//mWebView.loadDataWithBaseURL("fake://fake.de", getFullMessage(), "text/html", "UTF-8", null);				
+			}
+
+			@Override
+			public void failure(final RetrofitError error) {
+
 			}
 		});
 		

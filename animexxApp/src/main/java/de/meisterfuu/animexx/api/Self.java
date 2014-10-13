@@ -1,16 +1,16 @@
 package de.meisterfuu.animexx.api;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import de.meisterfuu.animexx.api.broker.UserBroker;
+import de.meisterfuu.animexx.api.web.ReturnObject;
+import de.meisterfuu.animexx.objects.UserObject;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
-import de.meisterfuu.animexx.api.profile.UserApi;
-import de.meisterfuu.animexx.utils.APIException;
-import oauth.signpost.OAuth;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 
 public class Self {
@@ -37,23 +37,27 @@ public class Self {
 	}
 	
 	public void fetchSelf(){
-		UserApi uAPI = new UserApi(mContext);
-		uAPI.getMe(new APICallback() {
-			
+		UserBroker uAPI = new UserBroker(mContext);
+		uAPI.getMe(new Callback<ReturnObject<UserObject>>() {
 			@Override
-			public void onCallback(APIException pError, Object pObject) {
-				JSONObject result = (JSONObject)pObject;
-				Editor edit = PreferenceManager.getDefaultSharedPreferences(mContext).edit();
-				try {
-					edit.putLong("self_userid", result.getLong("id"));
-					edit.putString("self_username", result.getString("username"));
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-				edit.commit();
+
+			public void success(final ReturnObject<UserObject> t, final Response response) {
 				SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(mContext);
+				Editor edit = pref.edit();
+
+				edit.putLong("self_userid", t.getObj().getId());
+				edit.putString("self_username", t.getObj().getUsername());
+
+				edit.commit();
+
+
 				mUsername = pref.getString("self_username", null);
 				mUserID = pref.getLong("self_userid", -1L);
+			}
+
+			@Override
+			public void failure(final RetrofitError error) {
+
 			}
 		});
 		

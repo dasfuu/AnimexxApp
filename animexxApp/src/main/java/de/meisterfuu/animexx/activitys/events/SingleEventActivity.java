@@ -11,13 +11,16 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import de.meisterfuu.animexx.R;
-import de.meisterfuu.animexx.api.APICallback;
-import de.meisterfuu.animexx.api.events.EventApi;
+import de.meisterfuu.animexx.api.broker.EventBroker;
+import de.meisterfuu.animexx.api.web.ReturnObject;
 import de.meisterfuu.animexx.objects.event.EventDescriptionObject;
 import de.meisterfuu.animexx.objects.event.EventObject;
-import de.meisterfuu.animexx.utils.APIException;
 import de.meisterfuu.animexx.utils.imageloader.ImageDownloaderCustom;
 import de.meisterfuu.animexx.utils.imageloader.ImageSaveObject;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.PendingIntent;
@@ -43,7 +46,7 @@ public class SingleEventActivity extends Activity {
 	SimpleDateFormat sdf = new SimpleDateFormat("'Datum: 'HH:mm dd.MM.yyyy", Locale.getDefault());
 
 	EventObject mEvent;
-	EventApi mAPI;
+	EventBroker mAPI;
 	long mID;
 	private GoogleMap mMap;
 	
@@ -57,7 +60,7 @@ public class SingleEventActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_single_event);
 		// Show the Up button in the action bar.
-		mAPI = new EventApi(this);
+		mAPI = new EventBroker(this);
 		mHeader = (FrameLayout) this.findViewById(R.id.activity_event_single_header);
 		mMapContainer = (FrameLayout) this.findViewById(R.id.activity_event_single_map);
 		mPages = (FrameLayout) this.findViewById(R.id.activity_event_single_pagelist);
@@ -88,18 +91,17 @@ public class SingleEventActivity extends Activity {
 		}
 		
 		
-		mAPI.getEvent(new APICallback() {
-			
+		mAPI.getEvent(mID, new Callback<ReturnObject<EventObject>>() {
 			@Override
-			public void onCallback(APIException pError, Object pObject) {
-				mEvent = (EventObject)pObject;
+			public void success(final ReturnObject<EventObject> t, final Response response) {
+				mEvent = t.getObj();
 				if(mEvent.getLogo() != null && !mEvent.getLogo().isEmpty()){
 					ImageLoader.download(new ImageSaveObject(mEvent.getLogo(), ""+mEvent.getId()), mLogo);
 				} else {
 					mLogo.setVisibility(View.GONE);
 				}
 
-				
+
 				mStart.setText("Vom: "+mEvent.getStartDate());
 				mEnd.setText("Bis: "+mEvent.getEndDate());
 				mAddress.setText(mEvent.getAddress());
@@ -107,17 +109,19 @@ public class SingleEventActivity extends Activity {
 				mAnimexxStatus.setText(mEvent.getAnimexxString());
 				SingleEventActivity.this.getActionBar().setTitle(mEvent.getName());
 				mSection.setText(mEvent.getSections().getName());
-					
+
 				mHeader.setVisibility(View.VISIBLE);
-				
+
 				showPages();
-				
+
 				showMap();
-				
+			}
+
+			@Override
+			public void failure(final RetrofitError error) {
 
 			}
-			
-		}, mID, EventApi.DETAIL_FULL);
+		});
 		
 		setupActionBar();
 	}

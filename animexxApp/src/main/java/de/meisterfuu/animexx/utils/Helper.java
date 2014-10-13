@@ -10,7 +10,7 @@ import de.meisterfuu.animexx.Debug;
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.activitys.main.LoginActivity;
 import de.meisterfuu.animexx.api.Self;
-import de.meisterfuu.animexx.api.ens.ENSApi;
+import de.meisterfuu.animexx.api.broker.ENSBroker;
 
 import oauth.signpost.OAuth;
 
@@ -46,7 +46,7 @@ public class Helper {
 		s += "\n\n";
 		s += ""+text;
 		//Request.sendENS("Debug Log", s, "Debug Log "+Constants.VERSION, new int[]{586283}, -1);
-		ENSApi.sendENSDEBUG(s,"StacTrace", con);
+		ENSBroker.sendENSDEBUG(s, "StacTrace", con);
 		Log.i("Debug", "Debug Log gesendet");
 		//Request.doToast("Debug Log gesendet!", con);
 	}

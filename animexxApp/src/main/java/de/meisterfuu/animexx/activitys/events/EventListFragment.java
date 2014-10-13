@@ -1,13 +1,17 @@
 package de.meisterfuu.animexx.activitys.events;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.meisterfuu.animexx.adapter.EventAdapter;
-import de.meisterfuu.animexx.api.APICallback;
-import de.meisterfuu.animexx.api.events.EventApi;
+import de.meisterfuu.animexx.api.broker.EventBroker;
+import de.meisterfuu.animexx.api.web.ReturnObject;
 import de.meisterfuu.animexx.objects.event.EventObject;
-import de.meisterfuu.animexx.utils.APIException;
 import de.meisterfuu.animexx.utils.Request;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+
 import android.app.ListFragment;
 import android.preference.PreferenceManager;
 import android.view.View;
@@ -16,7 +20,7 @@ import android.widget.ListView;
 
 public class EventListFragment extends ListFragment  {
 
-	EventApi mAPI;
+	EventBroker mAPI;
 	ArrayList<EventObject> mList;
 	EventAdapter mAdapter;
 	
@@ -44,7 +48,7 @@ public class EventListFragment extends ListFragment  {
 	@Override
 	public void onResume() {
 		Request.config = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
-		mAPI = new EventApi(this.getActivity());
+		mAPI = new EventBroker(this.getActivity());
 		init();
 		
 		super.onResume();
@@ -67,16 +71,18 @@ public class EventListFragment extends ListFragment  {
 	
 	private void loadEvents(){
 				
-		mAPI.getEventList(new APICallback(){
-
-			@SuppressWarnings("unchecked")
+		mAPI.getEventList(new Callback<ReturnObject<List<EventObject>>>() {
 			@Override
-			public void onCallback(APIException pError, Object pObject) {
-				ArrayList<EventObject> list = (ArrayList<EventObject>) pObject;
-				mAdapter.addAll(list);			
+			public void success(final ReturnObject<List<EventObject>> t, final Response response) {
+				mAdapter.addAll(t.getObj());
 			}
-		}, EventApi.LIST_PARTICIPATING);
-		
+
+			@Override
+			public void failure(final RetrofitError error) {
+
+			}
+		});
+
 
 
 	}

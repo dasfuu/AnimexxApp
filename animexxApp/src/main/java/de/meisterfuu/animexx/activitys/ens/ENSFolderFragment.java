@@ -2,14 +2,18 @@ package de.meisterfuu.animexx.activitys.ens;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import de.meisterfuu.animexx.activitys.main.MainActivity;
 import de.meisterfuu.animexx.adapter.ENSFolderAdapter;
-import de.meisterfuu.animexx.api.APICallback;
-import de.meisterfuu.animexx.api.ens.ENSApi;
+import de.meisterfuu.animexx.api.broker.ENSBroker;
+import de.meisterfuu.animexx.api.web.ReturnObject;
 import de.meisterfuu.animexx.objects.ens.ENSObject;
-import de.meisterfuu.animexx.utils.APIException;
 import de.meisterfuu.animexx.utils.Request;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+
 import android.app.ListFragment;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -24,11 +28,11 @@ import android.widget.ListView;
 
 public class ENSFolderFragment extends ListFragment implements OnScrollListener {
 
-	ENSApi mAPI;
+	ENSBroker mAPI;
 	boolean mInitiated = false;
 	int mNextPage = 0;
 	long mFolderID = 1;
-	String mType = ENSApi.TYPE_INBOX;
+	String mType = ENSBroker.TYPE_INBOX;
 	ArrayList<ENSObject> mList;
 	ENSFolderAdapter mAdapter;
 	int mPrevTotalItemCount;
@@ -79,7 +83,7 @@ public class ENSFolderFragment extends ListFragment implements OnScrollListener 
 	public void onResume() {
 		Request.config = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
 
-		mAPI = new ENSApi(this.getActivity());
+		mAPI = new ENSBroker(this.getActivity());
 		mAPI.clearNotification();
 
 		if(ENSFolderFragment.saveAdapter == null){
@@ -148,19 +152,19 @@ public class ENSFolderFragment extends ListFragment implements OnScrollListener 
 		
 		mAdapter.startLoadingAnimation();
 		
-		mAPI.getENSList(pPage, mFolderID, mType, new APICallback(){
-
-			@SuppressWarnings("unchecked")
+		mAPI.getENSList(pPage, mFolderID, mType, new Callback<ReturnObject<List<ENSObject>>>() {
 			@Override
-			public void onCallback(APIException pError, Object pObject) {
-				ArrayList<ENSObject> list = (ArrayList<ENSObject>) pObject;
+			public void success(final ReturnObject<List<ENSObject>> t, final Response response) {
+				List<ENSObject> list = t.getObj();
 				Collections.sort(list);
 				mAdapter.stopLoadingAnimation();
 				mAdapter.addAll(list);
-;
-				
 			}
-			
+
+			@Override
+			public void failure(final RetrofitError error) {
+
+			}
 		});
 	}
 

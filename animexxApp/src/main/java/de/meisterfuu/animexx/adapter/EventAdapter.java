@@ -103,7 +103,7 @@ public class EventAdapter extends BaseAdapter {
 		return rowView;
 	}
 
-	public void addAll(ArrayList<EventObject> list) {
+	public void addAll(List<EventObject> list) {
 		mItems.addAll(list);
 		this.notifyDataSetChanged();		
 	}
