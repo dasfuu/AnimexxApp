@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 /**
- * Created by Furuha on 05.10.2014.
+ * Created by Meisterfuu on 05.10.2014.
  */
 public class SingleValueObjects {
 

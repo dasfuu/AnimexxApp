@@ -6,7 +6,7 @@ import retrofit.http.FormUrlEncoded;
 import retrofit.http.POST;
 
 /**
- * Created by Furuha on 28.09.2014.
+ * Created by Meisterfuu on 28.09.2014.
  */
 public interface OAuthInterface {
 

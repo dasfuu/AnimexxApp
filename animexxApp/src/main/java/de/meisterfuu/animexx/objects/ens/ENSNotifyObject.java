@@ -3,7 +3,7 @@ package de.meisterfuu.animexx.objects.ens;
 import com.j256.ormlite.field.DatabaseField;
 
 /**
- * Created by Furuha on 04.07.2014.
+ * Created by Meisterfuu on 04.07.2014.
  */
 public class ENSNotifyObject {
 

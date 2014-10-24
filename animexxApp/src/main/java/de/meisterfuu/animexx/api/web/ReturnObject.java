@@ -3,7 +3,7 @@ package de.meisterfuu.animexx.api.web;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by Furuha on 28.09.2014.
+ * Created by Meisterfuu on 28.09.2014.
  */
 public class ReturnObject<T> {
 

@@ -40,7 +40,7 @@ import retrofit.http.Query;
 import retrofit.mime.TypedFile;
 
 /**
- * Created by Furuha on 28.09.2014.
+ * Created by Meisterfuu on 28.09.2014.
  */
 public interface WebApiInterface {
 

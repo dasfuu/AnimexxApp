@@ -5,7 +5,7 @@ import android.content.Context;
 import retrofit.RequestInterceptor;
 
 /**
- * Created by Furuha on 28.09.2014.
+ * Created by Meisterfuu on 28.09.2014.
  */
 public class InterceptorSigner implements RequestInterceptor {
 

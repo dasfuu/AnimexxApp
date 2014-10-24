@@ -3,7 +3,7 @@ package de.meisterfuu.animexx.objects.profile;
 import de.meisterfuu.animexx.objects.UserObject;
 
 /**
- * Created by Furuha on 25.07.2014.
+ * Created by Meisterfuu on 25.07.2014.
  */
 public class GBDraftObject {
 

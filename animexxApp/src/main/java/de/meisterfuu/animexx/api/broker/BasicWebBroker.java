@@ -5,7 +5,7 @@ import android.content.Context;
 import de.meisterfuu.animexx.api.web.WebAPI;
 
 /**
- * Created by Furuha on 13.10.2014.
+ * Created by Meisterfuu on 13.10.2014.
  */
 public abstract class BasicWebBroker {
 

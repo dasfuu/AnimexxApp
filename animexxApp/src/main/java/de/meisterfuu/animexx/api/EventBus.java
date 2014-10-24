@@ -11,7 +11,7 @@ import java.util.LinkedList;
 import de.meisterfuu.animexx.BuildConfig;
 
 /**
- * Created by Furuha on 26.09.2014.
+ * Created by Meisterfuu on 26.09.2014.
  */
 public class EventBus {
 

@@ -12,7 +12,7 @@ import retrofit.RetrofitError;
 import retrofit.client.OkClient;
 
 /**
- * Created by Furuha on 28.09.2014.
+ * Created by Meisterfuu on 28.09.2014.
  */
 public class WebAPI implements ErrorHandler {
 

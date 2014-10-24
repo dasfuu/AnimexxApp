@@ -17,7 +17,7 @@ import de.meisterfuu.animexx.objects.UserSearchResultObject;
 import de.meisterfuu.animexx.objects.home.BasicHomeObject;
 
 /**
- * Created by Furuha on 04.10.2014.
+ * Created by Meisterfuu on 04.10.2014.
  */
 public class ApiEvent<T> {
 

@@ -11,7 +11,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
- * Created by Furuha on 29.09.2014.
+ * Created by Meisterfuu on 29.09.2014.
  */
 public abstract class RefreshTokenCallback<T> implements Callback<T> {
 

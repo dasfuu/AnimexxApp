@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import de.meisterfuu.animexx.objects.UserObject;
 
 /**
- * Created by Furuha on 09.10.2014.
+ * Created by Meisterfuu on 09.10.2014.
  */
 public class HomeCommentObject {
 

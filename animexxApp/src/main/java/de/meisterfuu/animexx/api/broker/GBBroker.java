@@ -11,7 +11,7 @@ import de.meisterfuu.animexx.objects.profile.GBListObject;
 import retrofit.Callback;
 
 /**
- * Created by Furuha on 14.07.2014.
+ * Created by Meisterfuu on 14.07.2014.
  */
 public class GBBroker extends BasicWebBroker {
 
