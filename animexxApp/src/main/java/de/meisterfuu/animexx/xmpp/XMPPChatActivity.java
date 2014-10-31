@@ -63,7 +63,7 @@ public class XMPPChatActivity extends AnimexxBaseActivityAB {
 		
 		Bundle extras = this.getIntent().getExtras();
 		mjabberName = extras.getString("name");		
-		this.getActionBar().setTitle(mjabberName.replace("@jabber.animexx.de", ""));
+		this.getSupportActionBar().setTitle(mjabberName.replace("@jabber.animexx.de", ""));
 		
 		list = new ArrayList<ChatAdapter.Message>();
 		adapter = new ChatAdapter(list, this, lv);
