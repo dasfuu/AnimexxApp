@@ -11,10 +11,12 @@
     <color name="bg_green2">#109618</color>
     <color name="bg_lightgreen">#66AA00</color>
     <color name="bg_light">#C3C3FF</color>
-    
+
+    <color name="white">#FFFFFF</color>
+
     <color name="animexx_blue_notfiy_light">#ff0000ff</color>
 
-    <style name="AppBaseTheme" parent="android:Theme.Holo.Light">
+    <style name="AppBaseTheme" parent="Theme.AppCompat.NoActionBar">
         <!-- API 14 theme customizations can go here. -->
     </style>
 
@@ -23,10 +25,47 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
         <item name="android:windowBackground">@color/animexx_blue_light</item>
         <item name="android:colorBackground">@color/animexx_blue_light</item>
+        <!-- Set AppCompat’s color theming attrs -->
+        <item name="colorPrimary">@color/animexx_blue</item>
+        <item name="colorPrimaryDark">@color/animexx_blue</item>
+        <item name="colorAccent">@color/animexx_blue</item>
+
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textColorPrimary">@android:color/black</item>
+
+        <item name="windowActionModeOverlay">true</item>
+
+        <item name="android:actionModeStyle">@style/ActionModeStyle</item>
+        <item name="actionModeStyle">@style/ActionModeStyle</item>
+        <item name="actionModeBackground">@color/animexx_blue</item>
+    <!-- You can also set colorControlNormal, colorControlActivated
+         colorControlHighlight, and colorSwitchThumbNormal. -->
+
+       <!-- <item name="drawerArrowStyle">@style/DrawerArrowStyle</item> -->
     </style>
-    
-    
-        <style name="AnimexxThemeActionBarOverlay" parent="AnimexxTheme">
+
+    <style name="DrawerArrowStyle" parent="Base.Widget.AppCompat.DrawerArrowToggle">
+        <item name="spinBars">true</item>
+        <item name="color">@android:color/white</item>
+    </style>
+
+    <style name="ActionModeStyle" parent="Widget.AppCompat.ActionMode">
+        <item name="android:titleTextStyle">@style/ActionModeTitleStyle</item>
+        <item name="android:subtitleTextStyle">@style/ActionModeSubtitleStyle</item>
+    </style>
+
+    <style name="ActionModeTitleStyle" parent="TextAppearance.AppCompat.Widget.ActionMode.Title">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColorPrimary">@android:color/white</item>
+    </style>
+
+    <style name="ActionModeSubtitleStyle" parent="TextAppearance.AppCompat.Widget.ActionMode.Subtitle">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColorPrimary">@android:color/white</item>
+    </style>
+
+
+     <style name="AnimexxThemeActionBarOverlay" parent="AnimexxTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
         <item name="android:windowBackground">@color/animexx_blue_light</item>
         <item name="android:colorBackground">@color/animexx_blue_light</item>

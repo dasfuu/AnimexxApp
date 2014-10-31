@@ -16,7 +16,6 @@ import android.util.Log;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import de.meisterfuu.animexx.KEYS;
-import de.meisterfuu.animexx.api.APICallback;
 import de.meisterfuu.animexx.api.web.ReturnObject;
 import de.meisterfuu.animexx.objects.SingleValueObjects;
 import retrofit.Callback;
@@ -57,7 +56,7 @@ public class GCMBroker extends BasicWebBroker {
 	
 
 	
-	public void registerGCM(final APICallback pCallback){	
+	public void registerGCM(final Callback pCallback){
 		final Handler hand = new Handler();	
 		final Thread t = new Thread(new Runnable() {
 
@@ -73,7 +72,7 @@ public class GCMBroker extends BasicWebBroker {
 
 					hand.post(new Runnable() {
 						public void run() {
-							if (pCallback != null) pCallback.onCallback(null, null);
+							if (pCallback != null) pCallback.success(null, null);
 						}
 					});
 

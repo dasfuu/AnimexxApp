@@ -1,19 +1,24 @@
 package de.meisterfuu.animexx.xmpp;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 
 import de.meisterfuu.animexx.R;
+import de.meisterfuu.animexx.activitys.AnimexxBaseActivityAB;
 import de.meisterfuu.animexx.adapter.ChatAdapter;
-import de.meisterfuu.animexx.api.APICallback;
 import de.meisterfuu.animexx.api.broker.UserBroker;
+import de.meisterfuu.animexx.api.web.ReturnObject;
 import de.meisterfuu.animexx.api.xmpp.XMPPApi;
 import de.meisterfuu.animexx.notification.XMPPNotification;
 import de.meisterfuu.animexx.objects.UserObject;
 import de.meisterfuu.animexx.objects.xmpp.XMPPHistoryObject;
 import de.meisterfuu.animexx.objects.xmpp.XMPPMessageObject;
-import de.meisterfuu.animexx.utils.APIException;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.app.Activity;
@@ -27,7 +32,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 
-public class XMPPChatActivity extends Activity  {
+public class XMPPChatActivity extends AnimexxBaseActivityAB {
 
 	Handler h;
 	ListView lv;
@@ -103,53 +108,66 @@ public class XMPPChatActivity extends Activity  {
 	public void showHistory(){
 
 		if(mjabberName.split("@")[1].equalsIgnoreCase("jabber.animexx.de")){
-			(new UserBroker(this)).searchUserByName(mjabberName.split("@")[0], new APICallback() {
+			(new UserBroker(this)).searchUserByName(mjabberName.split("@")[0], new Callback<ReturnObject<List<UserObject>>>() {
 
-				@SuppressWarnings("unchecked")
-				@Override
-				public void onCallback(APIException pError, Object pObject) {
-					ArrayList<UserObject> temp = (ArrayList<UserObject>) pObject;
-					mApi.getOnlineHistory(temp.get(0).getId(), new APICallback() {
 
-						@Override
-						public void onCallback(APIException pError, Object pObject) {
-							ArrayList<XMPPHistoryObject> temp = (ArrayList<XMPPHistoryObject>) pObject;
-							adapter.clear();
-							for(XMPPHistoryObject obj: temp){
-								ChatAdapter.Message msg = new ChatAdapter.Message();
-								msg.setBody(obj.getBody());
-								msg.setTime(obj.getTimeObj().getTime());
-								msg.setLeft(!obj.isMe(XMPPChatActivity.this));
-								adapter.addTop(msg);
-							}
-							adapter.notifyDataSetChanged();
-						}
-					});
-				}
-			});
+                @Override
+                public void success(ReturnObject<List<UserObject>> listReturnObject, Response response) {
+                    List<UserObject> temp = listReturnObject.getObj();
+                    mApi.getOnlineHistory(temp.get(0).getId(), new Callback<ReturnObject<List<XMPPHistoryObject>>>() {
+                        @Override
+                        public void success(ReturnObject<List<XMPPHistoryObject>> listReturnObject, Response response) {
+                            List<XMPPHistoryObject> temp = listReturnObject.getObj();
+                            adapter.clear();
+                            for(XMPPHistoryObject obj: temp){
+                                ChatAdapter.Message msg = new ChatAdapter.Message();
+                                msg.setBody(obj.getBody());
+                                msg.setTime(obj.getTimeObj().getTime());
+                                msg.setLeft(!obj.isMe(XMPPChatActivity.this));
+                                adapter.addTop(msg);
+                            }
+                            adapter.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void failure(RetrofitError error) {
+
+                        }
+                    });
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+
+                }
+            });
 		} else {
-			mApi.getOfflineHistory(mjabberName, new APICallback() {
+			mApi.getOfflineHistory(mjabberName, new Callback<List<XMPPMessageObject>>() {
+                @Override
+                public void success(List<XMPPMessageObject> xmppMessageObjects, Response response) {
+                    List<XMPPMessageObject> temp = xmppMessageObjects;
+                    adapter.clear();
+                    for (XMPPMessageObject obj : temp) {
+                        ChatAdapter.Message msg = new ChatAdapter.Message();
+                        msg.setBody(obj.getBody());
+                        msg.setTime(obj.getDate());
+                        msg.setLeft(!obj.isMe());
+                        adapter.add(msg);
+                    }
+                    adapter.notifyDataSetChanged();
+                }
 
-				@Override
-				public void onCallback(APIException pError, Object pObject) {
-					ArrayList<XMPPMessageObject> temp = (ArrayList<XMPPMessageObject>) pObject;
-					adapter.clear();
-					for(XMPPMessageObject obj: temp){
-						ChatAdapter.Message msg = new ChatAdapter.Message();
-						msg.setBody(obj.getBody());
-						msg.setTime(obj.getDate());
-						msg.setLeft(!obj.isMe());
-						adapter.add(msg);
-					}
-					adapter.notifyDataSetChanged();
-				}
-			});
+                @Override
+                public void failure(RetrofitError error) {
+
+                }
+            });
 		}
 	}
 
 
 	@Override
-	protected void onResume() {
+    public void onResume() {
 		super.onResume();
 		if(mApi == null)mApi = new XMPPApi(this);
 		XMPPNotification.d_from = mjabberName;
@@ -186,7 +204,7 @@ public class XMPPChatActivity extends Activity  {
 	}
 
 	@Override
-	protected void onPause() {
+    public void onPause() {
 		super.onPause();
 		mApi.close();
 		mApi = null;

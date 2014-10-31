@@ -12,7 +12,6 @@ import de.meisterfuu.animexx.objects.profile.ProfileObject;
 
 import android.content.Context;
 
-import de.meisterfuu.animexx.api.APICallback;
 import de.meisterfuu.animexx.objects.UserObject;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -52,7 +51,7 @@ public class UserBroker extends BasicWebBroker {
 
 
 
-	public void getProfileBox(final String pBoxID, final long pID, final APICallback<Object> pAPICallback) {
+	public void getProfileBox(final String pBoxID, final long pID, final Callback<Object> pCallback) {
 	}
 
 

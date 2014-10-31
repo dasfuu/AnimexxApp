@@ -10,9 +10,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import de.meisterfuu.animexx.R;
-import de.meisterfuu.animexx.api.APICallback;
 import de.meisterfuu.animexx.objects.profile.ProfileObject;
-import de.meisterfuu.animexx.utils.APIException;
 import de.meisterfuu.animexx.utils.imageloader.ImageDownloaderCustom;
 import de.meisterfuu.animexx.utils.imageloader.ImageSaveObject;
 import de.meisterfuu.animexx.utils.views.FitImageView;
@@ -24,7 +22,7 @@ import de.meisterfuu.animexx.utils.views.TableDataView;
  * create an instance of this fragment.
  *
  */
-public class ProfileFragment extends Fragment implements APICallback<ProfileObject> {
+public class ProfileFragment extends Fragment {
 
 
 	private static final String USER_ID = "mUserID";
@@ -91,14 +89,13 @@ public class ProfileFragment extends Fragment implements APICallback<ProfileObje
 		super.onResume();
 		created = true;
 		if(mUser != null){
-			onCallback(null, mUser);
+			onCallback(mUser);
 			mUser = null;
 		}
 //		mApi.getProfile(mUserID, this);
 	}
 
-	@Override
-	public void onCallback(final APIException pError, final ProfileObject pObject) {
+	public void onCallback(final ProfileObject pObject) {
 
 		if(!created){
 			mUser = pObject;

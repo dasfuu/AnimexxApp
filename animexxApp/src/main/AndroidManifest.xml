@@ -127,6 +127,7 @@
         <activity
             android:name=".activitys.main.SettingsActivity"
             android:label="@string/title_activity_settings"
+            android:theme="@style/AnimexxTheme"
             android:parentActivityName=".activitys.main.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

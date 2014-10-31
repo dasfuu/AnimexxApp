@@ -7,7 +7,6 @@ import de.meisterfuu.animexx.adapter.EventAdapter;
 import de.meisterfuu.animexx.api.broker.EventBroker;
 import de.meisterfuu.animexx.api.web.ReturnObject;
 import de.meisterfuu.animexx.objects.event.EventObject;
-import de.meisterfuu.animexx.utils.Request;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -47,7 +46,6 @@ public class EventListFragment extends ListFragment  {
 
 	@Override
 	public void onResume() {
-		Request.config = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
 		mAPI = new EventBroker(this.getActivity());
 		init();
 		

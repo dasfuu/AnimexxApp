@@ -28,19 +28,33 @@ public class SingleValueObjects {
 		}
 	}
 
-	public static class ENSUnreadObject {
+	public static class CalListObject {
 
-		@SerializedName("ungelesen")
-		int unread;
+		@SerializedName("events")
+		List<CalendarEntryObject> events;
 
-		public int getUnread() {
-			return unread;
-		}
+        public List<CalendarEntryObject> getEvents() {
+            return events;
+        }
 
-		public void setUnread(final int pUnread) {
-			unread = pUnread;
-		}
-	}
+        public void setEvents(List<CalendarEntryObject> events) {
+            this.events = events;
+        }
+    }
+
+    public static class ENSUnreadObject {
+
+        @SerializedName("ungelesen")
+        int unread;
+
+        public int getUnread() {
+            return unread;
+        }
+
+        public void setUnread(final int pUnread) {
+            unread = pUnread;
+        }
+    }
 
 	public static class ENSSendIDObject {
 

@@ -1,11 +1,13 @@
 package de.meisterfuu.animexx.activitys;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 
 import com.squareup.otto.DeadEvent;
 import com.squareup.otto.Subscribe;
 
+import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.api.ApiEvent;
 import de.meisterfuu.animexx.api.EventBus;
 import de.meisterfuu.animexx.api.xmpp.StatusEvent;
@@ -15,7 +17,7 @@ import icepick.Icicle;
 /**
  * Created by Meisterfuu on 26.09.2014.
  */
-public class AnimexxBaseActivity extends Activity {
+public class AnimexxBaseActivity extends ActionBarActivity {
 
 	EventBus mBus;
 	@Icicle int mCallerID = -1;
@@ -46,7 +48,7 @@ public class AnimexxBaseActivity extends Activity {
 		return mCallerID;
 	}
 
-	@Override
+    @Override
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
@@ -96,4 +98,5 @@ public class AnimexxBaseActivity extends Activity {
 		mBus.getOtto().unregister(this);
 		mBus.getOtto().unregister(mBaseActivityListener);
 	}
+
 }

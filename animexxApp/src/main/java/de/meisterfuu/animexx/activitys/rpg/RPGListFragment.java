@@ -2,18 +2,22 @@ package de.meisterfuu.animexx.activitys.rpg;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import de.meisterfuu.animexx.activitys.main.MainActivity;
 import de.meisterfuu.animexx.adapter.RPGListAdapter;
-import de.meisterfuu.animexx.api.APICallback;
-import de.meisterfuu.animexx.api.rpg.RPGApi;
+import de.meisterfuu.animexx.api.broker.RPGBroker;
+import de.meisterfuu.animexx.api.web.ReturnObject;
 import de.meisterfuu.animexx.objects.rpg.RPGObject;
-import de.meisterfuu.animexx.utils.APIException;
-import de.meisterfuu.animexx.utils.Request;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+
 import android.app.ListFragment;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.ListView;
@@ -21,10 +25,11 @@ import android.widget.ListView;
 
 public class RPGListFragment extends ListFragment  {
 
-	RPGApi mAPI;
+	RPGBroker mAPI;
 	ArrayList<RPGObject> mList;
 	RPGListAdapter mAdapter;
-	
+    SharedPreferences config;
+
 	public static RPGListFragment getInstance(){
 		RPGListFragment result = new RPGListFragment();
 //	     Bundle args = new Bundle();
@@ -56,8 +61,9 @@ public class RPGListFragment extends ListFragment  {
 
 	@Override
 	public void onResume() {
-		Request.config = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
-		mAPI = new RPGApi(this.getActivity());
+
+        config = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
+        mAPI = new RPGBroker(this.getActivity());
 		init();
 		
 		super.onResume();
@@ -80,16 +86,19 @@ public class RPGListFragment extends ListFragment  {
 	
 	private void loadRPG(){
 				
-		mAPI.getRPGList(new APICallback(){
+		mAPI.getRPGList(new Callback<ReturnObject<List<RPGObject>>>() {
+            @Override
+            public void success(ReturnObject<List<RPGObject>> listReturnObject, Response response) {
+                List<RPGObject> list = listReturnObject.getObj();
+                Collections.sort(list);
+                mAdapter.addAll(list);
+            }
 
-			@SuppressWarnings("unchecked")
-			@Override
-			public void onCallback(APIException pError, Object pObject) {
-				ArrayList<RPGObject> list = (ArrayList<RPGObject>) pObject;
-				Collections.sort(list);
-				mAdapter.addAll(list);			
-			}
-		});
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
 
 	}
 

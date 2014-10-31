@@ -23,8 +23,6 @@ import android.util.Log;
 import de.meisterfuu.animexx.Constants;
 import de.meisterfuu.animexx.api.broker.EventBroker;
 import de.meisterfuu.animexx.objects.event.EventObject;
-import de.meisterfuu.animexx.utils.APIException;
-import de.meisterfuu.animexx.utils.Request;
 import retrofit.RetrofitError;
 
 public class EventCalHelper {
@@ -305,7 +303,6 @@ public class EventCalHelper {
     
     public static void sync(Context pContext){
         Log.d(TAG, "Starting sync...");
-        Request.config = PreferenceManager.getDefaultSharedPreferences(pContext);
 
         ContentResolver contentResolver = pContext.getContentResolver();
 

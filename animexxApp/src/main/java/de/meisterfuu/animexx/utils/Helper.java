@@ -82,8 +82,8 @@ public class Helper {
 
 
 	public static void Tutorial(String text, String config, Context c) {
-		Request.config = PreferenceManager.getDefaultSharedPreferences(c);
-		if (!Request.config.getBoolean(config, false)) {
+        SharedPreferences cfg = PreferenceManager.getDefaultSharedPreferences(c);
+		if (!cfg.getBoolean(config, false)) {
 			AlertDialog alertDialog = new AlertDialog.Builder(c).create();
 			alertDialog.setMessage(text);
 			alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "Ok", new DialogInterface.OnClickListener() {
@@ -94,7 +94,7 @@ public class Helper {
 			});
 			alertDialog.show();
 
-			final Editor edit = Request.config.edit();
+			final Editor edit = cfg.edit();
 			edit.putBoolean(config, true);
 			edit.commit();
 		}

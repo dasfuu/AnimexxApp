@@ -1,11 +1,14 @@
 package de.meisterfuu.animexx;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import de.meisterfuu.animexx.api.APICallback;
 import de.meisterfuu.animexx.api.xmpp.XMPPApi;
 import de.meisterfuu.animexx.objects.xmpp.XMPPMessageObject;
-import de.meisterfuu.animexx.utils.APIException;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+
 import android.os.Bundle;
 import android.app.ListActivity;
 import android.view.Menu;
@@ -18,14 +21,18 @@ public class AnimexxDebugActivity extends ListActivity {
 		super.onCreate(savedInstanceState);
 //		setContentView(R.layout.activity_animexx_debug);
 		XMPPApi mApi = new XMPPApi(this);
-		mApi.getOfflineHistory(null, new APICallback() {
-			
-			@Override
-			public void onCallback(APIException pError, Object pObject) {
-				ArrayList<XMPPMessageObject> list = (ArrayList<XMPPMessageObject>) pObject;
-				setListAdapter(new ArrayAdapter<XMPPMessageObject>(AnimexxDebugActivity.this, android.R.layout.simple_list_item_1, list));
-			}
-		});
+		mApi.getOfflineHistory(null, new Callback<List<XMPPMessageObject>>() {
+            @Override
+            public void success(List<XMPPMessageObject> xmppMessageObjects, Response response) {
+                List<XMPPMessageObject> list = xmppMessageObjects;
+                setListAdapter(new ArrayAdapter<XMPPMessageObject>(AnimexxDebugActivity.this, android.R.layout.simple_list_item_1, list));
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
 	}
 
 	@Override

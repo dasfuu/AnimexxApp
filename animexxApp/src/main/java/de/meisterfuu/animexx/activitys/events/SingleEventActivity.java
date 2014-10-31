@@ -11,6 +11,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import de.meisterfuu.animexx.R;
+import de.meisterfuu.animexx.activitys.AnimexxBaseActivityAB;
 import de.meisterfuu.animexx.api.broker.EventBroker;
 import de.meisterfuu.animexx.api.web.ReturnObject;
 import de.meisterfuu.animexx.objects.event.EventDescriptionObject;
@@ -38,7 +39,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.support.v4.app.NavUtils;
 
-public class SingleEventActivity extends Activity {
+public class SingleEventActivity extends AnimexxBaseActivityAB {
 
 	
 	ImageDownloaderCustom ImageLoader = new ImageDownloaderCustom("event_logo");
@@ -80,7 +81,7 @@ public class SingleEventActivity extends Activity {
 		mMapContainer.setVisibility(View.GONE);
 		mPages.setVisibility(View.GONE);
 		
-		SingleEventActivity.this.getActionBar().setTitle("");
+		SingleEventActivity.this.getSupportActionBar().setTitle("");
 		
 		if(this.getIntent().hasExtra("id")){
 			Bundle extras = this.getIntent().getExtras();
@@ -107,7 +108,7 @@ public class SingleEventActivity extends Activity {
 				mAddress.setText(mEvent.getAddress());
 				mCount.setText(mEvent.getAttendees()+" Teilnehmer");
 				mAnimexxStatus.setText(mEvent.getAnimexxString());
-				SingleEventActivity.this.getActionBar().setTitle(mEvent.getName());
+				SingleEventActivity.this.getSupportActionBar().setTitle(mEvent.getName());
 				mSection.setText(mEvent.getSections().getName());
 
 				mHeader.setVisibility(View.VISIBLE);
@@ -123,7 +124,6 @@ public class SingleEventActivity extends Activity {
 			}
 		});
 		
-		setupActionBar();
 	}
 	
 	protected void showMap() {
@@ -184,14 +184,6 @@ public class SingleEventActivity extends Activity {
 	     return PendingIntent.getActivity(pContext, 0, intent, 0);
 	}
 	
-	/**
-	 * Set up the {@link android.app.ActionBar}.
-	 */
-	private void setupActionBar() {
-
-		getActionBar().setDisplayHomeAsUpEnabled(true);
-
-	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

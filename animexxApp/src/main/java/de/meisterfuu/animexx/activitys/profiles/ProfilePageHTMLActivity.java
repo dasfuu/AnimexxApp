@@ -9,10 +9,11 @@ import android.view.MenuItem;
 import android.webkit.WebView;
 
 import de.meisterfuu.animexx.R;
-import de.meisterfuu.animexx.api.APICallback;
 import de.meisterfuu.animexx.api.broker.UserBroker;
 import de.meisterfuu.animexx.objects.event.EventDescriptionObject;
-import de.meisterfuu.animexx.utils.APIException;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class ProfilePageHTMLActivity extends Activity {
 
@@ -51,14 +52,18 @@ public class ProfilePageHTMLActivity extends Activity {
 		this.getActionBar().setTitle(mTitle);
 		mWebView = (WebView) this.findViewById(R.id.activity_profile_page_html_html);
 
-		mApi.getProfileBox(mBoxID, mID, new APICallback<Object>() {
+		mApi.getProfileBox(mBoxID, mID, new Callback<Object>() {
+            @Override
+            public void success(Object o, Response response) {
+                EventDescriptionObject obj = (EventDescriptionObject) o;
+                mWebView.loadDataWithBaseURL("https://animexx.de", obj.getHtml(), "text/html", "UTF-8", null);
+            }
 
-			@Override
-			public void onCallback(APIException pError, Object pObject) {
-				EventDescriptionObject obj = (EventDescriptionObject) pObject;
-				mWebView.loadDataWithBaseURL("https://animexx.de", obj.getHtml(), "text/html", "UTF-8", null);
-			}
-		});
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
 
 	}
 

@@ -411,7 +411,8 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 			Beta.notifyOnline(temp, mApplicationContext);
 
 			if(user_list != null)
-			for(UserObject user_obj: user_list){	
+			for(UserObject user_obj: user_list){
+                Log.e(TAG, user_obj.getUsername() + " == "+obj.getName());
 				if(user_obj.getUsername().equalsIgnoreCase(obj.getName())){
 					temp.setAnimexxID(user_obj.getId());
 					if(user_obj.getAvatar() != null){

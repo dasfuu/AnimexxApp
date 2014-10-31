@@ -23,7 +23,6 @@ import android.util.Log;
 import de.meisterfuu.animexx.Constants;
 import de.meisterfuu.animexx.api.broker.CalendarBroker;
 import de.meisterfuu.animexx.objects.CalendarEntryObject;
-import de.meisterfuu.animexx.utils.Request;
 
 public class PrivateCalHelper {
 	
@@ -324,7 +323,6 @@ public class PrivateCalHelper {
     
     public static void sync(Context pContext){
         Log.d(TAG, "Starting sync...");
-        Request.config = PreferenceManager.getDefaultSharedPreferences(pContext);
 
         ContentResolver contentResolver = pContext.getContentResolver();
 
@@ -353,7 +351,7 @@ public class PrivateCalHelper {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.GERMANY);
 		try {
 	        for(int i = 0; i < 12; i++){
-				events.addAll(API.getEventListNT(sdf.format(c.getTime())));
+				events.addAll(API.getEventListNT(sdf.format(c.getTime())).getEvents());
 				c.add(Calendar.MONTH, 1);
 	        }
 	        ArrayList<CompareObject> _arr = getCurrentEvents(pContext, calendarId);

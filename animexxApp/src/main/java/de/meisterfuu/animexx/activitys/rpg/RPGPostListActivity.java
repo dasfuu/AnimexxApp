@@ -1,22 +1,25 @@
 package de.meisterfuu.animexx.activitys.rpg;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelSlideListener;
 
 import de.meisterfuu.animexx.R;
+import de.meisterfuu.animexx.activitys.AnimexxBaseActivityAB;
 import de.meisterfuu.animexx.adapter.RPGAvatarSpinnerAdapter;
 import de.meisterfuu.animexx.adapter.RPGPostListAdapter;
 import de.meisterfuu.animexx.adapter.RPGSpinnerAdapter;
-import de.meisterfuu.animexx.api.APICallback;
-import de.meisterfuu.animexx.api.rpg.RPGApi;
+import de.meisterfuu.animexx.api.broker.RPGBroker;
+import de.meisterfuu.animexx.api.web.ReturnObject;
 import de.meisterfuu.animexx.notification.RPGPostNotification;
 import de.meisterfuu.animexx.objects.rpg.RPGDraftObject;
 import de.meisterfuu.animexx.objects.rpg.RPGObject;
 import de.meisterfuu.animexx.objects.rpg.RPGPostObject;
-import de.meisterfuu.animexx.utils.APIException;
-import de.meisterfuu.animexx.utils.Request;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -38,7 +41,7 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-public class RPGPostListActivity extends ListActivity implements PanelSlideListener {
+public class RPGPostListActivity extends AnimexxBaseActivityAB implements PanelSlideListener {
 	
 	public static void getInstance(Context pContext, long pID){
 		Intent i = new Intent().setClass(pContext, RPGPostListActivity.class);
@@ -48,7 +51,7 @@ public class RPGPostListActivity extends ListActivity implements PanelSlideListe
 	     pContext.startActivity(i);
 	}
 	
-	RPGApi mAPI;
+	RPGBroker mAPI;
 	ArrayList<RPGPostObject> mList;
 	RPGPostListAdapter mAdapter;
 	RPGObject mRPG;
@@ -57,6 +60,7 @@ public class RPGPostListActivity extends ListActivity implements PanelSlideListe
 	
 	SlidingUpPanelLayout mSlidingLayout;
 	EditText mEditPost;
+    ListView mListView;
 	CheckBox mCBAction, mCBInTime;
 	TextView mToggleLabel;
 	private BroadcastReceiver mReceiver;
@@ -73,20 +77,17 @@ public class RPGPostListActivity extends ListActivity implements PanelSlideListe
 		mCBInTime = (CheckBox) this.findViewById(R.id.activity_rpgpost_new_intime);
 		mSpinnerAvatar = (Spinner) this.findViewById(R.id.activity_rpgpost_new_avatar);
 		mEditPost = (EditText) this.findViewById(R.id.activity_rpgpost_new_text);
+        mListView = (ListView) this.findViewById(android.R.id.list);
 		
 		mSlidingLayout.setPanelSlideListener(this);
-		mAPI = new RPGApi(this);	
+		mAPI = new RPGBroker(this);
 		this.getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 		RPGPostListActivity.this.getActionBar().setDisplayHomeAsUpEnabled(true);
 		init();
 	}
 
 
-	
-	@Override
-	public void onListItemClick(ListView l, View v, int position, long id) {
-		super.onListItemClick(l, v, position, id);
-	}
+
 	
 	boolean paused = false;
 	
@@ -100,8 +101,7 @@ public class RPGPostListActivity extends ListActivity implements PanelSlideListe
 
 	@Override
 	public void onResume() {
-		Request.config = PreferenceManager.getDefaultSharedPreferences(this);
-		mAPI = new RPGApi(this);	
+		mAPI = new RPGBroker(this);
 
 		mReceiver = new BroadcastReceiver() {
 			@Override
@@ -133,31 +133,35 @@ public class RPGPostListActivity extends ListActivity implements PanelSlideListe
 		
 		mList = new ArrayList<RPGPostObject>();
 		mAdapter = new RPGPostListAdapter(mList, this, mRPGID);
-		this.getListView().setAdapter(mAdapter);
+        mListView.setAdapter(mAdapter);
 		
-		mAPI.getRPG(mRPGID, new APICallback(){
+		mAPI.getRPG(mRPGID, new Callback<ReturnObject<RPGObject>>() {
+            @Override
+            public void success(ReturnObject<RPGObject> rpgObjectReturnObject, Response response) {
+                mRPG = rpgObjectReturnObject.getObj();
+                RPGPostListActivity.this.getActionBar().setTitle(mRPG.getName());
+                final RPGSpinnerAdapter spinnerAdapter = new RPGSpinnerAdapter(mRPG.getPlayer(), mRPGID, RPGPostListActivity.this);
+                OnNavigationListener listener = new OnNavigationListener() {
 
-			@Override
-			public void onCallback(APIException pError, Object pObject) {
-				mRPG = (RPGObject) pObject;
-				RPGPostListActivity.this.getActionBar().setTitle(mRPG.getName());				
-				final RPGSpinnerAdapter spinnerAdapter = new RPGSpinnerAdapter(mRPG.getPlayer(), mRPGID, RPGPostListActivity.this);
-				OnNavigationListener listener = new OnNavigationListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+                        mCharaID = itemId;
+                        initChara();
+                        return true;
+                    }
 
-					@Override
-					public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-						mCharaID = itemId;
-						initChara();
-						return true;
-					}
+                };
 
-				};
+                RPGPostListActivity.this.getActionBar().setListNavigationCallbacks(spinnerAdapter, listener);
 
-				RPGPostListActivity.this.getActionBar().setListNavigationCallbacks(spinnerAdapter, listener);
-				
-				loadPosts();
-			}
-		});
+                loadPosts();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
 	}
 
 	int postCount = 0;
@@ -165,32 +169,38 @@ public class RPGPostListActivity extends ListActivity implements PanelSlideListe
 	private void loadPosts() {
 		postCount = mRPG.getPostCount();
 		
-		mAPI.getRPGPostList(mRPGID, mRPG.getPostCount()-29, new APICallback(){
+		mAPI.getRPGPostList(mRPGID, mRPG.getPostCount()-29, new Callback<ReturnObject<List<RPGPostObject>>>() {
+            @Override
+            public void success(ReturnObject<List<RPGPostObject>> listReturnObject, Response response) {
+                List<RPGPostObject> list = listReturnObject.getObj();
+                mAdapter.addAll(list);
+            }
 
-			@SuppressWarnings("unchecked")
-			@Override
-			public void onCallback(APIException pError, Object pObject) {
-				ArrayList<RPGPostObject> list = (ArrayList<RPGPostObject>) pObject;
-				mAdapter.addAll(list);		
-			}
-		});
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
 		
 	}
 	
 	public void refreshList() {
-		mAPI.getRPGPostList(mRPGID, postCount+1, new APICallback(){
+		mAPI.getRPGPostList(mRPGID, postCount+1, new Callback<ReturnObject<List<RPGPostObject>>>() {
+            @Override
+            public void success(ReturnObject<List<RPGPostObject>> listReturnObject, Response response) {
+                List<RPGPostObject> list = listReturnObject.getObj();
+                postCount = postCount+list.size();
+                mAdapter.addAll(list);
+                if(list.size() == 30){
+                    refreshList();
+                }
+            }
 
-			@SuppressWarnings("unchecked")
-			@Override
-			public void onCallback(APIException pError, Object pObject) {
-				ArrayList<RPGPostObject> list = (ArrayList<RPGPostObject>) pObject;
-				postCount = postCount+list.size();
-				mAdapter.addAll(list);		
-				if(list.size() == 30){
-					refreshList();
-				}
-			}
-		});
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
 	}
 
 
@@ -252,20 +262,21 @@ public class RPGPostListActivity extends ListActivity implements PanelSlideListe
 		draft.setRpgID(mRPGID);
 		draft.setText(mEditPost.getText().toString());
 		dialog.show();
-		mAPI.sendRPGDraft(draft, new APICallback() {
-			
-			@Override
-			public void onCallback(APIException pError, Object pObject) {
-				dialog.cancel();
-				if(pError != null){
-					return;
-				}
-				refreshList();
-				mSlidingLayout.collapsePanel();
-				mToggleLabel.setText("Neuer Post");
-				mEditPost.setText("");
-			}
-		});
+		mAPI.sendRPGDraft(draft, new Callback<ReturnObject<Integer>>() {
+            @Override
+            public void success(ReturnObject<Integer> integerReturnObject, Response response) {
+                dialog.cancel();
+                refreshList();
+                mSlidingLayout.collapsePanel();
+                mToggleLabel.setText("Neuer Post");
+                mEditPost.setText("");
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                dialog.cancel();
+            }
+        });
 	}
 
 

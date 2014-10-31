@@ -2,6 +2,7 @@ package de.meisterfuu.animexx.activitys.home;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -17,11 +18,12 @@ import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAni
 
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.adapter.HomeContactAdapter;
-import de.meisterfuu.animexx.api.APICallback;
-import de.meisterfuu.animexx.api.home.HomeApi;
+import de.meisterfuu.animexx.api.broker.HomeBroker;
+import de.meisterfuu.animexx.api.web.ReturnObject;
 import de.meisterfuu.animexx.objects.home.ContactHomeObject;
-import de.meisterfuu.animexx.utils.APIException;
-import de.meisterfuu.animexx.utils.Request;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * A fragment representing a list of Items.
@@ -43,7 +45,7 @@ public class HomeObjectFragment extends Fragment implements AbsListView.OnItemCl
 	 */
 	private HomeContactAdapter mAdapter;
 
-	private HomeApi mAPI;
+	private HomeBroker mAPI;
 
 	private ArrayList<ContactHomeObject> mList;
 
@@ -76,10 +78,9 @@ public class HomeObjectFragment extends Fragment implements AbsListView.OnItemCl
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		Request.config = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
 		View view = inflater.inflate(R.layout.fragment_homeobject, container, false);
 		mListView = (AbsListView) view.findViewById(android.R.id.list);
-		mAPI = new HomeApi(this.getActivity());
+		mAPI = new HomeBroker(this.getActivity());
 		init();
 		
 		return view;
@@ -149,26 +150,29 @@ public class HomeObjectFragment extends Fragment implements AbsListView.OnItemCl
 	
 	private void loadEntries(){
 				
-		mAPI.getContactWidgetList(HomeApi.LIST_ALL ,new APICallback(){
+		mAPI.getContactWidgetList(new Callback<ReturnObject<List<ContactHomeObject>>>() {
+            @Override
+            public void success(ReturnObject<List<ContactHomeObject>> listReturnObject, Response response) {
+                List<ContactHomeObject> list = listReturnObject.getObj();
+                ArrayList<ContactHomeObject> list_ = new ArrayList<ContactHomeObject>();
+                for(ContactHomeObject obj: list){
+                    if(obj.isMultiItem() == false){
+                        list_.add(obj);
+                    } else {
+                        for(ContactHomeObject obj_: obj.getChildItems()){
+                            list_.add(obj_);
+                        }
+                    }
+                }
+                Collections.sort(list_);
+                mAdapter.addAll(list_);
+            }
 
-			@SuppressWarnings("unchecked")
-			@Override
-			public void onCallback(APIException pError, Object pObject) {
-				ArrayList<ContactHomeObject> list = (ArrayList<ContactHomeObject>) pObject;
-				ArrayList<ContactHomeObject> list_ = new ArrayList<ContactHomeObject>();
-				for(ContactHomeObject obj: list){
-					if(obj.isMultiItem() == false){
-						list_.add(obj);
-					} else {
-						for(ContactHomeObject obj_: obj.getChildItems()){
-								list_.add(obj_);
-						}
-					}
-				}
-				Collections.sort(list_);
-				mAdapter.addAll(list_);			
-			}
-		});
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
 
 	}
 

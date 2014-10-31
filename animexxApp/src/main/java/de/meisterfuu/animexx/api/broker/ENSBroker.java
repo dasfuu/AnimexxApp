@@ -13,7 +13,6 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import android.content.Context;
 import android.os.Handler;
-import de.meisterfuu.animexx.api.APICallback;
 import de.meisterfuu.animexx.api.DatabaseHelper;
 import de.meisterfuu.animexx.objects.ens.ENSDraftObject;
 import de.meisterfuu.animexx.objects.ens.ENSFolderObject;
@@ -48,7 +47,7 @@ public class ENSBroker extends BasicWebBroker {
 	 * @param pENS
 	 * @param pCallback
 	 */
-	public void sendENS(final ENSDraftObject pENS, final APICallback pCallback){
+	public void sendENS(final ENSDraftObject pENS, final Callback<Long> pCallback){
 		final Handler hand = new Handler();
 		new Thread(new Runnable() {
 			public void run() {
@@ -72,8 +71,8 @@ public class ENSBroker extends BasicWebBroker {
 				
 				hand.post(new Runnable() {			
 					public void run() {
-						if(pCallback != null) pCallback.onCallback(null, retu);
-					}
+						if(pCallback != null) pCallback.success(retu, null);
+                    }
 				});
 			}
 		}).start();
@@ -85,13 +84,13 @@ public class ENSBroker extends BasicWebBroker {
 	 */
 	public long NTsendENS(final ENSDraftObject pENS) throws RetrofitError{
 
-		ReturnObject<ENSSendIDObject> ret;
+		ReturnObject<Long> ret;
 		if(pENS.getReferenceID() > 0) {
 			ret = getWebApi().getApi().sendENS(pENS.getSubject(), pENS.getMessage(), pENS.getSignature(), pENS.getRecipients(), pENS.getReferenceType(), pENS.getReferenceID());
 		} else {
 			ret = getWebApi().getApi().sendENS(pENS.getSubject(), pENS.getMessage(), pENS.getSignature(), pENS.getRecipients());
 		}
-		return ret.getObj().getId();
+		return ret.getObj();
 	}
 	
 	public static void sendENSDEBUG(final String string, final String title, Context c){		
@@ -115,18 +114,17 @@ public class ENSBroker extends BasicWebBroker {
 	 * @param pENS
 	 * @param pCallback
 	 */
-	public void saveENSDraft(final ENSDraftObject pENS, final APICallback pCallback){		
+	public void saveENSDraft(final ENSDraftObject pENS, final Callback<Boolean> pCallback){
 		final Handler hand = new Handler();		
 		new Thread(new Runnable() {
 			public void run() {
 	
 				final Boolean retu = ENSBroker.this.saveDraftToDB(pENS);
-				hand.post(new Runnable() {			
-					public void run() {
-						if(pCallback != null) pCallback.onCallback(null, retu);
-						
-					}
-				});
+                hand.post(new Runnable() {
+                    public void run() {
+                        if(pCallback != null) pCallback.success(retu, null);
+                    }
+                });
 			}
 		}).start();
 	}
@@ -135,19 +133,18 @@ public class ENSBroker extends BasicWebBroker {
 	 * @param pID
 	 * @param pCallback
 	 */
-	public void getENSDraft(final long pID, final APICallback pCallback){		
+	public void getENSDraft(final long pID, final Callback<ENSDraftObject> pCallback){
 		final Handler hand = new Handler();		
 		new Thread(new Runnable() {
 			public void run() {
 	
 				final ENSDraftObject retu = ENSBroker.this.getFromDraftDB(pID);
 
-				hand.post(new Runnable() {			
-					public void run() {
-						if(pCallback != null) pCallback.onCallback(null, retu);
-						
-					}
-				});
+                hand.post(new Runnable() {
+                    public void run() {
+                        if(pCallback != null) pCallback.success(retu, null);
+                    }
+                });
 			}
 		}).start();
 	}
@@ -156,19 +153,18 @@ public class ENSBroker extends BasicWebBroker {
 	 * @param pENS
 	 * @param pCallback
 	 */
-	public void deleteENSDraft(final ENSDraftObject pENS, final APICallback pCallback){		
+	public void deleteENSDraft(final ENSDraftObject pENS, final Callback<Boolean> pCallback){
 		final Handler hand = new Handler();		
 		new Thread(new Runnable() {
 			public void run() {
 	
 				final boolean retu = ENSBroker.this.removeDraftFromDB(pENS);
 
-				hand.post(new Runnable() {			
-					public void run() {
-						if(pCallback != null) pCallback.onCallback(null, retu);
-						
-					}
-				});
+                hand.post(new Runnable() {
+                    public void run() {
+                        if(pCallback != null) pCallback.success(retu, null);
+                    }
+                });
 			}
 		}).start();
 	}
@@ -198,9 +194,9 @@ public class ENSBroker extends BasicWebBroker {
 	
 
 	/**
-	 * @param pCallback
-	 */
-	public void getFolderList(final Callback<ReturnObject<List<ENSFolderObject>>> pCallback){
+     * @param pCallback
+     */
+	public void getFolderList(final Callback<ReturnObject<ENSFolderObject.ENSFolderObjectContainer>> pCallback){
 		getWebApi().getApi().getENSFolder(pCallback);
 	}
 	

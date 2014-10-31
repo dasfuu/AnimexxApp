@@ -93,11 +93,9 @@ public interface WebApiInterface {
 
 
 	@POST("/mitglieder/ich/")
-	@FormUrlEncoded
 	void getMe(Callback<ReturnObject<UserObject>> pCallback);
 
 	@POST("/mitglieder/ich/")
-	@FormUrlEncoded
 	ReturnObject<UserObject> getMe();
 
 
@@ -141,11 +139,9 @@ public interface WebApiInterface {
 
 
 	@POST("/ens/signatur_get/")
-	@FormUrlEncoded
 	ReturnObject<ENSSignatureObject> getENSSignature();
 
 	@POST("/ens/signatur_get/")
-	@FormUrlEncoded
 	void getENSSignature(Callback<ReturnObject<ENSSignatureObject>> pCallback);
 
 	@POST("/ens/signatur_set/")
@@ -159,11 +155,9 @@ public interface WebApiInterface {
 
 
 	@POST("/ens/anzahl_ungelesen/")
-	@FormUrlEncoded
 	ReturnObject<ENSUnreadObject> getENSUnreadCount();
 
 	@POST("/ens/anzahl_ungelesen/")
-	@FormUrlEncoded
 	void getENSUnreadCount(Callback<ReturnObject<ENSUnreadObject>> pCallback);
 
 	@POST("/ens/anzahl_neue_ens/")
@@ -176,12 +170,10 @@ public interface WebApiInterface {
 
 
 	@POST("/ens/ordner_liste/")
-	@FormUrlEncoded
-	ReturnObject<List<ENSFolderObject>> getENSFolder();
+	ReturnObject<ENSFolderObject.ENSFolderObjectContainer> getENSFolder();
 
 	@POST("/ens/ordner_liste/")
-	@FormUrlEncoded
-	void getENSFolder(Callback<ReturnObject<List<ENSFolderObject>>> pCallback);
+	void getENSFolder(Callback<ReturnObject<ENSFolderObject.ENSFolderObjectContainer>> pCallback);
 
 
 	@POST("/ens/ordner_ens_liste/?get_user_avatar=true")
@@ -221,19 +213,19 @@ public interface WebApiInterface {
 
 	@POST("/ens/ens_senden/")
 	@FormUrlEncoded
-	ReturnObject<ENSSendIDObject> sendENS(@Field("betreff") String pSubject, @Field("text") String pBody, @Field("sig") String pSignature, @Field("an_users[]") List<Long> pUserIds);
+	ReturnObject<Long> sendENS(@Field("betreff") String pSubject, @Field("text") String pBody, @Field("sig") String pSignature, @Field("an_users[]") List<Long> pUserIds);
 
 	@POST("/ens/ens_senden/")
 	@FormUrlEncoded
-	void sendENS(@Field("betreff") String pSubject, @Field("text") String pBody, @Field("sig") String pSignature, @Field("an_users[]") List<Long> pUserIds, Callback<ReturnObject<ENSSendIDObject>> pCallback);
+	void sendENS(@Field("betreff") String pSubject, @Field("text") String pBody, @Field("sig") String pSignature, @Field("an_users[]") List<Long> pUserIds, Callback<ReturnObject<Long>> pCallback);
 
 	@POST("/ens/ens_senden/")
 	@FormUrlEncoded
-	ReturnObject<ENSSendIDObject> sendENS(@Field("betreff") String pSubject, @Field("text") String pBody, @Field("sig") String pSignature, @Field("an_users[]") List<Long> pUserIds, @Field("referenz_typ") String pReferenceType, @Field("referenz_id") long pReferenceId);
+	ReturnObject<Long> sendENS(@Field("betreff") String pSubject, @Field("text") String pBody, @Field("sig") String pSignature, @Field("an_users[]") List<Long> pUserIds, @Field("referenz_typ") String pReferenceType, @Field("referenz_id") long pReferenceId);
 
 	@POST("/ens/ens_senden/")
 	@FormUrlEncoded
-	void sendENS(@Field("betreff") String pSubject, @Field("text") String pBody, @Field("sig") String pSignature, @Field("an_users[]") List<Long> pUserIds, @Field("referenz_typ") String pReferenceType, @Field("referenz_id") long pReferenceId, Callback<ReturnObject<ENSSendIDObject>> pCallback);
+	void sendENS(@Field("betreff") String pSubject, @Field("text") String pBody, @Field("sig") String pSignature, @Field("an_users[]") List<Long> pUserIds, @Field("referenz_typ") String pReferenceType, @Field("referenz_id") long pReferenceId, Callback<ReturnObject<Long>> pCallback);
 
 
 
@@ -271,11 +263,9 @@ public interface WebApiInterface {
 
 
 	@POST("/persstart5/get_widget_data/?get_user_avatar=true&img_max_x=800&img_max_y=800&img_quality=90&img_format=jpg&widget_id=kontakte")
-	@FormUrlEncoded
 	ReturnObject<List<ContactHomeObject>> getContectWidget();
 
 	@POST("/persstart5/get_widget_data/?get_user_avatar=true&img_max_x=800&img_max_y=800&img_quality=90&img_format=jpg&widget_id=kontakte")
-	@FormUrlEncoded
 	void getContactWidget(Callback<ReturnObject<List<ContactHomeObject>>> pCallback);
 
 	@POST("/persstart5/get_widget_data/?get_user_avatar=true&img_max_x=800&img_max_y=800&img_quality=90&img_format=jpg&widget_id=kontakte")
@@ -309,11 +299,9 @@ public interface WebApiInterface {
 	//-------------------------------
 
 	@POST("/persstart5/get_widget_data/?get_user_avatar=true&img_max_x=800&img_max_y=800&img_quality=90&img_format=jpg&widget_id=kontakte_blog")
-	@FormUrlEncoded
 	ReturnObject<List<ContactHomeObject>> getMicroblogs();
 
 	@POST("/persstart5/get_widget_data/?get_user_avatar=true&img_max_x=800&img_max_y=800&img_quality=90&img_format=jpg&widget_id=kontakte_blog")
-	@FormUrlEncoded
 	void getMicroblogs(Callback<ReturnObject<List<ContactHomeObject>>> pCallback);
 
 
@@ -392,27 +380,21 @@ public interface WebApiInterface {
 	void getEventNews(@Field("event_id") long pEventId, @Field("limit") int pLimit, Callback<ReturnObject<List<WeblogEntryObject>>> pCallback);
 
 	@POST("/events/event/startseitenevents/")
-	@FormUrlEncoded
 	ReturnObject<List<EventObject>> getEventsHome();
 
 	@POST("/events/event/startseitenevents/")
-	@FormUrlEncoded
 	void getEventsHome(Callback<ReturnObject<List<EventObject>>> pCallback);
 
 	@POST("/events/event/dabei_events/")
-	@FormUrlEncoded
 	ReturnObject<List<EventObject>> getEventsAttending();
 
 	@POST("/events/event/dabei_events/")
-	@FormUrlEncoded
 	void getEventsAttending(Callback<ReturnObject<List<EventObject>>> pCallback);
 
 	@POST("/events/event/admin_events/")
-	@FormUrlEncoded
 	ReturnObject<List<EventObject>> getEventsAtmin();
 
 	@POST("/events/event/admin_events/")
-	@FormUrlEncoded
 	void getEventsAtmin(Callback<ReturnObject<List<EventObject>>> pCallback);
 
 	@POST("/events/event/beschreibung_get/")
@@ -623,19 +605,15 @@ public interface WebApiInterface {
 	//-------------------------------
 
 	@POST("/kontakte/get_gruppen/")
-	@FormUrlEncoded
 	ReturnObject<List<ContactGroupObject>> getContactGroups();
 
 	@POST("/kontakte/get_gruppen/")
-	@FormUrlEncoded
 	void getContactGroups(Callback<ReturnObject<List<ContactGroupObject>>> pCallback);
 
 	@POST("/kontakte/get_kontakte/")
-	@FormUrlEncoded
 	ReturnObject<List<UserObject>> getContacts();
 
 	@POST("/kontakte/get_kontakte/")
-	@FormUrlEncoded
 	void getContacts(Callback<ReturnObject<List<UserObject>>> pCallback);
 
 	@POST("/kontakte/get_kontakte/")
@@ -654,19 +632,19 @@ public interface WebApiInterface {
 
 	@POST("/kalender/list/?zuord_typ=user_private")
 	@FormUrlEncoded
-	ReturnObject<List<CalendarEntryObject>> getPrivateCalendar(@Field("zuord_id") long pId, @Field("tag") String pDay, @Field("zeitraum") String pInterval, @Field("show_events") int pEvents, @Field("show_gebs") int pBirthdays, @Field("show_zirkel") int pZirkel);
+	ReturnObject<CalListObject> getPrivateCalendar(@Field("zuord_id") long pId, @Field("tag") String pDay, @Field("zeitraum") String pInterval, @Field("show_events") int pEvents, @Field("show_gebs") int pBirthdays, @Field("show_zirkel") int pZirkel);
 
 	@POST("/kalender/list/?zuord_typ=user_private")
 	@FormUrlEncoded
-	void getPrivateCalendar(@Field("zuord_id") long pId, @Field("tag") String pDay, @Field("zeitraum") String pInterval, @Field("show_events") int pEvents, @Field("show_gebs") int pBirthdays, @Field("show_zirkel") int pZirkel, Callback<ReturnObject<List<CalendarEntryObject>>> pCallback);
+	void getPrivateCalendar(@Field("zuord_id") long pId, @Field("tag") String pDay, @Field("zeitraum") String pInterval, @Field("show_events") int pEvents, @Field("show_gebs") int pBirthdays, @Field("show_zirkel") int pZirkel, Callback<ReturnObject<CalListObject>> pCallback);
 
 	@POST("/kalender/list/?zuord_typ=event")
 	@FormUrlEncoded
-	ReturnObject<List<CalendarEntryObject>> getEventCalendar(@Field("zuord_id") long pId, @Field("tag") String pDay, @Field("zeitraum") String pInterval);
+	ReturnObject<CalListObject> getEventCalendar(@Field("zuord_id") long pId, @Field("tag") String pDay, @Field("zeitraum") String pInterval);
 
 	@POST("/kalender/list/?zuord_typ=event")
 	@FormUrlEncoded
-	void getEventCalendar(@Field("zuord_id") long pId, @Field("tag") String pDay, @Field("zeitraum") String pInterval, Callback<ReturnObject<List<CalendarEntryObject>>> pCallback);
+	void getEventCalendar(@Field("zuord_id") long pId, @Field("tag") String pDay, @Field("zeitraum") String pInterval, Callback<ReturnObject<CalListObject>> pCallback);
 
 
 	//-------------------------------
@@ -674,19 +652,15 @@ public interface WebApiInterface {
 	//-------------------------------
 
 	@POST("/items/kt_statistik/")
-	@FormUrlEncoded
 	ReturnObject<KarotalerStatsObject> getKarotalerStats();
 
 	@POST("/items/kt_statistik/")
-	@FormUrlEncoded
 	void getKarotalerStats(Callback<ReturnObject<KarotalerStatsObject>> pCallback);
 
 	@POST("/items/kt_abholen/")
-	@FormUrlEncoded
 	ReturnObject<Integer> getKarotaler();
 
 	@POST("/items/kt_abholen/")
-	@FormUrlEncoded
 	void getKarotaler(Callback<ReturnObject<Integer>> pCallback);
 
 
@@ -694,21 +668,19 @@ public interface WebApiInterface {
 	//XMPP
 	//-------------------------------
 
-	@POST("/items/kt_statistik/")
-	@FormUrlEncoded
+	@POST("/xmpp/get_chat_auth/")
 	ReturnObject<XMPPAuthObject> getXMPPAuth();
 
-	@POST("/items/kt_statistik/")
-	@FormUrlEncoded
+	@POST("/xmpp/get_chat_auth/")
 	void getXMPPAuth(Callback<ReturnObject<XMPPAuthObject>> pCallback);
 
-	@POST("/items/kt_abholen/")
+	@POST("/xmpp/log_user_animexx/")
 	@FormUrlEncoded
-	ReturnObject<XMPPHistoryObject> getXMPPLog(@Field("user_id") long pUserId, @Field("limit") long pLimit);
+	ReturnObject<List<XMPPHistoryObject>> getXMPPLog(@Field("user_id") long pUserId, @Field("limit") long pLimit);
 
-	@POST("/items/kt_abholen/")
+	@POST("/xmpp/log_user_animexx/")
 	@FormUrlEncoded
-	void getXMPPLog(@Field("user_id") long pUserId, @Field("limit") long pLimit, Callback<ReturnObject<XMPPHistoryObject>> pCallback);
+	void getXMPPLog(@Field("user_id") long pUserId, @Field("limit") long pLimit, Callback<ReturnObject<List<XMPPHistoryObject>>> pCallback);
 
 
 	//-------------------------------
@@ -716,11 +688,9 @@ public interface WebApiInterface {
 	//-------------------------------
 
 	@POST("/aidb/mangas/meine_detailliert/")
-	@FormUrlEncoded
 	ReturnObject<JsonElement> getMangaOwned();
 
 	@POST("/aidb/mangas/meine_detailliert/")
-	@FormUrlEncoded
 	void getMangaOwned(Callback<ReturnObject<JsonElement>> pCallback);
 
 	@POST("/aidb/mangas/details/")
@@ -740,11 +710,9 @@ public interface WebApiInterface {
 	void getMangaSeriesDetail(@Field("serie") String pSeriesId, Callback<ReturnObject<Object>> pCallback);
 
 	@POST("/aidb/mangas/alle/")
-	@FormUrlEncoded
 	ReturnObject<Object> getMangaAll();
 
 	@POST("/aidb/mangas/alle/")
-	@FormUrlEncoded
 	void getMangaAll(Callback<ReturnObject<Object>> pCallback);
 
 
@@ -761,11 +729,9 @@ public interface WebApiInterface {
 	void setGCMId(@Field("registration_id") String pDeviceToken, @Field("collapse_by_type") int pCollapse, Callback<ReturnObject<Empty>> pCallback);
 
 	@POST("/cloud2device/registration_id_get/")
-	@FormUrlEncoded
 	ReturnObject<GCMIdObject> getGCMId();
 
 	@POST("/cloud2device/registration_id_get/")
-	@FormUrlEncoded
 	void getGCMId(Callback<ReturnObject<GCMIdObject>> pCallback);
 
 	@POST("/cloud2device/set_active_events/")

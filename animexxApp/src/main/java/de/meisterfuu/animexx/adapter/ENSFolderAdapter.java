@@ -1,6 +1,5 @@
 package de.meisterfuu.animexx.adapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.meisterfuu.animexx.R;
@@ -10,6 +9,7 @@ import de.meisterfuu.animexx.utils.imageloader.ImageDownloaderCustom;
 import de.meisterfuu.animexx.utils.imageloader.ImageLoaderCustom;
 import de.meisterfuu.animexx.utils.imageloader.ImageSaveObject;
 import android.app.Activity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,12 +32,8 @@ public class ENSFolderAdapter extends BaseAdapter {
 		this.mContext = pContext;
 	}
 	
-	boolean mLoading;
+	boolean mLoading = false;
 	
-	@Override
-	public void notifyDataSetChanged() {
-		super.notifyDataSetChanged();
-	}
 
 	public void startLoadingAnimation(){
 		mLoading = true;

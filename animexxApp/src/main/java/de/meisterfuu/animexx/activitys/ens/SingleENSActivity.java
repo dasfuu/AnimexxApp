@@ -6,13 +6,12 @@ import java.util.Locale;
 import java.util.Random;
 
 import de.meisterfuu.animexx.R;
-import de.meisterfuu.animexx.api.APICallback;
+import de.meisterfuu.animexx.activitys.AnimexxBaseActivityAB;
 import de.meisterfuu.animexx.api.broker.ENSBroker;
 import de.meisterfuu.animexx.api.web.ReturnObject;
 import de.meisterfuu.animexx.objects.ens.ENSDraftObject;
 import de.meisterfuu.animexx.objects.ens.ENSObject;
 import de.meisterfuu.animexx.objects.UserObject;
-import de.meisterfuu.animexx.utils.APIException;
 import de.meisterfuu.animexx.utils.Helper;
 import de.meisterfuu.animexx.utils.imageloader.ImageDownloaderCustom;
 import de.meisterfuu.animexx.utils.imageloader.ImageLoaderCustom;
@@ -22,7 +21,6 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 import android.os.Bundle;
-import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -35,7 +33,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class SingleENSActivity extends Activity {
+public class SingleENSActivity extends AnimexxBaseActivityAB {
 
 	long mID;
 	ENSObject mENS;
@@ -75,10 +73,10 @@ public class SingleENSActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_single_ens);
-		
-		this.getActionBar().setDisplayHomeAsUpEnabled(true);
-		
-		
+
+		this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
 		mSubject = (TextView)this.findViewById(R.id.activity_ens_single_subject);
 		mUserLabel = (TextView)this.findViewById(R.id.activity_ens_single_user_label);
 		mUser = (TextView)this.findViewById(R.id.activity_ens_single_user);
@@ -86,22 +84,22 @@ public class SingleENSActivity extends Activity {
 		mWebView = (WebView)this.findViewById(R.id.activity_ens_single_webview);
 		mMessage = (TextView)this.findViewById(R.id.activity_ens_single_message);
 		mAvatar = (ImageView)this.findViewById(R.id.activity_ens_single_user_avatar);
-		
+
 		mHeader = (FrameLayout) this.findViewById(R.id.activity_ens_single_header);
 		mBody = (FrameLayout) this.findViewById(R.id.activity_ens_single_body);
-		
+
 		mHeader.setVisibility(View.GONE);
 		mBody.setVisibility(View.GONE);
-		
+
 		//this.findViewById(R.id.activity_ens_single_base);
-		
-		
+
+
 		mWebView.setVisibility(View.GONE);
-		
-		
+
+
 		Bundle extras = this.getIntent().getExtras();
 		mID = extras.getLong("id");
-		
+
 
 		mAPI = new ENSBroker(this);
 		mAPI.getENS(mID, new Callback<ReturnObject<ENSObject>>() {
@@ -110,7 +108,7 @@ public class SingleENSActivity extends Activity {
 				mENS =  t.getObj();
 
 				mSubject.setText(mENS.getSubject());
-				SingleENSActivity.this.getActionBar().setTitle(mENS.getSubject());
+				//SingleENSActivity.this.getActionBar().setTitle(mENS.getSubject());
 
 				mDate.setText(sdf.format(mENS.getDateObject()));
 				target = new UserObject();
@@ -162,7 +160,7 @@ public class SingleENSActivity extends Activity {
 
 			}
 		});
-		
+
 	}
 
 
@@ -220,13 +218,17 @@ public class SingleENSActivity extends Activity {
 		draft.setSubject(Helper.BetreffRe(mENS.getSubject()));
 		draft.setReferenceID(mENS.getId());
 		draft.setReferenceType("forward");
-		mAPI.saveENSDraft(draft, new APICallback() {
-			
-			@Override
-			public void onCallback(APIException pError, Object pObject) {
-				NewENSActivity.getInstance(SingleENSActivity.this, draft);
-			}
-		});
+		mAPI.saveENSDraft(draft, new Callback<Boolean>() {
+            @Override
+            public void success(Boolean aBoolean, Response response) {
+                NewENSActivity.getInstance(SingleENSActivity.this, draft);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
 	}
 
 	private void answer() {
@@ -241,13 +243,17 @@ public class SingleENSActivity extends Activity {
 		draft.setSubject(Helper.BetreffRe(mENS.getSubject()));
 		draft.setReferenceID(mENS.getId());
 		draft.setReferenceType("reply");
-		mAPI.saveENSDraft(draft, new APICallback() {
-			
-			@Override
-			public void onCallback(APIException pError, Object pObject) {
-				NewENSActivity.getInstance(SingleENSActivity.this, draft);
-			}
-		});
+		mAPI.saveENSDraft(draft, new Callback<Boolean>() {
+            @Override
+            public void success(Boolean aBoolean, Response response) {
+                NewENSActivity.getInstance(SingleENSActivity.this, draft);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
 	}
 	
 	private void answerQuote() {
@@ -262,13 +268,17 @@ public class SingleENSActivity extends Activity {
 		draft.setSubject(Helper.BetreffRe(mENS.getSubject()));
 		draft.setReferenceID(mENS.getId());
 		draft.setReferenceType("reply");
-		mAPI.saveENSDraft(draft, new APICallback() {
-			
-			@Override
-			public void onCallback(APIException pError, Object pObject) {
-				NewENSActivity.getInstance(SingleENSActivity.this, draft);
-			}
-		});
+		mAPI.saveENSDraft(draft, new Callback<Boolean>() {
+            @Override
+            public void success(Boolean aBoolean, Response response) {
+                NewENSActivity.getInstance(SingleENSActivity.this, draft);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
 	}
 	
 	

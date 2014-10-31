@@ -2,8 +2,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="?android:attr/actionBarSize"
     tools:context=".RPGPostListActivity" xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:minHeight="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:transitionName="actionBar"/>
 
     <com.sothree.slidinguppanel.SlidingUpPanelLayout
         android:id="@+id/activity_rpgpost_list_slide"
@@ -11,7 +18,8 @@
         android:layout_height="match_parent"
         app:dragView="@+id/activity_rpgpost_new_drag"
         app:panelHeight="50dp"
-        android:gravity="bottom" >
+        android:gravity="bottom"
+        android:layout_below="@+id/toolbar">
 
         <ListView
             android:id="@android:id/list"

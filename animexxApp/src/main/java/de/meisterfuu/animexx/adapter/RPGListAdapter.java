@@ -120,7 +120,7 @@ public class RPGListAdapter extends BaseAdapter {
 		return rowView;
 	}
 
-	public void addAll(ArrayList<RPGObject> list) {
+	public void addAll(List<RPGObject> list) {
 		mItems.addAll(list);
 		this.notifyDataSetChanged();		
 	}

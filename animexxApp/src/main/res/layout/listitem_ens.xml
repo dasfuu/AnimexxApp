@@ -1,81 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/ens_list_item_root"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:gravity="center" xmlns:app="http://schemas.android.com/apk/res/de.meisterfuu.animexx">
+    android:layout_margin="5dp"
+    android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/ens_list_item_color"
-        android:layout_width="20dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:background="@color/bg_blue2"
-        android:text=""
-        android:textColor="#FFFFFF" />
-
-    <LinearLayout
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/ens_list_item_root"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:gravity="center" xmlns:app="http://schemas.android.com/apk/res-auto">
 
-        <de.meisterfuu.animexx.utils.views.RoundedImageView
-            android:id="@+id/ens_list_item_avatar"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:adjustViewBounds="true"
-            android:baselineAlignBottom="false"
-            android:contentDescription="Avatar"
-            android:cropToPadding="false"
-            android:padding="5dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_contact_picture"
-            app:corner_radius="200dp"
-            app:is_oval="true" />
+        <TextView
+            android:id="@+id/ens_list_item_color"
+            android:layout_width="20dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="@color/bg_blue2"
+            android:text=""
+            android:textColor="#FFFFFF" />
 
         <LinearLayout
-            android:layout_width="0dip"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="top"
-            android:minHeight="30dp"
-            android:orientation="vertical"
-            android:padding="10dp" >
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <de.meisterfuu.animexx.utils.views.RoundedImageView
+                android:id="@+id/ens_list_item_avatar"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:adjustViewBounds="true"
+                android:baselineAlignBottom="false"
+                android:contentDescription="Avatar"
+                android:cropToPadding="false"
+                android:padding="5dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_contact_picture"
+                app:corner_radius="200dp"
+                app:is_oval="true" />
 
             <LinearLayout
-                android:id="@+id/ens_flag_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="top"
+                android:minHeight="30dp"
+                android:orientation="vertical"
+                android:padding="10dp" >
+
+                <LinearLayout
+                    android:id="@+id/ens_flag_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:id="@+id/ens_list_item_subtitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@+id/label"
+                        android:textSize="12sp" />
+
+                    <ImageView
+                        android:id="@+id/ens_flag_answered"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="-5dp"
+                        android:src="@drawable/ens_flags_answered" />
+
+                    <ImageView
+                        android:id="@+id/ens_flag_forwarded"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="-5dp"
+                        android:src="@drawable/ens_flags_forwarded" />
+                </LinearLayout>
 
                 <TextView
-                    android:id="@+id/ens_list_item_subtitle"
-                    android:layout_width="match_parent"
+                    android:id="@+id/ens_list_item_title"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:text="@+id/label"
-                    android:textSize="12sp" />
-
-                <ImageView
-                    android:id="@+id/ens_flag_answered"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="-5dp"
-                    android:src="@drawable/ens_flags_answered" />
-
-                <ImageView
-                    android:id="@+id/ens_flag_forwarded"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="-5dp"
-                    android:src="@drawable/ens_flags_forwarded" />
+                    android:textSize="16sp" />
             </LinearLayout>
-
-            <TextView
-                android:id="@+id/ens_list_item_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@+id/label"
-                android:textSize="16sp" />
         </LinearLayout>
-    </LinearLayout>
 
-</LinearLayout>
+    </LinearLayout>
+</android.support.v7.widget.CardView>

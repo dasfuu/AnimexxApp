@@ -1,11 +1,14 @@
 package de.meisterfuu.animexx.activitys.rpg;
 
 import de.meisterfuu.animexx.R;
-import de.meisterfuu.animexx.api.APICallback;
-import de.meisterfuu.animexx.api.rpg.RPGApi;
+import de.meisterfuu.animexx.activitys.AnimexxBaseActivityAB;
+import de.meisterfuu.animexx.api.broker.RPGBroker;
+import de.meisterfuu.animexx.api.web.ReturnObject;
 import de.meisterfuu.animexx.objects.rpg.RPGObject;
-import de.meisterfuu.animexx.utils.APIException;
 import de.meisterfuu.animexx.utils.views.TableDataView;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -15,10 +18,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
 
-public class RPGDetailActivity extends Activity implements APICallback<RPGObject> {
+public class RPGDetailActivity extends AnimexxBaseActivityAB implements Callback<ReturnObject<RPGObject>> {
 
 	private long mRPGID;
-	private RPGApi mAPI;
+	private RPGBroker mAPI;
 	private RPGObject mRPG;
 	private TableDataView mTableView;
 
@@ -36,25 +39,17 @@ public class RPGDetailActivity extends Activity implements APICallback<RPGObject
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_rpgdetail);
 		// Show the Up button in the action bar.
-		setupActionBar();
 
 		mTableView = (TableDataView) this.findViewById(R.id.activity_rpg_single_body_table);
 
 		Bundle extras = this.getIntent().getExtras();
 		mRPGID = extras.getLong("id");
-		mAPI = new RPGApi(this);
+		mAPI = new RPGBroker(this);
 		
 		mAPI.getRPG(mRPGID, this);
 	}
 
-	/**
-	 * Set up the {@link android.app.ActionBar}.
-	 */
-	private void setupActionBar() {
 
-		getActionBar().setDisplayHomeAsUpEnabled(true);
-
-	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -80,12 +75,17 @@ public class RPGDetailActivity extends Activity implements APICallback<RPGObject
 		return super.onOptionsItemSelected(item);
 	}
 
-	@Override
-	public void onCallback(final APIException pError, final RPGObject pObject) {
-		mRPG = pObject;
-		mTableView.add(new TableDataView.TableDataEntity(mRPG.getName(), R.drawable.ens_flags_forwarded_blue));
-		mTableView.add(new TableDataView.TableDataEntity(mRPG.getTopicName(), R.drawable.ens_flags_answered_blue));
-		mTableView.add(new TableDataView.TableDataEntity(mRPG.getLastCharacter(), R.drawable.ens_flags_forwarded_blue));
 
-	}
+    @Override
+    public void success(ReturnObject<RPGObject> rpgObjectReturnObject, Response response) {
+        mRPG = rpgObjectReturnObject.getObj();
+        mTableView.add(new TableDataView.TableDataEntity(mRPG.getName(), R.drawable.ens_flags_forwarded_blue));
+        mTableView.add(new TableDataView.TableDataEntity(mRPG.getTopicName(), R.drawable.ens_flags_answered_blue));
+        mTableView.add(new TableDataView.TableDataEntity(mRPG.getLastCharacter(), R.drawable.ens_flags_forwarded_blue));
+    }
+
+    @Override
+    public void failure(RetrofitError error) {
+
+    }
 }

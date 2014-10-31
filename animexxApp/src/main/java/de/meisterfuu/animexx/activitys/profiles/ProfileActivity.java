@@ -15,11 +15,11 @@ import android.view.MenuItem;
 import com.squareup.otto.Subscribe;
 
 import de.meisterfuu.animexx.R;
-import de.meisterfuu.animexx.activitys.AnimexxBaseActivity;
+import de.meisterfuu.animexx.activitys.AnimexxBaseActivityAB;
 import de.meisterfuu.animexx.api.ApiEvent;
 import de.meisterfuu.animexx.api.broker.UserBroker;
 
-public class ProfileActivity extends AnimexxBaseActivity{
+public class ProfileActivity extends AnimexxBaseActivityAB {
 
 	long mUserID;
 	String mUserName;
@@ -79,8 +79,8 @@ public class ProfileActivity extends AnimexxBaseActivity{
 	@Subscribe
 	public void retrieveProfile(ApiEvent.ProfileEvent pEvent) {
 		mUserName = pEvent.getObj().getUsername();
-		this.getActionBar().setTitle(mUserName);
-		profileFrag.onCallback(null, pEvent.getObj());
+		this.getSupportActionBar().setTitle(mUserName);
+		profileFrag.onCallback(pEvent.getObj());
 	}
 
     @Override

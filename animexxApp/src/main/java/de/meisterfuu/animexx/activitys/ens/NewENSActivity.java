@@ -4,20 +4,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import de.meisterfuu.animexx.R;
-import de.meisterfuu.animexx.api.APICallback;
+import de.meisterfuu.animexx.activitys.AnimexxBaseActivityAB;
 import de.meisterfuu.animexx.api.broker.ENSBroker;
 import de.meisterfuu.animexx.api.web.ReturnObject;
 import de.meisterfuu.animexx.objects.ens.ENSCheckRecipientsObject;
 import de.meisterfuu.animexx.objects.ens.ENSDraftObject;
 import de.meisterfuu.animexx.objects.UserObject;
-import de.meisterfuu.animexx.utils.APIException;
 import de.meisterfuu.animexx.utils.views.UsernameAutoCompleteTextView;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 import android.os.Bundle;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -28,8 +26,8 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-public class NewENSActivity extends Activity {
-	
+public class NewENSActivity extends AnimexxBaseActivityAB {
+
 	public static void getInstance(Context pContext, ENSDraftObject pDraft){
 		Intent i = new Intent().setClass(pContext, NewENSActivity.class);
 	     Bundle args = new Bundle();
@@ -37,7 +35,7 @@ public class NewENSActivity extends Activity {
 	     i.putExtras(args);
 	     pContext.startActivity(i);
 	}
-	
+
 	public static void getInstanceBlank(final Context pContext){
 		final ENSDraftObject draft = new ENSDraftObject();
 		draft.setMessage("");
@@ -45,33 +43,37 @@ public class NewENSActivity extends Activity {
 		ArrayList<String> recip_name = new ArrayList<String>();
 		draft.setRecipients(recip);
 		draft.setRecipients_name(recip_name);
-		draft.setSubject("");		
+		draft.setSubject("");
 		draft.setReferenceType(null);
 		draft.setSignature("");
-		
+
 		final ENSBroker mAPI = new ENSBroker(pContext);
-		mAPI.saveENSDraft(draft, new APICallback() {
-			
-			@Override
-			public void onCallback(APIException pError, Object pObject) {
-				Intent i = new Intent().setClass(pContext, NewENSActivity.class);
-			    Bundle args = new Bundle();
-			    args.putLong("ENSDraftObject", draft.getID());
-			    i.putExtras(args);
-			    pContext.startActivity(i);
-			    mAPI.close();
-			}
-		});
-		
+		mAPI.saveENSDraft(draft, new Callback<Boolean>() {
+            @Override
+            public void success(Boolean aBoolean, Response response) {
+                Intent i = new Intent().setClass(pContext, NewENSActivity.class);
+                Bundle args = new Bundle();
+                args.putLong("ENSDraftObject", draft.getID());
+                i.putExtras(args);
+                pContext.startActivity(i);
+                mAPI.close();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
+
 
 	}
-	
+
 	public static void getInstance(Context pContext){
 		Intent i = new Intent().setClass(pContext, NewENSActivity.class);
 	     pContext.startActivity(i);
 	}
-	
-	
+
+
 	long mDraftID;
 	ENSBroker mAPI;
 	EditText mMessage, mSubject, mRecipient;
@@ -84,16 +86,16 @@ public class NewENSActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_new_ens);
-		
+
 		mMessage = (EditText) this.findViewById(R.id.activity_ens_new_message);
 		mSubject = (EditText) this.findViewById(R.id.activity_ens_new_subject);
 //		mRecipient = (EditText) this.findViewById(R.id.activity_ens_new_user);
-		
+
 		mSearch = (UsernameAutoCompleteTextView) this.findViewById(R.id.activity_ens_new_user_search);
-		 
+
 		mHeader = (FrameLayout) this.findViewById(R.id.activity_ens_new_header);
 		mBody = (FrameLayout) this.findViewById(R.id.activity_ens_new_body);
-		
+
 		mSearch.init();
 		mHeader.setVisibility(View.GONE);
 		mBody.setVisibility(View.GONE);
@@ -101,27 +103,31 @@ public class NewENSActivity extends Activity {
 		Bundle extras = this.getIntent().getExtras();
 		mDraftID = extras.getLong("ENSDraftObject");
 		mAPI = new ENSBroker(this);
-		
-		mAPI.getENSDraft(mDraftID, new APICallback() {
-			
-			@Override
-			public void onCallback(APIException pError, Object pObject) {
-				mENSDraft = (ENSDraftObject) pObject;
-				
-				mMessage.setText(mENSDraft.getMessage());
-				mSubject.setText(mENSDraft.getSubject());
-				if(mENSDraft.getRecipients_name().size()>0){
-					mSearch.setText(mENSDraft.getRecipients_name().get(0)+", ");
-				}
 
-				
-				mHeader.setVisibility(View.VISIBLE);
-				mBody.setVisibility(View.VISIBLE);
-			}
-		});
+		mAPI.getENSDraft(mDraftID, new Callback<ENSDraftObject>() {
+            @Override
+            public void success(ENSDraftObject ensDraftObject, Response response) {
+                mENSDraft = ensDraftObject;
+
+                mMessage.setText(mENSDraft.getMessage());
+                mSubject.setText(mENSDraft.getSubject());
+                if(mENSDraft.getRecipients_name().size()>0){
+                    mSearch.setText(mENSDraft.getRecipients_name().get(0)+", ");
+                }
+
+
+                mHeader.setVisibility(View.VISIBLE);
+                mBody.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
 
 	}
-	
+
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
@@ -134,20 +140,21 @@ public class NewENSActivity extends Activity {
 		getMenuInflater().inflate(R.menu.new_ens, menu);
 		return true;
 	}
-	
+
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		
-		switch(item.getItemId()){ 
+
+		switch(item.getItemId()){
 		case R.id.send:
 			send();
-
-
 			break;
+        case android.R.id.home:
+            this.finish();
+            break;
 		}
-		
-		
+
+
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -182,26 +189,34 @@ public class NewENSActivity extends Activity {
 			}
 		});
 	}
-	
+
 	public void send_(){
 		mENSDraft.setMessage(mMessage.getText().toString());
 		mENSDraft.setSubject(mSubject.getText().toString());
 		mAPI.saveENSDraft(mENSDraft, null);
-		mAPI.sendENS(mENSDraft, new APICallback() {
-			
-			@Override
-			public void onCallback(APIException pError, Object pObject) {
-				if(pError == null){					
+		mAPI.sendENS(mENSDraft, new Callback<Long>() {
+            @Override
+            public void success(Long aLong, Response response) {
+                if (aLong > -1) {
+                    mAPI.deleteENSDraft(mENSDraft, new Callback<Boolean>() {
+                        @Override
+                        public void success(Boolean aBoolean, Response response) {
 
-					mAPI.deleteENSDraft(mENSDraft, new APICallback() {						
-						@Override
-						public void onCallback(APIException pError, Object pObject) {
-							
-						}
-					});
-				}
-			}
-		});
+                        }
+
+                        @Override
+                        public void failure(RetrofitError error) {
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
 		mDialog.cancel();
 		NewENSActivity.this.finish();
 	}

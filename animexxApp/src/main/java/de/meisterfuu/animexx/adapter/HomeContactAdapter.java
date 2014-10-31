@@ -111,7 +111,7 @@ public class HomeContactAdapter extends BaseAdapter {
 			holder.Image.getLayoutParams().height = obj.getBigImageHeight();
 //			ImageLoader.download(new ImageSaveObject(obj.getBigImageURL(), obj.getItemID()), holder.Image);
 
-			mPicasso.load(obj.getBigImageURL()).into(holder.Image);
+			mPicasso.load(obj.getBigImageURL()).steadyKey("home_contact"+obj.getItemID()).into(holder.Image);
 		} else {
 			holder.Image.setVisibility(View.GONE);
 		}

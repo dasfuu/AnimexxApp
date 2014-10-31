@@ -1,10 +1,23 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    tools:context=".XMPPChatActivity"
+    android:layout_height="match_parent">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:minHeight="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:transitionName="actionBar"/>
+
+
+    <LinearLayout
     android:id="@+id/LinearLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".XMPPChatActivity" >
+        android:layout_below="@+id/toolbar">
 
     <ListView
         android:id="@+id/xmpp_test_list"
@@ -44,4 +57,4 @@
             android:src="@drawable/ic_action_ens_new" />
     </RelativeLayout>
 
-</LinearLayout>
+</LinearLayout></RelativeLayout>

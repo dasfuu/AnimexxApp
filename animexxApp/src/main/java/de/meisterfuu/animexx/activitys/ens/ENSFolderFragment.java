@@ -4,29 +4,34 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.activitys.main.MainActivity;
 import de.meisterfuu.animexx.adapter.ENSFolderAdapter;
 import de.meisterfuu.animexx.api.broker.ENSBroker;
+import de.meisterfuu.animexx.api.broker.HomeBroker;
 import de.meisterfuu.animexx.api.web.ReturnObject;
 import de.meisterfuu.animexx.objects.ens.ENSObject;
-import de.meisterfuu.animexx.utils.Request;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
+import android.app.Fragment;
 import android.app.ListFragment;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 
-public class ENSFolderFragment extends ListFragment implements OnScrollListener {
+public class ENSFolderFragment extends Fragment implements AbsListView.OnItemClickListener, OnScrollListener {
 
 	ENSBroker mAPI;
 	boolean mInitiated = false;
@@ -42,8 +47,9 @@ public class ENSFolderFragment extends ListFragment implements OnScrollListener 
 	static int saveItemCount, saveNextPage;
 	static ArrayList<ENSObject> saveList;
 	static int saveScrollstate;
-	
-	public static ENSFolderFragment getInstance(long pFolderID, String pType, long pDesign){
+    private ListView mListView;
+
+    public static ENSFolderFragment getInstance(long pFolderID, String pType, long pDesign){
 		ENSFolderFragment result = new ENSFolderFragment();
 	     Bundle args = new Bundle();
 	     args.putLong("mFolderID", pFolderID);
@@ -60,18 +66,6 @@ public class ENSFolderFragment extends ListFragment implements OnScrollListener 
 		return PendingIntent.getActivity(pContext, 0, intent, 0);
 	}
 
-	@Override
-	public void onListItemClick(ListView l, View v, int position, long id) {
-		super.onListItemClick(l, v, position, id);
-				
-		ENSFolderFragment.saveScrollstate = this.getListView().getFirstVisiblePosition(); 
-		ENSFolderFragment.saveNextPage = mNextPage;
-		ENSFolderFragment.saveList = mList;
-		ENSFolderFragment.saveAdapter = mAdapter;
-		ENSFolderFragment.saveItemCount = mPrevTotalItemCount;		
-		
-		SingleENSActivity.getInstance(this.getActivity(), mAdapter.getItem(position).getId());		
-	}
 	
 	@Override
 	public void onPause() {
@@ -81,7 +75,6 @@ public class ENSFolderFragment extends ListFragment implements OnScrollListener 
 
 	@Override
 	public void onResume() {
-		Request.config = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
 
 		mAPI = new ENSBroker(this.getActivity());
 		mAPI.clearNotification();
@@ -101,7 +94,16 @@ public class ENSFolderFragment extends ListFragment implements OnScrollListener 
 		mAPI.close();
 	}
 
-	private void init(){
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_ens_list, container, false);
+        mListView = (ListView) view.findViewById(android.R.id.list);
+
+        return view;
+    }
+
+
+    private void init(){
 		this.mType = this.getArguments().getString("mType");
 		this.mFolderID = this.getArguments().getLong("mFolderID");
 		this.mDesign = this.getArguments().getLong("mDesign");
@@ -110,11 +112,11 @@ public class ENSFolderFragment extends ListFragment implements OnScrollListener 
 		this.getListView().setOnScrollListener(this);
 		mList = new ArrayList<ENSObject>();
 		mAdapter = new ENSFolderAdapter(mList, ENSFolderFragment.this.getActivity(), mDesign);
-		this.setListAdapter(mAdapter);
-		if(mDesign == 4){
-			this.getListView().setDivider(null);
-			this.getListView().setPadding(15, 0, 15, 0);
-		}
+        mListView.setAdapter(mAdapter);
+        mListView.setOnItemClickListener(this);
+
+		this.getListView().setDivider(null);
+
 		getNextPage();		
 	}
 	
@@ -128,15 +130,13 @@ public class ENSFolderFragment extends ListFragment implements OnScrollListener 
 		mList = ENSFolderFragment.saveList;
 		mAdapter = ENSFolderFragment.saveAdapter;
 		mPrevTotalItemCount = ENSFolderFragment.saveItemCount;
-		this.setListAdapter(mAdapter);
-		
+        mListView.setAdapter(mAdapter);
+        mListView.setOnItemClickListener(this);
+
 		this.getListView().setSelectionFromTop(ENSFolderFragment.saveScrollstate, 0);
-		
-		if(mDesign == 4){
-			this.getListView().setDivider(null);
-			this.getListView().setPadding(15, 0, 15, 0);
-		}
-		
+
+        this.getListView().setDivider(null);
+
 		ENSFolderFragment.saveScrollstate = 0;
 		ENSFolderFragment.saveNextPage = 0;
 		ENSFolderFragment.saveList = null;
@@ -149,13 +149,13 @@ public class ENSFolderFragment extends ListFragment implements OnScrollListener 
 	}
 	
 	private void getPage(int pPage){
-		
-		mAdapter.startLoadingAnimation();
+
+        mAdapter.startLoadingAnimation();
 		
 		mAPI.getENSList(pPage, mFolderID, mType, new Callback<ReturnObject<List<ENSObject>>>() {
 			@Override
 			public void success(final ReturnObject<List<ENSObject>> t, final Response response) {
-				List<ENSObject> list = t.getObj();
+                List<ENSObject> list = t.getObj();
 				Collections.sort(list);
 				mAdapter.stopLoadingAnimation();
 				mAdapter.addAll(list);
@@ -163,7 +163,7 @@ public class ENSFolderFragment extends ListFragment implements OnScrollListener 
 
 			@Override
 			public void failure(final RetrofitError error) {
-
+                mAdapter.stopLoadingAnimation();
 			}
 		});
 	}
@@ -181,5 +181,19 @@ public class ENSFolderFragment extends ListFragment implements OnScrollListener 
 		// TODO Auto-generated method stub
 		
 	}
-	
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        ENSFolderFragment.saveScrollstate = this.getListView().getFirstVisiblePosition();
+        ENSFolderFragment.saveNextPage = mNextPage;
+        ENSFolderFragment.saveList = mList;
+        ENSFolderFragment.saveAdapter = mAdapter;
+        ENSFolderFragment.saveItemCount = mPrevTotalItemCount;
+
+        SingleENSActivity.getInstance(this.getActivity(), mAdapter.getItem(position).getId());
+    }
+
+    public ListView getListView() {
+        return mListView;
+    }
 }

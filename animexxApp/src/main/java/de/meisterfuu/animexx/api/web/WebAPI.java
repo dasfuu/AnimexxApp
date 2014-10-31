@@ -25,7 +25,7 @@ public class WebAPI implements ErrorHandler {
 			RestAdapter.Builder builder = new RestAdapter.Builder()
 					.setEndpoint(WebApiInterface.API_ENDPOINT)
 					.setClient(new OkClient(new OkHttpClient()))
-					.setErrorHandler(this)
+                    .setLogLevel(RestAdapter.LogLevel.FULL)
 					.setRequestInterceptor(new InterceptorSigner(pContext.getApplicationContext()));
 
 			RestAdapter adapter = builder.build();

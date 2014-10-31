@@ -1,7 +1,5 @@
 package de.meisterfuu.animexx.activitys.main;
 
-import java.util.List;
-
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.activitys.ens.ENSFolderFragment;
 import de.meisterfuu.animexx.activitys.ens.NewENSActivity;
@@ -16,36 +14,33 @@ import de.meisterfuu.animexx.api.broker.ENSBroker;
 import de.meisterfuu.animexx.api.web.ReturnObject;
 import de.meisterfuu.animexx.objects.DrawerObject;
 import de.meisterfuu.animexx.objects.ens.ENSFolderObject;
-import de.meisterfuu.animexx.utils.Request;
 import de.meisterfuu.animexx.xmpp.XMPPRoosterFragment;
 import de.meisterfuu.animexx.xmpp.XMPPService;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-import android.app.ActionBar;
-import android.app.ActionBar.OnNavigationListener;
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ListView;
-import android.widget.Switch;
 
-public class MainActivity extends Activity {
+public class MainActivity extends ActionBarActivity {
 
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
@@ -65,22 +60,28 @@ public class MainActivity extends Activity {
 		mDrawerList = (ListView) findViewById(R.id.left_drawer);
 		mAdapter = new MainDrawerAdapter(this);
 
-		Request.config = PreferenceManager.getDefaultSharedPreferences(this);
-		
+
 		// Set shadow
 		mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
 		mDrawerList.setAdapter(mAdapter);
 		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
-		getActionBar().setDisplayHomeAsUpEnabled(true);
-		getActionBar().setHomeButtonEnabled(true);
+        // Handle Toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitleTextColor(Color.WHITE);
+        toolbar.setSubtitleTextColor(Color.WHITE);
+
+        setSupportActionBar(toolbar);
+
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
 
 		// ActionBarDrawerToggle
 		mDrawerToggle = new ActionBarDrawerToggle(
 			this, /* host Activity */
 			mDrawerLayout, /* DrawerLayout object */
-			R.drawable.ic_drawer, /* nav drawer image to replace 'Up' caret */
+			toolbar,//R.drawable.ic_drawer, /* nav drawer image to replace 'Up' caret */
 			R.string.drawer_open, /* "open drawer" description for accessibility */
 			R.string.drawer_close /* "close drawer" description for accessibility */
 			) {
@@ -95,6 +96,7 @@ public class MainActivity extends Activity {
 			}
 
 		};
+        mDrawerToggle.syncState();
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 		
 		mDesign = 1;
@@ -131,7 +133,6 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		Request.config = PreferenceManager.getDefaultSharedPreferences(this);
 		System.out.println("RESUME");
 		selectItem(mLastCode);
 	}
@@ -207,26 +208,28 @@ public class MainActivity extends Activity {
 		} else if (mSelected.equals("XMPP")) {
 			MenuInflater inflater = getMenuInflater();
 			inflater.inflate(R.menu.main_xmpp, menu);
-	        View v = (View) menu.findItem(R.id.menu_xmpp_switch).getActionView();
-			final Switch sw = ((Switch)v.findViewById(R.id.ac_switch_actionbar));			
-			sw.setChecked(PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getBoolean("xmpp_status", false));
-			sw.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-
-				@Override
-				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-					PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit().putBoolean("xmpp_status", isChecked).commit();
-					if (isChecked) {
-						String password = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("xmpp_password", null);
-						Intent intent = new Intent(MainActivity.this, XMPPService.class);
-						MainActivity.this.startService(intent);
-//						selectChat();
-					} else {
-						Intent intent = new Intent(MainActivity.this, XMPPService.class);
-						MainActivity.this.stopService(intent);
-//						selectChat();
-					}
-				}
-			});
+//	        View v = (View) menu.findItem(R.id.menu_xmpp_switch).getActionView();
+//			final Switch sw = ((Switch)v.findViewById(R.id.ac_switch_actionbar));
+//			sw.setChecked(PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getBoolean("xmpp_status", false));
+//			sw.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+//
+//				@Override
+//				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//					PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit().putBoolean("xmpp_status", isChecked).commit();
+//					if (isChecked) {
+//						String password = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("xmpp_password", null);
+//						Intent intent = new Intent(MainActivity.this, XMPPService.class);
+//						MainActivity.this.startService(intent);
+////						selectChat();
+//					} else {
+//						Intent intent = new Intent(MainActivity.this, XMPPService.class);
+//						MainActivity.this.stopService(intent);
+////						selectChat();
+//					}
+//				}
+//			});
+            Intent intent = new Intent(MainActivity.this, XMPPService.class);
+            MainActivity.this.startService(intent);
 		}
 
 		return menu;
@@ -303,14 +306,14 @@ public class MainActivity extends Activity {
 		Fragment fragment;
 		boolean chat = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("xmpp_status", false);
 //		if(chat){
-			fragment = XMPPRoosterFragment.getInstance();
+		fragment = XMPPRoosterFragment.getInstance();
 //		} else {
 //			fragment = EmptyRoosterFragment.getInstance();
 //		}
 
 		FragmentManager fragmentManager = getFragmentManager();
 		fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, "Rooster").commit();
-		getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+		getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 		invalidateOptionsMenu();
 	}
 
@@ -321,28 +324,29 @@ public class MainActivity extends Activity {
 //		Fragment fragment = ENSFolderFragment.getInstance(1, ENSApi.TYPE_INBOX, mDesign);
 //		FragmentManager fragmentManager = getFragmentManager();
 //		fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, "1_"+ENSApi.TYPE_INBOX).commit();
-		getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+		getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
-		new ENSBroker(MainActivity.this).getFolderList(new Callback<ReturnObject<List<ENSFolderObject>>>() {
-			@Override
-			public void success(final ReturnObject<List<ENSFolderObject>> t, final Response response) {
-				final ENSFolderSpinnerAdapter spinnerAdapter = new ENSFolderSpinnerAdapter(t.getObj(), MainActivity.this);
-				OnNavigationListener listener = new OnNavigationListener() {
+		new ENSBroker(MainActivity.this).getFolderList(new Callback<ReturnObject<ENSFolderObject.ENSFolderObjectContainer>>() {
 
-					@Override
-					public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-						ENSFolderObject folder = spinnerAdapter.getItem(itemPosition);
-						Fragment fragment = ENSFolderFragment.getInstance(folder.getId(), folder.getType(), mDesign);
-						FragmentManager fragmentManager = getFragmentManager();
-						fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, folder.getId()+"_"+folder.getType()).commit();
-						return true;
-					}
-				};
+            @Override
+            public void success(ReturnObject<ENSFolderObject.ENSFolderObjectContainer> t, Response response) {
+                final ENSFolderSpinnerAdapter spinnerAdapter = new ENSFolderSpinnerAdapter(t.getObj().getAll(), MainActivity.this);
+                ActionBar.OnNavigationListener listener = new ActionBar.OnNavigationListener() {
 
-				MainActivity.this.getActionBar().setListNavigationCallbacks(spinnerAdapter, listener);
-			}
+                    @Override
+                    public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+                        ENSFolderObject folder = spinnerAdapter.getItem(itemPosition);
+                        Fragment fragment = ENSFolderFragment.getInstance(folder.getId(), folder.getType(), mDesign);
+                        FragmentManager fragmentManager = getFragmentManager();
+                        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, folder.getId()+"_"+folder.getType()).commit();
+                        return true;
+                    }
+                };
 
-			@Override
+                MainActivity.this.getSupportActionBar().setListNavigationCallbacks(spinnerAdapter, listener);
+            }
+
+            @Override
 			public void failure(final RetrofitError error) {
 
 			}
@@ -357,7 +361,7 @@ public class MainActivity extends Activity {
 		Fragment fragment = RPGListFragment.getInstance();
 		FragmentManager fragmentManager = getFragmentManager();
 		fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, "RPGList").commit();
-		getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+		getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 		invalidateOptionsMenu();
 	}
 
@@ -368,7 +372,7 @@ public class MainActivity extends Activity {
 //		Fragment fragment = GuestbookListFragment.newInstance(Self.getInstance(this).getUserID());
 //		FragmentManager fragmentManager = getFragmentManager();
 //		fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, "GBList").commit();
-//		getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+//		getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 //		invalidateOptionsMenu();
 	}
 
@@ -378,7 +382,7 @@ public class MainActivity extends Activity {
 		Fragment fragment = EventListFragment.getInstance();
 		FragmentManager fragmentManager = getFragmentManager();
 		fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, "EventList").commit();
-		getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+		getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 		invalidateOptionsMenu();
 	}
 	
@@ -389,7 +393,7 @@ public class MainActivity extends Activity {
 		Fragment fragment = HomeObjectFragment.getInstance();
 		FragmentManager fragmentManager = getFragmentManager();
 		fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, "Home").commit();
-		getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+		getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 		invalidateOptionsMenu();
 	}
 	

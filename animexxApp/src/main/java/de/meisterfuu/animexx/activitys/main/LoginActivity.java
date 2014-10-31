@@ -4,18 +4,16 @@ package de.meisterfuu.animexx.activitys.main;
 
 import de.meisterfuu.animexx.Constants;
 import de.meisterfuu.animexx.R;
-import de.meisterfuu.animexx.api.APICallback;
 import de.meisterfuu.animexx.api.Self;
 import de.meisterfuu.animexx.api.broker.GCMBroker;
 import de.meisterfuu.animexx.api.web.ReturnObject;
 import de.meisterfuu.animexx.objects.SingleValueObjects;
-import de.meisterfuu.animexx.utils.APIException;
-import de.meisterfuu.animexx.utils.Request;
 import de.meisterfuu.animexx.xmpp.XMPPService;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.accounts.Account;
@@ -32,12 +30,13 @@ import android.widget.ImageView;
 public class LoginActivity extends Activity implements OnClickListener {
 	
 	GCMBroker gcm;
-	
-	@Override
+    SharedPreferences config;
+
+    @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		gcm = new GCMBroker(this);
-		Request.config = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
+        config = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
 		if(init()) return;
 		setContentView(R.layout.activity_login);
 		
@@ -72,7 +71,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 			boolean chat = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("xmpp_status", false);
 			if(chat){
 				Intent intent = new Intent(this, XMPPService.class);
-				this.startService(intent);
+				//this.startService(intent);
 			} else {
 				Intent intent = new Intent(this, XMPPService.class);
 				this.stopService(intent);
@@ -98,28 +97,32 @@ public class LoginActivity extends Activity implements OnClickListener {
 	
 	private void initGCM(){
 		//Check for gcm id
+
 		if(gcm.getRegistrationId(this) == null){
 			Log.e("Animexx Init", "GCM REG ID IS NULL");
 			//No? Get one and activate.
-			gcm.registerGCM(new APICallback() {
-				
-				@Override
-				public void onCallback(APIException pError, Object pObject) {
-				
-					//Activate Events after registration					
-					gcm.activateGCMEvents(new Callback<ReturnObject<SingleValueObjects.Empty>>() {
-						@Override
-						public void success(final ReturnObject<SingleValueObjects.Empty> t, final Response response) {
+			gcm.registerGCM(new Callback() {
+                @Override
+                public void success(Object o, Response response) {
+                    //Activate Events after registration
+                    gcm.activateGCMEvents(new Callback<ReturnObject<SingleValueObjects.Empty>>() {
+                        @Override
+                        public void success(final ReturnObject<SingleValueObjects.Empty> t, final Response response) {
 
-						}
+                        }
 
-						@Override
-						public void failure(final RetrofitError error) {
+                        @Override
+                        public void failure(final RetrofitError error) {
 
-						}
-					});
-				}
-			});
+                        }
+                    });
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+
+                }
+            });
 		} 
 	}
 

@@ -2,13 +2,16 @@ package de.meisterfuu.animexx.xmpp;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import de.meisterfuu.animexx.activitys.main.MainActivity;
 import de.meisterfuu.animexx.adapter.XMPPRoosterAdapter;
-import de.meisterfuu.animexx.api.APICallback;
 import de.meisterfuu.animexx.api.xmpp.XMPPApi;
 import de.meisterfuu.animexx.objects.xmpp.XMPPRoosterObject;
-import de.meisterfuu.animexx.utils.APIException;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+
 import android.os.Bundle;
 import android.app.ListFragment;
 import android.app.PendingIntent;
@@ -85,18 +88,21 @@ public class XMPPRoosterFragment extends ListFragment {
 
 	
 	private void getRooster(){
-		mApi.getRooster(new APICallback() {
-			
-			@Override
-			public void onCallback(APIException pError, Object pObject) {
-				final ArrayList<XMPPRoosterObject> temp = (ArrayList<XMPPRoosterObject>) pObject;
-				Collections.sort(temp);
-				list.clear();
-				list.addAll(temp);				
-				adapter.notifyDataSetChanged();
-			}
-			
-		}, false);
+		mApi.getRooster(new Callback<List<XMPPRoosterObject>>() {
+            @Override
+            public void success(List<XMPPRoosterObject> xmppRoosterObjects, Response response) {
+                final List<XMPPRoosterObject> temp = xmppRoosterObjects;
+                Collections.sort(temp);
+                list.clear();
+                list.addAll(temp);
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        }, false);
 		
 
 	}

@@ -145,7 +145,7 @@ public class RPGPostListAdapter extends BaseAdapter {
 		return rowView;
 	}
 
-	public void addAll(ArrayList<RPGPostObject> list) {
+	public void addAll(List<RPGPostObject> list) {
 		mItems.addAll(list);
 		this.notifyDataSetChanged();		
 	}
