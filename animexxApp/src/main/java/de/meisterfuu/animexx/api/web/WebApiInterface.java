@@ -118,11 +118,11 @@ public interface WebApiInterface {
 
 	@POST("/mitglieder/gaestebuch_info/?get_user_avatar=true")
 	@FormUrlEncoded
-	void getGBInfo(@Field("user_id") long pUserId, Callback<ReturnObject<List<GBInfoObject>>> pCallback);
+	void getGBInfo(@Field("user_id") long pUserId, Callback<ReturnObject<GBInfoObject>> pCallback);
 
 	@POST("/mitglieder/gaestebuch_info/?get_user_avatar=true")
 	@FormUrlEncoded
-	ReturnObject<List<GBInfoObject>> getGBInfo(@Field("user_id") long pUserId);
+	ReturnObject<GBInfoObject> getGBInfo(@Field("user_id") long pUserId);
 
 	@POST("/mitglieder/gaestebuch_lesen/?text_format=both&anzahl=30")
 	@FormUrlEncoded

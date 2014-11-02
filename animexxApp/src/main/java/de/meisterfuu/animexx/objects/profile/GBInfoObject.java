@@ -27,7 +27,7 @@ public class GBInfoObject {
 	@SerializedName("avatare")
 	ArrayList<GBAvatar> avatars;
 	
-	static class GBAvatar{
+	static public class GBAvatar{
 //		 - id / int
 		@SerializedName("id")
 		long id;
@@ -43,8 +43,39 @@ public class GBInfoObject {
 //		 - url / string / nur wenige Minuten gültig
 		@SerializedName("url")
 		String url;
-		
-	}
+
+        public long getId() {
+            return id;
+        }
+
+        public void setId(long id) {
+            this.id = id;
+        }
+
+        public int getWidth() {
+            return width;
+        }
+
+        public void setWidth(int width) {
+            this.width = width;
+        }
+
+        public int getHeight() {
+            return height;
+        }
+
+        public void setHeight(int height) {
+            this.height = height;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+    }
 
 	public boolean isReadable() {
 		return readable;

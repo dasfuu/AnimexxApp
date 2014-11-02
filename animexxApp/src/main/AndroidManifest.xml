@@ -39,6 +39,8 @@
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
+    <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -49,7 +51,7 @@
             android:value="@integer/google_play_services_version" />
 
         <service
-            android:name=".services.CalSyncService"
+            android:name="de.meisterfuu.animexx.services.CalSyncService"
             android:enabled="true"
             android:exported="true" >
             <intent-filter>
@@ -61,7 +63,7 @@
                 android:resource="@xml/calsyncadapter" />
         </service>
         <service
-            android:name=".services.AccountService"
+            android:name="de.meisterfuu.animexx.services.AccountService"
             android:enabled="true"
             android:exported="true" >
             <intent-filter>
@@ -74,12 +76,11 @@
         </service>
 
         <activity
-            android:name=".activitys.main.RequestTokenActivity"
+            android:name="de.meisterfuu.animexx.activitys.main.RequestTokenActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask" >
             <intent-filter>
-                <data
-                    android:scheme="animexx" />
+                <data android:scheme="animexx" />
 
                 <action android:name="android.intent.action.VIEW" />
 
@@ -88,12 +89,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activitys.main.MainActivity"
+            android:name="de.meisterfuu.animexx.activitys.main.MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop" >
         </activity>
         <activity
-            android:name=".activitys.main.LoginActivity"
+            android:name="de.meisterfuu.animexx.activitys.main.LoginActivity"
             android:label="@string/title_activity_main" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -102,18 +103,18 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activitys.ens.SingleENSActivity"
+            android:name="de.meisterfuu.animexx.activitys.ens.SingleENSActivity"
             android:label="@string/title_activity_single_ens"
-            android:parentActivityName=".activitys.main.MainActivity" >
+            android:parentActivityName="de.meisterfuu.animexx.activitys.main.MainActivity" >
         </activity>
         <activity
-            android:name=".activitys.ens.NewENSActivity"
+            android:name="de.meisterfuu.animexx.activitys.ens.NewENSActivity"
             android:label="@string/title_activity_new_ens" >
         </activity>
 
         <!-- GCM Receiver/Service -->
         <receiver
-            android:name=".receiver.GcmBroadcastReceiver"
+            android:name="de.meisterfuu.animexx.receiver.GcmBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
@@ -122,29 +123,29 @@
             </intent-filter>
         </receiver>
 
-        <service android:name=".services.GcmIntentService" />
+        <service android:name="de.meisterfuu.animexx.services.GcmIntentService" />
 
         <activity
-            android:name=".activitys.main.SettingsActivity"
+            android:name="de.meisterfuu.animexx.activitys.main.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:theme="@style/AnimexxTheme"
-            android:parentActivityName=".activitys.main.MainActivity" >
+            android:parentActivityName="de.meisterfuu.animexx.activitys.main.MainActivity"
+            android:theme="@style/AnimexxTheme" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.meisterfuu.animexx.activitys.main.MainActivity" />
         </activity>
         <activity
-            android:name=".activitys.rpg.RPGDetailActivity"
+            android:name="de.meisterfuu.animexx.activitys.rpg.RPGDetailActivity"
             android:label="@string/title_activity_rpgdetail"
-            android:parentActivityName=".activitys.main.MainActivity" >
+            android:parentActivityName="de.meisterfuu.animexx.activitys.main.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.meisterfuu.animexx.activitys.main.MainActivity" />
         </activity>
         <activity
-            android:name=".activitys.rpg.RPGPostListActivity"
+            android:name="de.meisterfuu.animexx.activitys.rpg.RPGPostListActivity"
             android:label="@string/title_activity_rpgpost_list"
-            android:parentActivityName=".activitys.main.MainActivity"
+            android:parentActivityName="de.meisterfuu.animexx.activitys.main.MainActivity"
             android:theme="@style/AnimexxThemeActionBarOverlay"
             android:windowSoftInputMode="stateHidden" >
             <meta-data
@@ -152,35 +153,35 @@
                 android:value="de.meisterfuu.animexx.activitys.main.MainActivity" />
         </activity>
         <activity
-            android:name=".activitys.events.SingleEventActivity"
+            android:name="de.meisterfuu.animexx.activitys.events.SingleEventActivity"
             android:label="@string/title_activity_single_event"
-            android:parentActivityName=".activitys.main.MainActivity" >
+            android:parentActivityName="de.meisterfuu.animexx.activitys.main.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.meisterfuu.animexx.activitys.main.MainActivity" />
         </activity>
         <activity
-            android:name=".xmpp.XMPPChatActivity"
+            android:name="de.meisterfuu.animexx.xmpp.XMPPChatActivity"
             android:label="@string/title_activity_xmpptest"
-            android:parentActivityName=".activitys.main.MainActivity" >
+            android:parentActivityName="de.meisterfuu.animexx.activitys.main.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.meisterfuu.animexx.activitys.main.MainActivity" />
         </activity>
 
         <service
-            android:name=".xmpp.XMPPService"
+            android:name="de.meisterfuu.animexx.xmpp.XMPPService"
             android:enabled="true"
             android:exported="false"
             android:process=":AnimexxChat" >
         </service>
         <service
-            android:name=".services.ENSQueueService"
+            android:name="de.meisterfuu.animexx.services.ENSQueueService"
             android:exported="false" >
         </service>
 
         <activity
-            android:name=".AnimexxDebugActivity"
+            android:name="de.meisterfuu.animexx.AnimexxDebugActivity"
             android:label="@string/title_activity_animexx_debug" >
 
             <!--
@@ -193,14 +194,14 @@
         </activity>
 
         <receiver
-            android:name=".xmpp.ConnectionManager$AlarmReceiver"
+            android:name="de.meisterfuu.animexx.xmpp.ConnectionManager$AlarmReceiver"
             android:process=":AnimexxChat" >
         </receiver>
-        <receiver android:name=".notification.ENSCollapseNotification$ENSNotificationDismissedReceiver" >
+        <receiver android:name="de.meisterfuu.animexx.notification.ENSCollapseNotification$ENSNotificationDismissedReceiver" >
         </receiver>
 
         <activity
-            android:name=".activitys.events.SingleEventDescriptionActivity"
+            android:name="de.meisterfuu.animexx.activitys.events.SingleEventDescriptionActivity"
             android:label="@string/title_activity_single_event_description" >
         </activity>
 
@@ -209,40 +210,48 @@
             android:value="@string/GoogleMapsApiKey" />
 
         <activity
-            android:name=".activitys.share.ImageUploadActivity"
+            android:name="de.meisterfuu.animexx.activitys.share.ImageUploadActivity"
             android:label="@string/title_activity_image_upload" >
         </activity>
         <activity
-            android:name=".activitys.share.LocateMeActivity"
+            android:name="de.meisterfuu.animexx.activitys.share.LocateMeActivity"
             android:label="@string/title_activity_locate_me" >
         </activity>
         <activity
-            android:name=".activitys.profiles.ProfileActivity"
+            android:name="de.meisterfuu.animexx.activitys.profiles.ProfileActivity"
             android:label="@string/title_activity_profile"
-            android:parentActivityName=".activitys.main.MainActivity" >
+            android:parentActivityName="de.meisterfuu.animexx.activitys.main.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.meisterfuu.animexx.activitys.main.MainActivity" />
         </activity>
         <activity
-            android:name=".activitys.profiles.GuestbookPostActivity"
+            android:name="de.meisterfuu.animexx.activitys.profiles.GuestbookPostActivity"
             android:label="@string/title_activity_guestbook_post" >
         </activity>
         <activity
-            android:name=".activitys.profiles.ProfilePageTableActivity"
+            android:name="de.meisterfuu.animexx.activitys.profiles.ProfilePageTableActivity"
             android:label="@string/title_activity_profile_page_table" >
         </activity>
         <activity
-            android:name=".activitys.profiles.ProfilePageEventActivity"
+            android:name="de.meisterfuu.animexx.activitys.profiles.ProfilePageEventActivity"
             android:label="@string/title_activity_profile_page_event" >
         </activity>
         <activity
-            android:name=".activitys.profiles.ProfilePageFanActivity"
+            android:name="de.meisterfuu.animexx.activitys.profiles.ProfilePageFanActivity"
             android:label="@string/title_activity_profile_page_fan" >
         </activity>
         <activity
-            android:name=".activitys.profiles.ProfilePageHTMLActivity"
+            android:name="de.meisterfuu.animexx.activitys.profiles.ProfilePageHTMLActivity"
             android:label="@string/title_activity_profile_page_html" >
+        </activity>
+        <activity
+            android:name="de.meisterfuu.animexx.activitys.home.NewMicroblogActivity"
+            android:label="@string/title_activity_new_microblog"
+            android:parentActivityName="de.meisterfuu.animexx.activitys.main.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.meisterfuu.animexx.activitys.main.MainActivity" />
         </activity>
     </application>
 

@@ -3,13 +3,12 @@
     android:layout_width="match_parent"
     tools:context=".XMPPChatActivity"
     android:layout_height="match_parent">
-    <android.support.v7.widget.Toolbar
+    <include
         android:id="@+id/toolbar"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:minHeight="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        android:transitionName="actionBar"/>
+        layout="@layout/toolbar" />
+
 
 
     <LinearLayout

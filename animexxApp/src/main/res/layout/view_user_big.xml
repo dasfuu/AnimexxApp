@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+        <de.meisterfuu.animexx.utils.views.RoundedImageView
+            android:id="@+id/view_user_big_image"
+            android:layout_width="55dp"
+            android:layout_height="50dp"
+            android:adjustViewBounds="true"
+            android:baselineAlignBottom="false"
+            android:contentDescription="Avatar"
+            android:cropToPadding="false"
+            android:paddingRight="5dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_contact_picture"
+            app:corner_radius="200dp"
+            app:is_oval="true" />
+
+        <TextView
+            android:id="@+id/view_user_big_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="Test"
+            android:textSize="16sp" />
+
+</LinearLayout>

@@ -29,7 +29,7 @@ public class GBBroker extends BasicWebBroker {
 		getWebApi().getApi().getGBEntries(pUserID,pPage, pCallback);
 	}
 
-	public void getGBInfo(final long pUserID, final Callback<ReturnObject<List<GBInfoObject>>> pCallback) {
+	public void getGBInfo(final long pUserID, final Callback<ReturnObject<GBInfoObject>> pCallback) {
 		getWebApi().getApi().getGBInfo(pUserID, pCallback);
 	}
 

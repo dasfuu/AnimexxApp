@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+tools:context="de.meisterfuu.animexx.activitys.home.NewMicroblogActivity"
+android:layout_width="match_parent"
+android:layout_height="match_parent">
+
+<include
+    android:id="@+id/toolbar"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    layout="@layout/toolbar" />
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_below="@+id/toolbar">
+
+    <LinearLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <EditText
+            android:id="@+id/activity_new_microblog_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:ems="10"
+            android:hint="Neuer Microblog...."
+            android:inputType="textMultiLine"
+            android:gravity="top" />
+
+    </LinearLayout>
+
+</LinearLayout>
+</RelativeLayout>

@@ -17,6 +17,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
+
 
 public class ENSFolderAdapter extends BaseAdapter {
 	
@@ -190,12 +193,11 @@ public class ENSFolderAdapter extends BaseAdapter {
 		if(ENS.getType() == 2){
 			
 		}
-		
+
 
 		//holder.Avatar.getDrawable().set//.setColorFilter(mContext.getResources().getColor(R.color.animexx_blue), PorterDuff.Mode. );
-		
 		//Avatar
-		if(ImageLoaderProfile.exists(new ImageSaveObject("", target.getId()+""), mContext)){
+        if(ImageLoaderProfile.exists(new ImageSaveObject("", target.getId()+""), mContext)){
 			holder.Avatar.setVisibility(View.VISIBLE);
 			ImageLoader.download(new ImageSaveObject("", target.getId()+""), holder.Avatar);			
 		} else {

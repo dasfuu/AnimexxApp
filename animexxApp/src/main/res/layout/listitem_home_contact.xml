@@ -19,9 +19,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:cropToPadding="true"
-            android:padding="8dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="0dp"
             android:scaleType="centerCrop"
             android:src="@drawable/test1" />
+
+        <de.meisterfuu.animexx.utils.views.UserViewBig
+            android:id="@+id/home_list_item_author"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="3dp"/>
 
         <TextView
             android:id="@+id/home_list_item_title"
@@ -32,22 +43,62 @@
             android:text="@+id/label"
             android:textSize="16sp" />
 
+
+
+        <TextView
+            android:id="@+id/home_list_item_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="8dp"
+            android:paddingTop="0dp"
+            android:paddingBottom="0dp"
+            android:text="@string/rpg_detail"
+            android:textColor="@color/grey_light"
+            android:textSize="14sp" />
+
+
+
         <View
             android:id="@+id/view1"
             android:layout_width="wrap_content"
             android:layout_height="1dp"
             android:background="@color/stroke" />
 
-        <TextView
-            android:id="@+id/home_list_item_detail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:clickable="true"
-            android:text="@string/rpg_detail"
-            android:background="@android:drawable/list_selector_background"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@color/animexx_blue" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <TextView
+                android:id="@+id/home_list_item_button1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:text="@string/rpg_detail"
+                android:background="@android:drawable/list_selector_background"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/animexx_blue" />
+            <View
+                android:id="@+id/view2"
+                android:layout_width="0dp"
+                android:layout_margin="5dp"
+                android:layout_height="match_parent"
+                android:background="@color/stroke" />
+            <TextView
+                android:id="@+id/home_list_item_button2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:gravity="right"
+                android:text="@string/rpg_detail"
+                android:background="@android:drawable/list_selector_background"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/animexx_blue" />
+        </LinearLayout>
 
     </LinearLayout>
 

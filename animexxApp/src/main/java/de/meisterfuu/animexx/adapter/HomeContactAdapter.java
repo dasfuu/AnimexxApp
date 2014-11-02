@@ -7,7 +7,9 @@ import com.squareup.picasso.Picasso;
 
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.objects.home.ContactHomeObject;
+import de.meisterfuu.animexx.utils.Helper;
 import de.meisterfuu.animexx.utils.imageloader.ImageDownloaderCustom;
+import de.meisterfuu.animexx.utils.views.UserViewBig;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -20,7 +22,7 @@ import android.widget.TextView;
 
 
 public class HomeContactAdapter extends BaseAdapter {
-	
+
 	List<ContactHomeObject> mItems;
 	Activity mContext;
 	ImageDownloaderCustom ImageLoader = new ImageDownloaderCustom("home_contact");
@@ -32,9 +34,6 @@ public class HomeContactAdapter extends BaseAdapter {
 		mPicasso = Picasso.with(mContext);
 		mPicasso.setIndicatorsEnabled(false);
 	}
-	
-	boolean mLoading;
-
 	
 	@Override
 	public void notifyDataSetChanged() {
@@ -77,8 +76,9 @@ public class HomeContactAdapter extends BaseAdapter {
 	}
 
 	static class ViewHolder {
-		public TextView Title, Detail;
+		public TextView Title, btLeft, btRight, Date;
 		public ImageView Image;
+        public UserViewBig User;
 	}
 	
 	
@@ -92,8 +92,11 @@ public class HomeContactAdapter extends BaseAdapter {
 			rowView = inflater.inflate(R.layout.listitem_home_contact, null);
 			ViewHolder viewHolder = new ViewHolder();
 			viewHolder.Title = (TextView) rowView.findViewById(R.id.home_list_item_title);
-			viewHolder.Detail = (TextView) rowView.findViewById(R.id.home_list_item_detail);
+            viewHolder.Date = (TextView) rowView.findViewById(R.id.home_list_item_date);
+			viewHolder.btLeft = (TextView) rowView.findViewById(R.id.home_list_item_button1);
+            viewHolder.btRight = (TextView) rowView.findViewById(R.id.home_list_item_button2);
 			viewHolder.Image = (ImageView) rowView.findViewById(R.id.home_list_item_image);
+            viewHolder.User = (UserViewBig) rowView.findViewById(R.id.home_list_item_author);
 			rowView.setTag(viewHolder);
 		}
 
@@ -104,19 +107,34 @@ public class HomeContactAdapter extends BaseAdapter {
 		
 		//Text
 		holder.Title.setText(obj.toString());
-		
-		if(obj.getBigImageURL() != null && !obj.getBigImageURL().equals("null")){
+        holder.Date.setText(Helper.TimestampToString(obj.getServerTS()*1000, false));
+
+
+        holder.Image.setVisibility(View.GONE);
+
+		if(obj.getBigImageURL() != null){
+            holder.Image.setVisibility(View.VISIBLE);
+            mPicasso.load(obj.getBigImageURL()).steadyKey("home_contact_"+obj.getItemID()).error(R.drawable.test1).into(holder.Image);
+        }
+
+        holder.User.setVisibility(View.GONE);
+
+        if(obj.getVon() != null){
+            holder.User.setVisibility(View.VISIBLE);
+            holder.User.setUser(obj.getVon());
+        }
+
 //			System.out.println(obj.getBigImageURL());
-			holder.Image.setVisibility(View.VISIBLE);
-			holder.Image.getLayoutParams().height = obj.getBigImageHeight();
+
+//			holder.Image.getLayoutParams().height = obj.getBigImageHeight();
 //			ImageLoader.download(new ImageSaveObject(obj.getBigImageURL(), obj.getItemID()), holder.Image);
 
-			mPicasso.load(obj.getBigImageURL()).steadyKey("home_contact"+obj.getItemID()).into(holder.Image);
-		} else {
-			holder.Image.setVisibility(View.GONE);
-		}
 
-		holder.Detail.setOnClickListener(new OnClickListener() {
+//		} else {
+//
+//		}
+
+		holder.btLeft.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -132,7 +150,13 @@ public class HomeContactAdapter extends BaseAdapter {
 		this.notifyDataSetChanged();		
 	}
 
-	@Override
+    public void addAllBeginning(ArrayList<ContactHomeObject> list) {
+        mItems.addAll(0,list);
+        this.notifyDataSetChanged();
+    }
+
+
+    @Override
 	public long getItemId(int position) {
 		return position;
 	}

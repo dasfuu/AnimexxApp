@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 
+import com.melnykov.fab.FloatingActionButton;
 import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 
 import de.meisterfuu.animexx.R;
@@ -31,7 +32,7 @@ import retrofit.client.Response;
  * Large screen devices (such as tablets) are supported by replacing the ListView with a GridView.
  * <p />
  */
-public class HomeObjectFragment extends Fragment implements AbsListView.OnItemClickListener {
+public class HomeObjectFragment extends Fragment implements AbsListView.OnItemClickListener, View.OnClickListener {
 
 
 	/**
@@ -50,7 +51,10 @@ public class HomeObjectFragment extends Fragment implements AbsListView.OnItemCl
 	private ArrayList<ContactHomeObject> mList;
 
 
-	public static Fragment getInstance() {
+    private FloatingActionButton mFloatButton;
+    private boolean paused;
+
+    public static Fragment getInstance() {
 		Fragment fragment = new HomeObjectFragment();
 		return fragment;
 	}
@@ -78,9 +82,14 @@ public class HomeObjectFragment extends Fragment implements AbsListView.OnItemCl
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_homeobject, container, false);
+		View view = inflater.inflate(R.layout.fragment_homeobject_list, container, false);
 		mListView = (AbsListView) view.findViewById(android.R.id.list);
+        mFloatButton = (FloatingActionButton) view.findViewById(R.id.home_float_new);
 		mAPI = new HomeBroker(this.getActivity());
+
+        mFloatButton.setOnClickListener(this);
+        mFloatButton.attachToListView(mListView);
+
 		init();
 		
 		return view;
@@ -126,6 +135,11 @@ public class HomeObjectFragment extends Fragment implements AbsListView.OnItemCl
 //		init();
 		
 		super.onResume();
+
+        if(paused){
+            paused = false;
+            loadNew();
+        }
 	}
 	
 	@Override
@@ -144,9 +158,44 @@ public class HomeObjectFragment extends Fragment implements AbsListView.OnItemCl
 		mListView.setAdapter(swingAdapter);
 //		mListView.setDivider(null);
 		mListView.setPadding(15, 0, 15, 0);
+
+
+
 		loadEntries();		
 	}
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        paused = true;
+    }
+
+    private void loadNew(){
+        mAPI.getContactWidgetList(new Callback<ReturnObject<List<ContactHomeObject>>>() {
+            @Override
+            public void success(ReturnObject<List<ContactHomeObject>> listReturnObject, Response response) {
+                List<ContactHomeObject> list = listReturnObject.getObj();
+                ArrayList<ContactHomeObject> list_ = new ArrayList<ContactHomeObject>();
+                ContactHomeObject start = mAdapter.getItem(0);
+                for(ContactHomeObject obj: list){
+                    if(obj.isMultiItem() == false){
+                        if(start.getServerTS() < obj.getServerTS())list_.add(obj);
+                    } else {
+                        for(ContactHomeObject obj_: obj.getChildItems()){
+                            if(start.getServerTS() < obj.getServerTS())list_.add(obj_);
+                        }
+                    }
+                }
+                Collections.sort(list_);
+                mAdapter.addAllBeginning(list_);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
+    }
 	
 	private void loadEntries(){
 				
@@ -176,4 +225,8 @@ public class HomeObjectFragment extends Fragment implements AbsListView.OnItemCl
 
 	}
 
+    @Override
+    public void onClick(View v) {
+        NewMicroblogActivity.getInstance(this.getActivity());
+    }
 }

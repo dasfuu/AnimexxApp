@@ -6,7 +6,6 @@ import android.preference.PreferenceManager;
 
 import com.google.gson.annotations.SerializedName;
 
-import oauth.signpost.OAuth;
 
 public class AccessToken extends BaseResponse {
 

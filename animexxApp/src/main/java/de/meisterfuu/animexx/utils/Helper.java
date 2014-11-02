@@ -12,8 +12,6 @@ import de.meisterfuu.animexx.activitys.main.LoginActivity;
 import de.meisterfuu.animexx.api.Self;
 import de.meisterfuu.animexx.api.broker.ENSBroker;
 
-import oauth.signpost.OAuth;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -213,34 +211,5 @@ public class Helper {
 		toast.show();
 	}
 
-
-	public static void initActivity(Activity a) {
-		SharedPreferences config = PreferenceManager.getDefaultSharedPreferences(a);
-		String token = config.getString(OAuth.OAUTH_TOKEN, null);
-		String secret = config.getString(OAuth.OAUTH_TOKEN_SECRET, null);
-		
-		if(( Calendar.getInstance().get( Calendar.MONTH ) == Calendar.DECEMBER) &&  Calendar.getInstance().get( Calendar.DAY_OF_MONTH )  >= 24){
-			//a.setTheme(R.style.AnimexxChristmasStyle);
-		} else {
-			a.setTheme(R.style.AnimexxTheme);		
-		}
-
-		if (token != null && secret != null)
-			return;
-		else
-			a.startActivity(new Intent(a, LoginActivity.class));
-		a.finish();
-	}
-
-
-	public static boolean isLoggedIn(Context c) {
-		SharedPreferences config = PreferenceManager.getDefaultSharedPreferences(c);
-		String token = config.getString(OAuth.OAUTH_TOKEN, null);
-		String secret = config.getString(OAuth.OAUTH_TOKEN_SECRET, null);
-		if (token != null && secret != null)
-			return true;
-		else
-			return false;
-	}
 
 }

@@ -6,12 +6,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.util.List;
 
 import de.meisterfuu.animexx.R;
+import de.meisterfuu.animexx.activitys.AnimexxBaseActivityAB;
+import de.meisterfuu.animexx.adapter.GBAvatarSpinnerAdapter;
 import de.meisterfuu.animexx.api.broker.GBBroker;
 import de.meisterfuu.animexx.api.web.ReturnObject;
 import de.meisterfuu.animexx.objects.profile.GBDraftObject;
@@ -21,7 +26,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class GuestbookPostActivity extends Activity implements Callback<ReturnObject<List<GBInfoObject>>> {
+public class GuestbookPostActivity extends AnimexxBaseActivityAB implements Callback<ReturnObject<GBInfoObject>>, AdapterView.OnItemSelectedListener {
 
 
 	public static void getInstance(Context pContext, long pID){
@@ -35,10 +40,11 @@ public class GuestbookPostActivity extends Activity implements Callback<ReturnOb
 
 	EditText mText;
 	Spinner mAvatarSpinner;
+    GBAvatarSpinnerAdapter mAdapter;
 
 	private GBBroker mApi;
 	private long mUserID;
-	private int mAvatarID;
+	private long mAvatarID;
 
 
 	@Override
@@ -49,14 +55,14 @@ public class GuestbookPostActivity extends Activity implements Callback<ReturnOb
 		mAvatarID = -1;
 
 
-
 		mText = (EditText) this.findViewById(R.id.activity_gbpost_new_text);
 		mAvatarSpinner = (Spinner) this.findViewById(R.id.activity_gbpost_new_avatar);
-
+        mAvatarSpinner.setOnItemSelectedListener(this);
     }
 
 	@Override
 	public void onResume() {
+        super.onResume();
 		Bundle extras = this.getIntent().getExtras();
 		mUserID = extras.getLong("id");
 
@@ -66,8 +72,9 @@ public class GuestbookPostActivity extends Activity implements Callback<ReturnOb
 
 
 	@Override
-	public void success(final ReturnObject<List<GBInfoObject>> t, final Response response) {
-
+	public void success(final ReturnObject<GBInfoObject> t, final Response response) {
+        mAdapter = new GBAvatarSpinnerAdapter(t.getObj().getAvatars(), this);
+        mAvatarSpinner.setAdapter(mAdapter);
 	}
 
 	@Override
@@ -105,8 +112,26 @@ public class GuestbookPostActivity extends Activity implements Callback<ReturnOb
 		draft.setRecipient(user);
 		draft.setAvatar(mAvatarID);
 
+        mApi.postGBEntry(draft, new Callback<ReturnObject<Boolean>>() {
+            @Override
+            public void success(ReturnObject<Boolean> booleanReturnObject, Response response) {
+                   finish();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Toast.makeText(GuestbookPostActivity.this, "Eintrag konnte nicht gesendet werden.", Toast.LENGTH_SHORT).show();
+            }
+        });
 	}
 
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        mAvatarID = mAdapter.getItem(position).getId();
+    }
 
-
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        mAvatarID = -1;
+    }
 }

@@ -17,7 +17,7 @@ public class GBDraftObject {
 
 //	- avatar_id: int / optional / die ID des zu verwendenden Avatars
 //	@DatabaseField
-	private int avatar;
+	private long avatar;
 
 	public GBDraftObject() {
 		avatar = -1;
@@ -39,11 +39,11 @@ public class GBDraftObject {
 		text = pText;
 	}
 
-	public int getAvatar() {
+	public long getAvatar() {
 		return avatar;
 	}
 
-	public void setAvatar(final int pAvatar) {
+	public void setAvatar(final long pAvatar) {
 		avatar = pAvatar;
 	}
 }
