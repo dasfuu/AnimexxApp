@@ -51,12 +51,14 @@ public class GCMBroker extends BasicWebBroker {
 	 * @param pCallback
 	 */
 	public void activateGCMEvents(final Callback<ReturnObject<SingleValueObjects.Empty>> pCallback){
+        getWebApi().refresh(this.getContext());
 		getWebApi().getApi().setGCMEvents(EventCodes, pCallback);
 	}
 	
 
 	
 	public void registerGCM(final Callback pCallback){
+        getWebApi().refresh(this.getContext());
 		final Handler hand = new Handler();	
 		final Thread t = new Thread(new Runnable() {
 

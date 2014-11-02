@@ -22,19 +22,17 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.app.ActionBar;
-import android.app.ListActivity;
-import android.app.ActionBar.OnNavigationListener;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -81,8 +79,6 @@ public class RPGPostListActivity extends AnimexxBaseActivityAB implements PanelS
 		
 		mSlidingLayout.setPanelSlideListener(this);
 		mAPI = new RPGBroker(this);
-		this.getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-		RPGPostListActivity.this.getActionBar().setDisplayHomeAsUpEnabled(true);
 		init();
 	}
 
@@ -139,9 +135,9 @@ public class RPGPostListActivity extends AnimexxBaseActivityAB implements PanelS
             @Override
             public void success(ReturnObject<RPGObject> rpgObjectReturnObject, Response response) {
                 mRPG = rpgObjectReturnObject.getObj();
-                RPGPostListActivity.this.getActionBar().setTitle(mRPG.getName());
+                setTitle(mRPG.getName());
                 final RPGSpinnerAdapter spinnerAdapter = new RPGSpinnerAdapter(mRPG.getPlayer(), mRPGID, RPGPostListActivity.this);
-                OnNavigationListener listener = new OnNavigationListener() {
+                ActionBar.OnNavigationListener listener = new ActionBar.OnNavigationListener() {
 
                     @Override
                     public boolean onNavigationItemSelected(int itemPosition, long itemId) {
@@ -152,7 +148,7 @@ public class RPGPostListActivity extends AnimexxBaseActivityAB implements PanelS
 
                 };
 
-                RPGPostListActivity.this.getActionBar().setListNavigationCallbacks(spinnerAdapter, listener);
+                RPGPostListActivity.this.getSupportActionBar().setListNavigationCallbacks(spinnerAdapter, listener);
 
                 loadPosts();
             }
@@ -216,17 +212,17 @@ public class RPGPostListActivity extends AnimexxBaseActivityAB implements PanelS
 
 	@Override
 	public void onPanelCollapsed(View panel) {
-		mToggleLabel.setText("Zur�ck zum Post");
-		this.getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-		RPGPostListActivity.this.getActionBar().setDisplayShowTitleEnabled(true);
+		mToggleLabel.setText("Zurück zum Post");
+		this.getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+		RPGPostListActivity.this.getSupportActionBar().setDisplayShowTitleEnabled(true);
 		invalidateOptionsMenu();
 	}
 
 	@Override
 	public void onPanelExpanded(View panel) {
-		mToggleLabel.setText("Zur�ck zum RPG");
-		this.getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-		RPGPostListActivity.this.getActionBar().setDisplayShowTitleEnabled(false);
+		mToggleLabel.setText("Zurück zum RPG");
+		this.getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+		RPGPostListActivity.this.getSupportActionBar().setDisplayShowTitleEnabled(false);
 		invalidateOptionsMenu();
 	}
 	
@@ -241,8 +237,20 @@ public class RPGPostListActivity extends AnimexxBaseActivityAB implements PanelS
 			}
 		}
 	}
+
+    private void hideKeyboard() {
+        InputMethodManager inputManager = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        // check if no view has focus:
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            inputManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
+    }
 	
 	public void post() {
+        hideKeyboard();
+
 		final ProgressDialog dialog = new ProgressDialog(this);
 		dialog.setTitle("Sende...");
 		RPGDraftObject draft = new RPGDraftObject();

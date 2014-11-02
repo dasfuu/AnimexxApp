@@ -12,7 +12,7 @@ public class InterceptorSigner implements RequestInterceptor {
 	AccessToken mToken;
 
 	public InterceptorSigner (Context pContext){
-		mToken = AccessToken.getToken(pContext);
+        refresh(pContext);
 	}
 
 	@Override
@@ -21,4 +21,8 @@ public class InterceptorSigner implements RequestInterceptor {
 		request.addHeader("Authorization", mToken.getTokenType() + " " + mToken.getAccessToken());
 		request.addQueryParam("api","3");
 	}
+
+    public void refresh(Context pContext) {
+        mToken = AccessToken.getToken(pContext);
+    }
 }

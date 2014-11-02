@@ -5,16 +5,6 @@
                 android:animateLayoutChanges="true"
                 tools:context=".SingleEventDescriptionActivity" >
 
-
-    <include
-        android:id="@+id/toolbar"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        layout="@layout/toolbar" />
-
-
-
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -28,7 +18,7 @@
         android:layout_below="@+id/toolbar">
 
         <WebView
-            android:id="@+id/activity_profile_page_html_html"
+            android:id="@+id/fragment_profile_page_html_html"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="10dp"

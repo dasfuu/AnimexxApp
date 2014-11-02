@@ -211,9 +211,7 @@ public class ENSFolderAdapter extends BaseAdapter {
 				holder.Avatar.setImageResource(R.drawable.ic_contact_picture);
 			}
 		}
-		
 
-		
 		
 		return rowView;
 	}

@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import de.meisterfuu.animexx.R;
+import de.meisterfuu.animexx.objects.profile.ProfileBoxObject;
 import de.meisterfuu.animexx.objects.profile.ProfileObject;
 import de.meisterfuu.animexx.utils.imageloader.ImageDownloaderCustom;
 import de.meisterfuu.animexx.utils.imageloader.ImageSaveObject;
@@ -58,9 +59,7 @@ public class ProfileFragment extends Fragment {
 	        mUserID = getArguments().getLong(USER_ID);
         }
 
-//	    mApi = new UserApi(this.getActivity());
 	    mImageLoader = new ImageDownloaderCustom("profilbild");
-
     }
 
 
@@ -88,10 +87,16 @@ public class ProfileFragment extends Fragment {
 	public void onResume() {
 		super.onResume();
 		created = true;
+
 		if(mUser != null){
 			onCallback(mUser);
 			mUser = null;
-		}
+		} else {
+            ProfileObject parentProfile = ((ProfileActivity)this.getActivity()).getProfile();
+            if(parentProfile != null) {
+                onCallback(parentProfile);
+            }
+        }
 //		mApi.getProfile(mUserID, this);
 	}
 
@@ -126,7 +131,7 @@ public class ProfileFragment extends Fragment {
 			this.contactFrame.setVisibility(View.VISIBLE);
 		}
 
-		for(ProfileObject.ProfileBoxEntry entry: pObject.getBoxes()){
+		for(ProfileBoxObject entry: pObject.getBoxes()){
 			boxTable.add(new TableDataView.TableDataEntity(entry.getTitle(), R.drawable.ens_flags_forwarded_blue));
 		}
 		if(pObject.getBoxes().isEmpty()){

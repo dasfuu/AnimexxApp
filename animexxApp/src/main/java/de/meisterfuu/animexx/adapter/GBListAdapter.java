@@ -54,7 +54,11 @@ public class GBListAdapter extends BaseAdapter implements Callback<ReturnObject<
 
 	@Override
 	public void success(final ReturnObject<GBListObject> t, final Response response) {
-		mLoading = false;
+        mLoading = false;
+        if(t.getObj() == null){
+            mEnd = true;
+            return;
+        }
 		if(t.getObj().getEntries().size() < 30){
 			mEnd = true;
 		}

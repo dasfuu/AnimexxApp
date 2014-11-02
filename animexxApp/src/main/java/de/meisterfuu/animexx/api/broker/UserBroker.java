@@ -8,6 +8,7 @@ import java.util.List;
 import de.meisterfuu.animexx.api.ApiEvent;
 import de.meisterfuu.animexx.api.EventBus;
 import de.meisterfuu.animexx.api.web.ReturnObject;
+import de.meisterfuu.animexx.objects.profile.ProfileBoxObject;
 import de.meisterfuu.animexx.objects.profile.ProfileObject;
 
 import android.content.Context;
@@ -51,7 +52,8 @@ public class UserBroker extends BasicWebBroker {
 
 
 
-	public void getProfileBox(final String pBoxID, final long pID, final Callback<Object> pCallback) {
+	public void getProfileBox(final String pBoxID, final long pID, final Callback<ReturnObject<ProfileBoxObject>> pCallback) {
+        getWebApi().getApi().getProfileBox(pID,pBoxID,pCallback);
 	}
 
 

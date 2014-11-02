@@ -370,7 +370,7 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 			temp.setStatus(XMPPRoosterObject.STATUS_AWAY);
 		}
 
-		Beta.notifyOnline(temp, mApplicationContext);
+		//Beta.notifyOnline(temp, mApplicationContext);
 
 		mApi.insertSingleRoosterToDB(temp);
 		
@@ -408,7 +408,7 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 			} else if (online && away){
 				temp.setStatus(XMPPRoosterObject.STATUS_AWAY);
 			}
-			Beta.notifyOnline(temp, mApplicationContext);
+			//Beta.notifyOnline(temp, mApplicationContext);
 
 			if(user_list != null)
 			for(UserObject user_obj: user_list){

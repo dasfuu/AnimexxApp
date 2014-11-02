@@ -128,70 +128,8 @@ public class ProfileObject {
 
 //	- boxen: Array / Ein Array bestehend aus Objekten mit folgenden Eigenschaften:
 	@SerializedName("boxen")
-	ArrayList<ProfileBoxEntry> boxes;
+	ArrayList<ProfileBoxObject> boxes;
 
-	public static class ProfileBoxEntry{
-
-//	- "typ": einer der folgenden Typen:
-//			- "sb" = Selbstbeschreibung
-//	        - "eig" = Tabellarische Daten
-//	        - "conventions" = Besuchte Events
-//	        - "fanlisten" = Fanlisten
-
-		@SerializedName("typ")
-		String type;
-
-		public static final String TYPE_BESCHREIBUNG = "sb";
-		public static final String TYPE_EIGENSCHAFTEN = "eig";
-		public static final String TYPE_EVENTS = "conventions";
-		public static final String TYPE_FAVS= "fanlisten";
-
-//	- "id": die ID der Box
-		@SerializedName("id")
-		String id;
-
-//	- "titel"
-		@SerializedName("titel")
-		String title;
-
-//	- "anzahl"
-		@SerializedName("anzahl")
-		String count;
-
-		public String getType() {
-			return type;
-		}
-
-		public void setType(final String pType) {
-			type = pType;
-		}
-
-		public String getTitle() {
-			return title;
-		}
-
-		public void setTitle(final String pTitle) {
-			title = pTitle;
-		}
-
-		public String getCount() {
-			return count;
-		}
-
-		public void setCount(final String pCount) {
-			count = pCount;
-		}
-
-		public String getId() {
-			return id;
-		}
-
-		public void setId(final String pId) {
-			id = pId;
-		}
-	}
-	
-	
 	public long getId() {
 		return id;
 	}
@@ -312,11 +250,11 @@ public class ProfileObject {
 		this.contactData = contactData;
 	}
 
-	public ArrayList<ProfileBoxEntry> getBoxes() {
+	public ArrayList<ProfileBoxObject> getBoxes() {
 		return boxes;
 	}
 
-	public void setBoxes(final ArrayList<ProfileBoxEntry> pBoxes) {
+	public void setBoxes(final ArrayList<ProfileBoxObject> pBoxes) {
 		boxes = pBoxes;
 	}
 }

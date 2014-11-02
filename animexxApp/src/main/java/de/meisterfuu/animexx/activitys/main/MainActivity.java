@@ -134,6 +134,10 @@ public class MainActivity extends ActionBarActivity {
 	protected void onResume() {
 		super.onResume();
 		System.out.println("RESUME");
+        if(PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getBoolean("xmpp_status", false)){
+            Intent intent = new Intent(MainActivity.this, XMPPService.class);
+            MainActivity.this.startService(intent);
+        }
 		selectItem(mLastCode);
 	}
 
@@ -228,8 +232,9 @@ public class MainActivity extends ActionBarActivity {
 //					}
 //				}
 //			});
-            Intent intent = new Intent(MainActivity.this, XMPPService.class);
-            MainActivity.this.startService(intent);
+
+
+
 		}
 
 		return menu;
@@ -304,12 +309,8 @@ public class MainActivity extends ActionBarActivity {
 		mSelected = "XMPP";
 		this.setTitle("Chat");
 		Fragment fragment;
-		boolean chat = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("xmpp_status", false);
-//		if(chat){
+
 		fragment = XMPPRoosterFragment.getInstance();
-//		} else {
-//			fragment = EmptyRoosterFragment.getInstance();
-//		}
 
 		FragmentManager fragmentManager = getFragmentManager();
 		fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, "Rooster").commit();

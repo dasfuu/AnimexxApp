@@ -7,6 +7,7 @@ import java.util.Random;
 
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.activitys.AnimexxBaseActivityAB;
+import de.meisterfuu.animexx.activitys.profiles.ProfileActivity;
 import de.meisterfuu.animexx.api.broker.ENSBroker;
 import de.meisterfuu.animexx.api.web.ReturnObject;
 import de.meisterfuu.animexx.objects.ens.ENSDraftObject;
@@ -138,9 +139,16 @@ public class SingleENSActivity extends AnimexxBaseActivityAB {
 						System.out.println(target.getAvatar().getUrl());
 						ImageLoader.download(image, mAvatar);
 					} else {
-						mAvatar.setVisibility(View.GONE);
+                        mAvatar.setImageResource(R.drawable.ic_contact_picture);
 					}
 				}
+
+                mAvatar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ProfileActivity.getInstance(SingleENSActivity.this, target.getId());
+                    }
+                });
 
 				mMessage.setText(Html.fromHtml(getFullMessage()));
 

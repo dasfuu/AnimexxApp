@@ -48,6 +48,11 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 	private boolean init() {
 		boolean result = false;
+
+        if(config.getBoolean("first", true)){
+            config.edit().clear().commit();
+            config.edit().putBoolean("first", false).commit();
+        }
 		
 		//Logged in?
 		if(Self.getInstance(this).isLoggedIn()){

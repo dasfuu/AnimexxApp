@@ -19,6 +19,7 @@ import de.meisterfuu.animexx.objects.home.HomeCommentObject;
 import de.meisterfuu.animexx.objects.photos.PhotoSeriesObject;
 import de.meisterfuu.animexx.objects.profile.GBInfoObject;
 import de.meisterfuu.animexx.objects.profile.GBListObject;
+import de.meisterfuu.animexx.objects.profile.ProfileBoxObject;
 import de.meisterfuu.animexx.objects.profile.ProfileObject;
 import static de.meisterfuu.animexx.objects.SingleValueObjects.*;
 import de.meisterfuu.animexx.objects.rpg.RPGObject;
@@ -71,6 +72,14 @@ public interface WebApiInterface {
 	                Callback<ReturnObject<ProfileObject>> pCallback);
 
 
+
+    @POST("/mitglieder/steckbrief_box/")
+    @FormUrlEncoded
+    void getProfileBox(@Field("user_id") long user_id, @Field("box_id") String box_id, Callback<ReturnObject<ProfileBoxObject>> pCallback);
+
+    @POST("/mitglieder/steckbrief_box/")
+    @FormUrlEncoded
+    ReturnObject<ProfileBoxObject> getProfileBox(@Field("user_id") long user_id, @Field("box_id") String box_id);
 
 	@POST("/mitglieder/username_autocomplete/")
 	@FormUrlEncoded
@@ -722,11 +731,11 @@ public interface WebApiInterface {
 
 	@POST("/cloud2device/registration_id_set/")
 	@FormUrlEncoded
-	ReturnObject<Empty> setGCMId(@Field("registration_id") String pDeviceToken, @Field("collapse_by_type") int pCollapse);
+	ReturnObject<Integer> setGCMId(@Field("registration_id") String pDeviceToken, @Field("collapse_by_type") int pCollapse);
 
 	@POST("/cloud2device/registration_id_set/")
 	@FormUrlEncoded
-	void setGCMId(@Field("registration_id") String pDeviceToken, @Field("collapse_by_type") int pCollapse, Callback<ReturnObject<Empty>> pCallback);
+	void setGCMId(@Field("registration_id") String pDeviceToken, @Field("collapse_by_type") int pCollapse, Callback<ReturnObject<Integer>> pCallback);
 
 	@POST("/cloud2device/registration_id_get/")
 	ReturnObject<GCMIdObject> getGCMId();

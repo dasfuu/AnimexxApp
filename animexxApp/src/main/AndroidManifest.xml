@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.meisterfuu.animexx"
-    android:versionCode="67"
+    android:versionCode="68"
     android:versionName="2.0" >
 
     <uses-sdk
@@ -39,7 +39,7 @@
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-    <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:allowBackup="true"
@@ -228,22 +228,6 @@
         <activity
             android:name="de.meisterfuu.animexx.activitys.profiles.GuestbookPostActivity"
             android:label="@string/title_activity_guestbook_post" >
-        </activity>
-        <activity
-            android:name="de.meisterfuu.animexx.activitys.profiles.ProfilePageTableActivity"
-            android:label="@string/title_activity_profile_page_table" >
-        </activity>
-        <activity
-            android:name="de.meisterfuu.animexx.activitys.profiles.ProfilePageEventActivity"
-            android:label="@string/title_activity_profile_page_event" >
-        </activity>
-        <activity
-            android:name="de.meisterfuu.animexx.activitys.profiles.ProfilePageFanActivity"
-            android:label="@string/title_activity_profile_page_fan" >
-        </activity>
-        <activity
-            android:name="de.meisterfuu.animexx.activitys.profiles.ProfilePageHTMLActivity"
-            android:label="@string/title_activity_profile_page_html" >
         </activity>
         <activity
             android:name="de.meisterfuu.animexx.activitys.home.NewMicroblogActivity"

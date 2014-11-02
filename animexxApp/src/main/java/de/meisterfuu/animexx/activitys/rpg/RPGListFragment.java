@@ -49,7 +49,7 @@ public class RPGListFragment extends ListFragment  {
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
 		
-		RPGDetailActivity.getInstance(this.getActivity(), mAdapter.getItem(position).getId());
+		RPGPostListActivity.getInstance(this.getActivity(), mAdapter.getItem(position).getId());
 //		RPGPostListActivity.getInstance(this.getActivity(), mAdapter.getItem(position).getId());
 	}
 	

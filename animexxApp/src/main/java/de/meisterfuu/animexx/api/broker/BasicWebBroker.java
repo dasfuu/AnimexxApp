@@ -15,6 +15,7 @@ public abstract class BasicWebBroker {
 	public BasicWebBroker(Context pContext){
 		this.mContext = pContext.getApplicationContext();
 		this.mWebApi = new WebAPI(mContext);
+        this.getWebApi().refresh(mContext);
 	}
 
 	public WebAPI getWebApi() {

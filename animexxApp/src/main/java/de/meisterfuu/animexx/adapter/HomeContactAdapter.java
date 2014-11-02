@@ -114,7 +114,8 @@ public class HomeContactAdapter extends BaseAdapter {
 
 		if(obj.getBigImageURL() != null){
             holder.Image.setVisibility(View.VISIBLE);
-            mPicasso.load(obj.getBigImageURL()).steadyKey("home_contact_"+obj.getItemID()).error(R.drawable.test1).into(holder.Image);
+            holder.Image.getLayoutParams().height = obj.getBigImageHeight();
+            mPicasso.load(obj.getBigImageURL()).steadyKey("home_contact_"+obj.getItemID()).into(holder.Image);
         }
 
         holder.User.setVisibility(View.GONE);

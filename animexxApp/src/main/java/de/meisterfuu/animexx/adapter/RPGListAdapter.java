@@ -113,7 +113,7 @@ public class RPGListAdapter extends BaseAdapter {
 			
 			@Override
 			public void onClick(View v) {
-				RPGDetailActivity.getInstance(mContext, RPG.getId());		
+				RPGDetailActivity.getInstance(mContext, RPG.getId());
 			}
 		});
 		
