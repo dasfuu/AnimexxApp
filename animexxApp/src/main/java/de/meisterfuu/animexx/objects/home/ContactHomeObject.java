@@ -90,7 +90,9 @@ public class ContactHomeObject extends BasicHomeObject {
 			return "nimmt am Event \""+this.getItemName()+"\" teil.";
 		} else if(this.getEventType().equalsIgnoreCase("mb")){
 			return this.getComment();
-		} else if(this.getAuthor() != null && this.getEventType().contains("mag")){
+		} else if(this.getEventType().equalsIgnoreCase("usernamechange")) {
+            return "hat sich umbenannt("+this.getComment()+")";
+        }else if(this.getAuthor() != null && this.getEventType().contains("mag")){
 			return "empfiehlt \""+this.getItemName()+"\" von "+this.getAuthor().getUsername()+".";
 		} else if(this.getComment() != null && !this.getEventType().equals("sb")) {
             if(this.getItemName() != null) {

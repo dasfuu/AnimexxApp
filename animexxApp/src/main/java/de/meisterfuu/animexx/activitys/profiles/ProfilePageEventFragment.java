@@ -6,12 +6,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import de.meisterfuu.animexx.R;
+import de.meisterfuu.animexx.activitys.events.SingleEventActivity;
 import de.meisterfuu.animexx.adapter.ProfileEventAdapter;
 import de.meisterfuu.animexx.api.broker.UserBroker;
 import de.meisterfuu.animexx.api.web.ReturnObject;
@@ -21,7 +23,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 //fragment_profile_page_event
-public class ProfilePageEventFragment extends Fragment {
+public class ProfilePageEventFragment extends Fragment implements AdapterView.OnItemClickListener {
 
 
     private UserBroker mApi;
@@ -57,6 +59,7 @@ public class ProfilePageEventFragment extends Fragment {
         mList = new ArrayList<ProfileBoxObject.EventBoxObject>();
         mAdapter = new ProfileEventAdapter(mList, this.getActivity());
         mListView.setAdapter(mAdapter);
+        mListView.setOnItemClickListener(this);
         load();
 
         return v;
@@ -80,5 +83,10 @@ public class ProfilePageEventFragment extends Fragment {
             }
         });
 
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        SingleEventActivity.getInstance(this.getActivity(), id);
     }
 }

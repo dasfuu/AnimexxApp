@@ -10,7 +10,6 @@ import android.widget.TextView;
 import java.util.List;
 
 import de.meisterfuu.animexx.R;
-import de.meisterfuu.animexx.objects.profile.ProfileBoxObject;
 
 
 public class ProfileTableAdapter extends BaseAdapter {
@@ -33,7 +32,7 @@ public class ProfileTableAdapter extends BaseAdapter {
 	
 	static class ViewHolder {
 
-		public TextView Title, Subtitle;
+		public TextView Left, Right;
 	}
 
 	@Override
@@ -79,28 +78,32 @@ public class ProfileTableAdapter extends BaseAdapter {
 		if (rowView == null) {
 			LayoutInflater inflater = mContext.getLayoutInflater();
 			
-			rowView = inflater.inflate(R.layout.listitem_event, null);
+			rowView = inflater.inflate(R.layout.listitem_profile_table, null);
 
 
 			ViewHolder viewHolder = new ViewHolder();
-			viewHolder.Title = (TextView) rowView.findViewById(R.id.event_list_item_title);
-			viewHolder.Subtitle = (TextView) rowView.findViewById(R.id.event_list_item_subtitle);
+			viewHolder.Left = (TextView) rowView.findViewById(R.id.list_item_profile_table_left);
+			viewHolder.Right = (TextView) rowView.findViewById(R.id.list_item_profile_table_right);
 			rowView.setTag(viewHolder);
 		}
 
 		ViewHolder holder = (ViewHolder) rowView.getTag();
 		final List<String> datum = mItems.get(position);
-		
+        String first = "";
+        if(datum.size() > 0){
+            first = datum.get(0);
+        }
+
 		//Init
 		//holder.Color.setBackgroundResource(R.color.animexx_blue);
 		
         StringBuilder sb = new StringBuilder();
-        for(String row: datum){
-            sb.append(row);
-            sb.append(System.getProperty("line.separator"));
+        for(int i = 1; i < datum.size(); i++){
+            sb.append(datum.get(i));
+            if(i < (datum.size()-1))sb.append(System.getProperty("line.separator"));
         }
-		holder.Title.setText(sb.toString());
-		holder.Subtitle.setVisibility(View.GONE);
+		holder.Left.setText(first);
+		holder.Right.setText(sb.toString());
 
 		
 		return rowView;

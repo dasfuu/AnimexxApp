@@ -90,6 +90,7 @@ public class RPGListFragment extends ListFragment  {
             @Override
             public void success(ReturnObject<List<RPGObject>> listReturnObject, Response response) {
                 List<RPGObject> list = listReturnObject.getObj();
+                list.removeAll(Collections.singleton(null));
                 Collections.sort(list);
                 mAdapter.addAll(list);
             }

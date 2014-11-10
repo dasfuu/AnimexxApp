@@ -184,6 +184,9 @@ public class RPGObject implements Comparable<RPGObject> {
 	}
 
 	public String getLastPostDate() {
+        if(lastPostDate == null){
+            return "";
+        }
 		return lastPostDate;
 	}
 
@@ -309,7 +312,7 @@ public class RPGObject implements Comparable<RPGObject> {
 		
 //		  "mitglied":null, User-Objekt oder null, falls nicht besetzt
 		@SerializedName("mitglied")
-UserObject user;
+        UserObject user;
 		
 //		  "admin":false, true = Moderator-Rechte
 		@SerializedName("admin")
