@@ -9,18 +9,18 @@ import retrofit.RequestInterceptor;
  */
 public class InterceptorSigner implements RequestInterceptor {
 
-	AccessToken mToken;
+    AccessToken mToken;
 
-	public InterceptorSigner (Context pContext){
+    public InterceptorSigner(Context pContext) {
         refresh(pContext);
-	}
+    }
 
-	@Override
-	public void intercept(final RequestFacade request) {
-		request.addHeader("Accept", "application/json;versions=1");
-		request.addHeader("Authorization", mToken.getTokenType() + " " + mToken.getAccessToken());
-		request.addQueryParam("api","3");
-	}
+    @Override
+    public void intercept(final RequestFacade request) {
+        request.addHeader("Accept", "application/json;versions=1");
+        request.addHeader("Authorization", mToken.getTokenType() + " " + mToken.getAccessToken());
+        request.addQueryParam("api", "3");
+    }
 
     public void refresh(Context pContext) {
         mToken = AccessToken.getToken(pContext);

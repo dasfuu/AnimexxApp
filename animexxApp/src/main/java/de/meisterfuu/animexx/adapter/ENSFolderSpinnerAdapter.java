@@ -1,8 +1,5 @@
 package de.meisterfuu.animexx.adapter;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,107 +7,108 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.api.broker.ENSBroker;
 import de.meisterfuu.animexx.objects.ens.ENSFolderObject;
 
 public class ENSFolderSpinnerAdapter extends BaseAdapter {
-	
-	List<ENSFolderObject> mItems;
-	Activity mContext;
-	
-	public ENSFolderSpinnerAdapter(List<ENSFolderObject> pList, Activity pContext){
-		this.mItems = pList;
-		this.mContext = pContext;
-	}
-	
 
-	@Override
-	public void notifyDataSetChanged() {
-		super.notifyDataSetChanged();
-	}
+    List<ENSFolderObject> mItems;
+    Activity mContext;
+
+    public ENSFolderSpinnerAdapter(List<ENSFolderObject> pList, Activity pContext) {
+        this.mItems = pList;
+        this.mContext = pContext;
+    }
 
 
-	
-	static class ViewHolder {
+    @Override
+    public void notifyDataSetChanged() {
+        super.notifyDataSetChanged();
+    }
 
-		public TextView Title;
-		public ImageView Icon;
-	}
 
-	@Override
-	public int getCount() {
-		return mItems.size();
-	}
-	
+    static class ViewHolder {
 
-	@Override
-	public boolean areAllItemsEnabled() {
-		return true;
-	}
+        public TextView Title;
+        public ImageView Icon;
+    }
 
-	@Override
-	public boolean isEnabled(int position) {
-		return true;
-	}
+    @Override
+    public int getCount() {
+        return mItems.size();
+    }
 
-	@Override
-	public ENSFolderObject getItem(int position) {
-		return mItems.get(position);
-	}
 
-	@Override
-	public long getItemId(int position) {		
-		return mItems.get(position).getId();
-	}
+    @Override
+    public boolean areAllItemsEnabled() {
+        return true;
+    }
 
-	@Override
-	public int getItemViewType(int position) {
-		return 0;
-	}
+    @Override
+    public boolean isEnabled(int position) {
+        return true;
+    }
 
-	@Override
-	public int getViewTypeCount() {
-		return 1;
-	}
+    @Override
+    public ENSFolderObject getItem(int position) {
+        return mItems.get(position);
+    }
 
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
+    @Override
+    public long getItemId(int position) {
+        return mItems.get(position).getId();
+    }
 
-		
-		View rowView = convertView;
-		if (rowView == null) {
-			LayoutInflater inflater = mContext.getLayoutInflater();
-			rowView = inflater.inflate(R.layout.listitem_ens_folder, null);
-			ViewHolder viewHolder = new ViewHolder();
-			viewHolder.Title = (TextView) rowView.findViewById(R.id.ens_folder_title);
-			viewHolder.Icon = (ImageView) rowView.findViewById(R.id.ens_folder_icon);
-			rowView.setTag(viewHolder);
-		}
+    @Override
+    public int getItemViewType(int position) {
+        return 0;
+    }
 
-		ViewHolder holder = (ViewHolder) rowView.getTag();
-		final ENSFolderObject Folder = mItems.get(position);
-		
-		//Subject
-		holder.Title.setText(Folder.getName());
-		
-		if(Folder.getType().equals(ENSBroker.TYPE_INBOX)) {
-			holder.Icon.setImageResource(R.drawable.ens_folder_in);
-		} else {
-			holder.Icon.setImageResource(R.drawable.ens_folder_out);
-		}
-		
-		//holder.Icon.getDrawable().setColorFilter(mContext.getResources().getColor(R.color.animexx_blue), PorterDuff.Mode.MULTIPLY );
-		
-		return rowView;
-	}
+    @Override
+    public int getViewTypeCount() {
+        return 1;
+    }
 
-	public void addAll(ArrayList<ENSFolderObject> list) {
-		mItems.addAll(list);
-		this.notifyDataSetChanged();		
-	}
-	
-	
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+
+
+        View rowView = convertView;
+        if (rowView == null) {
+            LayoutInflater inflater = mContext.getLayoutInflater();
+            rowView = inflater.inflate(R.layout.listitem_ens_folder, null);
+            ViewHolder viewHolder = new ViewHolder();
+            viewHolder.Title = (TextView) rowView.findViewById(R.id.ens_folder_title);
+            viewHolder.Icon = (ImageView) rowView.findViewById(R.id.ens_folder_icon);
+            rowView.setTag(viewHolder);
+        }
+
+        ViewHolder holder = (ViewHolder) rowView.getTag();
+        final ENSFolderObject Folder = mItems.get(position);
+
+        //Subject
+        holder.Title.setText(Folder.getName());
+
+        if (Folder.getType().equals(ENSBroker.TYPE_INBOX)) {
+            holder.Icon.setImageResource(R.drawable.ens_folder_in);
+        } else {
+            holder.Icon.setImageResource(R.drawable.ens_folder_out);
+        }
+
+        //holder.Icon.getDrawable().setColorFilter(mContext.getResources().getColor(R.color.animexx_blue), PorterDuff.Mode.MULTIPLY );
+
+        return rowView;
+    }
+
+    public void addAll(ArrayList<ENSFolderObject> list) {
+        mItems.addAll(list);
+        this.notifyDataSetChanged();
+    }
 
 
 }

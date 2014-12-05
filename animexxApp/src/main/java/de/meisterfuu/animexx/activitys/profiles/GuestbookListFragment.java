@@ -2,7 +2,6 @@ package de.meisterfuu.animexx.activitys.profiles;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +17,7 @@ public class GuestbookListFragment extends Fragment implements View.OnClickListe
     private static final String USER_ID = "mUserID";
 
     private long mUserID;
-	private GBListAdapter mAdapter;
+    private GBListAdapter mAdapter;
     private FloatingActionButton mFloatButton;
     private ListView mListView;
 
@@ -48,14 +47,14 @@ public class GuestbookListFragment extends Fragment implements View.OnClickListe
         return view;
     }
 
-	@Override
+    @Override
     public void onResume() {
         super.onResume();
         if (getArguments() != null) {
             mUserID = getArguments().getLong(USER_ID);
         }
 
-	    mAdapter = new GBListAdapter(this.getActivity(), mUserID);
+        mAdapter = new GBListAdapter(this.getActivity(), mUserID);
         mListView.setAdapter(mAdapter);
     }
 

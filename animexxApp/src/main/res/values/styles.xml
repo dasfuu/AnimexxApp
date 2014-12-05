@@ -3,6 +3,7 @@
     <color name="animexx_blue_light">#E8E8FF</color>
     <color name="animexx_blue_light2">#E0E0FF</color>
 
+    <color name="animexx_blue_dark">#4747FF</color>
     <color name="animexx_blue">#5858FF</color>
     <color name="animexx_blue2">#7373FF</color>
     <color name="animexx_blue3">#C3C3FF</color>
@@ -23,6 +24,8 @@
 
     <color name="animexx_blue_notfiy_light">#ff0000ff</color>
 
+    <dimen name="drawer_list_margin_vertical">0dp</dimen>
+
     <style name="AppBaseTheme" parent="Theme.AppCompat.NoActionBar">
         <!-- API 14 theme customizations can go here. -->
     </style>
@@ -34,7 +37,7 @@
         <item name="android:colorBackground">@color/animexx_blue_light</item>
         <!-- Set AppCompat’s color theming attrs -->
         <item name="colorPrimary">@color/animexx_blue</item>
-        <item name="colorPrimaryDark">@color/animexx_blue</item>
+        <item name="colorPrimaryDark">@color/animexx_blue_dark</item>
         <item name="colorAccent">@color/animexx_blue</item>
 
         <item name="android:textColor">@android:color/black</item>
@@ -52,6 +55,8 @@
         <item name="colorControlActivated">@color/animexx_blue</item>
         <item name="colorControlHighlight">@color/animexx_blue2</item>
        <!-- <item name="drawerArrowStyle">@style/DrawerArrowStyle</item> -->
+
+
     </style>
 
     <style name="DrawerArrowStyle" parent="Base.Widget.AppCompat.DrawerArrowToggle">

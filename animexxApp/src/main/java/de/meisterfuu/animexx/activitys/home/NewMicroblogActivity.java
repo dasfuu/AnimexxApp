@@ -20,8 +20,7 @@ import retrofit.client.Response;
 public class NewMicroblogActivity extends AnimexxBaseActivityAB {
 
 
-
-    public static void getInstance(Context pContext){
+    public static void getInstance(Context pContext) {
         Intent i = new Intent().setClass(pContext, NewMicroblogActivity.class);
         pContext.startActivity(i);
     }
@@ -65,11 +64,11 @@ public class NewMicroblogActivity extends AnimexxBaseActivityAB {
         broker.getWebApi().getApi().sendMicroblog(mText.getText().toString(), new Callback<ReturnObject<ContactHomeObject>>() {
             @Override
             public void success(ReturnObject<ContactHomeObject> contactHomeObjectReturnObject, Response response) {
-                    if(contactHomeObjectReturnObject.getObj() != null){
-                        finish();
-                    } else {
-                        Toast.makeText(NewMicroblogActivity.this, "Microblog senden fehlgeschlagen.", Toast.LENGTH_SHORT).show();
-                    }
+                if (contactHomeObjectReturnObject.getObj() != null) {
+                    finish();
+                } else {
+                    Toast.makeText(NewMicroblogActivity.this, "Microblog senden fehlgeschlagen.", Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override

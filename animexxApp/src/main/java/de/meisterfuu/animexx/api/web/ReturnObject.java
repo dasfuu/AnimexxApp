@@ -7,14 +7,14 @@ import com.google.gson.annotations.SerializedName;
  */
 public class ReturnObject<T> {
 
-	@SerializedName("return")
-	private T obj;
+    @SerializedName("return")
+    private T obj;
 
-	public T getObj() {
-		return obj;
-	}
+    public T getObj() {
+        return obj;
+    }
 
-	public void setObj(final T pObj) {
-		obj = pObj;
-	}
+    public void setObj(final T pObj) {
+        obj = pObj;
+    }
 }

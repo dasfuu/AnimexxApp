@@ -5,52 +5,51 @@ import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 
 public class ENSQueueObject {
-	
-	@DatabaseField(generatedId = true)
-	long id;
-	
-	@DatabaseField
-	String subject;
-	
-	@DatabaseField
-	int tries;
-	
-	@DatabaseField(dataType = DataType.SERIALIZABLE)
-	@SerializedName("draft")
-	ENSDraftObject draft;
 
-	public long getId() {
-		return id;
-	}
+    @DatabaseField(generatedId = true)
+    long id;
 
-	public void setId(long id) {
-		this.id = id;
-	}
+    @DatabaseField
+    String subject;
 
-	public String getSubject() {
-		return subject;
-	}
+    @DatabaseField
+    int tries;
 
-	public void setSubject(String subject) {
-		this.subject = subject;
-	}
+    @DatabaseField(dataType = DataType.SERIALIZABLE)
+    @SerializedName("draft")
+    ENSDraftObject draft;
 
-	public ENSDraftObject getDraft() {
-		return draft;
-	}
+    public long getId() {
+        return id;
+    }
 
-	public void setDraft(ENSDraftObject draft) {
-		this.draft = draft;
-	}
+    public void setId(long id) {
+        this.id = id;
+    }
 
-	public int getTries() {
-		return tries;
-	}
+    public String getSubject() {
+        return subject;
+    }
 
-	public void setTries(int tries) {
-		this.tries = tries;
-	}
-	
-	
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+
+    public ENSDraftObject getDraft() {
+        return draft;
+    }
+
+    public void setDraft(ENSDraftObject draft) {
+        this.draft = draft;
+    }
+
+    public int getTries() {
+        return tries;
+    }
+
+    public void setTries(int tries) {
+        this.tries = tries;
+    }
+
 
 }

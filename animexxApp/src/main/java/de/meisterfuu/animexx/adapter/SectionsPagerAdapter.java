@@ -28,15 +28,15 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         return mFragments.get(position).getId();
     }
 
-    public void addFragment(FragmentHolder pHolder){
+    public void addFragment(FragmentHolder pHolder) {
         mFragments.add(pHolder);
     }
 
-    public void addFragmentBeginning(FragmentHolder pHolder){
+    public void addFragmentBeginning(FragmentHolder pHolder) {
         mFragments.add(0, pHolder);
     }
 
-    public void addFragmentAt(int pPos, FragmentHolder pHolder){
+    public void addFragmentAt(int pPos, FragmentHolder pHolder) {
         mFragments.add(pPos, pHolder);
     }
 

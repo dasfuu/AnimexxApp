@@ -9,40 +9,40 @@ import java.util.ArrayList;
  */
 public class ENSCheckRecipientsObject {
 
-	@SerializedName("user_ids")
-	ArrayList<Long> IDs;
+    @SerializedName("user_ids")
+    ArrayList<Long> IDs;
 
-	@SerializedName("errors")
-	ArrayList<String> errors;
+    @SerializedName("errors")
+    ArrayList<String> errors;
 
-	@SerializedName("warnings")
-	ArrayList<String> warnings;
+    @SerializedName("warnings")
+    ArrayList<String> warnings;
 
-	public ENSCheckRecipientsObject(){
+    public ENSCheckRecipientsObject() {
 
-	}
+    }
 
-	public ArrayList<Long> getIDs() {
-		return IDs;
-	}
+    public ArrayList<Long> getIDs() {
+        return IDs;
+    }
 
-	public void setIDs(final ArrayList<Long> pIDs) {
-		IDs = pIDs;
-	}
+    public void setIDs(final ArrayList<Long> pIDs) {
+        IDs = pIDs;
+    }
 
-	public ArrayList<String> getErrors() {
-		return errors;
-	}
+    public ArrayList<String> getErrors() {
+        return errors;
+    }
 
-	public void setErrors(final ArrayList<String> pErrors) {
-		errors = pErrors;
-	}
+    public void setErrors(final ArrayList<String> pErrors) {
+        errors = pErrors;
+    }
 
-	public ArrayList<String> getWarnings() {
-		return warnings;
-	}
+    public ArrayList<String> getWarnings() {
+        return warnings;
+    }
 
-	public void setWarnings(final ArrayList<String> pWarnings) {
-		warnings = pWarnings;
-	}
+    public void setWarnings(final ArrayList<String> pWarnings) {
+        warnings = pWarnings;
+    }
 }

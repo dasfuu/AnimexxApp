@@ -1,80 +1,76 @@
 package de.meisterfuu.animexx.objects;
 
 public class LocateMeObject {
-	
-	String text;
-	String username;
-	long ts;
-	
-	double longitude;
-	double latitude;
-	
-	String imageURLMe;
-	String imageURLPlace;
-	
-	public LocateMeObject(){
-		
-	}
 
-	public String getText() {
-		return text;
-	}
+    String text;
+    String username;
+    long ts;
 
-	public void setText(String text) {
-		this.text = text;
-	}
+    double longitude;
+    double latitude;
 
-	public long getTs() {
-		return ts;
-	}
+    String imageURLMe;
+    String imageURLPlace;
 
-	public void setTs(long ts) {
-		this.ts = ts;
-	}
+    public LocateMeObject() {
 
-	public double getLongitude() {
-		return longitude;
-	}
+    }
 
-	public void setLongitude(double longitude) {
-		this.longitude = longitude;
-	}
+    public String getText() {
+        return text;
+    }
 
-	public double getLatitude() {
-		return latitude;
-	}
+    public void setText(String text) {
+        this.text = text;
+    }
 
-	public void setLatitude(double latitude) {
-		this.latitude = latitude;
-	}
+    public long getTs() {
+        return ts;
+    }
 
-	public String getImageURLMe() {
-		return imageURLMe;
-	}
+    public void setTs(long ts) {
+        this.ts = ts;
+    }
 
-	public void setImageURLMe(String imageURLMe) {
-		this.imageURLMe = imageURLMe;
-	}
+    public double getLongitude() {
+        return longitude;
+    }
 
-	public String getImageURLPlace() {
-		return imageURLPlace;
-	}
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
 
-	public void setImageURLPlace(String imageURLPlace) {
-		this.imageURLPlace = imageURLPlace;
-	}
+    public double getLatitude() {
+        return latitude;
+    }
 
-	public String getUsername() {
-		return username;
-	}
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
+    public String getImageURLMe() {
+        return imageURLMe;
+    }
 
-	
-	
-	
-	
+    public void setImageURLMe(String imageURLMe) {
+        this.imageURLMe = imageURLMe;
+    }
+
+    public String getImageURLPlace() {
+        return imageURLPlace;
+    }
+
+    public void setImageURLPlace(String imageURLPlace) {
+        this.imageURLPlace = imageURLPlace;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
 
 }

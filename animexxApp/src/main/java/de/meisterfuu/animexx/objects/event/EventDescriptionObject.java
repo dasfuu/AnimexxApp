@@ -2,90 +2,90 @@ package de.meisterfuu.animexx.objects.event;
 
 import com.google.gson.annotations.SerializedName;
 
-public class EventDescriptionObject{
-	
-//    id: int: ID der Beschreibungsseite
-	@SerializedName("id")
-	long id;
-	
-//    sprache: string: ISO-Code der Sprache (meistens "de")
-	@SerializedName("sprache")
-	String language;
-	
-//    seite: int: Nummer der Seite innerhalb der Sprache; nur zum Sortieren wichtig, das beschreibungsseiten-array ist aber auch bereits nach diesem Wert vorsortiert.
-	@SerializedName("seite")
-	int pageNumber;
-	
-//    seitenname: string: Name der Seite
-	@SerializedName("seitenname")
-	String pageName;
-	
-//    html: int: 1, falls die Seite HTML-formatiert ist, ansonsten BBCode.
-	@SerializedName("html")
-	String isHtml;
-	
-	@SerializedName("text_html")
-	String html;
-	
-//    status: int: 0, falls sichtbar. 1, falls unsichtbar (unsichtbare Seiten tauchen nur bei Events auf, bei denen der aktuelle Nutzer Admin-Rechte hat)
-	@SerializedName("status")
-	int status;
+public class EventDescriptionObject {
 
-	public long getId() {
-		return id;
-	}
+    //    id: int: ID der Beschreibungsseite
+    @SerializedName("id")
+    long id;
 
-	public void setId(long id) {
-		this.id = id;
-	}
+    //    sprache: string: ISO-Code der Sprache (meistens "de")
+    @SerializedName("sprache")
+    String language;
 
-	public String getLanguage() {
-		return language;
-	}
+    //    seite: int: Nummer der Seite innerhalb der Sprache; nur zum Sortieren wichtig, das beschreibungsseiten-array ist aber auch bereits nach diesem Wert vorsortiert.
+    @SerializedName("seite")
+    int pageNumber;
 
-	public void setLanguage(String language) {
-		this.language = language;
-	}
+    //    seitenname: string: Name der Seite
+    @SerializedName("seitenname")
+    String pageName;
 
-	public int getPageNumber() {
-		return pageNumber;
-	}
+    //    html: int: 1, falls die Seite HTML-formatiert ist, ansonsten BBCode.
+    @SerializedName("html")
+    String isHtml;
 
-	public void setPageNumber(int pageNumber) {
-		this.pageNumber = pageNumber;
-	}
+    @SerializedName("text_html")
+    String html;
 
-	public String getPageName() {
-		return pageName;
-	}
+    //    status: int: 0, falls sichtbar. 1, falls unsichtbar (unsichtbare Seiten tauchen nur bei Events auf, bei denen der aktuelle Nutzer Admin-Rechte hat)
+    @SerializedName("status")
+    int status;
 
-	public void setPageName(String pageName) {
-		this.pageName = pageName;
-	}
+    public long getId() {
+        return id;
+    }
 
-	public String getHtml() {
-		return html;
-	}
+    public void setId(long id) {
+        this.id = id;
+    }
 
-	public void setHtml(String html) {
-		this.html = html;
-	}
+    public String getLanguage() {
+        return language;
+    }
 
-	public int getStatus() {
-		return status;
-	}
+    public void setLanguage(String language) {
+        this.language = language;
+    }
 
-	public void setStatus(int status) {
-		this.status = status;
-	}
+    public int getPageNumber() {
+        return pageNumber;
+    }
 
-	public String getIsHtml() {
-		return isHtml;
-	}
+    public void setPageNumber(int pageNumber) {
+        this.pageNumber = pageNumber;
+    }
 
-	public void setIsHtml(String isHtml) {
-		this.isHtml = isHtml;
-	}
-	
-	
+    public String getPageName() {
+        return pageName;
+    }
+
+    public void setPageName(String pageName) {
+        this.pageName = pageName;
+    }
+
+    public String getHtml() {
+        return html;
+    }
+
+    public void setHtml(String html) {
+        this.html = html;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public String getIsHtml() {
+        return isHtml;
+    }
+
+    public void setIsHtml(String isHtml) {
+        this.isHtml = isHtml;
+    }
+
+
 }

@@ -25,17 +25,17 @@ public class HomeBroker extends BasicWebBroker {
     /**
      * @param pCallback
      */
-    public void getContactWidgetList(final Callback<ReturnObject<List<ContactHomeObject>>> pCallback){
+    public void getContactWidgetList(final Callback<ReturnObject<List<ContactHomeObject>>> pCallback) {
         Calendar c = Calendar.getInstance();
         c.add(Calendar.DAY_OF_MONTH, -10);
-        long from = c.getTimeInMillis()/1000;
+        long from = c.getTimeInMillis() / 1000;
         getWebApi().getApi().getContactWidget(from, pCallback);
     }
 
     /**
      * @param pCallback
      */
-    public void getContactMicroblogList(final Callback<ReturnObject<List<ContactHomeObject>>> pCallback){
+    public void getContactMicroblogList(final Callback<ReturnObject<List<ContactHomeObject>>> pCallback) {
         getWebApi().getApi().getMicroblogs(pCallback);
     }
 

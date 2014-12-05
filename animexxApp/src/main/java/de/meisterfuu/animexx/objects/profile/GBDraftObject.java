@@ -7,43 +7,43 @@ import de.meisterfuu.animexx.objects.UserObject;
  */
 public class GBDraftObject {
 
-//	- user_id: int / benötigt
+    //	- user_id: int / benötigt
 //	@DatabaseField(dataType = DataType.SERIALIZABLE)
-	private UserObject recipient;
+    private UserObject recipient;
 
-//	- text: string / benötigt
+    //	- text: string / benötigt
 //	@DatabaseField
-	private String text;
+    private String text;
 
-//	- avatar_id: int / optional / die ID des zu verwendenden Avatars
+    //	- avatar_id: int / optional / die ID des zu verwendenden Avatars
 //	@DatabaseField
-	private long avatar;
+    private long avatar;
 
-	public GBDraftObject() {
-		avatar = -1;
-	}
+    public GBDraftObject() {
+        avatar = -1;
+    }
 
-	public UserObject getRecipient() {
-		return recipient;
-	}
+    public UserObject getRecipient() {
+        return recipient;
+    }
 
-	public void setRecipient(final UserObject pRecipient) {
-		recipient = pRecipient;
-	}
+    public void setRecipient(final UserObject pRecipient) {
+        recipient = pRecipient;
+    }
 
-	public String getText() {
-		return text;
-	}
+    public String getText() {
+        return text;
+    }
 
-	public void setText(final String pText) {
-		text = pText;
-	}
+    public void setText(final String pText) {
+        text = pText;
+    }
 
-	public long getAvatar() {
-		return avatar;
-	}
+    public long getAvatar() {
+        return avatar;
+    }
 
-	public void setAvatar(final long pAvatar) {
-		avatar = pAvatar;
-	}
+    public void setAvatar(final long pAvatar) {
+        avatar = pAvatar;
+    }
 }

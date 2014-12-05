@@ -9,29 +9,29 @@ import java.util.List;
  */
 public class SingleValueObjects {
 
-	public static class Empty {
+    public static class Empty {
 
 
-	}
+    }
 
-	public static class ENSSignatureObject {
+    public static class ENSSignatureObject {
 
-		@SerializedName("sig")
-		String signature;
+        @SerializedName("sig")
+        String signature;
 
-		public String getSignature() {
-			return signature;
-		}
+        public String getSignature() {
+            return signature;
+        }
 
-		public void setSignature(final String pSignature) {
-			signature = pSignature;
-		}
-	}
+        public void setSignature(final String pSignature) {
+            signature = pSignature;
+        }
+    }
 
-	public static class CalListObject {
+    public static class CalListObject {
 
-		@SerializedName("events")
-		List<CalendarEntryObject> events;
+        @SerializedName("events")
+        List<CalendarEntryObject> events;
 
         public List<CalendarEntryObject> getEvents() {
             return events;
@@ -56,46 +56,46 @@ public class SingleValueObjects {
         }
     }
 
-	public static class ENSSendIDObject {
+    public static class ENSSendIDObject {
 
-		@SerializedName("id")
-		int id;
+        @SerializedName("id")
+        int id;
 
-		public int getId() {
-			return id;
-		}
+        public int getId() {
+            return id;
+        }
 
-		public void setId(final int pID) {
-			id = pID;
-		}
-	}
+        public void setId(final int pID) {
+            id = pID;
+        }
+    }
 
-	public static class XMPPAuthObject {
+    public static class XMPPAuthObject {
 
-		@SerializedName("chat_auth")
-		String token;
+        @SerializedName("chat_auth")
+        String token;
 
-		public String getToken() {
-			return token;
-		}
+        public String getToken() {
+            return token;
+        }
 
-		public void setToken(final String pToken) {
-			token = pToken;
-		}
-	}
+        public void setToken(final String pToken) {
+            token = pToken;
+        }
+    }
 
-	public static class GCMIdObject {
+    public static class GCMIdObject {
 
-		@SerializedName("registration_ids")
-		List<String> Ids;
+        @SerializedName("registration_ids")
+        List<String> Ids;
 
-		public List<String> getIds() {
-			return Ids;
-		}
+        public List<String> getIds() {
+            return Ids;
+        }
 
-		public void setIds(final List<String> pIds) {
-			Ids = pIds;
-		}
-	}
+        public void setIds(final List<String> pIds) {
+            Ids = pIds;
+        }
+    }
 
 }

@@ -1,12 +1,9 @@
 package de.meisterfuu.animexx.activitys.profiles;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -15,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.meisterfuu.animexx.R;
-import de.meisterfuu.animexx.adapter.ProfileEventAdapter;
 import de.meisterfuu.animexx.adapter.ProfileFanAdapter;
 import de.meisterfuu.animexx.api.broker.UserBroker;
 import de.meisterfuu.animexx.api.web.ReturnObject;
@@ -24,7 +20,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class ProfilePageFanFragment  extends Fragment {
+public class ProfilePageFanFragment extends Fragment {
 
 
     private UserBroker mApi;
@@ -34,7 +30,7 @@ public class ProfilePageFanFragment  extends Fragment {
     private ProfileFanAdapter mAdapter;
     private List<ProfileBoxObject.FanBoxObject> mList;
 
-    public static Fragment getInstance(Context pContext, long pUserID, String pBoxID){
+    public static Fragment getInstance(Context pContext, long pUserID, String pBoxID) {
         ProfilePageFanFragment fragment = new ProfilePageFanFragment();
         Bundle args = new Bundle();
         args.putLong("id", pUserID);

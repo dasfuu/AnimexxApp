@@ -33,7 +33,7 @@ public class ProfilePageEventFragment extends Fragment implements AdapterView.On
     private ProfileEventAdapter mAdapter;
     private List<ProfileBoxObject.EventBoxObject> mList;
 
-    public static Fragment getInstance(Context pContext, long pUserID, String pBoxID){
+    public static Fragment getInstance(Context pContext, long pUserID, String pBoxID) {
         ProfilePageEventFragment fragment = new ProfilePageEventFragment();
         Bundle args = new Bundle();
         args.putLong("id", pUserID);

@@ -1,23 +1,12 @@
 package de.meisterfuu.animexx.utils.views;
 
 import android.content.Context;
-import android.content.res.TypedArray;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.drawable.Drawable;
-import android.provider.ContactsContract;
-import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
 
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.activitys.profiles.ProfileActivity;
@@ -53,19 +42,19 @@ public class UserViewBig extends FrameLayout {
         init(context);
     }
 
-    private void init(final Context pContext){
+    private void init(final Context pContext) {
         this.mContext = pContext;
-        mInflater = (LayoutInflater)   getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mLayout = (LinearLayout) mInflater.inflate(R.layout.view_user_big, null);
         mImage = (RoundedImageView) mLayout.findViewById(R.id.view_user_big_image);
         mText = (TextView) mLayout.findViewById(R.id.view_user_big_text);
         this.addView(mLayout);
     }
 
-    public void setUser(UserObject pUser){
+    public void setUser(UserObject pUser) {
         mUser = pUser;
-        if(mUser.getAvatar() != null){
-            ImageSaveObject image = new ImageSaveObject(mUser.getAvatar().getUrl(), mUser.getId()+"");
+        if (mUser.getAvatar() != null) {
+            ImageSaveObject image = new ImageSaveObject(mUser.getAvatar().getUrl(), mUser.getId() + "");
             mImageLoader.download(image, mImage);
         } else {
             mImage.setImageResource(R.drawable.ic_contact_picture);
@@ -74,12 +63,12 @@ public class UserViewBig extends FrameLayout {
         this.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                ProfileActivity.getInstance(mContext,mUser.getId());
+                ProfileActivity.getInstance(mContext, mUser.getId());
             }
         });
     }
 
-    public UserObject getUser(){
+    public UserObject getUser() {
         return mUser;
     }
 

@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.meisterfuu.animexx.R;
-import de.meisterfuu.animexx.adapter.ProfileFanAdapter;
 import de.meisterfuu.animexx.adapter.ProfileTableAdapter;
 import de.meisterfuu.animexx.api.broker.UserBroker;
 import de.meisterfuu.animexx.api.web.ReturnObject;
@@ -21,7 +20,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class ProfilePageTableFragment  extends Fragment {
+public class ProfilePageTableFragment extends Fragment {
 
 
     private UserBroker mApi;
@@ -31,7 +30,7 @@ public class ProfilePageTableFragment  extends Fragment {
     private ProfileTableAdapter mAdapter;
     private List<List<String>> mList;
 
-    public static Fragment getInstance(Context pContext, long pUserID, String pBoxID){
+    public static Fragment getInstance(Context pContext, long pUserID, String pBoxID) {
         ProfilePageTableFragment fragment = new ProfilePageTableFragment();
         Bundle args = new Bundle();
         args.putLong("id", pUserID);

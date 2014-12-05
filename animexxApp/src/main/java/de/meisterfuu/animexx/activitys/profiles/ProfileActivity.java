@@ -2,8 +2,8 @@ package de.meisterfuu.animexx.activitys.profiles;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v13.app.FragmentPagerAdapter;
 import android.os.Bundle;
+import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,21 +20,21 @@ import de.meisterfuu.animexx.objects.profile.ProfileObject;
 
 public class ProfileActivity extends AnimexxBaseActivityAB {
 
-	long mUserID;
-	String mUserName;
-	private UserBroker mApi;
+    long mUserID;
+    String mUserName;
+    private UserBroker mApi;
 
-	ProfileFragment profileFrag;
-	GuestbookListFragment gbFrag;
+    ProfileFragment profileFrag;
+    GuestbookListFragment gbFrag;
     ProfileObject mProfile;
 
-    public static void getInstance(Context pContext, long pUserID){
-		Intent i = new Intent().setClass(pContext, ProfileActivity.class);
-		Bundle args = new Bundle();
-		args.putLong("id", pUserID);
-		i.putExtras(args);
-		pContext.startActivity(i);
-	}
+    public static void getInstance(Context pContext, long pUserID) {
+        Intent i = new Intent().setClass(pContext, ProfileActivity.class);
+        Bundle args = new Bundle();
+        args.putLong("id", pUserID);
+        i.putExtras(args);
+        pContext.startActivity(i);
+    }
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -59,9 +59,9 @@ public class ProfileActivity extends AnimexxBaseActivityAB {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-	    Bundle extras = this.getIntent().getExtras();
-	    mUserID = extras.getLong("id");
-	    mUserName = "Steckbrief";
+        Bundle extras = this.getIntent().getExtras();
+        mUserID = extras.getLong("id");
+        mUserName = "Steckbrief";
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -71,54 +71,51 @@ public class ProfileActivity extends AnimexxBaseActivityAB {
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         //mViewPager.setOffscreenPageLimit(30);
-	    mApi = new UserBroker(this);
+        mApi = new UserBroker(this);
         profileFrag = ProfileFragment.newInstance(mUserID);
         mSectionsPagerAdapter.addFragment(new SectionsPagerAdapter.FragmentHolder("Steckbrief", "MAIN", profileFrag, idcount++));
         mSectionsPagerAdapter.notifyDataSetChanged();
-	    mApi.getProfile(mUserID, this.getCallerID());
+        mApi.getProfile(mUserID, this.getCallerID());
     }
 
-	@SuppressWarnings("unused")
-	@Subscribe
-	public void retrieveProfile(ApiEvent.ProfileEvent pEvent) {
-		mUserName = pEvent.getObj().getUsername();
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void retrieveProfile(ApiEvent.ProfileEvent pEvent) {
+        mUserName = pEvent.getObj().getUsername();
         mProfile = pEvent.getObj();
 
-		this.getSupportActionBar().setTitle(mUserName);
+        this.getSupportActionBar().setTitle(mUserName);
 
-        if(!pEvent.getObj().isProfileShared()){
+        if (!pEvent.getObj().isProfileShared()) {
 
 
         }
 
-		profileFrag.onCallback(pEvent.getObj());
+        profileFrag.onCallback(pEvent.getObj());
         gbFrag = GuestbookListFragment.newInstance(mUserID);
         mSectionsPagerAdapter.addFragmentBeginning(new SectionsPagerAdapter.FragmentHolder("Gästebuch", "GB", gbFrag, idcount++));
         mSectionsPagerAdapter.notifyDataSetChanged();
         mViewPager.setCurrentItem(1);
 
-        for(ProfileBoxObject entry: pEvent.getObj().getBoxes()){
-            if(entry.getType().equals(ProfileBoxObject.TYPE_BESCHREIBUNG)){
+        for (ProfileBoxObject entry : pEvent.getObj().getBoxes()) {
+            if (entry.getType().equals(ProfileBoxObject.TYPE_BESCHREIBUNG)) {
                 mSectionsPagerAdapter.addFragment(new SectionsPagerAdapter.FragmentHolder(entry.getTitle(), "box_sb", ProfilePageHTMLFragment.getInstance(this, mUserID, entry.getId()), idcount++));
-            }
-            else if(entry.getType().equals(ProfileBoxObject.TYPE_EVENTS)){
+            } else if (entry.getType().equals(ProfileBoxObject.TYPE_EVENTS)) {
                 mSectionsPagerAdapter.addFragment(new SectionsPagerAdapter.FragmentHolder(entry.getTitle(), "box_event", ProfilePageEventFragment.getInstance(this, mUserID, entry.getId()), idcount++));
-            }
-            else if(entry.getType().equals(ProfileBoxObject.TYPE_EIGENSCHAFTEN)){
+            } else if (entry.getType().equals(ProfileBoxObject.TYPE_EIGENSCHAFTEN)) {
                 mSectionsPagerAdapter.addFragment(new SectionsPagerAdapter.FragmentHolder(entry.getTitle(), "box_eig", ProfilePageTableFragment.getInstance(this, mUserID, entry.getId()), idcount++));
-            }
-            else if(entry.getType().equals(ProfileBoxObject.TYPE_FAVS)){
+            } else if (entry.getType().equals(ProfileBoxObject.TYPE_FAVS)) {
                 mSectionsPagerAdapter.addFragment(new SectionsPagerAdapter.FragmentHolder(entry.getTitle(), "box_fan", ProfilePageFanFragment.getInstance(this, mUserID, entry.getId()), idcount++));
             }
         }
         mSectionsPagerAdapter.notifyDataSetChanged();
-	}
+    }
 
-    public long getUserId(){
+    public long getUserId() {
         return mUserID;
     }
 
-    public ProfileObject getProfile(){
+    public ProfileObject getProfile() {
         return mProfile;
     }
 
@@ -140,9 +137,6 @@ public class ProfileActivity extends AnimexxBaseActivityAB {
         }
         return super.onOptionsItemSelected(item);
     }
-
-
-
 
 
 }

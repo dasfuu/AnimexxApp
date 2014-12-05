@@ -32,7 +32,7 @@ public class ProfileBoxObject {
     public static final String TYPE_BESCHREIBUNG = "sb";
     public static final String TYPE_EIGENSCHAFTEN = "eig";
     public static final String TYPE_EVENTS = "conventions";
-    public static final String TYPE_FAVS= "fanlisten";
+    public static final String TYPE_FAVS = "fanlisten";
 
     //	- "id": die ID der Box
     @SerializedName("id")

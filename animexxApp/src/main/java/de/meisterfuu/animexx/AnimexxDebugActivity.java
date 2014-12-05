@@ -1,6 +1,10 @@
 package de.meisterfuu.animexx;
 
-import java.util.ArrayList;
+import android.app.ListActivity;
+import android.os.Bundle;
+import android.view.Menu;
+import android.widget.ArrayAdapter;
+
 import java.util.List;
 
 import de.meisterfuu.animexx.api.xmpp.XMPPApi;
@@ -9,19 +13,14 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-import android.os.Bundle;
-import android.app.ListActivity;
-import android.view.Menu;
-import android.widget.ArrayAdapter;
-
 public class AnimexxDebugActivity extends ListActivity {
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 //		setContentView(R.layout.activity_animexx_debug);
-		XMPPApi mApi = new XMPPApi(this);
-		mApi.getOfflineHistory(null, new Callback<List<XMPPMessageObject>>() {
+        XMPPApi mApi = new XMPPApi(this);
+        mApi.getOfflineHistory(null, new Callback<List<XMPPMessageObject>>() {
             @Override
             public void success(List<XMPPMessageObject> xmppMessageObjects, Response response) {
                 List<XMPPMessageObject> list = xmppMessageObjects;
@@ -33,13 +32,13 @@ public class AnimexxDebugActivity extends ListActivity {
 
             }
         });
-	}
+    }
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.animexx_debug, menu);
-		return true;
-	}
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.animexx_debug, menu);
+        return true;
+    }
 
 }

@@ -28,11 +28,11 @@ public class AnimexxBaseActivityAB extends AnimexxBaseActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
     }
 
-    public void setTitle(String pTitle){
+    public void setTitle(String pTitle) {
         mToolbar.setTitle(pTitle);
     }
 
-    public Toolbar getToolbar(){
+    public Toolbar getToolbar() {
         return mToolbar;
     }
 

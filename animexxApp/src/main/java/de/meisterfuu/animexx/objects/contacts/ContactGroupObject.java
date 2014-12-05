@@ -7,34 +7,34 @@ import com.google.gson.annotations.SerializedName;
  */
 public class ContactGroupObject {
 
-	@SerializedName("id")
-	private long id;
-	@SerializedName("name")
-	private String name;
-	@SerializedName("anzahl")
-	private long count;
+    @SerializedName("id")
+    private long id;
+    @SerializedName("name")
+    private String name;
+    @SerializedName("anzahl")
+    private long count;
 
-	public long getId() {
-		return id;
-	}
+    public long getId() {
+        return id;
+    }
 
-	public void setId(final long pId) {
-		id = pId;
-	}
+    public void setId(final long pId) {
+        id = pId;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(final String pName) {
-		name = pName;
-	}
+    public void setName(final String pName) {
+        name = pName;
+    }
 
-	public long getCount() {
-		return count;
-	}
+    public long getCount() {
+        return count;
+    }
 
-	public void setCount(final long pCount) {
-		count = pCount;
-	}
+    public void setCount(final long pCount) {
+        count = pCount;
+    }
 }

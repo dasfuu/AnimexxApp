@@ -15,30 +15,30 @@ import retrofit.client.Response;
  */
 public abstract class RefreshTokenCallback<T> implements Callback<T> {
 
-	private final Context mContext;
+    private final Context mContext;
 
-	public RefreshTokenCallback(Context pContext){
-		mContext = pContext;
-	}
+    public RefreshTokenCallback(Context pContext) {
+        mContext = pContext;
+    }
 
-	@Override
-	public void failure(final RetrofitError error) {
-		if(error.getResponse().getStatus() == 401) {
-			final WebAPI api = new WebAPI(mContext);
-			AccessToken.clearToken(mContext);
-			api.getOAuthApi().refreshAccessToken(Constants.CLIENT_ID,Constants.CLIENT_SECRET, AccessToken.getToken(mContext).getRefreshToken(),"refresh_token", new Callback<RefreshToken>() {
-				@Override
-				public void success(final RefreshToken t, final Response response) {
-					retry();
-				}
+    @Override
+    public void failure(final RetrofitError error) {
+        if (error.getResponse().getStatus() == 401) {
+            final WebAPI api = new WebAPI(mContext);
+            AccessToken.clearToken(mContext);
+            api.getOAuthApi().refreshAccessToken(Constants.CLIENT_ID, Constants.CLIENT_SECRET, AccessToken.getToken(mContext).getRefreshToken(), "refresh_token", new Callback<RefreshToken>() {
+                @Override
+                public void success(final RefreshToken t, final Response response) {
+                    retry();
+                }
 
-				@Override
-				public void failure(final RetrofitError error) {
-					Log.e("Api", "getProfile()", error);
-				}
-			});
-		}
-	}
+                @Override
+                public void failure(final RetrofitError error) {
+                    Log.e("Api", "getProfile()", error);
+                }
+            });
+        }
+    }
 
-	public abstract void retry();
+    public abstract void retry();
 }

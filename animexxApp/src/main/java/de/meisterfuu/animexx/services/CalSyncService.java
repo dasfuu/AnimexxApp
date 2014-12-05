@@ -1,8 +1,5 @@
 package de.meisterfuu.animexx.services;
 
-import de.meisterfuu.animexx.services.helper.EventCalHelper;
-import de.meisterfuu.animexx.services.helper.PrivateCalHelper;
-
 import android.accounts.Account;
 import android.accounts.OperationCanceledException;
 import android.app.Service;
@@ -15,16 +12,19 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
-public class CalSyncService extends Service {
-	
-	private static SyncAdapterImpl sSyncAdapter = null;
-		public static final String TAG = "Animexx Cal";
-	
-	public CalSyncService() {
-		super();
-	}
+import de.meisterfuu.animexx.services.helper.EventCalHelper;
+import de.meisterfuu.animexx.services.helper.PrivateCalHelper;
 
-	private static class SyncAdapterImpl extends AbstractThreadedSyncAdapter {
+public class CalSyncService extends Service {
+
+    private static SyncAdapterImpl sSyncAdapter = null;
+    public static final String TAG = "Animexx Cal";
+
+    public CalSyncService() {
+        super();
+    }
+
+    private static class SyncAdapterImpl extends AbstractThreadedSyncAdapter {
         private Context mContext;
 
         public SyncAdapterImpl(Context context) {
@@ -35,32 +35,31 @@ public class CalSyncService extends Service {
         @Override
         public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
             try {
-            	CalSyncService.performSync(mContext, account, extras, authority, provider, syncResult);
+                CalSyncService.performSync(mContext, account, extras, authority, provider, syncResult);
             } catch (OperationCanceledException e) {
 //                Log.e(Constants.TAG, "OperationCanceledException", e);
             }
         }
     }
-	
-	@Override
+
+    @Override
     public IBinder onBind(Intent intent) {
         IBinder ret = null;
         ret = getSyncAdapter().getSyncAdapterBinder();
         return ret;
     }
-	
-	private SyncAdapterImpl getSyncAdapter() {
+
+    private SyncAdapterImpl getSyncAdapter() {
         if (sSyncAdapter == null)
             sSyncAdapter = new SyncAdapterImpl(this);
         return sSyncAdapter;
     }
 
-	public static void performSync(Context mContext, Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) throws OperationCanceledException {
-		performSync(mContext);
-	}
-	
-	
-    
+    public static void performSync(Context mContext, Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) throws OperationCanceledException {
+        performSync(mContext);
+    }
+
+
     public static void performSync(Context pContext) {
         Log.d(TAG, "Starting sync...");
         EventCalHelper.sync(pContext);

@@ -1,55 +1,55 @@
 package de.meisterfuu.animexx.objects;
 
-import java.io.Serializable;
-
 import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
 
 
 public class AvatarObject implements Serializable {
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	@SerializedName("height")
-	int height;
-	@SerializedName("width")
-	int width;
-	@SerializedName("url")
-	String url;
 
-	public AvatarObject(){
-	}
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+    @SerializedName("height")
+    int height;
+    @SerializedName("width")
+    int width;
+    @SerializedName("url")
+    String url;
 
-	
-	public int getHeight() {
-		return height;
-	}
+    public AvatarObject() {
+    }
 
-	
-	public void setHeight(int height) {
-		this.height = height;
-	}
 
-	
-	public int getWidth() {
-		return width;
-	}
+    public int getHeight() {
+        return height;
+    }
 
-	
-	public void setWidth(int width) {
-		this.width = width;
-	}
 
-	
-	public String getUrl() {
-		return url;
-	}
+    public void setHeight(int height) {
+        this.height = height;
+    }
 
-	
-	public void setUrl(String url) {
-		this.url = url;
-	}
-	
+
+    public int getWidth() {
+        return width;
+    }
+
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+
+    public String getUrl() {
+        return url;
+    }
+
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
 }
 

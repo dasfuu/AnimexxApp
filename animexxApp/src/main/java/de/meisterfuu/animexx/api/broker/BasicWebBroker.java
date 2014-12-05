@@ -9,21 +9,21 @@ import de.meisterfuu.animexx.api.web.WebAPI;
  */
 public abstract class BasicWebBroker {
 
-	private final WebAPI mWebApi;
-	private final Context mContext;
+    private final WebAPI mWebApi;
+    private final Context mContext;
 
-	public BasicWebBroker(Context pContext){
-		this.mContext = pContext.getApplicationContext();
-		this.mWebApi = new WebAPI(mContext);
+    public BasicWebBroker(Context pContext) {
+        this.mContext = pContext.getApplicationContext();
+        this.mWebApi = new WebAPI(mContext);
         this.getWebApi().refresh(mContext);
-	}
+    }
 
-	public WebAPI getWebApi() {
-		return mWebApi;
-	}
+    public WebAPI getWebApi() {
+        return mWebApi;
+    }
 
-	public Context getContext() {
-		return mContext;
-	}
+    public Context getContext() {
+        return mContext;
+    }
 
 }

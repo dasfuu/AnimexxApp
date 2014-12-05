@@ -1,39 +1,39 @@
 package de.meisterfuu.animexx.utils.imageloader;
 
 
-public class ImageSaveObject{
+public class ImageSaveObject {
 
-	String url;
-	String name;
-	
-	public ImageSaveObject(String url, String name) {
-		super();
-		this.url = url;
-		this.name = name;
-	}
-	
-	public String getUrl() {
-		return url;
-	}
+    String url;
+    String name;
 
-	
-	public void setUrl(String url) {
-		this.url = url;
-	}
+    public ImageSaveObject(String url, String name) {
+        super();
+        this.url = url;
+        this.name = name;
+    }
 
-	
-	public String getName() {
-		return name;
-	}
+    public String getUrl() {
+        return url;
+    }
 
-	
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	@Override
-	public String toString(){
-		return this.getUrl();
-	}
-	
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+
+    public String getName() {
+        return name;
+    }
+
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return this.getUrl();
+    }
+
 }

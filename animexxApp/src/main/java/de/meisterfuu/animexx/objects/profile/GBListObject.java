@@ -9,14 +9,14 @@ import java.util.ArrayList;
  */
 public class GBListObject {
 
-	@SerializedName("eintraege")
-	ArrayList<GBEntryObject> entries;
+    @SerializedName("eintraege")
+    ArrayList<GBEntryObject> entries;
 
-	public ArrayList<GBEntryObject> getEntries() {
-		return entries;
-	}
+    public ArrayList<GBEntryObject> getEntries() {
+        return entries;
+    }
 
-	public void setEntries(final ArrayList<GBEntryObject> pEntries) {
-		entries = pEntries;
-	}
+    public void setEntries(final ArrayList<GBEntryObject> pEntries) {
+        entries = pEntries;
+    }
 }

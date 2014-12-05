@@ -21,9 +21,9 @@ public class AccessToken extends BaseResponse {
     @SerializedName("refresh_token")
     private String refreshToken;
 
-	private long lastRefresh;
+    private long lastRefresh;
 
-	public String getAccessToken() {
+    public String getAccessToken() {
         return accessToken;
     }
 
@@ -39,23 +39,23 @@ public class AccessToken extends BaseResponse {
         return refreshToken;
     }
 
-	public void setAccessToken(final String pAccessToken) {
-		accessToken = pAccessToken;
-	}
+    public void setAccessToken(final String pAccessToken) {
+        accessToken = pAccessToken;
+    }
 
-	public void setTokenType(final String pTokenType) {
-		tokenType = pTokenType;
-	}
+    public void setTokenType(final String pTokenType) {
+        tokenType = pTokenType;
+    }
 
-	public void setExpiresIn(final Long pExpiresIn) {
-		expiresIn = pExpiresIn;
-	}
+    public void setExpiresIn(final Long pExpiresIn) {
+        expiresIn = pExpiresIn;
+    }
 
-	public void setRefreshToken(final String pRefreshToken) {
-		refreshToken = pRefreshToken;
-	}
+    public void setRefreshToken(final String pRefreshToken) {
+        refreshToken = pRefreshToken;
+    }
 
-	@Override
+    @Override
     public String toString() {
 
         if (super.getError() != null) {
@@ -70,36 +70,36 @@ public class AccessToken extends BaseResponse {
                 '}';
     }
 
-	public static AccessToken getToken(Context pContext){
-		AccessToken token = new AccessToken();
+    public static AccessToken getToken(Context pContext) {
+        AccessToken token = new AccessToken();
 
-		SharedPreferences config = PreferenceManager.getDefaultSharedPreferences(pContext.getApplicationContext());
-		token.accessToken = config.getString("OAUTH_ACCESSTOKEN", "");
-		token.tokenType = config.getString("OAUTH_TYPE", "");
-		token.expiresIn = config.getLong("OAUTH_EXPIRE", 0);
-		token.lastRefresh = config.getLong("OAUTH_LASTREFRESH", 0);
-		token.refreshToken = config.getString("OAUTH_REFRESHTOKEN", "");
+        SharedPreferences config = PreferenceManager.getDefaultSharedPreferences(pContext.getApplicationContext());
+        token.accessToken = config.getString("OAUTH_ACCESSTOKEN", "");
+        token.tokenType = config.getString("OAUTH_TYPE", "");
+        token.expiresIn = config.getLong("OAUTH_EXPIRE", 0);
+        token.lastRefresh = config.getLong("OAUTH_LASTREFRESH", 0);
+        token.refreshToken = config.getString("OAUTH_REFRESHTOKEN", "");
 
-		return token;
-	}
+        return token;
+    }
 
-	public static void saveToken(AccessToken pToken, Context pContext){
-		SharedPreferences.Editor config = PreferenceManager.getDefaultSharedPreferences(pContext.getApplicationContext()).edit();
-		config.putString("OAUTH_ACCESSTOKEN", pToken.accessToken);
-		config.putString("OAUTH_TYPE", pToken.tokenType);
-		config.putLong("OAUTH_EXPIRE", pToken.expiresIn);
-		config.putLong("OAUTH_LASTREFRESH", pToken.lastRefresh);
-		config.putString("OAUTH_REFRESHTOKEN", pToken.refreshToken);
-		config.commit();
-	}
+    public static void saveToken(AccessToken pToken, Context pContext) {
+        SharedPreferences.Editor config = PreferenceManager.getDefaultSharedPreferences(pContext.getApplicationContext()).edit();
+        config.putString("OAUTH_ACCESSTOKEN", pToken.accessToken);
+        config.putString("OAUTH_TYPE", pToken.tokenType);
+        config.putLong("OAUTH_EXPIRE", pToken.expiresIn);
+        config.putLong("OAUTH_LASTREFRESH", pToken.lastRefresh);
+        config.putString("OAUTH_REFRESHTOKEN", pToken.refreshToken);
+        config.commit();
+    }
 
-	public static void clearToken(Context pContext){
-		SharedPreferences.Editor config = PreferenceManager.getDefaultSharedPreferences(pContext.getApplicationContext()).edit();
-		config.remove("OAUTH_ACCESSTOKEN");
-		config.remove("OAUTH_TYPE");
-		config.remove("OAUTH_EXPIRE");
-		config.remove("OAUTH_LASTREFRESH");
-		config.remove("OAUTH_REFRESHTOKEN");
-		config.commit();
-	}
+    public static void clearToken(Context pContext) {
+        SharedPreferences.Editor config = PreferenceManager.getDefaultSharedPreferences(pContext.getApplicationContext()).edit();
+        config.remove("OAUTH_ACCESSTOKEN");
+        config.remove("OAUTH_TYPE");
+        config.remove("OAUTH_EXPIRE");
+        config.remove("OAUTH_LASTREFRESH");
+        config.remove("OAUTH_REFRESHTOKEN");
+        config.commit();
+    }
 }

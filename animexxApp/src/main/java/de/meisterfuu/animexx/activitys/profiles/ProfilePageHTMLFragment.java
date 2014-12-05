@@ -18,21 +18,21 @@ import retrofit.client.Response;
 
 public class ProfilePageHTMLFragment extends Fragment {
 
-	private UserBroker mApi;
-	private String mBoxID;
-	private long mID;
-	private WebView mWebView;
+    private UserBroker mApi;
+    private String mBoxID;
+    private long mID;
+    private WebView mWebView;
 
-	public static Fragment getInstance(Context pContext, long pUserID, String pBoxID){
+    public static Fragment getInstance(Context pContext, long pUserID, String pBoxID) {
         ProfilePageHTMLFragment fragment = new ProfilePageHTMLFragment();
         Bundle args = new Bundle();
         args.putLong("id", pUserID);
         args.putString("boxid", pBoxID);
         fragment.setArguments(args);
         return fragment;
-	}
+    }
 
-	@Override
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_profile_page_html, container, false);
@@ -44,13 +44,13 @@ public class ProfilePageHTMLFragment extends Fragment {
 
         mApi = new UserBroker(this.getActivity());
 
-		mWebView = (WebView) v.findViewById(R.id.fragment_profile_page_html_html);
+        mWebView = (WebView) v.findViewById(R.id.fragment_profile_page_html_html);
 
         load();
 
         return v;
 
-	}
+    }
 
     private void load() {
 

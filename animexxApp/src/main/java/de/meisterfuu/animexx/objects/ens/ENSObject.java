@@ -1,16 +1,16 @@
 package de.meisterfuu.animexx.objects.ens;
 
+import com.google.gson.annotations.SerializedName;
+import com.j256.ormlite.field.DataType;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
-
-import com.google.gson.annotations.SerializedName;
-import com.j256.ormlite.field.DataType;
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
 
 import de.meisterfuu.animexx.objects.UserObject;
 
@@ -35,307 +35,302 @@ public class ENSObject implements Comparable<ENSObject> {
 //	- an/von_ordner, int / Der Ordner, in dem die ENS bei einem selbst liegt. Entweder an_ordner oder von_ordner ist gesetzt. (Bei /ordner_ens_liste/ immer identisch zum ordner_id-Parameter)
 //	- an_gelesen, bool / Nur gesetzt, wenn man die ENS selbst geschrieben hat (ordner_typ == "von"). Zeigt an, ob das Gegenüber die ENS gelesen hat oder nicht (bzw. sie nachträglich wieder auf "ungelesen" gestetzt hat).
 //	- an_flags, int / Nur gesetzt, wenn die ENS an einen selbst ging (ordner_typ == "an"). Siehe/ordner_ens_liste/. 
-	
-	@DatabaseField(id = true)
-	@SerializedName("id")
-	long id;
-	
-	@DatabaseField(dataType = DataType.SERIALIZABLE)
-	@SerializedName("von")
-	UserObject von;
 
-	@DatabaseField(dataType = DataType.SERIALIZABLE)
-	@SerializedName("von_benachrichtigung")
-	UserObject reply_to;
+    @DatabaseField(id = true)
+    @SerializedName("id")
+    long id;
 
-	@DatabaseField
-	@SerializedName("noreply")
-	boolean noreply;
+    @DatabaseField(dataType = DataType.SERIALIZABLE)
+    @SerializedName("von")
+    UserObject von;
 
-	@DatabaseField(dataType = DataType.SERIALIZABLE)
-	@SerializedName("an")
-	ArrayList<UserObject> an;
-	
-	@DatabaseField
-	@SerializedName("betreff")
-	String subject;
-	
-	@DatabaseField
-	@SerializedName("text_html")
-	String message;
-	
-	@DatabaseField
-	@SerializedName("text_raw")
-	String message_raw;
-	
-	@DatabaseField
-	@SerializedName("sig_html")
-	String signature;
-	
-	@DatabaseField
-	@SerializedName("datum_utc")
-	String date;
-	
-	@DatabaseField
-	@SerializedName("typ")
-	int type;
-	
-	@DatabaseField
-	@SerializedName("konversation")
-	long topicID;
-	
-	@DatabaseField
-	@SerializedName("referenz")
-	long reference;
-	
-	@DatabaseField
-	@SerializedName("von_ordner")
-	long von_ordner;
-	
-	@DatabaseField
-	@SerializedName("an_ordner")
-	long an_ordner;
-	
-	int folder;
-	
-	@DatabaseField
-	@SerializedName("an_gelesen")
-	boolean outboxRead;
-	
-	@DatabaseField
-	@SerializedName("an_flags")
-	int flags;
-	
-	public ENSObject(){
-		
-	}
+    @DatabaseField(dataType = DataType.SERIALIZABLE)
+    @SerializedName("von_benachrichtigung")
+    UserObject reply_to;
 
-	
-	
-	public long getId() {
-		return id;
-	}
+    @DatabaseField
+    @SerializedName("noreply")
+    boolean noreply;
 
-	
-	public void setId(long id) {
-		this.id = id;
-	}
+    @DatabaseField(dataType = DataType.SERIALIZABLE)
+    @SerializedName("an")
+    ArrayList<UserObject> an;
 
-	
-	public UserObject getVon() {
-		return von;
-	}
+    @DatabaseField
+    @SerializedName("betreff")
+    String subject;
 
-	
-	public void setVon(UserObject von) {
-		this.von = von;
-	}
+    @DatabaseField
+    @SerializedName("text_html")
+    String message;
 
-	
-	public ArrayList<UserObject> getAn() {
-		return an;
-	}
+    @DatabaseField
+    @SerializedName("text_raw")
+    String message_raw;
 
-	
-	public void setAn(ArrayList<UserObject> an) {
-		this.an = an;
-	}
+    @DatabaseField
+    @SerializedName("sig_html")
+    String signature;
 
-	
-	public String getSubject() {
-		return subject;
-	}
+    @DatabaseField
+    @SerializedName("datum_utc")
+    String date;
 
-	
-	public void setSubject(String subject) {
-		this.subject = subject;
-	}
+    @DatabaseField
+    @SerializedName("typ")
+    int type;
 
-	
-	public String getMessage() {
-		return message;
-	}
+    @DatabaseField
+    @SerializedName("konversation")
+    long topicID;
 
-	
-	public void setMessage(String message) {
-		this.message = message;
-	}
+    @DatabaseField
+    @SerializedName("referenz")
+    long reference;
 
-	
-	public String getSignature() {
-		return signature;
-	}
+    @DatabaseField
+    @SerializedName("von_ordner")
+    long von_ordner;
 
-	
-	public void setSignature(String signature) {
-		this.signature = signature;
-	}
+    @DatabaseField
+    @SerializedName("an_ordner")
+    long an_ordner;
 
-	
-	public String getDate() {
-		return date;
-	}
-	
-	public Date getDateObject(){
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.GERMANY);
-		sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-		try {
-			return sdf.parse(getDate());
-		} catch (ParseException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
+    int folder;
 
-	
-	public void setDate(String date) {
-		this.date = date;
-	}
+    @DatabaseField
+    @SerializedName("an_gelesen")
+    boolean outboxRead;
 
-	
-	public int getType() {
-		return type;
-	}
+    @DatabaseField
+    @SerializedName("an_flags")
+    int flags;
 
-	
-	public void setType(int type) {
-		this.type = type;
-	}
+    public ENSObject() {
 
-	
-	public long getTopicID() {
-		return topicID;
-	}
-
-	
-	public void setTopicID(long topicID) {
-		this.topicID = topicID;
-	}
-
-	
-	public long getReference() {
-		return reference;
-	}
-
-	
-	public void setReference(long reference) {
-		this.reference = reference;
-	}
-
-	
-	public long getVon_ordner() {
-		return von_ordner;
-	}
-
-	
-	public void setVon_ordner(long von_ordner) {
-		this.von_ordner = von_ordner;
-	}
-
-	
-	public long getAn_ordner() {
-		return an_ordner;
-	}
-
-	
-	public void setAn_ordner(long an_ordner) {
-		this.an_ordner = an_ordner;
-	}
-
-	
-	public int getFolder() {
-		return folder;
-	}
-
-	
-	public void setFolder(int folder) {
-		this.folder = folder;
-	}
-
-	
-	public boolean isOutboxRead() {
-		return outboxRead;
-	}
-
-	
-	public void setOutboxRead(boolean outboxRead) {
-		this.outboxRead = outboxRead;
-	}
-
-	
-	public int getFlags() {
-		return flags;
-	}
-
-	
-	public void setFlags(int flags) {
-		this.flags = flags;
-	}
+    }
 
 
-	public UserObject getReply_to() {
-		return reply_to;
-	}
+    public long getId() {
+        return id;
+    }
 
 
-	public void setReply_to(final UserObject pReply_to) {
-		reply_to = pReply_to;
-	}
+    public void setId(long id) {
+        this.id = id;
+    }
 
 
-	public boolean isNoreply() {
-		return noreply;
-	}
+    public UserObject getVon() {
+        return von;
+    }
 
 
-	public void setNoreply(final boolean pNoreply) {
-		noreply = pNoreply;
-	}
-
-	
-	public String getMessage_raw() {
-		return message_raw;
-	}
+    public void setVon(UserObject von) {
+        this.von = von;
+    }
 
 
-
-	
-	public void setMessage_raw(String message_raw) {
-		this.message_raw = message_raw;
-	}
+    public ArrayList<UserObject> getAn() {
+        return an;
+    }
 
 
+    public void setAn(ArrayList<UserObject> an) {
+        this.an = an;
+    }
 
-	@Override
-	public int compareTo(ENSObject another) {
-		return ((Long)another.getId()).compareTo(this.getId());
 
-	}
-	
-	public boolean isRead(){
-		String flag = Integer.toBinaryString(getFlags());
-		if (flag.length() >= 2 && flag.charAt(flag.length() - 2) == '1')
-			return true;
-		else
-			return false;
-	}
-	
-	public boolean isAnswered() {
-		String flag = Integer.toBinaryString(getFlags());
-		if (flag.length() >= 3 && flag.charAt(flag.length() - 3) == '1')
-			return true;
-		else
-			return false;
-	}
-	
-	public boolean isForwarded() {
-		String flag = Integer.toBinaryString(getFlags());
-		if (flag.length() >= 4 && flag.charAt(flag.length() - 4) == '1')
-			return true;
-		else
-			return false;
-	}
-	
-	
-	
+    public String getSubject() {
+        return subject;
+    }
+
+
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+
+
+    public String getMessage() {
+        return message;
+    }
+
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+
+    public String getSignature() {
+        return signature;
+    }
+
+
+    public void setSignature(String signature) {
+        this.signature = signature;
+    }
+
+
+    public String getDate() {
+        return date;
+    }
+
+    public Date getDateObject() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.GERMANY);
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        try {
+            return sdf.parse(getDate());
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+
+    public int getType() {
+        return type;
+    }
+
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+
+    public long getTopicID() {
+        return topicID;
+    }
+
+
+    public void setTopicID(long topicID) {
+        this.topicID = topicID;
+    }
+
+
+    public long getReference() {
+        return reference;
+    }
+
+
+    public void setReference(long reference) {
+        this.reference = reference;
+    }
+
+
+    public long getVon_ordner() {
+        return von_ordner;
+    }
+
+
+    public void setVon_ordner(long von_ordner) {
+        this.von_ordner = von_ordner;
+    }
+
+
+    public long getAn_ordner() {
+        return an_ordner;
+    }
+
+
+    public void setAn_ordner(long an_ordner) {
+        this.an_ordner = an_ordner;
+    }
+
+
+    public int getFolder() {
+        return folder;
+    }
+
+
+    public void setFolder(int folder) {
+        this.folder = folder;
+    }
+
+
+    public boolean isOutboxRead() {
+        return outboxRead;
+    }
+
+
+    public void setOutboxRead(boolean outboxRead) {
+        this.outboxRead = outboxRead;
+    }
+
+
+    public int getFlags() {
+        return flags;
+    }
+
+
+    public void setFlags(int flags) {
+        this.flags = flags;
+    }
+
+
+    public UserObject getReply_to() {
+        return reply_to;
+    }
+
+
+    public void setReply_to(final UserObject pReply_to) {
+        reply_to = pReply_to;
+    }
+
+
+    public boolean isNoreply() {
+        return noreply;
+    }
+
+
+    public void setNoreply(final boolean pNoreply) {
+        noreply = pNoreply;
+    }
+
+
+    public String getMessage_raw() {
+        return message_raw;
+    }
+
+
+    public void setMessage_raw(String message_raw) {
+        this.message_raw = message_raw;
+    }
+
+
+    @Override
+    public int compareTo(ENSObject another) {
+        return ((Long) another.getId()).compareTo(this.getId());
+
+    }
+
+    public boolean isRead() {
+        String flag = Integer.toBinaryString(getFlags());
+        if (flag.length() >= 2 && flag.charAt(flag.length() - 2) == '1')
+            return true;
+        else
+            return false;
+    }
+
+    public boolean isAnswered() {
+        String flag = Integer.toBinaryString(getFlags());
+        if (flag.length() >= 3 && flag.charAt(flag.length() - 3) == '1')
+            return true;
+        else
+            return false;
+    }
+
+    public boolean isForwarded() {
+        String flag = Integer.toBinaryString(getFlags());
+        if (flag.length() >= 4 && flag.charAt(flag.length() - 4) == '1')
+            return true;
+        else
+            return false;
+    }
+
+
 }

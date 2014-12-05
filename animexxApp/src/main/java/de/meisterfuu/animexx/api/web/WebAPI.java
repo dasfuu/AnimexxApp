@@ -7,7 +7,6 @@ import com.squareup.okhttp.OkHttpClient;
 import de.meisterfuu.animexx.api.web.oauth.InterceptorSigner;
 import de.meisterfuu.animexx.api.web.oauth.OAuthInterface;
 import retrofit.ErrorHandler;
-import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.OkClient;
@@ -17,33 +16,33 @@ import retrofit.client.OkClient;
  */
 public class WebAPI implements ErrorHandler {
 
-	private static WebApiInterface sRApi;
+    private static WebApiInterface sRApi;
     private static InterceptorSigner mSigner;
     private OAuthInterface mROauthApi;
 
-	public WebAPI(Context pContext){
+    public WebAPI(Context pContext) {
 
-		if(sRApi ==  null) {
-            mSigner =  new InterceptorSigner(pContext.getApplicationContext());
-			RestAdapter.Builder builder = new RestAdapter.Builder()
-					.setEndpoint(WebApiInterface.API_ENDPOINT)
-					.setClient(new OkClient(new OkHttpClient()))
+        if (sRApi == null) {
+            mSigner = new InterceptorSigner(pContext.getApplicationContext());
+            RestAdapter.Builder builder = new RestAdapter.Builder()
+                    .setEndpoint(WebApiInterface.API_ENDPOINT)
+                    .setClient(new OkClient(new OkHttpClient()))
                     .setLogLevel(RestAdapter.LogLevel.FULL)
-					.setRequestInterceptor(mSigner);
+                    .setRequestInterceptor(mSigner);
 
-			RestAdapter adapter = builder.build();
+            RestAdapter adapter = builder.build();
 
-			sRApi = adapter.create(WebApiInterface.class);
-		}
+            sRApi = adapter.create(WebApiInterface.class);
+        }
 
     }
 
-	public WebApiInterface getApi(){
-		return sRApi;
-	}
+    public WebApiInterface getApi() {
+        return sRApi;
+    }
 
-	public OAuthInterface getOAuthApi(){
-        if(mROauthApi == null){
+    public OAuthInterface getOAuthApi() {
+        if (mROauthApi == null) {
             RestAdapter.Builder builder = new RestAdapter.Builder()
                     .setEndpoint(OAuthInterface.TOKEN_ENDPOINT)
                     .setClient(new OkClient(new OkHttpClient()))
@@ -55,20 +54,20 @@ public class WebAPI implements ErrorHandler {
             mROauthApi = adapter.create(OAuthInterface.class);
         }
 
-		return mROauthApi;
-	}
+        return mROauthApi;
+    }
 
-    public void refresh(Context pContext){
+    public void refresh(Context pContext) {
         mSigner.refresh(pContext);
     }
 
-	@Override
-	public Throwable handleError(final RetrofitError cause) {
+    @Override
+    public Throwable handleError(final RetrofitError cause) {
 
-		if(cause.getResponse().getStatus() == 401){
-			//Refresh Token
-		}
+        if (cause.getResponse().getStatus() == 401) {
+            //Refresh Token
+        }
 
-		return cause;
-	}
+        return cause;
+    }
 }
