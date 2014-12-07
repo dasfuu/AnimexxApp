@@ -7,13 +7,37 @@ import java.util.List;
 public class EventRoomProgramObject {
 
     @SerializedName("raum_id")
-    private long id;
+    private long roomId;
 
     @SerializedName("raum_name")
-    private String name;
+    private String roomName;
 
     @SerializedName("termine")
     private List<EventProgramEntry> entries;
+
+    public long getRoomId() {
+        return roomId;
+    }
+
+    public void setRoomId(long roomId) {
+        this.roomId = roomId;
+    }
+
+    public String getRoomName() {
+        return roomName;
+    }
+
+    public void setRoomName(String roomName) {
+        this.roomName = roomName;
+    }
+
+    public List<EventProgramEntry> getEntries() {
+        return entries;
+    }
+
+    public void setEntries(List<EventProgramEntry> entries) {
+        this.entries = entries;
+    }
 
     public static class EventProgramEntry {
 

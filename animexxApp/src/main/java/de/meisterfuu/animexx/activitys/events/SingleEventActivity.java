@@ -4,10 +4,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import com.squareup.otto.Subscribe;
@@ -37,7 +35,7 @@ public class SingleEventActivity extends AnimexxBaseActivityAB {
 
     @Override
     public void onCreate() {
-        setContentView(R.layout.activity_single_event_one_column);
+        setContentView(R.layout.activity_single_event);
         // Show the Up button in the action bar.
         mAPI = new EventBroker(this);
 
@@ -61,14 +59,11 @@ public class SingleEventActivity extends AnimexxBaseActivityAB {
         mSectionsPagerAdapter.addFragment(new SectionsPagerAdapter.FragmentHolder("Allgemein", "EventMain", SingleEventFragment.newInstance(), idcount++));
         mSectionsPagerAdapter.notifyDataSetChanged();
 
-        mAPI.getEvent(mID, this.getCallerID());
-
     }
 
     @Override
     public void onCreateWithSavedInstanceState(Bundle savedInstanceState) {
         super.onCreateWithSavedInstanceState(savedInstanceState);
-        load();
     }
 
     @Override
@@ -77,20 +72,31 @@ public class SingleEventActivity extends AnimexxBaseActivityAB {
         mAPI.getEvent(mID, this.getCallerID());
     }
 
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        load();
+    }
+
     @SuppressWarnings("unused")
     @Subscribe
     public void retrieveEvent(ApiEvent.EventEvent pEvent) {
+        if(mEvent == pEvent.getObj()){
+            return;
+        }
         mEvent = pEvent.getObj();
         load();
     }
 
     private void load(){
-        Log.e("DEBUGDEBUG", "load()");
         this.setTitle(mEvent.getName());
+        mSectionsPagerAdapter.addFragmentBeginning(new SectionsPagerAdapter.FragmentHolder("News", "page_news", SingleEventFragmentNews.newInstance(mEvent.getId()), idcount++));
+        mSectionsPagerAdapter.addFragment(new SectionsPagerAdapter.FragmentHolder("Programm", "page_program", SingleEventFragmentProgram.newInstance(mEvent.getId(), mEvent.getStartTS().getTime(), mEvent.getDays()), idcount++));
         for(EventDescriptionObject page: mEvent.getPages()){
             mSectionsPagerAdapter.addFragment(new SectionsPagerAdapter.FragmentHolder(page.getPageName(), "page_"+page.getPageName(), SingleEventDescriptionFragment.newInstance(mEvent.getId(),page.getId()), idcount++));
         }
         mSectionsPagerAdapter.notifyDataSetChanged();
+        mViewPager.setCurrentItem(1);
         this.getEventBus().getOtto().post(new FinishedLoadingEvent(this.getCallerID()));
     }
 

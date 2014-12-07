@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/weblog_list_item_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:background="@drawable/card_background_shadow"
+    android:gravity="center" >
+
+    <LinearLayout
+        android:id="@+id/card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+
+        <de.meisterfuu.animexx.utils.views.UserViewBig
+            android:id="@+id/weblog_list_item_author"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="3dp"/>
+
+        <TextView
+            android:id="@+id/weblog_list_item_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:paddingTop="0dp"
+            android:text="@+id/label"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/weblog_list_item_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:paddingTop="0dp"
+            android:text="Test" />
+
+        <TextView
+            android:id="@+id/weblog_list_item_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="8dp"
+            android:paddingTop="0dp"
+            android:paddingBottom="0dp"
+            android:text="@string/rpg_detail"
+            android:textColor="@color/grey_light"
+            android:textSize="14sp" />
+
+
+
+        <View
+            android:id="@+id/view1"
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:background="@color/stroke" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <TextView
+                android:id="@+id/weblog_list_item_button1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:text="@string/rpg_detail"
+                android:background="@android:drawable/list_selector_background"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/animexx_blue" />
+            <View
+                android:id="@+id/view2"
+                android:layout_width="0dp"
+                android:layout_margin="5dp"
+                android:layout_height="match_parent"
+                android:background="@color/stroke" />
+            <TextView
+                android:id="@+id/weblog_list_item_button2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:gravity="right"
+                android:text="@string/rpg_detail"
+                android:background="@android:drawable/list_selector_background"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/animexx_blue" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

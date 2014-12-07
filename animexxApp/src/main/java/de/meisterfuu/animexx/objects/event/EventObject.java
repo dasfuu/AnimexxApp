@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 import de.meisterfuu.animexx.objects.UserObject;
 
@@ -560,6 +561,12 @@ public class EventObject implements Serializable {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public long getDays(){
+        long diff =  this.getStartTS().getTime() -  this.getEndTS().getTime();
+        long days = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+        return  days;
     }
 
 

@@ -55,6 +55,11 @@ public class ApiEvent<T> {
 
         private ApiEvent<?> event;
 
+        public ApiProxyEvent(ApiEvent<?> event) {
+            this.setEvent(event);
+        }
+        public ApiProxyEvent() {
+        }
         public ApiEvent<?> getEvent() {
             return event;
         }

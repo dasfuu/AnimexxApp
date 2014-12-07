@@ -206,5 +206,16 @@ public class Helper {
         toast.show();
     }
 
+    public static long toTimestamp(String utcString){
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.GERMANY);
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        try {
+            return sdf.parse(utcString).getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
 
 }

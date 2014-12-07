@@ -9,7 +9,9 @@ import de.meisterfuu.animexx.api.EventBus;
 import de.meisterfuu.animexx.api.web.ReturnObject;
 import de.meisterfuu.animexx.objects.event.EventDescriptionObject;
 import de.meisterfuu.animexx.objects.event.EventObject;
+import de.meisterfuu.animexx.objects.event.EventRoomProgramObject;
 import de.meisterfuu.animexx.objects.profile.ProfileObject;
+import de.meisterfuu.animexx.objects.weblog.WeblogEntryObject;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -44,7 +46,7 @@ public class EventBroker extends BasicWebBroker {
         getWebApi().getApi().getEvent(pID, new Callback<ReturnObject<EventObject>>() {
             @Override
             public void success(final ReturnObject<EventObject> t, final Response response) {
-                EventBus.getBus().getOtto().post(new ApiEvent.EventEvent().setObj(t.getObj()).setCallerID(pCallerID));
+                EventBus.getBus().getOtto().post(new ApiEvent.ApiProxyEvent(new ApiEvent.EventEvent().setObj(t.getObj()).setCallerID(pCallerID)));
             }
 
             @Override
@@ -60,6 +62,19 @@ public class EventBroker extends BasicWebBroker {
         getWebApi().getApi().getEventDescription(pEventID, pPageID, pCallback);
     }
 
+    /**
+     * @param pCallback
+     */
+    public void getEventNews(final long pEventID, final Callback<ReturnObject<List<WeblogEntryObject>>> pCallback) {
+        getWebApi().getApi().getEventNews(pEventID, 30, pCallback);
+    }
+
+    /**
+     * @param pCallback
+     */
+    public void getEventProgram(final long pEventID, final Callback<ReturnObject<List<EventRoomProgramObject>>> pCallback) {
+        getWebApi().getApi().getEventProgram(pEventID, pCallback);
+    }
 
 }
 

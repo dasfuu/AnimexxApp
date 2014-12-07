@@ -2,6 +2,7 @@ package de.meisterfuu.animexx.activitys;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 
 import com.squareup.otto.DeadEvent;
 import com.squareup.otto.Subscribe;
@@ -32,6 +33,7 @@ public class AnimexxBaseActivity extends ActionBarActivity {
         @SuppressWarnings("unused")
         @Subscribe
         public void onApiCall(ApiEvent.ApiProxyEvent pProxyEvent) {
+            Log.e("OTTO", "onApiCall() ");
             if (pProxyEvent.getEvent().getCallerID() == mCallerID) {
                 // Send the real event off to the real handler.
                 mBus.getOtto().post(pProxyEvent.getEvent());

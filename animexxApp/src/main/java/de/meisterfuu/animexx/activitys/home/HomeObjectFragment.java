@@ -44,10 +44,11 @@ public class HomeObjectFragment extends Fragment implements AbsListView.OnItemCl
      * Views.
      */
     private HomeContactAdapter mAdapter;
+    private ArrayList<ContactHomeObject> mList;
 
     private HomeBroker mAPI;
 
-    private ArrayList<ContactHomeObject> mList;
+
 
 
     private FloatingActionButton mFloatButton;
