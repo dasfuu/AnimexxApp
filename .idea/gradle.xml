@@ -10,7 +10,6 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/animexxApp" />
-            <option value="$PROJECT_DIR$/slidingUpPanel" />
           </set>
         </option>
       </GradleProjectSettings>

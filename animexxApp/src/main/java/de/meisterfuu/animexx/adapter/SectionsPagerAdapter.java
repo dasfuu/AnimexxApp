@@ -105,4 +105,5 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
             this.id = id;
         }
     }
+
 }

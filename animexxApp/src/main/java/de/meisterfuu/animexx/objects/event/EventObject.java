@@ -2,6 +2,7 @@ package de.meisterfuu.animexx.objects.event;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -11,7 +12,7 @@ import java.util.TimeZone;
 
 import de.meisterfuu.animexx.objects.UserObject;
 
-public class EventObject {
+public class EventObject implements Serializable {
 
     //	- id: int
     @SerializedName("id")
@@ -85,7 +86,7 @@ public class EventObject {
     @SerializedName("bereich")
     Section sections;
 
-    public static class Section {
+    public static class Section implements Serializable{
 
         //	      id: int: Bereichs-ID
         @SerializedName("id")

@@ -2,7 +2,9 @@ package de.meisterfuu.animexx.objects.event;
 
 import com.google.gson.annotations.SerializedName;
 
-public class EventDescriptionObject {
+import java.io.Serializable;
+
+public class EventDescriptionObject implements Serializable {
 
     //    id: int: ID der Beschreibungsseite
     @SerializedName("id")

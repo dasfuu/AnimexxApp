@@ -88,7 +88,9 @@ public class ENSFolderFragment extends Fragment implements AbsListView.OnItemCli
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mAPI.close();
+        if(mAPI!=null){
+            mAPI.close();
+        }
     }
 
     @Override

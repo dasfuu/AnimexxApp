@@ -1,5 +1,6 @@
 package de.meisterfuu.animexx.activitys;
 
+import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 
@@ -8,6 +9,7 @@ import com.squareup.otto.Subscribe;
 
 import de.meisterfuu.animexx.api.ApiEvent;
 import de.meisterfuu.animexx.api.EventBus;
+import de.meisterfuu.animexx.api.FinishedLoadingEvent;
 import de.meisterfuu.animexx.api.xmpp.StatusEvent;
 import icepick.Icepick;
 import icepick.Icicle;
@@ -15,7 +17,7 @@ import icepick.Icicle;
 /**
  * Created by Meisterfuu on 26.09.2014.
  */
-public class AnimexxBaseActivity extends ActionBarActivity {
+public class AnimexxBaseFragment extends Fragment {
 
     EventBus mBus;
     @Icicle
@@ -27,6 +29,12 @@ public class AnimexxBaseActivity extends ActionBarActivity {
         @Subscribe
         public void onLoginEvent(StatusEvent pEvent) {
 
+        }
+
+        @SuppressWarnings("unused")
+        @Subscribe
+        public void onLoadEvent(FinishedLoadingEvent pEvent) {
+            parentFinishedLoading(pEvent.getParentId());
         }
 
         @SuppressWarnings("unused")
@@ -47,12 +55,12 @@ public class AnimexxBaseActivity extends ActionBarActivity {
         return mCallerID;
     }
 
-    public EventBus getEventBus(){
-        return mBus;
+    public void parentFinishedLoading(int pParentId){
+
     }
 
     @Override
-    protected void onCreate(final Bundle savedInstanceState) {
+    public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mBus = EventBus.getBus();
@@ -61,26 +69,10 @@ public class AnimexxBaseActivity extends ActionBarActivity {
 
         if (savedInstanceState == null) {
             mCallerID = mBus.getNewCallerID();
-            onCreate();
-            onCreateWithoutSavedInstanceState();
         } else {
             Icepick.restoreInstanceState(this, savedInstanceState);
             mBus.retryDeadEvents(mCallerID);
-            onCreate();
-            onCreateWithSavedInstanceState(savedInstanceState);
         }
-
-    }
-
-    public void onCreate(){
-
-    }
-
-    public void onCreateWithSavedInstanceState(final Bundle savedInstanceState){
-
-    }
-
-    public void onCreateWithoutSavedInstanceState(){
 
     }
 
@@ -97,11 +89,6 @@ public class AnimexxBaseActivity extends ActionBarActivity {
         mBus.getOtto().register(this);
         mBus.getOtto().register(mBaseActivityListener);
 
-    }
-
-    @Override
-    protected void onPostResume() {
-        super.onPostResume();
 
         /**
          * This covers missed events caused by dialogs or other views causing the
@@ -110,6 +97,8 @@ public class AnimexxBaseActivity extends ActionBarActivity {
          */
         mBus.retryDeadEvents(mCallerID);
     }
+
+
 
     @Override
     public void onPause() {
