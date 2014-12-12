@@ -5,13 +5,14 @@
 
 
     <ListView
+        android:id="@+id/fragment_profile_page_fan_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
+        android:dividerHeight="8dp"
+        android:padding="8dp"
         android:paddingStart="8dp"
         android:paddingEnd="8dp"
-        android:clipToPadding="true"
-        android:id="@+id/fragment_profile_page_fan_list" />
+        android:clipToPadding="false"
+        android:divider="#00FFFFFF"/>
 
 </FrameLayout>

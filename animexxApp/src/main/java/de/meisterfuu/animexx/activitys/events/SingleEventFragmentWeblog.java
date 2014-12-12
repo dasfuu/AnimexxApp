@@ -2,6 +2,7 @@ package de.meisterfuu.animexx.activitys.events;
 
 
 import android.os.Bundle;
+import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,21 +13,20 @@ import java.util.List;
 
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.activitys.AnimexxBaseFragment;
-import de.meisterfuu.animexx.adapter.HomeContactAdapter;
+import de.meisterfuu.animexx.adapter.WeblogEntryAdapter;
 import de.meisterfuu.animexx.api.broker.EventBroker;
 import de.meisterfuu.animexx.api.web.ReturnObject;
-import de.meisterfuu.animexx.objects.home.ContactHomeObject;
 import de.meisterfuu.animexx.objects.weblog.WeblogEntryObject;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
- * A simple {@link android.app.Fragment} subclass.
- * Use the {@link de.meisterfuu.animexx.activitys.events.SingleEventFragmentNews#newInstance} factory method to
+ * A simple {@link Fragment} subclass.
+ * Use the {@link SingleEventFragmentWeblog#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SingleEventFragmentNews extends AnimexxBaseFragment implements Callback<ReturnObject<List<ContactHomeObject>>> {
+public class SingleEventFragmentWeblog extends AnimexxBaseFragment implements Callback<ReturnObject<List<WeblogEntryObject>>> {
     private static final String ID_PARAM = "mEventId";
 
     /**
@@ -35,8 +35,8 @@ public class SingleEventFragmentNews extends AnimexxBaseFragment implements Call
      *
      * @return A new instance of fragment SingleEventFragmentNews.
      */
-    public static SingleEventFragmentNews newInstance(long pEventId) {
-        SingleEventFragmentNews fragment = new SingleEventFragmentNews();
+    public static SingleEventFragmentWeblog newInstance(long pEventId) {
+        SingleEventFragmentWeblog fragment = new SingleEventFragmentWeblog();
         Bundle args = new Bundle();
         args.putLong(ID_PARAM, pEventId);
         fragment.setArguments(args);
@@ -53,12 +53,12 @@ public class SingleEventFragmentNews extends AnimexxBaseFragment implements Call
      * Views.
      */
     private ArrayList<WeblogEntryObject> mList;
-    private HomeContactAdapter mAdapter;
+    private WeblogEntryAdapter mWeblogEntryAdapter;
 
     private long mEventId;
     private EventBroker mEventApi;
 
-    public SingleEventFragmentNews() {
+    public SingleEventFragmentWeblog() {
         // Required empty public constructor
     }
 
@@ -74,7 +74,7 @@ public class SingleEventFragmentNews extends AnimexxBaseFragment implements Call
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_single_event_news, container, false);
+        View view = inflater.inflate(R.layout.fragment_single_event_weblog, container, false);
         mListView = (AbsListView) view.findViewById(android.R.id.list);
         return view;
     }
@@ -83,12 +83,13 @@ public class SingleEventFragmentNews extends AnimexxBaseFragment implements Call
     public void onResume() {
         super.onResume();
         mEventApi = new EventBroker(this.getActivity());
+        mEventApi.getEventWeblogs(mEventId, this);
     }
 
     @Override
-    public void success(ReturnObject<List<ContactHomeObject>> listReturnObject, Response response) {
-        mAdapter = new HomeContactAdapter(listReturnObject.getObj(), this.getActivity());
-        mListView.setAdapter(mAdapter);
+    public void success(ReturnObject<List<WeblogEntryObject>> listReturnObject, Response response) {
+        mWeblogEntryAdapter = new WeblogEntryAdapter(listReturnObject.getObj(), this.getActivity());
+        mListView.setAdapter(mWeblogEntryAdapter);
     }
 
     @Override

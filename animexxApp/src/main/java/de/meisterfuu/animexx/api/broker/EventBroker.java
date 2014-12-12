@@ -7,14 +7,17 @@ import java.util.List;
 import de.meisterfuu.animexx.api.ApiEvent;
 import de.meisterfuu.animexx.api.EventBus;
 import de.meisterfuu.animexx.api.web.ReturnObject;
+import de.meisterfuu.animexx.api.web.oauth.OAuthInterface;
 import de.meisterfuu.animexx.objects.event.EventDescriptionObject;
 import de.meisterfuu.animexx.objects.event.EventObject;
 import de.meisterfuu.animexx.objects.event.EventRoomProgramObject;
+import de.meisterfuu.animexx.objects.home.ContactHomeObject;
 import de.meisterfuu.animexx.objects.profile.ProfileObject;
 import de.meisterfuu.animexx.objects.weblog.WeblogEntryObject;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.http.POST;
 
 public class EventBroker extends BasicWebBroker {
 
@@ -65,7 +68,7 @@ public class EventBroker extends BasicWebBroker {
     /**
      * @param pCallback
      */
-    public void getEventNews(final long pEventID, final Callback<ReturnObject<List<WeblogEntryObject>>> pCallback) {
+    public void getEventWeblogs(final long pEventID, final Callback<ReturnObject<List<WeblogEntryObject>>> pCallback) {
         getWebApi().getApi().getEventNews(pEventID, 30, pCallback);
     }
 
@@ -76,5 +79,8 @@ public class EventBroker extends BasicWebBroker {
         getWebApi().getApi().getEventProgram(pEventID, pCallback);
     }
 
+    public void getEventListHome(Callback<ReturnObject<List<EventObject>>> pCallback) {
+        getWebApi().getApi().getEventsHome(pCallback);
+    }
 }
 

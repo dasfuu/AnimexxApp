@@ -1,12 +1,16 @@
 package de.meisterfuu.animexx.activitys.events;
 
 import android.app.ListFragment;
+import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.adapter.EventAdapter;
 import de.meisterfuu.animexx.api.broker.EventBroker;
 import de.meisterfuu.animexx.api.web.ReturnObject;
@@ -29,6 +33,12 @@ public class EventListFragment extends ListFragment {
 //	     args.putString("mType", pType);
 //	     result.setArguments(args);
         return result;
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_event_list, container, false);
+        return view;
     }
 
     @Override
@@ -60,8 +70,6 @@ public class EventListFragment extends ListFragment {
         mList = new ArrayList<EventObject>();
         mAdapter = new EventAdapter(mList, EventListFragment.this.getActivity());
         this.setListAdapter(mAdapter);
-        this.getListView().setDivider(null);
-        this.getListView().setPadding(15, 0, 15, 0);
         loadEvents();
     }
 

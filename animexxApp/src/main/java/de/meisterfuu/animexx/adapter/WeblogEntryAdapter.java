@@ -1,6 +1,7 @@
 package de.meisterfuu.animexx.adapter;
 
 import android.app.Activity;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -99,9 +100,9 @@ public class WeblogEntryAdapter extends BaseAdapter {
         holder.Title.setText(obj.getTitle());
         holder.Date.setText(obj.getDatum());
         if(obj.getTextLong() != null && !obj.getTextLong().isEmpty()){
-            holder.Text.setText(obj.getTextLong());
+            holder.Text.setText(Html.fromHtml(obj.getTextLong()));
         } else {
-            holder.Text.setText(obj.getTextShort());
+            holder.Text.setText(Html.fromHtml(obj.getTextShort()));
         }
 
         holder.User.setVisibility(View.GONE);

@@ -130,6 +130,7 @@ public class SingleEventFragmentProgram extends AnimexxBaseFragment implements C
         List<WeekViewEvent> events = new ArrayList<>();
         if(mList != null) {
             for (EventRoomProgramObject room : mList) {
+                if(room.getRoomName().equalsIgnoreCase("Workshopraum 1"))
                 for (EventRoomProgramObject.EventProgramEntry entry : room.getEntries()) {
 
                     WeekViewEvent event = new WeekViewEvent();

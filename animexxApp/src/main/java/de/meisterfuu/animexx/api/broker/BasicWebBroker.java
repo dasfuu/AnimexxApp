@@ -22,6 +22,10 @@ public abstract class BasicWebBroker {
         return mWebApi;
     }
 
+    public de.meisterfuu.animexx.api.web.WebApiInterface getInterface() {
+        return mWebApi.getApi();
+    }
+
     public Context getContext() {
         return mContext;
     }

@@ -39,7 +39,7 @@ public class EventRoomProgramObject {
         this.entries = entries;
     }
 
-    public static class EventProgramEntry {
+    public static class EventProgramEntry implements Comparable<EventProgramEntry> {
 
         @SerializedName("id")
         private long id;
@@ -57,6 +57,8 @@ public class EventRoomProgramObject {
         private String startServer;
         @SerializedName("end_server")
         private String endServer;
+
+        private transient String roomName;
 
         public long getId() {
             return id;
@@ -120,6 +122,19 @@ public class EventRoomProgramObject {
 
         public void setEndServer(final String pEndServer) {
             endServer = pEndServer;
+        }
+
+        public String getRoomName() {
+            return roomName;
+        }
+
+        public void setRoomName(String roomName) {
+            this.roomName = roomName;
+        }
+
+        @Override
+        public int compareTo(EventProgramEntry another) {
+            return this.getStartUtc().compareTo(another.getStartUtc());
         }
     }
 

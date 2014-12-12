@@ -155,8 +155,6 @@ public class HomeObjectFragment extends Fragment implements AbsListView.OnItemCl
         SwingBottomInAnimationAdapter swingAdapter = new SwingBottomInAnimationAdapter(mAdapter);
         swingAdapter.setAbsListView(mListView);
         mListView.setAdapter(swingAdapter);
-//		mListView.setDivider(null);
-        mListView.setPadding(15, 0, 15, 0);
 
 
         loadEntries();

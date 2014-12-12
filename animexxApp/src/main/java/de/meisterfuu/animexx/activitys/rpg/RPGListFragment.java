@@ -5,14 +5,18 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.activitys.main.MainActivity;
 import de.meisterfuu.animexx.adapter.RPGListAdapter;
 import de.meisterfuu.animexx.api.broker.RPGBroker;
@@ -43,6 +47,12 @@ public class RPGListFragment extends ListFragment {
         Intent intent = new Intent(pContext, MainActivity.class);
         intent.putExtra("LANDING", "RPG");
         return PendingIntent.getActivity(pContext, 0, intent, 0);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_rpg_list, container, false);
+        return view;
     }
 
     @Override
@@ -78,8 +88,6 @@ public class RPGListFragment extends ListFragment {
         mList = new ArrayList<RPGObject>();
         mAdapter = new RPGListAdapter(mList, RPGListFragment.this.getActivity());
         RPGListFragment.this.setListAdapter(mAdapter);
-        this.getListView().setDivider(null);
-        this.getListView().setPadding(15, 0, 15, 0);
         loadRPG();
     }
 

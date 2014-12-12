@@ -90,8 +90,9 @@ public class SingleEventActivity extends AnimexxBaseActivityAB {
 
     private void load(){
         this.setTitle(mEvent.getName());
-        mSectionsPagerAdapter.addFragmentBeginning(new SectionsPagerAdapter.FragmentHolder("News", "page_news", SingleEventFragmentNews.newInstance(mEvent.getId()), idcount++));
-        mSectionsPagerAdapter.addFragment(new SectionsPagerAdapter.FragmentHolder("Programm", "page_program", SingleEventFragmentProgram.newInstance(mEvent.getId(), mEvent.getStartTS().getTime(), mEvent.getDays()), idcount++));
+        mSectionsPagerAdapter.addFragmentBeginning(new SectionsPagerAdapter.FragmentHolder("News", "page_news", SingleEventFragmentWeblog.newInstance(mEvent.getId()), idcount++));
+        mSectionsPagerAdapter.addFragment(new SectionsPagerAdapter.FragmentHolder("Programm", "page_program_cal", SingleEventFragmentProgram.newInstance(mEvent.getId(), mEvent.getStartTS().getTime(), mEvent.getDays()), idcount++));
+        mSectionsPagerAdapter.addFragment(new SectionsPagerAdapter.FragmentHolder("Programm", "page_program", SingleEventFragmentProgramList.newInstance(mEvent.getId()), idcount++));
         for(EventDescriptionObject page: mEvent.getPages()){
             mSectionsPagerAdapter.addFragment(new SectionsPagerAdapter.FragmentHolder(page.getPageName(), "page_"+page.getPageName(), SingleEventDescriptionFragment.newInstance(mEvent.getId(),page.getId()), idcount++));
         }
