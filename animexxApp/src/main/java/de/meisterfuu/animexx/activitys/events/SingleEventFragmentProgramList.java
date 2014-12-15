@@ -21,6 +21,7 @@ import de.meisterfuu.animexx.api.broker.EventBroker;
 import de.meisterfuu.animexx.api.web.ReturnObject;
 import de.meisterfuu.animexx.objects.event.EventRoomProgramObject;
 import de.meisterfuu.animexx.utils.Helper;
+import de.meisterfuu.animexx.utils.views.FeedbackListView;
 import de.meisterfuu.animexx.utils.views.WeekView;
 import de.meisterfuu.animexx.utils.views.WeekViewEvent;
 import retrofit.Callback;
@@ -52,7 +53,7 @@ public class SingleEventFragmentProgramList extends AnimexxBaseFragment implemen
     }
 
 
-    private ListView mListView;
+    private FeedbackListView mListView;
     private List<EventRoomProgramObject> mList;
     private RoomEventAdapter mAdapter;
     private ArrayList<EventRoomProgramObject.EventProgramEntry> mAdapterList;
@@ -77,7 +78,7 @@ public class SingleEventFragmentProgramList extends AnimexxBaseFragment implemen
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_single_event_program_list, container, false);
-        mListView = (ListView) view.findViewById(android.R.id.list);
+        mListView = (FeedbackListView) view.findViewById(android.R.id.list);
         mAdapterList = new ArrayList<>();
         mAdapter = new RoomEventAdapter(mAdapterList, getActivity());
         mListView.setAdapter(mAdapter);
@@ -88,11 +89,13 @@ public class SingleEventFragmentProgramList extends AnimexxBaseFragment implemen
     public void onResume() {
         super.onResume();
         mEventApi = new EventBroker(this.getActivity());
+        mListView.showLoading();
         mEventApi.getEventProgram(mEventId, this);
     }
 
     @Override
     public void success(final ReturnObject<List<EventRoomProgramObject>> listReturnObject, Response response) {
+        mListView.showList();
         mList = listReturnObject.getObj();
         ArrayList<EventRoomProgramObject.EventProgramEntry> list = new ArrayList<>();
         if(mList != null) {
@@ -105,12 +108,15 @@ public class SingleEventFragmentProgramList extends AnimexxBaseFragment implemen
             Collections.sort(list);
             mAdapterList.clear();
             mAdapter.addAll(list);
+            if(mAdapter.getCount() == 0){
+                mListView.showError("Kein Programmplan vorhanden");
+            }
         }
     }
 
     @Override
     public void failure(RetrofitError error) {
-
+        mListView.showError("Es ist ein Fehler aufgetreten");
     }
 
 }

@@ -13,9 +13,16 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="top"
-            android:minHeight="30dp"
             android:orientation="vertical"
-            android:padding="10dp" >
+            android:padding="8dp" >
+
+            <TextView
+                android:id="@+id/event_attender_list_item_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:text="@+id/label"
+                android:textSize="16sp" />
 
             <LinearLayout
                 android:id="@+id/event_attender_flag_container"
@@ -24,20 +31,13 @@
 
                 <TextView
                     android:id="@+id/event_attender_list_item_subtitle"
+                    android:layout_marginTop="8dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@+id/label"
                     android:textSize="12sp" />
             </LinearLayout>
-
-            <TextView
-                android:id="@+id/event_attender_list_item_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="7dp"
-                android:text="@+id/label"
-                android:textSize="16sp" />
 
         </LinearLayout>
     </LinearLayout>

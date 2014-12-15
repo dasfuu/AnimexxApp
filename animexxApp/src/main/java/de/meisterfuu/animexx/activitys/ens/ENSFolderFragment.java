@@ -23,6 +23,7 @@ import de.meisterfuu.animexx.adapter.ENSFolderAdapter;
 import de.meisterfuu.animexx.api.broker.ENSBroker;
 import de.meisterfuu.animexx.api.web.ReturnObject;
 import de.meisterfuu.animexx.objects.ens.ENSObject;
+import de.meisterfuu.animexx.utils.views.FeedbackListView;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -44,7 +45,7 @@ public class ENSFolderFragment extends Fragment implements AbsListView.OnItemCli
     static int saveItemCount, saveNextPage;
     static ArrayList<ENSObject> saveList;
     static int saveScrollstate;
-    private ListView mListView;
+    private FeedbackListView mListView;
 
     public static ENSFolderFragment getInstance(long pFolderID, String pType, long pDesign) {
         ENSFolderFragment result = new ENSFolderFragment();
@@ -96,8 +97,7 @@ public class ENSFolderFragment extends Fragment implements AbsListView.OnItemCli
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ens_list, container, false);
-        mListView = (ListView) view.findViewById(android.R.id.list);
-
+        mListView = (FeedbackListView) view.findViewById(android.R.id.list);
         return view;
     }
 
@@ -131,7 +131,6 @@ public class ENSFolderFragment extends Fragment implements AbsListView.OnItemCli
         mPrevTotalItemCount = ENSFolderFragment.saveItemCount;
         mListView.setAdapter(mAdapter);
         mListView.setOnItemClickListener(this);
-
         this.getListView().setSelectionFromTop(ENSFolderFragment.saveScrollstate, 0);
 
         //this.getListView().setDivider(null);
@@ -158,11 +157,15 @@ public class ENSFolderFragment extends Fragment implements AbsListView.OnItemCli
                 Collections.sort(list);
                 mAdapter.stopLoadingAnimation();
                 mAdapter.addAll(list);
+
             }
 
             @Override
             public void failure(final RetrofitError error) {
                 mAdapter.stopLoadingAnimation();
+                if(mAdapter.getCount() == 0){
+                    mListView.showError("Es ist ein Fehler aufgetreten");
+                }
             }
         });
     }

@@ -98,7 +98,7 @@ public class SingleEventActivity extends AnimexxBaseActivityAB {
             mSectionsPagerAdapter.addFragment(new SectionsPagerAdapter.FragmentHolder(page.getPageName(), "page_"+page.getPageName(), SingleEventDescriptionFragment.newInstance(mEvent.getId(),page.getId()), idcount++));
         }
         mSectionsPagerAdapter.notifyDataSetChanged();
-        mViewPager.setCurrentItem(1);
+        mViewPager.setCurrentItem(1, false);
         this.getEventBus().getOtto().post(new FinishedLoadingEvent(this.getCallerID()));
     }
 

@@ -19,6 +19,7 @@ import de.meisterfuu.animexx.api.broker.EventBroker;
 import de.meisterfuu.animexx.api.web.ReturnObject;
 import de.meisterfuu.animexx.objects.event.EventAttender;
 import de.meisterfuu.animexx.objects.event.EventRoomProgramObject;
+import de.meisterfuu.animexx.utils.views.FeedbackListView;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -48,7 +49,7 @@ public class SingleEventFragmentAttenderList extends AnimexxBaseFragment impleme
     }
 
 
-    private ListView mListView;
+    private FeedbackListView mListView;
     private List<EventAttender> mList;
     private EventAttenderAdapter mAdapter;
 
@@ -72,7 +73,7 @@ public class SingleEventFragmentAttenderList extends AnimexxBaseFragment impleme
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_single_event_attender_list, container, false);
-        mListView = (ListView) view.findViewById(android.R.id.list);
+        mListView = (FeedbackListView) view.findViewById(android.R.id.list);
         mList = new ArrayList<>();
         mAdapter = new EventAttenderAdapter(mList, getActivity());
         mListView.setAdapter(mAdapter);
@@ -83,16 +84,22 @@ public class SingleEventFragmentAttenderList extends AnimexxBaseFragment impleme
     public void onResume() {
         super.onResume();
         mEventApi = new EventBroker(this.getActivity());
+        mListView.showLoading();
         mEventApi.getEventAttender(mEventId, this);
     }
 
     @Override
     public void success(final ReturnObject<List<EventAttender>> listReturnObject, Response response) {
+        mListView.showList();
         mAdapter.addAll(listReturnObject.getObj());
+        if(mAdapter.getCount() == 0){
+            mListView.showError("Niemand nimmt am Event teil.");
+        }
     }
 
     @Override
     public void failure(RetrofitError error) {
+        mListView.showError("Es ist ein Fehler aufgetreten");
 
     }
 

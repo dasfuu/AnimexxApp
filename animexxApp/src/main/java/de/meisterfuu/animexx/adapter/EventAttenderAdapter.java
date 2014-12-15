@@ -94,16 +94,25 @@ public class EventAttenderAdapter extends BaseAdapter {
         //holder.Color.setBackgroundResource(R.color.animexx_blue);
 
 
-        String title = Event.getUsername();
-        if(Event.getComment() != null && !Event.getComment().isEmpty()){
-            title += "\n"+Event.getComment();
-        }
-        holder.Title.setText(title);
+        String sub;
         if(Event.getStatus() == EventAttender.STATUS_SURE){
-            holder.Subtitle.setText("");
+            sub = "";
         } else {
-            holder.Subtitle.setText("Unsicher");
+            sub = "Unsicher";
         }
+        if(Event.getComment() != null && !Event.getComment().isEmpty()){
+            if(!sub.isEmpty()){
+                sub += "\n";
+            }
+            sub += Event.getComment();
+        }
+        if(!sub.isEmpty()){
+            holder.Subtitle.setVisibility(View.VISIBLE);
+            holder.Subtitle.setText(sub);
+        } else {
+            holder.Subtitle.setVisibility(View.GONE);
+        }
+        holder.Title.setText(Event.getUsername());
 
 
 

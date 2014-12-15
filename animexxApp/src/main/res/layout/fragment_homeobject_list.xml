@@ -5,18 +5,18 @@
     android:layout_height="match_parent"
     tools:context=".HomeObjectFragment" >
 
-    <ListView
+
+    <de.meisterfuu.animexx.utils.views.FeedbackListView
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:dividerHeight="8dp"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
-        android:paddingStart="8dp"
         android:paddingTop="8dp"
-        android:paddingEnd="8dp"
+        android:paddingBottom="8dp"
         android:clipToPadding="false"
-		android:divider="#00FFFFFF"/>
+        android:divider="@android:color/transparent"
+        android:dividerHeight="8dp"/>
 
 
     <com.melnykov.fab.FloatingActionButton
@@ -26,11 +26,5 @@
         android:layout_gravity="bottom|right"
         android:layout_margin="16dp"
         android:src="@drawable/ic_new_plus" />
-
-    <TextView
-        android:id="@android:id/empty"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center" />
 
 </FrameLayout>

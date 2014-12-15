@@ -17,6 +17,7 @@ import de.meisterfuu.animexx.adapter.WeblogEntryAdapter;
 import de.meisterfuu.animexx.api.broker.EventBroker;
 import de.meisterfuu.animexx.api.web.ReturnObject;
 import de.meisterfuu.animexx.objects.weblog.WeblogEntryObject;
+import de.meisterfuu.animexx.utils.views.FeedbackListView;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -46,7 +47,7 @@ public class SingleEventFragmentWeblog extends AnimexxBaseFragment implements Ca
     /**
      * The fragment's ListView/GridView.
      */
-    private AbsListView mListView;
+    private FeedbackListView mListView;
 
     /**
      * The Adapter which will be used to populate the ListView/GridView with
@@ -75,7 +76,7 @@ public class SingleEventFragmentWeblog extends AnimexxBaseFragment implements Ca
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_single_event_weblog, container, false);
-        mListView = (AbsListView) view.findViewById(android.R.id.list);
+        mListView = (FeedbackListView) view.findViewById(android.R.id.list);
         return view;
     }
 
@@ -83,17 +84,22 @@ public class SingleEventFragmentWeblog extends AnimexxBaseFragment implements Ca
     public void onResume() {
         super.onResume();
         mEventApi = new EventBroker(this.getActivity());
+        mListView.showLoading();
         mEventApi.getEventWeblogs(mEventId, this);
     }
 
     @Override
     public void success(ReturnObject<List<WeblogEntryObject>> listReturnObject, Response response) {
+        mListView.showList();
         mWeblogEntryAdapter = new WeblogEntryAdapter(listReturnObject.getObj(), this.getActivity());
         mListView.setAdapter(mWeblogEntryAdapter);
+        if(mWeblogEntryAdapter.getCount() == 0){
+            mListView.showError("Keine Weblog Einträge");
+        }
     }
 
     @Override
     public void failure(RetrofitError error) {
-
+        mListView.showError("Es ist ein Fehler aufgetreten");
     }
 }

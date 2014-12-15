@@ -21,6 +21,7 @@ import de.meisterfuu.animexx.adapter.HomeContactAdapter;
 import de.meisterfuu.animexx.api.broker.HomeBroker;
 import de.meisterfuu.animexx.api.web.ReturnObject;
 import de.meisterfuu.animexx.objects.home.ContactHomeObject;
+import de.meisterfuu.animexx.utils.views.FeedbackListView;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -37,7 +38,7 @@ public class HomeObjectFragment extends Fragment implements AbsListView.OnItemCl
     /**
      * The fragment's ListView/GridView.
      */
-    private AbsListView mListView;
+    private FeedbackListView mListView;
 
     /**
      * The Adapter which will be used to populate the ListView/GridView with
@@ -83,7 +84,7 @@ public class HomeObjectFragment extends Fragment implements AbsListView.OnItemCl
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_homeobject_list, container, false);
-        mListView = (AbsListView) view.findViewById(android.R.id.list);
+        mListView = (FeedbackListView) view.findViewById(android.R.id.list);
         mFloatButton = (FloatingActionButton) view.findViewById(R.id.home_float_new);
         mAPI = new HomeBroker(this.getActivity());
 
@@ -170,18 +171,35 @@ public class HomeObjectFragment extends Fragment implements AbsListView.OnItemCl
         mAPI.getContactWidgetList(new Callback<ReturnObject<List<ContactHomeObject>>>() {
             @Override
             public void success(ReturnObject<List<ContactHomeObject>> listReturnObject, Response response) {
+                if(listReturnObject.getObj().size() == 0){
+                    return;
+                }
                 List<ContactHomeObject> list = listReturnObject.getObj();
                 ArrayList<ContactHomeObject> list_ = new ArrayList<ContactHomeObject>();
-                ContactHomeObject start = mAdapter.getItem(0);
-                for (ContactHomeObject obj : list) {
-                    if (obj.isMultiItem() == false) {
-                        if (start.getServerTS() < obj.getServerTS()) list_.add(obj);
-                    } else {
-                        for (ContactHomeObject obj_ : obj.getChildItems()) {
-                            if (start.getServerTS() < obj.getServerTS()) list_.add(obj_);
+
+                if(mAdapter.getCount() > 0) {
+                    ContactHomeObject start = mAdapter.getItem(0);
+                    for (ContactHomeObject obj : list) {
+                        if (obj.isMultiItem() == false) {
+                            if (start.getServerTS() < obj.getServerTS()) list_.add(obj);
+                        } else {
+                            for (ContactHomeObject obj_ : obj.getChildItems()) {
+                                if (start.getServerTS() < obj.getServerTS()) list_.add(obj_);
+                            }
+                        }
+                    }
+                } else {
+                    for (ContactHomeObject obj : list) {
+                        if (obj.isMultiItem() == false) {
+                            list_.add(obj);
+                        } else {
+                            for (ContactHomeObject obj_ : obj.getChildItems()) {
+                                list_.add(obj_);
+                            }
                         }
                     }
                 }
+
                 Collections.sort(list_);
                 mAdapter.addAllBeginning(list_);
             }
@@ -194,10 +212,11 @@ public class HomeObjectFragment extends Fragment implements AbsListView.OnItemCl
     }
 
     private void loadEntries() {
-
+        mListView.showLoading();
         mAPI.getContactWidgetList(new Callback<ReturnObject<List<ContactHomeObject>>>() {
             @Override
             public void success(ReturnObject<List<ContactHomeObject>> listReturnObject, Response response) {
+                mListView.showList();
                 List<ContactHomeObject> list = listReturnObject.getObj();
                 ArrayList<ContactHomeObject> list_ = new ArrayList<ContactHomeObject>();
                 for (ContactHomeObject obj : list) {
@@ -211,11 +230,14 @@ public class HomeObjectFragment extends Fragment implements AbsListView.OnItemCl
                 }
                 Collections.sort(list_);
                 mAdapter.addAll(list_);
+                if(mAdapter.getCount() == 0){
+                    mListView.showError("Keine Einträge");
+                }
             }
 
             @Override
             public void failure(RetrofitError error) {
-
+                mListView.showError("Es ist ein Fehler aufgetreten");
             }
         });
 
