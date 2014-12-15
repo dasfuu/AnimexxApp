@@ -466,6 +466,7 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
     @Override
     public void pingFailed() {
         connectionState = false;
+        mManager.scheduleCheck();
         Log.i(TAG, ".pingFailed() called");
         DebugNotification.notify(mApplicationContext, "XMPP Ping Failed", 865);
     }

@@ -8,6 +8,7 @@ import de.meisterfuu.animexx.api.ApiEvent;
 import de.meisterfuu.animexx.api.EventBus;
 import de.meisterfuu.animexx.api.web.ReturnObject;
 import de.meisterfuu.animexx.api.web.oauth.OAuthInterface;
+import de.meisterfuu.animexx.objects.event.EventAttender;
 import de.meisterfuu.animexx.objects.event.EventDescriptionObject;
 import de.meisterfuu.animexx.objects.event.EventObject;
 import de.meisterfuu.animexx.objects.event.EventRoomProgramObject;
@@ -77,6 +78,13 @@ public class EventBroker extends BasicWebBroker {
      */
     public void getEventProgram(final long pEventID, final Callback<ReturnObject<List<EventRoomProgramObject>>> pCallback) {
         getWebApi().getApi().getEventProgram(pEventID, pCallback);
+    }
+
+    /**
+     * @param pCallback
+     */
+    public void getEventAttender(final long pEventID, final Callback<ReturnObject<List<EventAttender>>> pCallback) {
+        getWebApi().getApi().getEventAttender(pEventID, pCallback);
     }
 
     public void getEventListHome(Callback<ReturnObject<List<EventObject>>> pCallback) {

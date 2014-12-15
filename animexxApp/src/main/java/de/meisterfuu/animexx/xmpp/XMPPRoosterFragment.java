@@ -22,7 +22,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class XMPPRoosterFragment extends ListFragment {
+public class XMPPRoosterFragment extends ListFragment  {
 
     ArrayList<XMPPRoosterObject> list;
     XMPPRoosterAdapter adapter;

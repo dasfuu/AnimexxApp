@@ -31,7 +31,6 @@ public class XMPPService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-
         Notification notification = getNotification("");
         this.startForeground(42, notification);
     }
@@ -63,7 +62,7 @@ public class XMPPService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
-        throw new UnsupportedOperationException("Not implemented");
+        return null;
     }
 
     @Override

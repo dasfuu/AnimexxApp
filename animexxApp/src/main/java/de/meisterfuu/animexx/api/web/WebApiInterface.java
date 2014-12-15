@@ -12,6 +12,7 @@ import de.meisterfuu.animexx.objects.contacts.ContactGroupObject;
 import de.meisterfuu.animexx.objects.ens.ENSCheckRecipientsObject;
 import de.meisterfuu.animexx.objects.ens.ENSFolderObject;
 import de.meisterfuu.animexx.objects.ens.ENSObject;
+import de.meisterfuu.animexx.objects.event.EventAttender;
 import de.meisterfuu.animexx.objects.event.EventDescriptionObject;
 import de.meisterfuu.animexx.objects.event.EventObject;
 import de.meisterfuu.animexx.objects.event.EventRoomProgramObject;
@@ -436,6 +437,14 @@ public interface WebApiInterface {
     @POST("/events/event/beschreibung_del/")
     @FormUrlEncoded
     void deleteEventDescription(@Field("event_id") long pEventId, @Field("beschreibung_id") long pPageId, Callback<ReturnObject<Integer>> pCallback);
+
+    @POST("/events/event/dabei_get/")
+    @FormUrlEncoded
+    ReturnObject<List<EventAttender>> getEventAttender(@Field("event_id") long pEventId);
+
+    @POST("/events/event/dabei_get/")
+    @FormUrlEncoded
+    void getEventAttender(@Field("event_id") long pEventId, Callback<ReturnObject<List<EventAttender>>> pCallback);
 
 
     //-------------------------------
