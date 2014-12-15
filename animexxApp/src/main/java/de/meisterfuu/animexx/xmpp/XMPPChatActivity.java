@@ -66,11 +66,10 @@ public class XMPPChatActivity extends AnimexxBaseActivityAB {
 
         list = new ArrayList<ChatAdapter.Message>();
         adapter = new ChatAdapter(list, this, lv);
-        lv.setDivider(null);
-        SwingBottomInAnimationAdapter swingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(adapter);
-        swingBottomInAnimationAdapter.setInitialDelayMillis(100);
-        swingBottomInAnimationAdapter.setAbsListView(lv);
-        lv.setAdapter(swingBottomInAnimationAdapter);
+        //SwingBottomInAnimationAdapter swingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(adapter);
+        //swingBottomInAnimationAdapter.setInitialDelayMillis(100);
+        //swingBottomInAnimationAdapter.setAbsListView(lv);
+        lv.setAdapter(adapter);
 
         mApi = new XMPPApi(this);
 

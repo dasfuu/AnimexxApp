@@ -11,28 +11,36 @@
 
 
 
-    <LinearLayout
-    android:id="@+id/LinearLayout1"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-        android:layout_below="@+id/toolbar">
 
     <ListView
         android:id="@+id/xmpp_test_list"
         android:layout_width="match_parent"
-        android:layout_height="0dip"
-        android:layout_weight="2"
-        android:stackFromBottom="true">
+        android:layout_height="match_parent"
+        android:stackFromBottom="true"
+        android:transcriptMode="alwaysScroll"
+        android:layout_below="@+id/toolbar"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:clipToPadding="false"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="8dp"
+        android:layout_above="@+id/relativeLayout">
     </ListView>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="10dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="10dp" >
+        android:paddingBottom="8dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingTop="8dp"
+        android:background="@color/white"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/relativeLayout">
 
         <EditText
             android:id="@+id/xmpp_test_send"
@@ -43,7 +51,9 @@
             android:layout_toLeftOf="@+id/xmpp_test_send_bt"
             android:ems="10" >
 
+            <!--
             <requestFocus />
+            -->
         </EditText>
 
         <ImageView
@@ -56,4 +66,4 @@
             android:src="@drawable/ic_action_ens_new" />
     </RelativeLayout>
 
-</LinearLayout></RelativeLayout>
+</RelativeLayout>

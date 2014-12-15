@@ -32,7 +32,7 @@ public class ChatAdapter extends BaseAdapter {
     public void add(ChatAdapter.Message pMessage) {
         mList.add(pMessage);
         this.notifyDataSetChanged();
-        mView.smoothScrollToPositionFromTop(mList.size() - 1, 0);
+        //mView.smoothScrollToPositionFromTop(mList.size() - 1, 0);
     }
 
     public void addTop(ChatAdapter.Message pMessage) {
