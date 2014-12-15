@@ -10,6 +10,7 @@ import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -17,22 +18,25 @@ import java.util.Collections;
 import java.util.List;
 
 import de.meisterfuu.animexx.R;
+import de.meisterfuu.animexx.activitys.AnimexxBaseFragment;
 import de.meisterfuu.animexx.activitys.main.MainActivity;
 import de.meisterfuu.animexx.adapter.RPGListAdapter;
 import de.meisterfuu.animexx.api.broker.RPGBroker;
 import de.meisterfuu.animexx.api.web.ReturnObject;
 import de.meisterfuu.animexx.objects.rpg.RPGObject;
+import de.meisterfuu.animexx.utils.views.FeedbackListView;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class RPGListFragment extends ListFragment {
+public class RPGListFragment extends AnimexxBaseFragment implements AdapterView.OnItemClickListener {
 
     RPGBroker mAPI;
     ArrayList<RPGObject> mList;
     RPGListAdapter mAdapter;
     SharedPreferences config;
+    private FeedbackListView mListView;
 
     public static RPGListFragment getInstance() {
         RPGListFragment result = new RPGListFragment();
@@ -52,16 +56,10 @@ public class RPGListFragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_rpg_list, container, false);
+        mListView = (FeedbackListView) view.findViewById(android.R.id.list);mListView.setOnItemClickListener(this);
         return view;
     }
 
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
-
-        RPGPostListActivity.getInstance(this.getActivity(), mAdapter.getItem(position).getId());
-//		RPGPostListActivity.getInstance(this.getActivity(), mAdapter.getItem(position).getId());
-    }
 
     @Override
     public void onPause() {
@@ -87,29 +85,37 @@ public class RPGListFragment extends ListFragment {
     private void init() {
         mList = new ArrayList<RPGObject>();
         mAdapter = new RPGListAdapter(mList, RPGListFragment.this.getActivity());
-        RPGListFragment.this.setListAdapter(mAdapter);
+        mListView.setAdapter(mAdapter);
         loadRPG();
     }
 
 
     private void loadRPG() {
-
+        mListView.showLoading();
         mAPI.getRPGList(new Callback<ReturnObject<List<RPGObject>>>() {
             @Override
             public void success(ReturnObject<List<RPGObject>> listReturnObject, Response response) {
+                mListView.showList();
                 List<RPGObject> list = listReturnObject.getObj();
                 list.removeAll(Collections.singleton(null));
                 Collections.sort(list);
                 mAdapter.addAll(list);
+                if(mAdapter.getCount() == 0){
+                    mListView.showError("Keine RPGs");
+                }
             }
 
             @Override
             public void failure(RetrofitError error) {
-
+                mListView.showError("Es ist ein Fehler aufgetreten");
             }
         });
 
     }
 
 
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        RPGPostListActivity.getInstance(this.getActivity(), mAdapter.getItem(position).getId());
+    }
 }

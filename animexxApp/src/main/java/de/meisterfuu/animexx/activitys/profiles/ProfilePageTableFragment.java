@@ -16,6 +16,7 @@ import de.meisterfuu.animexx.adapter.ProfileTableAdapter;
 import de.meisterfuu.animexx.api.broker.UserBroker;
 import de.meisterfuu.animexx.api.web.ReturnObject;
 import de.meisterfuu.animexx.objects.profile.ProfileBoxObject;
+import de.meisterfuu.animexx.utils.views.FeedbackListView;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -26,7 +27,7 @@ public class ProfilePageTableFragment extends Fragment {
     private UserBroker mApi;
     private String mBoxID;
     private long mID;
-    private ListView mListView;
+    private FeedbackListView mListView;
     private ProfileTableAdapter mAdapter;
     private List<List<String>> mList;
 
@@ -51,7 +52,7 @@ public class ProfilePageTableFragment extends Fragment {
 
         mApi = new UserBroker(this.getActivity());
 
-        mListView = (ListView) v.findViewById(R.id.fragment_profile_page_fan_list);
+        mListView = (FeedbackListView) v.findViewById(android.R.id.list);
         mList = new ArrayList<List<String>>();
         mAdapter = new ProfileTableAdapter(mList, this.getActivity());
         mListView.setAdapter(mAdapter);
@@ -62,17 +63,21 @@ public class ProfilePageTableFragment extends Fragment {
     }
 
     private void load() {
-
+        mListView.showLoading();
         mApi.getProfileBox(mBoxID, mID, new Callback<ReturnObject<ProfileBoxObject>>() {
             @Override
             public void success(ReturnObject<ProfileBoxObject> o, Response response) {
+                mListView.showList();
                 ProfileBoxObject obj = (ProfileBoxObject) o.getObj();
                 mAdapter.addAll(obj.getDataList());
+                if(mAdapter.getCount() == 0){
+                    mListView.showError("Keine Einträge");
+                }
             }
 
             @Override
             public void failure(RetrofitError error) {
-
+                mListView.showError("Es ist ein Fehler aufgetreten");
             }
         });
 

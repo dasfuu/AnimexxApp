@@ -35,6 +35,7 @@ import de.meisterfuu.animexx.notification.RPGPostNotification;
 import de.meisterfuu.animexx.objects.rpg.RPGDraftObject;
 import de.meisterfuu.animexx.objects.rpg.RPGObject;
 import de.meisterfuu.animexx.objects.rpg.RPGPostObject;
+import de.meisterfuu.animexx.utils.views.FeedbackListView;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -58,7 +59,7 @@ public class RPGPostListActivity extends AnimexxBaseActivityAB implements PanelS
 
     SlidingUpPanelLayout mSlidingLayout;
     EditText mEditPost;
-    ListView mListView;
+    FeedbackListView mListView;
     CheckBox mCBAction, mCBInTime;
     TextView mToggleLabel;
     private BroadcastReceiver mReceiver;
@@ -75,7 +76,7 @@ public class RPGPostListActivity extends AnimexxBaseActivityAB implements PanelS
         mCBInTime = (CheckBox) this.findViewById(R.id.activity_rpgpost_new_intime);
         mSpinnerAvatar = (Spinner) this.findViewById(R.id.activity_rpgpost_new_avatar);
         mEditPost = (EditText) this.findViewById(R.id.activity_rpgpost_new_text);
-        mListView = (ListView) this.findViewById(android.R.id.list);
+        mListView = (FeedbackListView) this.findViewById(android.R.id.list);
 
         mSlidingLayout.setPanelSlideListener(this);
         mAPI = new RPGBroker(this);
@@ -128,7 +129,7 @@ public class RPGPostListActivity extends AnimexxBaseActivityAB implements PanelS
         mList = new ArrayList<RPGPostObject>();
         mAdapter = new RPGPostListAdapter(mList, this, mRPGID);
         mListView.setAdapter(mAdapter);
-
+        mListView.showLoading();
         mAPI.getRPG(mRPGID, new Callback<ReturnObject<RPGObject>>() {
             @Override
             public void success(ReturnObject<RPGObject> rpgObjectReturnObject, Response response) {
@@ -153,7 +154,7 @@ public class RPGPostListActivity extends AnimexxBaseActivityAB implements PanelS
 
             @Override
             public void failure(RetrofitError error) {
-
+                mListView.showError("Es ist ein Fehler aufgetreten");
             }
         });
     }
@@ -166,13 +167,17 @@ public class RPGPostListActivity extends AnimexxBaseActivityAB implements PanelS
         mAPI.getRPGPostList(mRPGID, mRPG.getPostCount() - 29, new Callback<ReturnObject<List<RPGPostObject>>>() {
             @Override
             public void success(ReturnObject<List<RPGPostObject>> listReturnObject, Response response) {
+                mListView.showList();
                 List<RPGPostObject> list = listReturnObject.getObj();
                 mAdapter.addAll(list);
+                if(mAdapter.getCount() == 0){
+                    mListView.showError("Keine Posts");
+                }
             }
 
             @Override
             public void failure(RetrofitError error) {
-
+                mListView.showError("Es ist ein Fehler aufgetreten");
             }
         });
 
@@ -210,9 +215,15 @@ public class RPGPostListActivity extends AnimexxBaseActivityAB implements PanelS
 
     @Override
     public void onPanelCollapsed(View panel) {
-        mToggleLabel.setText("Zurück zum Post");
+        if(mEditPost.getText().toString().isEmpty()){
+            mToggleLabel.setText("Neuer Post");
+        } else {
+            mToggleLabel.setText("Zurück zum Post");
+        }
+
         this.getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         RPGPostListActivity.this.getSupportActionBar().setDisplayShowTitleEnabled(true);
+        this.setTitle(mRPG.getName());
         invalidateOptionsMenu();
     }
 

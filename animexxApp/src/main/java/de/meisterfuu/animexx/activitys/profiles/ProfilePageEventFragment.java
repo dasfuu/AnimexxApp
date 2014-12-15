@@ -18,6 +18,7 @@ import de.meisterfuu.animexx.adapter.ProfileEventAdapter;
 import de.meisterfuu.animexx.api.broker.UserBroker;
 import de.meisterfuu.animexx.api.web.ReturnObject;
 import de.meisterfuu.animexx.objects.profile.ProfileBoxObject;
+import de.meisterfuu.animexx.utils.views.FeedbackListView;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -29,7 +30,7 @@ public class ProfilePageEventFragment extends Fragment implements AdapterView.On
     private UserBroker mApi;
     private String mBoxID;
     private long mID;
-    private ListView mListView;
+    private FeedbackListView mListView;
     private ProfileEventAdapter mAdapter;
     private List<ProfileBoxObject.EventBoxObject> mList;
 
@@ -55,7 +56,7 @@ public class ProfilePageEventFragment extends Fragment implements AdapterView.On
 
         mApi = new UserBroker(this.getActivity());
 
-        mListView = (ListView) v.findViewById(R.id.fragment_profile_page_event_list);
+        mListView = (FeedbackListView) v.findViewById(android.R.id.list);
         mList = new ArrayList<ProfileBoxObject.EventBoxObject>();
         mAdapter = new ProfileEventAdapter(mList, this.getActivity());
         mListView.setAdapter(mAdapter);
@@ -68,18 +69,22 @@ public class ProfilePageEventFragment extends Fragment implements AdapterView.On
 
 
     private void load() {
-
+        mListView.showLoading();
         mApi.getProfileBox(mBoxID, mID, new Callback<ReturnObject<ProfileBoxObject>>() {
             @Override
             public void success(ReturnObject<ProfileBoxObject> o, Response response) {
+                mListView.showList();
                 ProfileBoxObject obj = (ProfileBoxObject) o.getObj();
                 mAdapter.addAll(obj.getEventsFuture());
                 mAdapter.addAll(obj.getEventsPast());
+                if(mAdapter.getCount() == 0){
+                    mListView.showError("Keine Events");
+                }
             }
 
             @Override
             public void failure(RetrofitError error) {
-
+                mListView.showError("Es ist ein Fehler aufgetreten");
             }
         });
 

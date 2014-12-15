@@ -5,7 +5,7 @@
                     android:layout_height="match_parent"
                     tools:context=".gbPostListActivity" xmlns:app="http://schemas.android.com/apk/res-auto">
 
-            <ListView
+            <de.meisterfuu.animexx.utils.views.FeedbackListView
                 android:id="@android:id/list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

@@ -19,18 +19,26 @@
         android:gravity="bottom"
         android:layout_below="@+id/toolbar">
 
-        <ListView
-            android:id="@android:id/list"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:stackFromBottom="true"
-            android:transcriptMode="alwaysScroll" />
+            android:layout_height="match_parent">
+
+            <de.meisterfuu.animexx.utils.views.FeedbackListView
+                android:id="@android:id/list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:stackFromBottom="true"
+                android:transcriptMode="alwaysScroll" />
+
+        </FrameLayout>
+
 
         <include
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             layout="@layout/activity_rpgpost_new" />
+
     </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 
 </RelativeLayout>
