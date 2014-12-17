@@ -25,10 +25,13 @@ public class RPGObject implements Comparable<RPGObject> {
     @SerializedName("beendet")
     boolean finished;
 
-    //		  "letzt_datum_server":"2013-04-13 16:29:38",
+//		  "letzt_datum_server":"2013-04-13 16:29:38",
 //		  "letzt_datum_utc":"2013-04-13 14:29:38",
     @SerializedName("letzt_datum_utc")
     String lastPostDate;
+
+    @SerializedName("letzt_datum_server")
+    String lastPostDateServer;
 
     //		  "letzt_charakter":"",
     @SerializedName("letzt_charakter")
@@ -60,8 +63,8 @@ public class RPGObject implements Comparable<RPGObject> {
 //		    "Test-Angabe",
 //		    "<\\'>\":\/"
 //		  ],	
-//	@SerializedName("posting_metadaten")
-//	String metadata;
+    @SerializedName("posting_metadaten")
+    ArrayList<String> metadata;
 
 
     //		  "frei":3,
@@ -84,10 +87,12 @@ public class RPGObject implements Comparable<RPGObject> {
 
 //		  "tofu_at_hide":0, Bitmaske über die BBCodes, die nicht akzeptiert werden; aktuell noch nicht genauer dokumentiert
 //		  "tofu_avatare":3, Position der Avatare; aktuell noch nicht genauer dokumentiert
+
 //		  "tofu_sponsor":{ ... }, User-Objekt; sollte identisch mit tofu_data["mitglied"] sein
+    @SerializedName("tofu_sponsor")
+    UserObject tofuSponsor;
 
-
-    //		  "tofu_post_editable":2, Können Posting nachträglich bearbeitet werden; 0 == Nein, 1 == Bis max. 3 Tage nach dem Posting; 2 == Ja, immer.
+//		  "tofu_post_editable":2, Können Posting nachträglich bearbeitet werden; 0 == Nein, 1 == Bis max. 3 Tage nach dem Posting; 2 == Ja, immer.
     @SerializedName("tofu_post_editable")
     int tofuPostEditable;
 
@@ -129,19 +134,44 @@ public class RPGObject implements Comparable<RPGObject> {
 //		  "beschreibungen":[
 //		      Beschreibungsseiten-Objekte
 //		  ]
-
+    @SerializedName("beschreibungen")
+    ArrayList<DescriptionPageObject> descriptionPages;
 
     public RPGObject() {
 
     }
 
-//	public String getMetadata() {
-//		return metadata;
-//	}
-//
-//	public void setMetadata(String metadata) {
-//		this.metadata = metadata;
-//	}
+    public String getLastPostDateServer() {
+        return lastPostDateServer;
+    }
+
+    public void setLastPostDateServer(String lastPostDateServer) {
+        this.lastPostDateServer = lastPostDateServer;
+    }
+
+    public ArrayList<String> getMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(ArrayList<String> metadata) {
+        this.metadata = metadata;
+    }
+
+    public UserObject getTofuSponsor() {
+        return tofuSponsor;
+    }
+
+    public void setTofuSponsor(UserObject tofuSponsor) {
+        this.tofuSponsor = tofuSponsor;
+    }
+
+    public ArrayList<DescriptionPageObject> getDescriptionPages() {
+        return descriptionPages;
+    }
+
+    public void setDescriptionPages(ArrayList<DescriptionPageObject> descriptionPages) {
+        this.descriptionPages = descriptionPages;
+    }
 
     public int getPlayerCount() {
         return playerCount;
@@ -345,7 +375,6 @@ public class RPGObject implements Comparable<RPGObject> {
 //		      "y":160
 //		    }
 //		  ],
-
         @SerializedName("avatare")
         ArrayList<PlayerAvatarObject> avatars;
 
@@ -360,14 +389,69 @@ public class RPGObject implements Comparable<RPGObject> {
 //			 "Blubbw"
 //		   ]
 //		  ],
+        @SerializedName("eigenschaften")
+        ArrayList<ArrayList<String>> properties;
+
+
+
 //		  "beschreibung":"Test<br>\nsdf",
+        @SerializedName("beschreibung")
+        String description;
+
 //		  "hauptbild":"2012-11-21 17:02:08", UTC-Zeitpunkt des Uploads des Bildes; null, falls kein Bild vorhanden ist
+        @SerializedName("hauptbild")
+        String mainPicture;
+
 //		  "hauptbild_x":129,
-//		  "hauptbild_y":200		
+        @SerializedName("hauptbild_x")
+        int mainPictureX;
+//		  "hauptbild_y":200
+        @SerializedName("hauptbild_y")
+        int mainPictureY;
 
 
         public PlayerObject() {
 
+        }
+
+        public ArrayList<ArrayList<String>> getProperties() {
+            return properties;
+        }
+
+        public void setProperties(ArrayList<ArrayList<String>> properties) {
+            this.properties = properties;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
+        }
+
+        public String getMainPicture() {
+            return mainPicture;
+        }
+
+        public void setMainPicture(String mainPicture) {
+            this.mainPicture = mainPicture;
+        }
+
+        public int getMainPictureX() {
+            return mainPictureX;
+        }
+
+        public void setMainPictureX(int mainPictureX) {
+            this.mainPictureX = mainPictureX;
+        }
+
+        public int getMainPictureY() {
+            return mainPictureY;
+        }
+
+        public void setMainPictureY(int mainPictureY) {
+            this.mainPictureY = mainPictureY;
         }
 
         public long getId() {
@@ -491,6 +575,113 @@ public class RPGObject implements Comparable<RPGObject> {
         }
 
 
+    }
+
+    public static class DescriptionPageObject{
+
+//        "id":376689,
+        @SerializedName("id")
+        long id;
+//        "seite":1, Zur Sortierung der Seiten
+        @SerializedName("seite")
+        int page;
+//        "name":"Seitentitel",
+        @SerializedName("name")
+        String name;
+//            "orig_html":false,
+        @SerializedName("orig_html")
+        boolean wasHtml;
+//            "text_html":"Test<br>\nasdsdf",
+        @SerializedName("text_html")
+        String html;
+//            "datum_utc":"2013-11-15 12:56:52",
+        @SerializedName("datum_utc")
+        String dateUtc;
+//            "datum_server":"2013-11-15 13:56:52",
+        @SerializedName("datum_server")
+        String dateServer;
+//            "verfasser":null, null oder User-Objekt
+        @SerializedName("verfasser")
+        UserObject author;
+//        "zugriff":0
+        @SerializedName("zugriff")
+        int rights;
+
+        public static final int EVERYONE = 0;      //        0 == Alle Mitglieder dürfen die Seite sehen
+        public static final int PLAYER = 1;      //        1 == Nur Mitspieler dürfen die Seite sehen
+        public static final int MODS = 2;      //        2 == Nur RPG-Moderatoren dürfen die Seite sehen (noch nicht implementiert)
+
+        public long getId() {
+            return id;
+        }
+
+        public void setId(long id) {
+            this.id = id;
+        }
+
+        public int getPage() {
+            return page;
+        }
+
+        public void setPage(int page) {
+            this.page = page;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public boolean isWasHtml() {
+            return wasHtml;
+        }
+
+        public void setWasHtml(boolean wasHtml) {
+            this.wasHtml = wasHtml;
+        }
+
+        public String getHtml() {
+            return html;
+        }
+
+        public void setHtml(String html) {
+            this.html = html;
+        }
+
+        public String getDateUtc() {
+            return dateUtc;
+        }
+
+        public void setDateUtc(String dateUtc) {
+            this.dateUtc = dateUtc;
+        }
+
+        public String getDateServer() {
+            return dateServer;
+        }
+
+        public void setDateServer(String dateServer) {
+            this.dateServer = dateServer;
+        }
+
+        public UserObject getAuthor() {
+            return author;
+        }
+
+        public void setAuthor(UserObject author) {
+            this.author = author;
+        }
+
+        public int getRights() {
+            return rights;
+        }
+
+        public void setRights(int rights) {
+            this.rights = rights;
+        }
     }
 
     @Override

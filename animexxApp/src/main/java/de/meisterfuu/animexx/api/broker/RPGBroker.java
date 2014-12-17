@@ -4,11 +4,15 @@ import android.content.Context;
 
 import java.util.List;
 
+import de.meisterfuu.animexx.api.ApiEvent;
+import de.meisterfuu.animexx.api.EventBus;
 import de.meisterfuu.animexx.api.web.ReturnObject;
 import de.meisterfuu.animexx.objects.rpg.RPGDraftObject;
 import de.meisterfuu.animexx.objects.rpg.RPGObject;
 import de.meisterfuu.animexx.objects.rpg.RPGPostObject;
 import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class RPGBroker extends BasicWebBroker {
 
@@ -27,7 +31,22 @@ public class RPGBroker extends BasicWebBroker {
     }
 
     /**
-     * @param pCallback
+     */
+    public void getRPG(final long pID, final int pCallerID) {
+        getWebApi().getApi().getRPG(pID, new Callback<ReturnObject<RPGObject>>() {
+            @Override
+            public void success(ReturnObject<RPGObject> rpgObjectReturnObject, Response response) {
+                EventBus.getBus().getOtto().post(new ApiEvent.ApiProxyEvent(new ApiEvent.RPGEvent().setObj(rpgObjectReturnObject.getObj()).setCallerID(pCallerID)));
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
+    }
+
+    /**
      */
     public void getRPG(final long pID, final Callback<ReturnObject<RPGObject>> pCallback) {
         getWebApi().getApi().getRPG(pID, pCallback);

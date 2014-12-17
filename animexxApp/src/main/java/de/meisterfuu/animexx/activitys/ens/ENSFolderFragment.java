@@ -157,7 +157,9 @@ public class ENSFolderFragment extends Fragment implements AbsListView.OnItemCli
                 Collections.sort(list);
                 mAdapter.stopLoadingAnimation();
                 mAdapter.addAll(list);
-
+                if(mAdapter.getCount() == 0){
+                    mListView.showError("Keine ENS");
+                }
             }
 
             @Override

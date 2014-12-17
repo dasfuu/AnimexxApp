@@ -11,18 +11,11 @@
             android:layout_height="wrap_content"
             android:background="#11222222" >
 
-            <ImageView
-                android:id="@+id/rpgpost_item_avatar"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:adjustViewBounds="true"
-                android:scaleType="centerCrop"
-                android:src="@drawable/ic_contact_picture" />
-
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="8dp"
+                android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:orientation="vertical" >
 
@@ -40,15 +33,23 @@
                     android:text="Small Text"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
             </LinearLayout>
+
+            <ImageView
+                android:id="@+id/rpgpost_item_avatar"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_contact_picture" />
         </LinearLayout>
 
         <TextView
             android:id="@+id/rpgpost_item_post"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
             android:layout_marginTop="3dp"
             android:layout_weight="1"
             android:minHeight="50dp"

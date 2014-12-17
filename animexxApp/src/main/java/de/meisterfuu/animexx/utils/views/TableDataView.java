@@ -16,7 +16,7 @@ import de.meisterfuu.animexx.R;
 
 public class TableDataView extends LinearLayout {
 
-    ArrayList<TableDataEntity> mData;
+    ArrayList<TableDataViewEntry> mData;
     private Context mContext;
     LayoutInflater mInflater;
 
@@ -38,11 +38,11 @@ public class TableDataView extends LinearLayout {
     private void init(final Context pContext) {
         this.mContext = pContext;
         this.setOrientation(LinearLayout.VERTICAL);
-        mData = new ArrayList<TableDataEntity>();
+        mData = new ArrayList<TableDataViewEntry>();
         mInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    public void add(final TableDataEntity pEntry) {
+    public void add(final TableDataViewEntry pEntry) {
         mData.add(pEntry);
         this.addView(pEntry.getView(mInflater));
     }
@@ -57,7 +57,11 @@ public class TableDataView extends LinearLayout {
         mData.clear();
     }
 
-    public static class TableDataEntity {
+    public static interface TableDataViewEntry{
+        public LinearLayout getView(final LayoutInflater pInflater);
+    }
+
+    public static class TableDataEntity implements TableDataViewEntry {
 
         private Spannable text;
         private int icon_rid;
@@ -109,6 +113,49 @@ public class TableDataView extends LinearLayout {
 
         public TableDataEntity(final String pText, final int pIcon_rid) {
             this(new SpannableString(pText), pIcon_rid);
+        }
+    }
+
+    public static class TextTableDataEntity implements TableDataViewEntry{
+
+        private Spannable text;
+        private Spannable text_left;
+        private LinearLayout vContainer;
+        private TextView vText;
+        private TextView vTextLeft;
+
+        public Spannable getText() {
+            return text;
+        }
+
+        public void setText(final Spannable pText) {
+            text = pText;
+        }
+
+        public void setText(final String pText) {
+            this.setText(new SpannableString(pText));
+        }
+
+        public LinearLayout getView(final LayoutInflater pInflater) {
+            if (vContainer == null) {
+                vContainer = (LinearLayout) pInflater.inflate(R.layout.table_data_entity_text, null);
+                vText = (TextView) vContainer.findViewById(R.id.table_item_text);
+                vText.setText(text);
+
+                vTextLeft = (TextView) vContainer.findViewById(R.id.table_item_text_left);
+                vTextLeft.setText(text_left);
+
+            }
+            return vContainer;
+        }
+
+        public TextTableDataEntity(final Spannable pTextLeft, final Spannable pText) {
+            text = pText;
+            text_left = pTextLeft;
+        }
+
+        public TextTableDataEntity(final String pTextLeft, final String pText) {
+            this(new SpannableString(pTextLeft), new SpannableString(pText));
         }
     }
 }

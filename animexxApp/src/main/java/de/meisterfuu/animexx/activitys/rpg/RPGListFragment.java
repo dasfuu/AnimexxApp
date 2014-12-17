@@ -107,6 +107,7 @@ public class RPGListFragment extends AnimexxBaseFragment implements AdapterView.
 
             @Override
             public void failure(RetrofitError error) {
+                error.printStackTrace();
                 mListView.showError("Es ist ein Fehler aufgetreten");
             }
         });

@@ -12,8 +12,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 
-import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,7 +53,7 @@ public class XMPPChatActivity extends AnimexxBaseActivityAB {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_xmpptest);
+        setContentView(R.layout.activity_xmpp_chat);
         mNewMessageTx = (EditText) this.findViewById(R.id.xmpp_test_send);
         mNewMessageBt = (ImageView) this.findViewById(R.id.xmpp_test_send_bt);
         lv = (ListView) this.findViewById(R.id.xmpp_test_list);
