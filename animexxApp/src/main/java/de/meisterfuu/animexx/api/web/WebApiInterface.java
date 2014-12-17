@@ -469,11 +469,11 @@ public interface WebApiInterface {
     void createRPG(@Field("name") String pName, @Field("thema") int pTopic, @Field("adult") int pAdult, @Field("oeffentlich") int pPublic, @Field("sprache") String pLanguageCode, @Field("beschreibung") String pDescription, Callback<ReturnObject<RPGObject>> pCallback);
 
 
-    @POST("/rpg/rpg_details_alles/")
+    @POST("/rpg/rpg_details_alles/?get_user_avatar=true")
     @FormUrlEncoded
     ReturnObject<RPGObject> getRPG(@Field("rpg") long pRPGId);
 
-    @POST("/rpg/rpg_details_alles/")
+    @POST("/rpg/rpg_details_alles/?get_user_avatar=true")
     @FormUrlEncoded
     void getRPG(@Field("rpg") long pRPGId, Callback<ReturnObject<RPGObject>> pCallback);
 
