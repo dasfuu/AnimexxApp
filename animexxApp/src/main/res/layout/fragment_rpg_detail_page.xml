@@ -1,17 +1,17 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:context=".SingleEventDescriptionActivity" >
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SingleEventDescriptionActivity" >
 
     <android.support.v7.widget.CardView
-        android:id="@+id/activity_event_desc_container"
+        android:id="@+id/fragment_rpg_detail_page_container"
         android:layout_width="match_parent"
         android:layout_margin="8dp"
         android:layout_height="match_parent">
 
         <WebView
-            android:id="@+id/fragment_profile_page_html_html"
+            android:id="@+id/fragment_rpg_detail_page_html"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="8dp"

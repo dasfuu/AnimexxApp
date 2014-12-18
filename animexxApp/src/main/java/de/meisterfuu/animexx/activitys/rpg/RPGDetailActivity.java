@@ -85,9 +85,18 @@ public class RPGDetailActivity extends AnimexxBaseActivityAB {
 
         this.getSupportActionBar().setTitle(mRPG.getName());
 
-        mSectionsPagerAdapter.addFragment(new SectionsPagerAdapter.FragmentHolder("Allgemein", "main", RPGDetailFragment.newInstance(this, mRPGId), idcount++));
         mSectionsPagerAdapter.addFragment(new SectionsPagerAdapter.FragmentHolder("Charaktere", "charas", RPGDetailCharaListFragment.getInstance(), idcount++));
+        mSectionsPagerAdapter.addFragment(new SectionsPagerAdapter.FragmentHolder("Allgemein", "main", RPGDetailFragment.newInstance(this, mRPGId), idcount++));
+
+
+        for(int i = 0; i < mRPG.getDescriptionPages().size(); i++){
+            RPGObject.DescriptionPageObject page = mRPG.getDescriptionPages().get(i);
+            mSectionsPagerAdapter.addFragment(new SectionsPagerAdapter.FragmentHolder(page.getName(), "customPage"+i, RPGDetailPageFragment.newInstance(mRPGId, i), idcount++));
+        }
+
         mSectionsPagerAdapter.notifyDataSetChanged();
+
+        mViewPager.setCurrentItem(1, false);
     }
 
 
