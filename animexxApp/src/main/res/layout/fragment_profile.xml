@@ -5,41 +5,44 @@
             android:layout_height="match_parent"
             tools:context=".activitys.profiles.ProfileActivity">
 
+
+
+
+
     <LinearLayout
         android:id="@+id/LinearLayout1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin" >
+        >
+
+        <ImageView
+            android:id="@+id/activity_profile_single_image"
+            android:layout_width="match_parent"
+            android:layout_height="280dp"
+            android:src="@drawable/test1"
+            android:layout_weight="1"
+            android:scaleType="centerCrop"/>
 
         <LinearLayout
             android:id="@+id/activity_profile_single_base"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:animateLayoutChanges="true"
-            android:orientation="vertical" >
-
-            <de.meisterfuu.animexx.utils.views.FitImageView
-                android:id="@+id/activity_profile_single_image"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:src="@drawable/test1"
-                android:scaleType="centerCrop"/>
+            android:orientation="vertical"
+            android:layout_weight="1">
 
 
-
-            <FrameLayout
+            <android.support.v7.widget.CardView
                 android:id="@+id/activity_profile_single_common"
                 android:layout_width="match_parent"
-                android:layout_height="0dip"
-                android:layout_marginTop="10dp"
-                android:layout_weight="2"
-                android:background="@drawable/card_background_shadow"
-                android:padding="10dp" >
+                android:layout_height="wrap_content"
+                android:minHeight="10dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginBottom="0dp"
+                android:padding="8dp" >
 
                 <de.meisterfuu.animexx.utils.views.TableDataView
                     android:layout_width="match_parent"
@@ -47,16 +50,15 @@
                     android:id="@+id/activity_profile_single_common_table">
 
                 </de.meisterfuu.animexx.utils.views.TableDataView>
-            </FrameLayout>
+            </android.support.v7.widget.CardView>
 
-            <FrameLayout
+            <android.support.v7.widget.CardView
                 android:id="@+id/activity_profile_single_contact"
                 android:layout_width="match_parent"
-                android:layout_height="0dip"
-                android:layout_marginTop="10dp"
-                android:layout_weight="2"
-                android:background="@drawable/card_background_shadow"
-                android:padding="10dp" >
+                android:layout_height="wrap_content"
+                android:minHeight="10dp"
+                android:layout_margin="8dp"
+                android:padding="8dp" >
 
                 <de.meisterfuu.animexx.utils.views.TableDataView
                     android:layout_width="match_parent"
@@ -64,7 +66,7 @@
                     android:id="@+id/activity_profile_single_contact_table">
 
                 </de.meisterfuu.animexx.utils.views.TableDataView>
-            </FrameLayout>
+            </android.support.v7.widget.CardView>
 
         </LinearLayout>
     </LinearLayout>

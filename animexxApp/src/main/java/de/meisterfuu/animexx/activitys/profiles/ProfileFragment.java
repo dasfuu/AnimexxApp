@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.objects.profile.ProfileObject;
@@ -29,7 +30,7 @@ public class ProfileFragment extends Fragment {
 
     private FrameLayout commonFrame, contactFrame;
     private TableDataView commonTable, contactTable;
-    private FitImageView profileImage;
+    private ImageView profileImage;
     boolean created = false;
 
 //	private UserApi mApi;
@@ -66,7 +67,7 @@ public class ProfileFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        profileImage = (FitImageView) v.findViewById(R.id.activity_profile_single_image);
+        profileImage = (ImageView) v.findViewById(R.id.activity_profile_single_image);
 
         commonFrame = (FrameLayout) v.findViewById(R.id.activity_profile_single_common);
         contactFrame = (FrameLayout) v.findViewById(R.id.activity_profile_single_contact);
