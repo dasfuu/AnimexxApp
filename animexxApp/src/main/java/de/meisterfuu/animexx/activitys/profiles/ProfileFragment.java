@@ -108,7 +108,7 @@ public class ProfileFragment extends Fragment {
         contactTable.clear();
 
         if (!pObject.getPictures().isEmpty()) {
-            mImageLoader.download(new ImageSaveObject(pObject.getPictures().get(0).getUrl(), mUserID + "_0"), profileImage);
+            mImageLoader.download(new ImageSaveObject(pObject.getPictures().get(0).getUrl(), mUserID + "_0", true), profileImage);
             this.profileImage.setVisibility(View.VISIBLE);
         } else {
             this.profileImage.setVisibility(View.GONE);

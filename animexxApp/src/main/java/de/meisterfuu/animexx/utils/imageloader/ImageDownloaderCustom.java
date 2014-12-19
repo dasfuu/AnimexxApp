@@ -5,13 +5,18 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.v7.graphics.Palette;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.PathInterpolator;
 import android.widget.ImageView;
 
 import org.apache.http.HttpEntity;
@@ -117,27 +122,85 @@ public class ImageDownloaderCustom {
                 task.execute(url);
             } else {
                 // Yes? set the image
+                if(url.isUsePalette()){
+                    final Bitmap bm = bitmap;
+                    Palette.generateAsync(bitmap, new Palette.PaletteAsyncListener() {
 
-                imageView.setImageBitmap(bitmap);
+                        private final float[] mMultiplyBlendMatrixValues = {
+                                0, 0, 0, 0, 0,
+                                0, 0, 0, 0, 0,
+                                0, 0, 0, 0, 0,
+                                0, 0, 0, 1, 0
+                        };
+                        private final float[] mAlphaMatrixValues = {
+                                0, 0, 0, 0, 0,
+                                0, 0, 0, 0, 0,
+                                0, 0, 0, 0, 0,
+                                0, 0, 0, 1, 0
+                        };
+
+                        private final ColorMatrix mWhitenessColorMatrix = new ColorMatrix();
+                        private final ColorMatrix mMultiplyBlendMatrix = new ColorMatrix();
+
+                        /**
+                         * Simulates alpha blending an image with {@param color}.
+                         */
+                        private ColorMatrix alphaMatrix(float alpha, int color) {
+                            mAlphaMatrixValues[0] = Color.red(color) * alpha / 255;
+                            mAlphaMatrixValues[6] = Color.green(color) * alpha / 255;
+                            mAlphaMatrixValues[12] = Color.blue(color) * alpha / 255;
+                            mAlphaMatrixValues[4] = 255 * (1 - alpha);
+                            mAlphaMatrixValues[9] = 255 * (1 - alpha);
+                            mAlphaMatrixValues[14] = 255 * (1 - alpha);
+                            mWhitenessColorMatrix.set(mAlphaMatrixValues);
+                            return mWhitenessColorMatrix;
+                        }
+
+                        private float multiplyBlend(int color, float alpha) {
+                            return color * alpha / 255.0f + (1 - alpha);
+                        }
+
+                        /**
+                         * Simulates multiply blending an image with a single {@param color}.
+                         *
+                         * Multiply blending is [Sa * Da, Sc * Dc]. See {@link android.graphics.PorterDuff}.
+                         */
+                        private ColorMatrix multiplyBlendMatrix(int color, float alpha) {
+                            mMultiplyBlendMatrixValues[0] = multiplyBlend(Color.red(color), alpha);
+                            mMultiplyBlendMatrixValues[6] = multiplyBlend(Color.green(color), alpha);
+                            mMultiplyBlendMatrixValues[12] = multiplyBlend(Color.blue(color), alpha);
+                            mMultiplyBlendMatrix.set(mMultiplyBlendMatrixValues);
+                            return mMultiplyBlendMatrix;
+                        }
+
+                        @Override
+                        public void onGenerated(Palette palette) {
+                            url.setPalette(palette);
+                            final int mHeaderTintColor = palette.getVibrantSwatch().getRgb();
+                            final float colorAlpha = 1 - 0.1f;
+                            final float colorAlpha2 = 1 - 0.7f;
+
+
+                            ColorMatrix mColorMatrix = new ColorMatrix();
+                            mColorMatrix.setSaturation(1);
+                            mColorMatrix.postConcat(alphaMatrix(colorAlpha2, Color.WHITE));
+                            mColorMatrix.postConcat(multiplyBlendMatrix(mHeaderTintColor, colorAlpha));
+
+                            imageView.setColorFilter(new ColorMatrixColorFilter(mColorMatrix));
+                            //imageView.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+                            imageView.setImageBitmap(bm);
+                        }
+                    });
+                } else {
+                    imageView.setImageBitmap(bitmap);
+                }
                 if (clickable) imageView.setOnClickListener(new OnClickListener() {
 
                     public void onClick(View arg0) {
-                        /*
-						Bundle bundle = new Bundle();
-						bundle.putString("URL", url.getUrl());
-						bundle.putString("NAME", url.getName());
-						bundle.putString("FOLDER", url.toString());
-
-						Intent newIntent = new Intent(imageView.getContext(), SingleImage.class);
-						newIntent.putExtras(bundle);
-						imageView.getContext().startActivity(newIntent);
-						*/
                         Intent i2 = new Intent();
                         i2.setAction(android.content.Intent.ACTION_VIEW);
                         i2.setDataAndType(Uri.fromFile(f), "image/*");
                         imageView.getContext().startActivity(i2);
-
-
                     }
 
                 });
@@ -145,6 +208,9 @@ public class ImageDownloaderCustom {
             }
         }
     }
+
+
+
 
 
     // cancel a download (internal only)
