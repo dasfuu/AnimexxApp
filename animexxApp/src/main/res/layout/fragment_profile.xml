@@ -16,13 +16,32 @@
         android:orientation="vertical"
         >
 
-        <ImageView
-            android:id="@+id/activity_profile_single_image"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="280dp"
-            android:src="@drawable/test1"
-            android:layout_weight="1"
-            android:scaleType="centerCrop"/>
+            android:layout_weight="1">
+
+
+            <ImageView
+                android:id="@+id/activity_profile_single_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/test1"
+                android:scaleType="centerCrop"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:background="@drawable/shadow_top_gradient"
+                android:visibility="gone"
+                android:layout_gravity="top"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/shadow_bottom_gradient"
+                android:layout_gravity="bottom"/>
+        </FrameLayout>
+
+
 
         <LinearLayout
             android:id="@+id/activity_profile_single_base"
