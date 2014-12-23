@@ -9,12 +9,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +65,7 @@ public class ENSCollapseNotification {
 
                 final SpannableStringBuilder exampleItem = new SpannableStringBuilder();
                 exampleItem.append(list.get(i).getFromUsername());
-                exampleItem.setSpan(new ForegroundColorSpan(Color.WHITE), 0, exampleItem.length(), 0);
+                exampleItem.setSpan(new StyleSpan(Typeface.BOLD), 0, exampleItem.length(), 0);
                 exampleItem.append("   " + list.get(i).getSubject());
 
                 lines.add(exampleItem);

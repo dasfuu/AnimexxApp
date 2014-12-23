@@ -27,7 +27,7 @@ public class HomeBroker extends BasicWebBroker {
      */
     public void getContactWidgetList(final Callback<ReturnObject<List<ContactHomeObject>>> pCallback) {
         Calendar c = Calendar.getInstance();
-        c.add(Calendar.DAY_OF_MONTH, -10);
+        c.add(Calendar.DAY_OF_MONTH, -20);
         long from = c.getTimeInMillis() / 1000;
         getWebApi().getApi().getContactWidget(from, pCallback);
     }

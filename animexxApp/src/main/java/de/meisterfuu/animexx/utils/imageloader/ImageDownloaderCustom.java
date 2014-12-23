@@ -4,12 +4,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
+import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.PointF;
 import android.graphics.PorterDuff;
+import android.graphics.Rect;
+import android.graphics.RectF;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.FaceDetector;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.graphics.Palette;
@@ -101,7 +110,9 @@ public class ImageDownloaderCustom {
 
             if (bitmap == null) {
 
-                bitmap = BitmapFactory.decodeFile(f.getPath());
+                BitmapFactory.Options bitmapFatoryOptions = new BitmapFactory.Options();
+                bitmapFatoryOptions.inPreferredConfig = Bitmap.Config.RGB_565;
+                bitmap = BitmapFactory.decodeFile(f.getPath(), bitmapFatoryOptions);
 
                 if (bitmap != null) {
                     imageCache.put(f.getPath(), bitmap);
@@ -177,8 +188,8 @@ public class ImageDownloaderCustom {
                         public void onGenerated(Palette palette) {
                             url.setPalette(palette);
                             final int mHeaderTintColor = palette.getVibrantSwatch().getRgb();
-                            final float colorAlpha = 1 - 0.1f;
-                            final float colorAlpha2 = 1 - 0.7f;
+                            final float colorAlpha = 1 - 0.2f;
+                            final float colorAlpha2 = 1 - 0.6f;
 
 
                             ColorMatrix mColorMatrix = new ColorMatrix();
@@ -188,6 +199,8 @@ public class ImageDownloaderCustom {
 
                             imageView.setColorFilter(new ColorMatrixColorFilter(mColorMatrix));
                             //imageView.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+
+
                             imageView.setImageBitmap(bm);
                         }
                     });

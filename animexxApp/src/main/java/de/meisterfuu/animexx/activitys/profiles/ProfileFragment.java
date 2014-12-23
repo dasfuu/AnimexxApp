@@ -9,10 +9,14 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
+
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.objects.profile.ProfileObject;
 import de.meisterfuu.animexx.utils.imageloader.ImageDownloaderCustom;
 import de.meisterfuu.animexx.utils.imageloader.ImageSaveObject;
+import de.meisterfuu.animexx.utils.imageloader.PicassoDownloader;
 import de.meisterfuu.animexx.utils.views.FitImageView;
 import de.meisterfuu.animexx.utils.views.TableDataView;
 
@@ -37,6 +41,7 @@ public class ProfileFragment extends Fragment {
 
     private ImageDownloaderCustom mImageLoader;
     private ProfileObject mUser;
+    private FrameLayout profileImageFrame;
 
     public static ProfileFragment newInstance(long pUserID) {
         ProfileFragment fragment = new ProfileFragment();
@@ -68,6 +73,7 @@ public class ProfileFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_profile, container, false);
 
         profileImage = (ImageView) v.findViewById(R.id.activity_profile_single_image);
+        profileImageFrame = (FrameLayout) v.findViewById(R.id.activity_profile_single_image_frame);
 
         commonFrame = (FrameLayout) v.findViewById(R.id.activity_profile_single_common);
         contactFrame = (FrameLayout) v.findViewById(R.id.activity_profile_single_contact);
@@ -75,22 +81,23 @@ public class ProfileFragment extends Fragment {
         commonTable = (TableDataView) v.findViewById(R.id.activity_profile_single_common_table);
         contactTable = (TableDataView) v.findViewById(R.id.activity_profile_single_contact_table);
 
-        v.setVisibility(View.GONE);
+        v.setVisibility(View.INVISIBLE);
         return v;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        created = true;
 
         if (mUser != null) {
+            profileImageFrame.setVisibility(View.VISIBLE);
             onCallback(mUser);
-            mUser = null;
         } else {
+            profileImageFrame.setVisibility(View.GONE);
             ProfileObject parentProfile = ((ProfileActivity) this.getActivity()).getProfile();
             if (parentProfile != null) {
-                onCallback(parentProfile);
+                mUser = parentProfile;
+                onCallback(mUser);
             }
         }
 //		mApi.getProfile(mUserID, this);
@@ -98,20 +105,27 @@ public class ProfileFragment extends Fragment {
 
     public void onCallback(final ProfileObject pObject) {
 
-        if (!created) {
-            mUser = pObject;
-            return;
-        }
-
 
         commonTable.clear();
         contactTable.clear();
 
+        this.profileImageFrame.setVisibility(View.VISIBLE);
         if (!pObject.getPictures().isEmpty()) {
-            mImageLoader.download(new ImageSaveObject(pObject.getPictures().get(0).getUrl(), mUserID + "_0", true), profileImage);
-            this.profileImage.setVisibility(View.VISIBLE);
+            Picasso picasso = new Picasso.Builder(this.getActivity()).downloader(new PicassoDownloader(this.getActivity(), "profilbild")).build();
+            picasso.load(pObject.getPictures().get(0).getGoodUrl()).noFade().stableKey(mUserID + "_0").into(profileImage, new Callback() {
+                @Override
+                public void onSuccess() {
+                    profileImageFrame.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onError() {
+                    profileImageFrame.setVisibility(View.GONE);
+                }
+            });
+            //mImageLoader.download(new ImageSaveObject(pObject.getPictures().get(0).getGoodUrl(), mUserID + "_0", false), profileImage);
         } else {
-            this.profileImage.setVisibility(View.GONE);
+            this.profileImageFrame.setVisibility(View.GONE);
         }
 
         commonTable.clear();

@@ -18,6 +18,7 @@ import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.objects.home.ContactHomeObject;
 import de.meisterfuu.animexx.utils.Helper;
 import de.meisterfuu.animexx.utils.imageloader.ImageDownloaderCustom;
+import de.meisterfuu.animexx.utils.imageloader.PicassoDownloader;
 import de.meisterfuu.animexx.utils.views.UserViewBig;
 
 
@@ -31,7 +32,7 @@ public class HomeContactAdapter extends BaseAdapter {
     public HomeContactAdapter(List<ContactHomeObject> pList, Activity pContext) {
         this.mItems = pList;
         this.mContext = pContext;
-        mPicasso = Picasso.with(mContext);
+        mPicasso = new Picasso.Builder(pContext).downloader(new PicassoDownloader(pContext, "home_contacts")).build();
         mPicasso.setIndicatorsEnabled(false);
     }
 

@@ -17,7 +17,9 @@
         >
 
         <FrameLayout
+            android:id="@+id/activity_profile_single_image_frame"
             android:layout_width="match_parent"
+            android:background="@color/white"
             android:layout_height="280dp"
             android:layout_weight="1">
 
