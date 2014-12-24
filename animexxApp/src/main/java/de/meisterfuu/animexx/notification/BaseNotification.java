@@ -24,7 +24,6 @@ public interface BaseNotification {
     public int getLightColor();
     public int getColor();
 
-    public String getMultiTitle();
     public SpannableStringBuilder getMultiTextLine();
 
 
