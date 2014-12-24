@@ -15,6 +15,7 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.text.SpannableStringBuilder;
+import android.text.SpannedString;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 
