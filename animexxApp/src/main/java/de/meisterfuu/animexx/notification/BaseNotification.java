@@ -1,8 +1,8 @@
 package de.meisterfuu.animexx.notification;
 
 import android.app.PendingIntent;
+import android.content.Context;
 import android.graphics.Bitmap;
-import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 
 /**
@@ -13,15 +13,13 @@ public interface BaseNotification {
     public String getTitle();
     public String getText();
     public String getTicker();
-    public String getTextLong();
     public int getIcon();
-    public Bitmap getPicture();
+    public Bitmap getPicture(Context pContex);
 
-    public PendingIntent getIntent();
-    public boolean vibrate();
-    public boolean sound();
-    public String getSoundUri();
-    public int getLightColor();
+    public PendingIntent getIntent(Context pContex);
+    public boolean vibrate(Context pContext);
+    public String getSoundUri(Context pContext);
+    public int getLightColor(Context pContext);
     public int getColor();
 
     public SpannableStringBuilder getMultiTextLine();

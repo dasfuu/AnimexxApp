@@ -15,6 +15,8 @@ import de.meisterfuu.animexx.Debug;
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.activitys.main.MainActivity;
 import de.meisterfuu.animexx.notification.ENSCollapseNotification;
+import de.meisterfuu.animexx.notification.RPGNotification;
+import de.meisterfuu.animexx.notification.RPGNotificationManager;
 import de.meisterfuu.animexx.notification.RPGPostNotification;
 import de.meisterfuu.animexx.receiver.GcmBroadcastReceiver;
 
@@ -59,7 +61,9 @@ public class GcmIntentService extends IntentService {
                     System.out.println("ENS GCM!!!");
                     ENSCollapseNotification.notify(this, extras.getString("title"), extras.getString("from_username"), extras.getString("from_id"), extras.getString("id"), extras.getString("from"));
                 } else if (extras.getString("type").equalsIgnoreCase("XXEventRPGPosting")) {
-                    RPGPostNotification.notify(this, extras.getString("title"), extras.getString("from_username"), extras.getString("from_id"), extras.getString("id"), extras.getString("from"), 1);
+                    //RPGPostNotification.notify(this, extras.getString("title"), extras.getString("from_username"), extras.getString("from_id"), extras.getString("id"), extras.getString("from"), 1);
+                    RPGNotificationManager manager = new RPGNotificationManager(this);
+                    manager.addNotification(new RPGNotification(extras.getString("title"), extras.getLong("id"), extras.getString("from_username"), extras.getLong("from_id")));
                 } else {
                     // Post notification of unknown received message.
                     if (Debug.SHOW_DEBUG_NOTIFICATION) sendNotification("Received: " + extras.toString());
