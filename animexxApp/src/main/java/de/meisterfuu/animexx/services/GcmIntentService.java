@@ -49,6 +49,7 @@ public class GcmIntentService extends IntentService {
 			 * any message types you're not interested in, or that you don't
 			 * recognize.
 			 */
+
             if (GoogleCloudMessaging.MESSAGE_TYPE_SEND_ERROR.equals(messageType)) {
                 sendNotification("Send error: " + extras.toString());
 
