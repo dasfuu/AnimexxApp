@@ -21,7 +21,6 @@ import de.meisterfuu.animexx.adapter.ChatAdapter;
 import de.meisterfuu.animexx.api.broker.UserBroker;
 import de.meisterfuu.animexx.api.web.ReturnObject;
 import de.meisterfuu.animexx.api.xmpp.XMPPApi;
-import de.meisterfuu.animexx.notification.XMPPNotification;
 import de.meisterfuu.animexx.objects.UserObject;
 import de.meisterfuu.animexx.objects.xmpp.XMPPHistoryObject;
 import de.meisterfuu.animexx.objects.xmpp.XMPPMessageObject;
@@ -165,7 +164,6 @@ public class XMPPChatActivity extends AnimexxBaseActivityAB {
     public void onResume() {
         super.onResume();
         if (mApi == null) mApi = new XMPPApi(this);
-        XMPPNotification.d_from = mjabberName;
 
         mReceiver = new BroadcastReceiver() {
             @Override
@@ -176,7 +174,7 @@ public class XMPPChatActivity extends AnimexxBaseActivityAB {
                     String time = intent.getStringExtra(XMPPService.BUNDLE_TIME);
                     String message = intent.getStringExtra(XMPPService.BUNDLE_MESSAGE_BODY);
                     String direction = intent.getStringExtra(XMPPService.BUNDLE_DIRECTION);
-                    if (!from.split("/")[0].equalsIgnoreCase(XMPPNotification.d_from)) {
+                    if (!from.split("/")[0].equalsIgnoreCase(mjabberName)) {
                         return;
                     }
                     ChatAdapter.Message temp = new ChatAdapter.Message();
@@ -203,7 +201,6 @@ public class XMPPChatActivity extends AnimexxBaseActivityAB {
         super.onPause();
         mApi.close();
         mApi = null;
-        XMPPNotification.d_from = null;
         this.unregisterReceiver(mReceiver);
     }
 

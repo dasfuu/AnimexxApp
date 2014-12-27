@@ -11,7 +11,8 @@ import java.util.List;
 
 import de.meisterfuu.animexx.api.DatabaseHelper;
 import de.meisterfuu.animexx.api.web.ReturnObject;
-import de.meisterfuu.animexx.notification.ENSCollapseNotification;
+import de.meisterfuu.animexx.notification.ENSNotification;
+import de.meisterfuu.animexx.notification.ENSNotificationManager;
 import de.meisterfuu.animexx.objects.ens.ENSCheckRecipientsObject;
 import de.meisterfuu.animexx.objects.ens.ENSDraftObject;
 import de.meisterfuu.animexx.objects.ens.ENSFolderObject;
@@ -278,10 +279,8 @@ public class ENSBroker extends BasicWebBroker {
     }
 
     public void clearNotification() {
-        for (ENSNotifyObject obj : this.getNotifications()) {
-            getHelper().getENSNotifyDataDao().delete(obj);
-        }
-        ENSCollapseNotification.cancel(getContext());
+        ENSNotificationManager manager = new ENSNotificationManager(getContext());
+        manager.clearNotifications();
     }
 
     private DatabaseHelper databaseHelper = null;

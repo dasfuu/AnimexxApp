@@ -44,6 +44,7 @@ import de.meisterfuu.animexx.api.Self;
 import de.meisterfuu.animexx.api.broker.UserBroker;
 import de.meisterfuu.animexx.api.xmpp.XMPPApi;
 import de.meisterfuu.animexx.notification.XMPPNotification;
+import de.meisterfuu.animexx.notification.XMPPNotificationManager;
 import de.meisterfuu.animexx.objects.UserObject;
 import de.meisterfuu.animexx.objects.xmpp.XMPPMessageObject;
 import de.meisterfuu.animexx.objects.xmpp.XMPPRoosterObject;
@@ -291,11 +292,12 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 
                 Long id = mApi.getSingleRoosterFromDB(fromJID).getAnimexxID();
 
-                System.out.println("new message: " + XMPPNotification.d_from + " " + chat.getParticipant());
-                if (carbonCopied || (XMPPNotification.d_from != null && XMPPNotification.d_from.equalsIgnoreCase(fromJID))) {
+                if (carbonCopied) {
                     //No Notification
                 } else {
-                    XMPPNotification.notify(mApplicationContext, message.getBody(), fromJID, "" + id);
+                    XMPPNotificationManager manager = new XMPPNotificationManager(mApplicationContext);
+                    manager.addNotification(new XMPPNotification(message.getBody(), fromJID, id));
+                    manager.show();
                 }
 
 

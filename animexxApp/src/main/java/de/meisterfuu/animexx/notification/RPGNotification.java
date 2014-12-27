@@ -14,7 +14,7 @@ import de.meisterfuu.animexx.activitys.rpg.RPGListFragment;
 /**
  * Created by Furuha on 25.12.2014.
  */
-public class RPGNotification implements BaseNotification {
+public class RPGNotification extends BaseNotification {
 
     private String pTitle;
     private long pId;

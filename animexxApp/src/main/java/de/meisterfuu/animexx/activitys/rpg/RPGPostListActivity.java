@@ -31,10 +31,10 @@ import de.meisterfuu.animexx.adapter.RPGPostListAdapter;
 import de.meisterfuu.animexx.adapter.RPGSpinnerAdapter;
 import de.meisterfuu.animexx.api.broker.RPGBroker;
 import de.meisterfuu.animexx.api.web.ReturnObject;
-import de.meisterfuu.animexx.notification.RPGPostNotification;
 import de.meisterfuu.animexx.objects.rpg.RPGDraftObject;
 import de.meisterfuu.animexx.objects.rpg.RPGObject;
 import de.meisterfuu.animexx.objects.rpg.RPGPostObject;
+import de.meisterfuu.animexx.services.GcmIntentService;
 import de.meisterfuu.animexx.utils.views.FeedbackListView;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -89,7 +89,6 @@ public class RPGPostListActivity extends AnimexxBaseActivityAB implements PanelS
     @Override
     public void onPause() {
         unregisterReceiver(mReceiver);
-        RPGPostNotification.filter = null;
         paused = true;
         super.onPause();
     }
@@ -102,7 +101,7 @@ public class RPGPostListActivity extends AnimexxBaseActivityAB implements PanelS
             @Override
             public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();
-                if (action.equals(RPGPostNotification.NEW_POST)) {
+                if (action.equals(GcmIntentService.NEW_POST)) {
                     refreshList();
                 }
             }
@@ -110,10 +109,8 @@ public class RPGPostListActivity extends AnimexxBaseActivityAB implements PanelS
 
 
         IntentFilter filter = new IntentFilter();
-        filter.addAction(RPGPostNotification.NEW_POST);
+        filter.addAction(GcmIntentService.NEW_POST);
         registerReceiver(mReceiver, filter);
-
-        RPGPostNotification.filter = mRPGID + "";
 
         if (paused) {
             refreshList();

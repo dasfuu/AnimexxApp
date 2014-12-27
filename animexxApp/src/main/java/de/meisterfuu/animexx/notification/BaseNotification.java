@@ -8,21 +8,21 @@ import android.text.SpannableStringBuilder;
 /**
  * Created by Furuha on 23.12.2014.
  */
-public interface BaseNotification {
+public abstract class BaseNotification {
 
-    public String getTitle();
-    public String getText();
-    public String getTicker();
-    public int getIcon();
-    public Bitmap getPicture(Context pContex);
+    public abstract String getTitle();
+    public abstract String getText();
+    public abstract String getTicker();
+    public abstract int getIcon();
+    public abstract Bitmap getPicture(Context pContex);
 
-    public PendingIntent getIntent(Context pContex);
-    public boolean vibrate(Context pContext);
-    public String getSoundUri(Context pContext);
-    public int getLightColor(Context pContext);
-    public int getColor();
+    public abstract PendingIntent getIntent(Context pContex);
+    public abstract boolean vibrate(Context pContext);
+    public abstract String getSoundUri(Context pContext);
+    public abstract int getLightColor(Context pContext);
+    public abstract int getColor();
 
-    public SpannableStringBuilder getMultiTextLine();
+    public abstract SpannableStringBuilder getMultiTextLine();
 
 
 }

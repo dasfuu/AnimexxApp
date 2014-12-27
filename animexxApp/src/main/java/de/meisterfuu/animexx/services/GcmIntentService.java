@@ -14,10 +14,10 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import de.meisterfuu.animexx.Debug;
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.activitys.main.MainActivity;
-import de.meisterfuu.animexx.notification.ENSCollapseNotification;
+import de.meisterfuu.animexx.notification.ENSNotification;
+import de.meisterfuu.animexx.notification.ENSNotificationManager;
 import de.meisterfuu.animexx.notification.RPGNotification;
 import de.meisterfuu.animexx.notification.RPGNotificationManager;
-import de.meisterfuu.animexx.notification.RPGPostNotification;
 import de.meisterfuu.animexx.receiver.GcmBroadcastReceiver;
 
 public class GcmIntentService extends IntentService {
@@ -26,6 +26,8 @@ public class GcmIntentService extends IntentService {
     private static final String TAG = "GcmIntentService";
     private NotificationManager mNotificationManager;
     NotificationCompat.Builder builder;
+
+    public static final String NEW_POST = "de.meisterfuu.animexx.new";
 
 
     public GcmIntentService() {
@@ -60,11 +62,16 @@ public class GcmIntentService extends IntentService {
             } else if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
                 if (extras.getString("type").equalsIgnoreCase("XXEventENS")) {
                     System.out.println("ENS GCM!!!");
-                    ENSCollapseNotification.notify(this, extras.getString("title"), extras.getString("from_username"), extras.getString("from_id"), extras.getString("id"), extras.getString("from"));
+                    ENSNotificationManager manager = new ENSNotificationManager(this);
+                    manager.addNotification(new ENSNotification(extras.getString("title"), extras.getLong("id"), extras.getString("from_username"), extras.getLong("from_id")));
+                    manager.show();
                 } else if (extras.getString("type").equalsIgnoreCase("XXEventRPGPosting")) {
-                    //RPGPostNotification.notify(this, extras.getString("title"), extras.getString("from_username"), extras.getString("from_id"), extras.getString("id"), extras.getString("from"), 1);
                     RPGNotificationManager manager = new RPGNotificationManager(this);
                     manager.addNotification(new RPGNotification(extras.getString("title"), extras.getLong("id"), extras.getString("from_username"), extras.getLong("from_id")));
+                    manager.show();
+                    Intent i = new Intent(GcmIntentService.NEW_POST);
+                    i.setPackage(this.getPackageName());
+                    this.sendBroadcast(intent);
                 } else {
                     // Post notification of unknown received message.
                     if (Debug.SHOW_DEBUG_NOTIFICATION) sendNotification("Received: " + extras.toString());
