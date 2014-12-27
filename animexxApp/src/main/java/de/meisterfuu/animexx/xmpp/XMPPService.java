@@ -1,10 +1,13 @@
 package de.meisterfuu.animexx.xmpp;
 
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
+
+import com.squareup.otto.Subscribe;
 
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.api.EventBus;
@@ -38,6 +41,7 @@ public class XMPPService extends Service {
         EventBus.getBus().getOtto().register(this);
     }
 
+    @Subscribe
     public void onStatusChange(StatsuChangeEvent event){
         if(event.online == oldEvent){
             return;
@@ -46,6 +50,10 @@ public class XMPPService extends Service {
         oldEvent = event.online;
         
         if(event.online){
+//            final NotificationManager notificationManager = (NotificationManager) getApplicationContext()
+//                    .getSystemService(getApplicationContext().NOTIFICATION_SERVICE);
+//
+//            notificationManager.notify(42, getNotificationOnline());
             this.startForeground(42, getNotificationOnline());
         } else {
             this.startForeground(42, getNotificationOffline());
@@ -59,6 +67,8 @@ public class XMPPService extends Service {
                 .setTicker("Animexxenger")
                 .setContentTitle("Animexxenger")
                 .setContentText("Online")
+                .setPriority(NotificationCompat.PRIORITY_MIN)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setSmallIcon(R.drawable.ic_stat_chat_online)
                 .setColor(this.getResources().getColor(R.color.animexx_blue))
                 .setContentIntent(XMPPRoosterFragment.getPendingIntent(this))
@@ -73,6 +83,8 @@ public class XMPPService extends Service {
                 .setTicker("Animexxenger")
                 .setContentTitle("Animexxenger")
                 .setContentText("Offline")
+                .setPriority(NotificationCompat.PRIORITY_MIN)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setSmallIcon(R.drawable.ic_stat_chat_offline)
                 .setColor(this.getResources().getColor(R.color.animexx_blue))
                 .setContentIntent(XMPPRoosterFragment.getPendingIntent(this))

@@ -4,6 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Handler;
+import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -158,6 +160,9 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
         //Create Pingmanager
         initKeepAlive();
 
+        //Set ConnectionListener here to catch initial connect();
+        getConnection().addConnectionListener(this);
+
         //Connect and login(if not already)
         Log.i(TAG, "TCPConnection.connect() called");
         getConnection().connect();
@@ -167,6 +172,7 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
                 getConnection().login(userName, password, ressource);
             } catch (XMPPException e) {
                 PreferenceManager.getDefaultSharedPreferences(mApplicationContext).edit().putString("xmpp_password", null).apply();
+                postStatusEvent(false);
                 throw e;
             }
         }
@@ -175,7 +181,6 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
         //Set listener
         this.setChatListener();
         this.setRosterListener();
-        getConnection().addConnectionListener(this);
 
         initCarbonManager();
 
@@ -204,6 +209,7 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
         try {
             mPingManager.pingMyServer();
         } catch (SmackException e) {
+            postStatusEvent(false);
             connectionState = false;
             e.printStackTrace();
         }
@@ -471,14 +477,14 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
         connectionState = false;
         mManager.scheduleCheck();
         Log.i(TAG, ".pingFailed() called");
-        EventBus.getBus().getOtto().post(new StatsuChangeEvent(false));
+        postStatusEvent(false);
         DebugNotification.notify(mApplicationContext, "XMPP Ping Failed", 865);
     }
 
     @Override
     public void reconnectionSuccessful() {
         Log.i(TAG, "ConnectionListener.reconnectionSuccessful() called");
-        EventBus.getBus().getOtto().post(new StatsuChangeEvent(true));
+        postStatusEvent(true);
         initKeepAlive();
         initCarbonManager();
     }
@@ -495,7 +501,7 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
     public void connectionClosedOnError(Exception arg0) {
         connectionState = false;
         mManager.scheduleCheck();
-        EventBus.getBus().getOtto().post(new StatsuChangeEvent(false));
+        postStatusEvent(false);
         Log.i(TAG, "ConnectionListener.connectionClosedOnError() called");
     }
 
@@ -503,20 +509,21 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
     public void connectionClosed() {
         connectionState = false;
         mManager.scheduleCheck();
-        EventBus.getBus().getOtto().post(new StatsuChangeEvent(false));
+        postStatusEvent(false);
         Log.i(TAG, "ConnectionListener.connectionClosed() called");
     }
 
     @Override
     public void authenticated(XMPPConnection arg0) {
         Log.i(TAG, "ConnectionListener.authenticated() called");
+        postStatusEvent(true);
     }
 
     @Override
     public void connected(XMPPConnection arg0) {
         connectionState = true;
         Log.i(TAG, "ConnectionListener.connected() called");
-        EventBus.getBus().getOtto().post(new StatsuChangeEvent(true));
+        postStatusEvent(true);
         initKeepAlive();
         initCarbonManager();
     }
@@ -525,5 +532,14 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
     @Override
     public void processPacket(final Packet pPacket) throws NotConnectedException {
 
+    }
+
+    public void postStatusEvent(final boolean online){
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                EventBus.getBus().getOtto().post(new StatsuChangeEvent(online));
+            }
+        });
     }
 }
