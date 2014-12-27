@@ -9,7 +9,7 @@ import com.squareup.otto.Subscribe;
 
 import de.meisterfuu.animexx.api.ApiEvent;
 import de.meisterfuu.animexx.api.EventBus;
-import de.meisterfuu.animexx.api.xmpp.StatusEvent;
+import de.meisterfuu.animexx.api.xmpp.ChatEvent;
 import icepick.Icepick;
 import icepick.Icicle;
 
@@ -26,7 +26,7 @@ public class AnimexxBaseActivity extends ActionBarActivity {
 
         @SuppressWarnings("unused")
         @Subscribe
-        public void onLoginEvent(StatusEvent pEvent) {
+        public void onLoginEvent(ChatEvent pEvent) {
 
         }
 

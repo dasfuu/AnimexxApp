@@ -9,6 +9,7 @@ import java.util.List;
 import de.meisterfuu.animexx.api.ApiEvent;
 import de.meisterfuu.animexx.api.EventBus;
 import de.meisterfuu.animexx.api.web.ReturnObject;
+import de.meisterfuu.animexx.objects.SingleValueObjects;
 import de.meisterfuu.animexx.objects.UserObject;
 import de.meisterfuu.animexx.objects.profile.ProfileBoxObject;
 import de.meisterfuu.animexx.objects.profile.ProfileObject;
@@ -73,7 +74,7 @@ public class UserBroker extends BasicWebBroker {
      * @param pUsernameList
      * @param pCallback     (ArrayList<UserSearchResultObject>)
      */
-    public void getIDs(final ArrayList<String> pUsernameList, final Callback<ReturnObject<List<UserObject>>> pCallback) {
+    public void getIDs(final ArrayList<String> pUsernameList, final Callback<ReturnObject<SingleValueObjects.UserListObject>> pCallback) {
         getWebApi().getApi().getUserId(pUsernameList, pCallback);
     }
 
@@ -84,7 +85,7 @@ public class UserBroker extends BasicWebBroker {
     public List<UserObject> NTgetIDs(final ArrayList<String> pUsernameList) {
         List<UserObject> temp;
         try {
-            temp = getWebApi().getApi().getUserId(pUsernameList).getObj();
+            temp = getWebApi().getApi().getUserId(pUsernameList).getObj().getUser();
         } catch (RetrofitError e) {
             temp = new ArrayList<UserObject>();
         }

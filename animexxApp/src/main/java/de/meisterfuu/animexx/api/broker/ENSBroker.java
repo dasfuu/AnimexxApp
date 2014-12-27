@@ -266,18 +266,6 @@ public class ENSBroker extends BasicWebBroker {
         return getHelper().getENSQueueDataDao().queryForAll();
     }
 
-    public List<ENSNotifyObject> getNotifications() {
-        return getHelper().getENSNotifyDataDao().queryForAll();
-    }
-
-    public void addNotifications(ENSNotifyObject pENSNotifyObject) {
-        getHelper().getENSNotifyDataDao().createOrUpdate(pENSNotifyObject);
-    }
-
-    public void removeNotification(long pID) {
-        getHelper().getENSNotifyDataDao().deleteById(pID);
-    }
-
     public void clearNotification() {
         ENSNotificationManager manager = new ENSNotificationManager(getContext());
         manager.clearNotifications();

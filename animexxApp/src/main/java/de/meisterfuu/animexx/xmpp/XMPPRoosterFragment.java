@@ -1,33 +1,40 @@
 package de.meisterfuu.animexx.xmpp;
 
-import android.app.ListFragment;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ListView;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import de.meisterfuu.animexx.R;
+import de.meisterfuu.animexx.activitys.AnimexxBaseFragment;
 import de.meisterfuu.animexx.activitys.main.MainActivity;
 import de.meisterfuu.animexx.adapter.XMPPRoosterAdapter;
+import de.meisterfuu.animexx.api.xmpp.ChatEvent;
+import de.meisterfuu.animexx.api.xmpp.RoosterEvent;
 import de.meisterfuu.animexx.api.xmpp.XMPPApi;
 import de.meisterfuu.animexx.objects.xmpp.XMPPRoosterObject;
+import de.meisterfuu.animexx.utils.views.FeedbackListView;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class XMPPRoosterFragment extends ListFragment  {
+public class XMPPRoosterFragment extends AnimexxBaseFragment implements AdapterView.OnItemClickListener {
 
     ArrayList<XMPPRoosterObject> list;
     XMPPRoosterAdapter adapter;
-    BroadcastReceiver receiver;
     XMPPApi mApi;
+    private FeedbackListView mListView;
 
 
     public static XMPPRoosterFragment getInstance() {
@@ -39,21 +46,23 @@ public class XMPPRoosterFragment extends ListFragment  {
         return result;
     }
 
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_xmpp_rooster, container, false);
+        mListView = (FeedbackListView) view.findViewById(android.R.id.list);
+        mListView.setOnItemClickListener(this);
         list = new ArrayList<XMPPRoosterObject>();
         adapter = new XMPPRoosterAdapter(list, this.getActivity());
-        setListAdapter(adapter);
+        mListView.setAdapter(adapter);
+        return view;
     }
-
 
     @Override
     public void onPause() {
         super.onPause();
         mApi.close();
         mApi = null;
-        this.getActivity().unregisterReceiver(receiver);
     }
 
 
@@ -61,29 +70,20 @@ public class XMPPRoosterFragment extends ListFragment  {
     public void onResume() {
         super.onResume();
         mApi = new XMPPApi(this.getActivity());
-
-
-        receiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                String action = intent.getAction();
-                if (action.equals(XMPPService.NEW_ROOSTER) || action.equals(XMPPService.NEW_MESSAGE)) {
-                    getRooster();
-                }
-            }
-        };
-
-
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(XMPPService.NEW_ROOSTER);
-        this.getActivity().registerReceiver(receiver, filter);
         getRooster();
-
-        IntentFilter filter2 = new IntentFilter();
-        filter.addAction(XMPPService.NEW_MESSAGE);
-        this.getActivity().registerReceiver(receiver, filter2);
     }
 
+
+    @Subscribe
+    public void onNewMessageReturn(RoosterEvent event){
+        getRooster();
+    }
+
+
+    @Subscribe
+    public void onNewMessageReturn(ChatEvent event){
+        getRooster();
+    }
 
     private void getRooster() {
         mApi.getRooster(new Callback<List<XMPPRoosterObject>>() {
@@ -105,19 +105,14 @@ public class XMPPRoosterFragment extends ListFragment  {
 
     }
 
-
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
-
-        XMPPChatActivity.getInstance(this.getActivity(), list.get(position).getJid());
-    }
-
-
     public static PendingIntent getPendingIntent(Context pContext) {
         Intent intent = new Intent(pContext, MainActivity.class);
         intent.putExtra("LANDING", "CHAT");
         return PendingIntent.getActivity(pContext, 0, intent, 0);
     }
 
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        XMPPChatActivity.getInstance(this.getActivity(), list.get(position).getJid());
+    }
 }

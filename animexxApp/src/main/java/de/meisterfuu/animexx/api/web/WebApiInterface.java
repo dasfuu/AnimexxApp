@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.meisterfuu.animexx.objects.KarotalerStatsObject;
+import de.meisterfuu.animexx.objects.SingleValueObjects;
 import de.meisterfuu.animexx.objects.UserObject;
 import de.meisterfuu.animexx.objects.aidb.MangaObject;
 import de.meisterfuu.animexx.objects.contacts.ContactGroupObject;
@@ -96,11 +97,11 @@ public interface WebApiInterface {
 
     @POST("/mitglieder/usernames2ids/?get_user_avatar=true")
     @FormUrlEncoded
-    void getUserId(@Field("usernames[]") List<String> pUsernames, Callback<ReturnObject<List<UserObject>>> pCallback);
+    void getUserId(@Field("usernames[]") List<String> pUsernames, Callback<ReturnObject<SingleValueObjects.UserListObject>> pCallback);
 
     @POST("/mitglieder/usernames2ids/?get_user_avatar=true")
     @FormUrlEncoded
-    ReturnObject<List<UserObject>> getUserId(@Field("usernames[]") List<String> pUsernames);
+    ReturnObject<SingleValueObjects.UserListObject> getUserId(@Field("usernames[]") List<String> pUsernames);
 
 
     @POST("/mitglieder/ich/")
@@ -747,6 +748,14 @@ public interface WebApiInterface {
 
     @POST("/cloud2device/registration_id_get/")
     void getGCMId(Callback<ReturnObject<GCMIdObject>> pCallback);
+
+    @POST("/cloud2device/registration_id_del/")
+    @FormUrlEncoded
+    ReturnObject<Empty> deleteGCMId(@Field("registration_ids[]") List<String> pEventse);
+
+    @POST("/cloud2device/registration_id_del/")
+    @FormUrlEncoded
+    void deleteGCMId(@Field("registration_ids[]") List<String> pEventse,  Callback<ReturnObject<Empty>> pCallback);
 
     @POST("/cloud2device/set_active_events/")
     @FormUrlEncoded

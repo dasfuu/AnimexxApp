@@ -3,7 +3,6 @@ package de.meisterfuu.animexx.xmpp;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -11,6 +10,8 @@ import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +21,10 @@ import de.meisterfuu.animexx.activitys.AnimexxBaseActivityAB;
 import de.meisterfuu.animexx.adapter.ChatAdapter;
 import de.meisterfuu.animexx.api.broker.UserBroker;
 import de.meisterfuu.animexx.api.web.ReturnObject;
+import de.meisterfuu.animexx.api.xmpp.ChatEvent;
+import de.meisterfuu.animexx.api.xmpp.SendMessageEvent;
+import de.meisterfuu.animexx.api.xmpp.SendMessageReturnEvent;
+import de.meisterfuu.animexx.api.xmpp.StatsuChangeEvent;
 import de.meisterfuu.animexx.api.xmpp.XMPPApi;
 import de.meisterfuu.animexx.objects.UserObject;
 import de.meisterfuu.animexx.objects.xmpp.XMPPHistoryObject;
@@ -73,20 +78,20 @@ public class XMPPChatActivity extends AnimexxBaseActivityAB {
 //		Intent intent = new Intent(this, XMPPService.class);
 //		startService(intent);
 
-
         mNewMessageBt.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                XMPPApi.sendMessage(mjabberName, mNewMessageTx.getText().toString(), XMPPChatActivity.this);
+                SendMessageEvent event = new SendMessageEvent();
+                event.setToJid(mjabberName);
+                event.setMessage(mNewMessageTx.getText().toString());
+                getEventBus().getOtto().post(event);
 
                 ChatAdapter.Message temp = new ChatAdapter.Message();
                 temp.setBody(mNewMessageTx.getText().toString());
                 temp.setTime(System.currentTimeMillis());
                 temp.setLeft(false);
                 adapter.add(temp);
-
-                mNewMessageTx.setText("");
 
                 XMPPMessageObject msg = new XMPPMessageObject();
                 msg.setDate(System.currentTimeMillis());
@@ -165,35 +170,40 @@ public class XMPPChatActivity extends AnimexxBaseActivityAB {
         super.onResume();
         if (mApi == null) mApi = new XMPPApi(this);
 
-        mReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                String action = intent.getAction();
-                if (action.equals(XMPPService.NEW_MESSAGE)) {
-                    String from = intent.getStringExtra(XMPPService.BUNDLE_FROM);
-                    String time = intent.getStringExtra(XMPPService.BUNDLE_TIME);
-                    String message = intent.getStringExtra(XMPPService.BUNDLE_MESSAGE_BODY);
-                    String direction = intent.getStringExtra(XMPPService.BUNDLE_DIRECTION);
-                    if (!from.split("/")[0].equalsIgnoreCase(mjabberName)) {
-                        return;
-                    }
-                    ChatAdapter.Message temp = new ChatAdapter.Message();
-                    temp.setBody(message);
-                    temp.setTime(System.currentTimeMillis());
-                    temp.setLeft(direction.equals(XMPPService.BUNDLE_DIRECTION_IN));
-                    adapter.add(temp);
-                }
-            }
-        };
-
-
         showHistory();
 
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(XMPPService.NEW_MESSAGE);
-        registerReceiver(mReceiver, filter);
+    }
 
+    @Subscribe
+    public void onNewMessageReturn(SendMessageReturnEvent event){
+        if(event.send){
+            mNewMessageTx.setText("");
+        } else {
+            //Konnte nicht gesendet werden
+            //Todo: Nicht gesendete Chatnachrichten behandeln
+        }
+    }
 
+    @Subscribe
+    public void onStatusChange(StatsuChangeEvent event){
+        if(mNewMessageBt != null)mNewMessageBt.setEnabled(event.online);
+        if(mNewMessageTx != null)mNewMessageTx.setEnabled(event.online);
+    }
+
+    @Subscribe
+    public void onNewMessage(ChatEvent event){
+        String from = event.getJid();
+        Long time = event.getTime();
+        String message = event.getMessage();
+        boolean directionIn = event.getDirection();
+        if (!from.split("/")[0].equalsIgnoreCase(mjabberName)) {
+            return;
+        }
+        ChatAdapter.Message temp = new ChatAdapter.Message();
+        temp.setBody(message);
+        temp.setTime(time);
+        temp.setLeft(directionIn);
+        adapter.add(temp);
     }
 
     @Override
@@ -201,7 +211,6 @@ public class XMPPChatActivity extends AnimexxBaseActivityAB {
         super.onPause();
         mApi.close();
         mApi = null;
-        this.unregisterReceiver(mReceiver);
     }
 
 

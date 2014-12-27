@@ -16,6 +16,7 @@ import android.util.Log;
 import de.meisterfuu.animexx.Debug;
 import de.meisterfuu.animexx.DebugNotification;
 import de.meisterfuu.animexx.api.EventBus;
+import de.meisterfuu.animexx.api.xmpp.StatsuChangeEvent;
 import de.meisterfuu.animexx.utils.Helper;
 
 public class ConnectionManager {
@@ -28,6 +29,7 @@ public class ConnectionManager {
     private boolean mActive = false;
 
     private Thread mThread;
+
     protected Handler mTHandler;
 
     private BroadcastReceiver mNetRec;
@@ -61,6 +63,10 @@ public class ConnectionManager {
 
 
         mService.registerReceiver(mNetRec, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+    }
+
+    public Handler getmTHandler() {
+        return mTHandler;
     }
 
     public static ConnectionManager getInstance() {
@@ -132,7 +138,6 @@ public class ConnectionManager {
                     }
 
                     if (!check()) {
-                        EventBus.getBus().getOtto().post(new StatsuChangeEvent(false));
                         scheduleCheck();
                     } else {
                         step = 0;
@@ -183,6 +188,13 @@ public class ConnectionManager {
             }
 
             if (mConnection.isConnected() && mConnection.shouldConnect()) {
+                return true;
+            }
+
+            final ConnectivityManager connectivityManager = (ConnectivityManager) mService.getSystemService(Context.CONNECTIVITY_SERVICE);
+            final NetworkInfo net = connectivityManager.getActiveNetworkInfo();
+
+            if(net == null || !net.isAvailable()){
                 return true;
             }
 

@@ -15,6 +15,9 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import java.util.Arrays;
+import java.util.Collections;
+
 import de.meisterfuu.animexx.Constants;
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.api.Self;
@@ -101,6 +104,16 @@ public class LoginActivity extends Activity implements OnClickListener {
 
     private void initGCM() {
         //Check for gcm id
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                for(String s: gcm.getActiveIds().getIds()){
+//                        Log.e("GCM IDs", s);
+//                }
+//                //gcm.deleteID(gcm.getActiveIds().getIds());
+//            }
+//        }).start();
+
 
         if (gcm.getRegistrationId(this) == null) {
             Log.e("Animexx Init", "GCM REG ID IS NULL");

@@ -10,6 +10,7 @@ import android.text.style.StyleSpan;
 
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.activitys.rpg.RPGListFragment;
+import de.meisterfuu.animexx.utils.imageloader.BitmapLoaderCustom;
 
 /**
  * Created by Furuha on 25.12.2014.
@@ -57,7 +58,7 @@ public class RPGNotification extends BaseNotification {
 
     @Override
     public Bitmap getPicture(Context pContext) {
-        return null;
+        return BitmapLoaderCustom.getUserBitmap(pUserId + "", pContext);
     }
 
     @Override

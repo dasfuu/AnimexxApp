@@ -1,16 +1,17 @@
 package de.meisterfuu.animexx.xmpp;
 
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 
+import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
 
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.api.EventBus;
+import de.meisterfuu.animexx.api.xmpp.StatsuChangeEvent;
 
 public class XMPPService extends Service {
 
@@ -58,6 +59,11 @@ public class XMPPService extends Service {
         } else {
             this.startForeground(42, getNotificationOffline());
         }
+    }
+
+    @Produce
+    public StatsuChangeEvent produceStatus(){
+        return new StatsuChangeEvent(oldEvent);
     }
 
     private Notification getNotificationOnline() {

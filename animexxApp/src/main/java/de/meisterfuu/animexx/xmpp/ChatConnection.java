@@ -9,6 +9,8 @@ import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.squareup.otto.Subscribe;
+
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ChatManager;
 import org.jivesoftware.smack.ChatManagerListener;
@@ -45,6 +47,11 @@ import de.meisterfuu.animexx.DebugNotification;
 import de.meisterfuu.animexx.api.EventBus;
 import de.meisterfuu.animexx.api.Self;
 import de.meisterfuu.animexx.api.broker.UserBroker;
+import de.meisterfuu.animexx.api.xmpp.ChatEvent;
+import de.meisterfuu.animexx.api.xmpp.RoosterEvent;
+import de.meisterfuu.animexx.api.xmpp.SendMessageEvent;
+import de.meisterfuu.animexx.api.xmpp.SendMessageReturnEvent;
+import de.meisterfuu.animexx.api.xmpp.StatsuChangeEvent;
 import de.meisterfuu.animexx.api.xmpp.XMPPApi;
 import de.meisterfuu.animexx.notification.XMPPNotification;
 import de.meisterfuu.animexx.notification.XMPPNotificationManager;
@@ -63,7 +70,6 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
     private Context mApplicationContext;
     protected boolean connectionState;
     private PingManager mPingManager;
-    private int res_attach;
     private String ressource;
     private ConnectionManager mManager;
 
@@ -80,10 +86,17 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
         SmackConfiguration.setDefaultPacketReplyTimeout(30000);
 
         Random r = new Random();
-        res_attach = r.nextInt();
-        ressource = "AndroidApp_2";//+res_attach;
+        int res_attach = r.nextInt();
+        ressource = "AndroidApp_2_"+res_attach;
 
-        setupNewMessageReceiver();
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                EventBus.getBus().getOtto().register(ChatConnection.this);
+            }
+        });
+
     }
 
     public boolean connect() {
@@ -267,7 +280,7 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
         Message message = pMessage;
         boolean carbonCopied = false;
         String fromJID;
-        String direction = XMPPService.BUNDLE_DIRECTION_IN;
+        boolean directionIN = true;
         CarbonExtension c = CarbonManager.getCarbon(pMessage);
         if (c != null) {
             carbonCopied = true;
@@ -276,7 +289,7 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 
             if (c.getDirection() == CarbonExtension.Direction.sent) {
                 fromJID = getBareJID(message.getTo());
-                direction = XMPPService.BUNDLE_DIRECTION_OUT;
+                directionIN = false;
             } else {
                 fromJID = getBareJID(message.getFrom());
             }
@@ -286,16 +299,13 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 
         if (message.getType().equals(Type.chat) || message.getType().equals(Type.normal)) {
             if (message.getBody() != null && !chat.getParticipant().startsWith("animexx")) {
-                Intent intent = new Intent(XMPPService.NEW_MESSAGE);
-                intent.setPackage(mApplicationContext.getPackageName());
-                intent.putExtra(XMPPService.BUNDLE_MESSAGE_BODY, message.getBody());
-                intent.putExtra(XMPPService.BUNDLE_FROM, fromJID);
-                intent.putExtra(XMPPService.BUNDLE_DIRECTION, direction);
-                intent.putExtra(XMPPService.BUNDLE_TIME, "" + System.currentTimeMillis());
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
-                    intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
-                }
-                mApplicationContext.sendBroadcast(intent);
+
+                ChatEvent event = new ChatEvent();
+                event.setMessage(message.getBody());
+                event.setJid(fromJID);
+                event.setDirection(directionIN);
+                event.setTime(System.currentTimeMillis());
+                postToEventBus(event);
 
                 Long id = mApi.getSingleRoosterFromDB(fromJID).getAnimexxID();
 
@@ -312,7 +322,7 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
                 msg.setDate(System.currentTimeMillis());
                 msg.setTopicJID(fromJID);
                 msg.setBody(message.getBody());
-                if (direction.equals(XMPPService.BUNDLE_DIRECTION_IN)) {
+                if (directionIN) {
                     msg.setMe(false);
                 } else {
                     msg.setMe(true);
@@ -327,6 +337,7 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
         for (String s : arg0) {
             Log.i(TAG, "entriesAdded: " + s);
         }
+
         newRoster();
     }
 
@@ -336,12 +347,7 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
             mApi.deleteSingleRoosterFromDB(name);
         }
 
-        Intent intent = new Intent(XMPPService.NEW_ROOSTER);
-        intent.setPackage(mApplicationContext.getPackageName());
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
-            intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
-        }
-        mApplicationContext.sendBroadcast(intent);
+        postToEventBus(new RoosterEvent());
     }
 
     @Override
@@ -376,16 +382,9 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
             temp.setStatus(XMPPRoosterObject.STATUS_AWAY);
         }
 
-        //Beta.notifyOnline(temp, mApplicationContext);
-
         mApi.insertSingleRoosterToDB(temp);
 
-        Intent intent = new Intent(XMPPService.NEW_ROOSTER);
-        intent.setPackage(mApplicationContext.getPackageName());
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
-            intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
-        }
-        mApplicationContext.sendBroadcast(intent);
+        postToEventBus(new RoosterEvent());
     }
 
     private void newRoster() {
@@ -418,7 +417,7 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 
             if (user_list != null)
                 for (UserObject user_obj : user_list) {
-                    Log.e(TAG, user_obj.getUsername() + " == " + obj.getName());
+//                    Log.e(TAG, user_obj.getUsername() + " == " + obj.getName());
                     if (user_obj.getUsername().equalsIgnoreCase(obj.getName())) {
                         temp.setAnimexxID(user_obj.getId());
                         if (user_obj.getAvatar() != null) {
@@ -432,44 +431,32 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
         }
 
 
-        Intent intent = new Intent(XMPPService.NEW_ROOSTER);
-        intent.setPackage(mApplicationContext.getPackageName());
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
-            intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
-        }
-        mApplicationContext.sendBroadcast(intent);
+//        Intent intent = new Intent(XMPPService.NEW_ROOSTER);
+//        intent.setPackage(mApplicationContext.getPackageName());
+//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+//            intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
+//        }
+//        mApplicationContext.sendBroadcast(intent);
+
+        postToEventBus(new RoosterEvent());
     }
 
-    private void setupNewMessageReceiver() {
-        final BroadcastReceiver receiver = new BroadcastReceiver() {
-
+    @Subscribe
+    public void onSendNewMessage(SendMessageEvent pEvent){
+        final SendMessageEvent event = pEvent;
+        ConnectionManager.getInstance().getmTHandler().post(new Runnable() {
             @Override
-            public void onReceive(Context context, Intent intent) {
-                String action = intent.getAction();
-                if (action.equals(XMPPService.SEND_MESSAGE)) {
-                    try {
-                        sendMessage(intent.getStringExtra(XMPPService.BUNDLE_MESSAGE_BODY), intent.getStringExtra(XMPPService.BUNDLE_TO));
-                        Intent i = new Intent(XMPPService.SEND_MESSAGE_OK);
-                        i.setPackage(mApplicationContext.getPackageName());
-                        mApplicationContext.sendBroadcast(i);
-                    } catch (XMPPException e) {
-
-                        Intent i = new Intent(XMPPService.SEND_MESSAGE_BAD);
-                        i.setPackage(mApplicationContext.getPackageName());
-                        mApplicationContext.sendBroadcast(i);
-                    } catch (NotConnectedException e) {
-                        Intent i = new Intent(XMPPService.SEND_MESSAGE_BAD);
-                        i.setPackage(mApplicationContext.getPackageName());
-                        mApplicationContext.sendBroadcast(i);
-                    }
+            public void run() {
+                try {
+                    sendMessage(event.getMessage(), event.getToJid());
+                    postToEventBus(new SendMessageReturnEvent(true));
+                } catch (XMPPException e) {
+                    postToEventBus(new SendMessageReturnEvent(false));
+                } catch (NotConnectedException e) {
+                    postToEventBus(new SendMessageReturnEvent(false));
                 }
             }
-
-        };
-
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(XMPPService.SEND_MESSAGE);
-        mApplicationContext.registerReceiver(receiver, filter);
+        });
     }
 
     @Override
@@ -539,6 +526,15 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
             @Override
             public void run() {
                 EventBus.getBus().getOtto().post(new StatsuChangeEvent(online));
+            }
+        });
+    }
+
+    public void postToEventBus(final Object event){
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                EventBus.getBus().getOtto().post(event);
             }
         });
     }

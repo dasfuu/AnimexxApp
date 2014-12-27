@@ -3,12 +3,18 @@ package de.meisterfuu.animexx.notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.preference.PreferenceManager;
 import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
 import de.meisterfuu.animexx.R;
+import de.meisterfuu.animexx.utils.imageloader.BitmapLoaderCustom;
 import de.meisterfuu.animexx.xmpp.XMPPRoosterFragment;
 
 /**
@@ -58,7 +64,7 @@ public class XMPPNotification extends BaseNotification {
 
     @Override
     public Bitmap getPicture(Context pContext) {
-        return null;
+        return BitmapLoaderCustom.getUserBitmap(pUserId+"", pContext);
     }
 
     @Override

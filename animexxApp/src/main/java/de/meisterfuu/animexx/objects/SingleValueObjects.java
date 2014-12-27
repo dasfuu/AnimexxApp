@@ -2,6 +2,7 @@ package de.meisterfuu.animexx.objects;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,6 +26,20 @@ public class SingleValueObjects {
 
         public void setSignature(final String pSignature) {
             signature = pSignature;
+        }
+    }
+
+    public static class UserListObject {
+
+        @SerializedName("ids")
+        ArrayList<UserObject> user;
+
+        public ArrayList<UserObject> getUser() {
+            return user;
+        }
+
+        public void setUser(ArrayList<UserObject> user) {
+            this.user = user;
         }
     }
 

@@ -1,4 +1,4 @@
-package de.meisterfuu.animexx.xmpp;
+package de.meisterfuu.animexx.api.xmpp;
 
 /**
  * Created by Furuha on 27.12.2014.
