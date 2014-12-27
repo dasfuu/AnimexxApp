@@ -198,7 +198,15 @@
         <receiver
             android:name=".xmpp.ConnectionManager$AlarmReceiver" >
         </receiver>
-        <receiver android:name=".notification.ENSCollapseNotification$ENSNotificationDismissedReceiver" >
+
+        <receiver android:name=".notification.RPGNotificationManager$NotificationDismissedReceiver" >
+            <intent-filter>
+                <action android:name="de.meisterfuu.animexx.xmpp.start" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".notification.ENSNotificationManager$NotificationDismissedReceiver" >
+        </receiver>
+        <receiver android:name=".notification.XMPPNotificationManager$NotificationDismissedReceiver" >
         </receiver>
 
         <meta-data

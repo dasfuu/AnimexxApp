@@ -7,6 +7,7 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 
 import de.meisterfuu.animexx.R;
+import de.meisterfuu.animexx.api.EventBus;
 
 public class XMPPService extends Service {
 
@@ -27,27 +28,57 @@ public class XMPPService extends Service {
 
     public static final String BUNDLE_DIRECTION_OUT = "OUT";
     public static final String BUNDLE_DIRECTION_IN = "IN";
+    private boolean oldEvent = false;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        Notification notification = getNotification("");
+        Notification notification = getNotificationOffline();
         this.startForeground(42, notification);
+        EventBus.getBus().getOtto().register(this);
     }
 
-    private Notification getNotification(String pTitle) {
+    public void onStatusChange(StatsuChangeEvent event){
+        if(event.online == oldEvent){
+            return;
+        } 
+        
+        oldEvent = event.online;
+        
+        if(event.online){
+            this.startForeground(42, getNotificationOnline());
+        } else {
+            this.startForeground(42, getNotificationOffline());
+        }
+    }
+
+    private Notification getNotificationOnline() {
         final NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
         Notification notification = builder
                 .setOngoing(true)
                 .setTicker("Animexxenger")
                 .setContentTitle("Animexxenger")
                 .setContentText("Online")
-                .setSmallIcon(R.drawable.ic_launcher)
+                .setSmallIcon(R.drawable.ic_stat_chat_online)
+                .setColor(this.getResources().getColor(R.color.animexx_blue))
                 .setContentIntent(XMPPRoosterFragment.getPendingIntent(this))
                 .build();
         return notification;
     }
 
+    private Notification getNotificationOffline() {
+        final NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+        Notification notification = builder
+                .setOngoing(true)
+                .setTicker("Animexxenger")
+                .setContentTitle("Animexxenger")
+                .setContentText("Offline")
+                .setSmallIcon(R.drawable.ic_stat_chat_offline)
+                .setColor(this.getResources().getColor(R.color.animexx_blue))
+                .setContentIntent(XMPPRoosterFragment.getPendingIntent(this))
+                .build();
+        return notification;
+    }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {

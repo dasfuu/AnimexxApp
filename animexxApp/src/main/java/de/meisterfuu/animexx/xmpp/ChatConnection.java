@@ -40,6 +40,7 @@ import java.util.Random;
 
 import de.meisterfuu.animexx.Debug;
 import de.meisterfuu.animexx.DebugNotification;
+import de.meisterfuu.animexx.api.EventBus;
 import de.meisterfuu.animexx.api.Self;
 import de.meisterfuu.animexx.api.broker.UserBroker;
 import de.meisterfuu.animexx.api.xmpp.XMPPApi;
@@ -470,12 +471,14 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
         connectionState = false;
         mManager.scheduleCheck();
         Log.i(TAG, ".pingFailed() called");
+        EventBus.getBus().getOtto().post(new StatsuChangeEvent(false));
         DebugNotification.notify(mApplicationContext, "XMPP Ping Failed", 865);
     }
 
     @Override
     public void reconnectionSuccessful() {
         Log.i(TAG, "ConnectionListener.reconnectionSuccessful() called");
+        EventBus.getBus().getOtto().post(new StatsuChangeEvent(true));
         initKeepAlive();
         initCarbonManager();
     }
@@ -492,6 +495,7 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
     public void connectionClosedOnError(Exception arg0) {
         connectionState = false;
         mManager.scheduleCheck();
+        EventBus.getBus().getOtto().post(new StatsuChangeEvent(false));
         Log.i(TAG, "ConnectionListener.connectionClosedOnError() called");
     }
 
@@ -499,6 +503,7 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
     public void connectionClosed() {
         connectionState = false;
         mManager.scheduleCheck();
+        EventBus.getBus().getOtto().post(new StatsuChangeEvent(false));
         Log.i(TAG, "ConnectionListener.connectionClosed() called");
     }
 
@@ -511,6 +516,7 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
     public void connected(XMPPConnection arg0) {
         connectionState = true;
         Log.i(TAG, "ConnectionListener.connected() called");
+        EventBus.getBus().getOtto().post(new StatsuChangeEvent(true));
         initKeepAlive();
         initCarbonManager();
     }

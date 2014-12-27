@@ -15,6 +15,7 @@ import android.util.Log;
 
 import de.meisterfuu.animexx.Debug;
 import de.meisterfuu.animexx.DebugNotification;
+import de.meisterfuu.animexx.api.EventBus;
 import de.meisterfuu.animexx.utils.Helper;
 
 public class ConnectionManager {
@@ -131,6 +132,7 @@ public class ConnectionManager {
                     }
 
                     if (!check()) {
+                        EventBus.getBus().getOtto().post(new StatsuChangeEvent(false));
                         scheduleCheck();
                     } else {
                         step = 0;
@@ -175,11 +177,9 @@ public class ConnectionManager {
 
             // connection is not ok
             if (!mConnection.isConnected() && mConnection.shouldConnect()) {
-
                 Log.i(TAG, "ChatConnection.connect() called in ReconManager");
                 DebugNotification.notify(mService, "ReconManager is working", 433961);
                 mConnection.connect();
-
             }
 
             if (mConnection.isConnected() && mConnection.shouldConnect()) {

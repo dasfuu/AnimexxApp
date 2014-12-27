@@ -63,11 +63,11 @@ public class GcmIntentService extends IntentService {
                 if (extras.getString("type").equalsIgnoreCase("XXEventENS")) {
                     System.out.println("ENS GCM!!!");
                     ENSNotificationManager manager = new ENSNotificationManager(this);
-                    manager.addNotification(new ENSNotification(extras.getString("title"), extras.getLong("id"), extras.getString("from_username"), extras.getLong("from_id")));
+                    manager.addNotification(new ENSNotification(extras.getString("title"), Long.parseLong(extras.getString("id")), extras.getString("from_username"),  Long.parseLong(extras.getString("from_id"))));
                     manager.show();
                 } else if (extras.getString("type").equalsIgnoreCase("XXEventRPGPosting")) {
                     RPGNotificationManager manager = new RPGNotificationManager(this);
-                    manager.addNotification(new RPGNotification(extras.getString("title"), extras.getLong("id"), extras.getString("from_username"), extras.getLong("from_id")));
+                    manager.addNotification(new RPGNotification(extras.getString("title"),  Long.parseLong(extras.getString("id")), extras.getString("from_username"), Long.parseLong(extras.getString("from_id"))));
                     manager.show();
                     Intent i = new Intent(GcmIntentService.NEW_POST);
                     i.setPackage(this.getPackageName());

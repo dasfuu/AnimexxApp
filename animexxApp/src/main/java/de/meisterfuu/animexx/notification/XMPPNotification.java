@@ -89,9 +89,11 @@ public class XMPPNotification extends BaseNotification {
     @Override
     public SpannableStringBuilder getMultiTextLine() {
         final SpannableStringBuilder spann = new SpannableStringBuilder();
-        spann.append(pUserName);
+        spann.append(getTitle());
         spann.setSpan(new StyleSpan(Typeface.BOLD), 0, spann.length(), 0);
         spann.append("   " + pTitle);
         return spann;
     }
+
+
 }

@@ -3,7 +3,9 @@ package de.meisterfuu.animexx.notification;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -19,33 +21,36 @@ import java.util.List;
 /**
  * Created by Furuha on 19.12.2014.
  */
-public abstract class BaseNotificationManager <X extends BaseNotification> {
+public abstract class BaseNotificationManager <X extends BaseNotification>{
 
     private static final String KEY = "notification_list";
     private Context mContext;
     private Gson mGson;
-    private ListObject<X> mList;
+    private ArrayList<X> mList;
     SharedPreferences sharedPreferences;
 
     public BaseNotificationManager(Context pContext){
         mContext = pContext;
         mGson = new Gson();
-        sharedPreferences = pContext.getApplicationContext().getSharedPreferences("NotificationManager_" + getNotificationTag(), 0);
+        sharedPreferences = pContext.getApplicationContext().getSharedPreferences("NotificationManager2_" + getNotificationTag(), 0);
         String list = sharedPreferences.getString(KEY, null);
         if(list == null){
-            mList = new ListObject<>();
+            mList = new ArrayList<>();
         } else {
-            Type listType = new TypeToken<ListObject<X>>() {}.getType();
-            mList = mGson.fromJson(list, listType);
+            try {
+                mList = mGson.fromJson(list, getType());
+            } catch (Exception e){
+                mList = new ArrayList<>();
+            }
         }
     }
 
     private List<X> getNotifications(){
-        return mList.getList();
+        return mList;
     }
 
     public boolean addNotification(X pNotification){
-        getNotifications().add(pNotification);
+        getNotifications().add(0, pNotification);
         return sharedPreferences.edit().putString(KEY, mGson.toJson(mList)).commit();
     }
 
@@ -79,7 +84,9 @@ public abstract class BaseNotificationManager <X extends BaseNotification> {
         nm.cancel(getNotificationTag(), 0);
     }
 
+    public abstract Type getType();
     public abstract String getInboxTitle(int count, Context pContext);
+    public abstract PendingIntent getDismissIntent(Context pContext);
     public abstract String getInboxSummary(int count, Context pContext);
     public abstract PendingIntent getInboxIntent(X lastNotification, Context pContext);
     public abstract String getInboxTicker(X lastNotification, Context pContext);
@@ -142,7 +149,9 @@ public abstract class BaseNotificationManager <X extends BaseNotification> {
         builder.setAutoCancel(true);
 
         //Tint color
-        builder.setColor(notification.getColor());
+        builder.setColor(pContext.getResources().getColor(notification.getColor()));
+
+        builder.setDeleteIntent(this.getDismissIntent(pContext));
 
         // Provide a large icon, shown with the notification in the
         // notification drawer on devices running Android 3.0 or later.
@@ -161,7 +170,7 @@ public abstract class BaseNotificationManager <X extends BaseNotification> {
             builder.setVibrate(new long[]{0, 250, 100, 250});
         }
 
-        builder.setLights(notification.getLightColor(pContext), 1000, 600);
+        builder.setLights(pContext.getResources().getColor(notification.getLightColor(pContext)), 1000, 600);
 
         notify(pContext, builder.build());
     }
@@ -195,9 +204,11 @@ public abstract class BaseNotificationManager <X extends BaseNotification> {
         builder.setAutoCancel(true);
 
         //Tint color
-        builder.setColor(notification.getColor());
+        builder.setColor(pContext.getResources().getColor(notification.getColor()));
 
         builder.setStyle(inbox);
+
+        builder.setDeleteIntent(this.getDismissIntent(pContext));
 
         // Provide a large icon, shown with the notification in the
         // notification drawer on devices running Android 3.0 or later.
@@ -216,29 +227,9 @@ public abstract class BaseNotificationManager <X extends BaseNotification> {
             builder.setVibrate(new long[]{0, 250, 100, 250});
         }
 
-        builder.setLights(notification.getLightColor(pContext), 1000, 600);
+        builder.setLights(pContext.getResources().getColor(notification.getLightColor(pContext)), 1000, 600);
 
         notify(pContext, builder.build());
     }
 
-    private class ListObject<X> {
-
-        ArrayList<X> list;
-
-        private ListObject() {
-            list = new ArrayList<>();
-        }
-
-        private ListObject(ArrayList<X> list) {
-            this.list = list;
-        }
-
-        public ArrayList<X> getList() {
-            return list;
-        }
-
-        public void setList(ArrayList<X> list) {
-            this.list = list;
-        }
-    }
 }
