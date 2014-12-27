@@ -14,13 +14,13 @@ import com.squareup.otto.Subscribe;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ChatManager;
 import org.jivesoftware.smack.ChatManagerListener;
+import org.jivesoftware.smack.ChatMessageListener;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.ConnectionListener;
-import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.PacketListener;
+import org.jivesoftware.smack.ReconnectionManager;
 import org.jivesoftware.smack.RosterEntry;
 import org.jivesoftware.smack.RosterListener;
-import org.jivesoftware.smack.SmackAndroid;
 import org.jivesoftware.smack.SmackConfiguration;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
@@ -31,9 +31,6 @@ import org.jivesoftware.smack.packet.Message.Type;
 import org.jivesoftware.smack.packet.Packet;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
-import org.jivesoftware.smackx.carbons.CarbonManager;
-import org.jivesoftware.smackx.carbons.packet.CarbonExtension;
-import org.jivesoftware.smackx.forward.Forwarded;
 import org.jivesoftware.smackx.ping.PingFailedListener;
 import org.jivesoftware.smackx.ping.PingManager;
 
@@ -62,7 +59,7 @@ import de.meisterfuu.animexx.utils.Helper;
 import de.meisterfuu.animexx.utils.imageloader.ImageSaveObject;
 import de.meisterfuu.animexx.utils.imageloader.ImageSaverCustom;
 
-public class ChatConnection implements MessageListener, ChatManagerListener, RosterListener, PingFailedListener, ConnectionListener, PacketListener {
+public class ChatConnection implements ChatMessageListener, ChatManagerListener, RosterListener, PingFailedListener, ConnectionListener, PacketListener {
 
     XMPPTCPConnection mConnection;
     XMPPApi mApi;
@@ -80,10 +77,10 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
         mManager = pManager;
 
         connectionState = false;
-        SmackAndroid.init(mApplicationContext);
 
         SmackConfiguration.DEBUG_ENABLED = Debug.XMPP_DEBUG_ENABLE;
         SmackConfiguration.setDefaultPacketReplyTimeout(30000);
+        ReconnectionManager.setEnabledPerDefault(false);
 
         Random r = new Random();
         int res_attach = r.nextInt();
@@ -163,8 +160,6 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 //			config.setSecurityMode(ConnectionConfiguration.SecurityMode.disabled);
 
             config.setRosterLoadedAtLogin(true);
-
-            config.setReconnectionAllowed(false);
             Log.i(TAG, "mConnection = new TCPConnection(config) called");
             mConnection = new XMPPTCPConnection(config);
             connectionState = true;
@@ -201,15 +196,15 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
 
 
     public void initCarbonManager() {
-        try {
-            if (CarbonManager.getInstanceFor(getConnection()).isSupportedByServer()) {
-                CarbonManager.getInstanceFor(getConnection()).enableCarbons();
-            }
-        } catch (XMPPException e) {
-            e.printStackTrace();
-        } catch (SmackException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            if (CarbonManager.getInstanceFor(getConnection()).isSupportedByServer()) {
+//                CarbonManager.getInstanceFor(getConnection()).enableCarbons();
+//            }
+//        } catch (XMPPException e) {
+//            e.printStackTrace();
+//        } catch (SmackException e) {
+//            e.printStackTrace();
+//        }
     }
 
     private void initKeepAlive() {
@@ -281,21 +276,21 @@ public class ChatConnection implements MessageListener, ChatManagerListener, Ros
         boolean carbonCopied = false;
         String fromJID;
         boolean directionIN = true;
-        CarbonExtension c = CarbonManager.getCarbon(pMessage);
-        if (c != null) {
-            carbonCopied = true;
-            Forwarded fwd = c.getForwarded();
-            message = (Message) fwd.getForwardedPacket();
-
-            if (c.getDirection() == CarbonExtension.Direction.sent) {
-                fromJID = getBareJID(message.getTo());
-                directionIN = false;
-            } else {
-                fromJID = getBareJID(message.getFrom());
-            }
-        } else {
+//        CarbonExtension c = CarbonManager.getCarbon(pMessage);
+//        if (c != null) {
+//            carbonCopied = true;
+//            Forwarded fwd = c.getForwarded();
+//            message = (Message) fwd.getForwardedPacket();
+//
+//            if (c.getDirection() == CarbonExtension.Direction.sent) {
+//                fromJID = getBareJID(message.getTo());
+//                directionIN = false;
+//            } else {
+//                fromJID = getBareJID(message.getFrom());
+//            }
+//        } else {
             fromJID = getBareJID(message.getFrom());
-        }
+//        }
 
         if (message.getType().equals(Type.chat) || message.getType().equals(Type.normal)) {
             if (message.getBody() != null && !chat.getParticipant().startsWith("animexx")) {
