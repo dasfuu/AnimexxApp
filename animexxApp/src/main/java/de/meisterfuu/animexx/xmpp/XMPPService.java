@@ -42,6 +42,8 @@ public class XMPPService extends Service {
         EventBus.getBus().getOtto().register(this);
     }
 
+
+
     @Subscribe
     public void onStatusChange(StatsuChangeEvent event){
         if(event.online == oldEvent){
@@ -118,6 +120,7 @@ public class XMPPService extends Service {
     public void onDestroy() {
         super.onDestroy();
         if (ConnectionManager.getInstance() != null) ConnectionManager.getInstance().stop();
+        EventBus.getBus().getOtto().unregister(this);
         stopForeground(true);
     }
 

@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
@@ -18,7 +17,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.activitys.ens.ENSFolderFragment;
@@ -46,10 +48,12 @@ public class MainActivity extends ActionBarActivity {
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
     private MainDrawerAdapter mAdapter;
-    private String mSelected = "ENS";
     private String mLastCode = "";
-    private long mDesign;
 
+    private Spinner mENSSpinner;
+    private Spinner mChatSpinner;
+    private Spinner currentSpinner;
+    private Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,11 +72,12 @@ public class MainActivity extends ActionBarActivity {
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
         // Handle Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitleTextColor(Color.WHITE);
-        toolbar.setSubtitleTextColor(Color.WHITE);
 
-        setSupportActionBar(toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar.setTitleTextColor(Color.WHITE);
+        mToolbar.setSubtitleTextColor(Color.WHITE);
+
+        setSupportActionBar(mToolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -81,7 +86,7 @@ public class MainActivity extends ActionBarActivity {
         mDrawerToggle = new ActionBarDrawerToggle(
                 this, /* host Activity */
                 mDrawerLayout, /* DrawerLayout object */
-                toolbar,//R.drawable.ic_drawer, /* nav drawer image to replace 'Up' caret */
+                mToolbar,//R.drawable.ic_drawer, /* nav drawer image to replace 'Up' caret */
                 R.string.drawer_open, /* "open drawer" description for accessibility */
                 R.string.drawer_close /* "close drawer" description for accessibility */
         ) {
@@ -99,9 +104,8 @@ public class MainActivity extends ActionBarActivity {
         mDrawerToggle.syncState();
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-        mDesign = 1;
         if (this.getIntent().hasExtra("LANDING")) {
-            selectItem(this.getIntent().getStringExtra("LANDING"));
+            selectItem(this.getIntent().getStringExtra("LANDING")); //Todo: Test: Split into multiple extras
         } else {
             if (!mLastCode.isEmpty()) {
                 selectItem(mLastCode);
@@ -183,61 +187,33 @@ public class MainActivity extends ActionBarActivity {
     /* Called whenever we call invalidateOptionsMenu() */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-
         boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
         if (drawerOpen) {
             //menu.clear();
         }
         inflateMenu(menu);
 
-        if (mSelected.equals("ENS")) {
-            // MenuInflater inflater = getMenuInflater();
-            // inflater.inflate(R.menu.main, menu);
-        }
-
         return super.onPrepareOptionsMenu(menu);
     }
 
     public Menu inflateMenu(Menu menu) {
         menu.clear();
-        if (mSelected.equals("ENS")) {
+
+        if (mLastCode.equals("ENS")) {
             MenuInflater inflater = getMenuInflater();
             inflater.inflate(R.menu.main_ens, menu);
-        } else if (mSelected.equals("RPG")) {
+        } else if (mLastCode.equals("RPG")) {
             MenuInflater inflater = getMenuInflater();
             inflater.inflate(R.menu.main_rpg, menu);
-        } else if (mSelected.equals("EVENT")) {
+        } else if (mLastCode.equals("EVENT")) {
             MenuInflater inflater = getMenuInflater();
             inflater.inflate(R.menu.main_rpg, menu);
-        } else if (mSelected.equals("XMPP")) {
+        } else if (mLastCode.equals("XMPP")) {
             MenuInflater inflater = getMenuInflater();
             inflater.inflate(R.menu.main_xmpp, menu);
-//	        View v = (View) menu.findItem(R.id.menu_xmpp_switch).getActionView();
-//			final Switch sw = ((Switch)v.findViewById(R.id.ac_switch_actionbar));
-//			sw.setChecked(PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getBoolean("xmpp_status", false));
-//			sw.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-//
-//				@Override
-//				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//					PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit().putBoolean("xmpp_status", isChecked).commit();
-//					if (isChecked) {
-//						String password = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("xmpp_password", null);
-//						Intent intent = new Intent(MainActivity.this, XMPPService.class);
-//						MainActivity.this.startService(intent);
-////						selectChat();
-//					} else {
-//						Intent intent = new Intent(MainActivity.this, XMPPService.class);
-//						MainActivity.this.stopService(intent);
-////						selectChat();
-//					}
-//				}
-//			});
-
-
         }
 
         return menu;
-
     }
 
 
@@ -248,15 +224,9 @@ public class MainActivity extends ActionBarActivity {
             return true;
         }
 
-
         switch (item.getItemId()) {
-            case R.id.menu_settings:
-                SettingsActivity.getInstance(this);
-                return true;
-            case R.id.menu_new_ens:
+            case R.id.menu_ens_new:
                 NewENSActivity.getInstanceBlank(this);
-                return true;
-            case R.id.menu_xmpp_switch:
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -277,6 +247,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
 
+
     private void selectItem(String pCode) {
         if (mLastCode.equals(pCode)) return;
 
@@ -285,7 +256,6 @@ public class MainActivity extends ActionBarActivity {
         }
 
         if (pCode.equals("ENS")) {
-            mDesign = 1;
             selectENS();
         } else if (pCode.equals("RPG")) {
             selectRPG();
@@ -303,47 +273,77 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
-
     private void selectChat() {
-        mSelected = "XMPP";
         this.setTitle("Chat");
-        Fragment fragment;
-
-        fragment = XMPPRoosterFragment.getInstance();
-
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, "Rooster").commit();
-        getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        resetToolbar();
+        loadFragment(XMPPRoosterFragment.getInstance(), "Rooster");
         invalidateOptionsMenu();
+
+        mChatSpinner = new Spinner(mToolbar.getContext(), Spinner.MODE_DROPDOWN);
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, new String[]{"Online", "Offline"});
+        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mChatSpinner.setAdapter(spinnerArrayAdapter);
+
+        boolean status = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getBoolean("xmpp_status", false);
+        mChatSpinner.setSelection(status ? 0 : 1);
+
+        mChatSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(position == 0){
+                    PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit().putBoolean("xmpp_status", true).apply();
+                    Intent intentStop = new Intent(MainActivity.this, XMPPService.class);
+                    MainActivity.this.startService(intentStop);
+                } else {
+                    PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit().putBoolean("xmpp_status", false).apply();
+                    Intent intentStart = new Intent(MainActivity.this, XMPPService.class);
+                    MainActivity.this.stopService(intentStart);
+                }
+
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        setSpinner(mChatSpinner);
     }
 
 
     private void selectENS() {
-        mSelected = "ENS";
-        this.setTitle("");
-//		Fragment fragment = ENSFolderFragment.getInstance(1, ENSApi.TYPE_INBOX, mDesign);
+
+//		Fragment fragment = ENSFolderFragment.getInstance(1, ENSApi.TYPE_INBOX);
 //		FragmentManager fragmentManager = getFragmentManager();
 //		fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, "1_"+ENSApi.TYPE_INBOX).commit();
-        getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+
+        mENSSpinner = new Spinner(mToolbar.getContext(), Spinner.MODE_DROPDOWN);
 
         new ENSBroker(MainActivity.this).getFolderList(new Callback<ReturnObject<ENSFolderObject.ENSFolderObjectContainer>>() {
 
             @Override
             public void success(ReturnObject<ENSFolderObject.ENSFolderObjectContainer> t, Response response) {
                 final ENSFolderSpinnerAdapter spinnerAdapter = new ENSFolderSpinnerAdapter(t.getObj().getAll(), MainActivity.this);
-                ActionBar.OnNavigationListener listener = new ActionBar.OnNavigationListener() {
+                AdapterView.OnItemSelectedListener listener = new AdapterView.OnItemSelectedListener() {
 
                     @Override
-                    public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+                    public void onItemSelected(AdapterView<?> parent, View view, int itemPosition, long id) {
                         ENSFolderObject folder = spinnerAdapter.getItem(itemPosition);
-                        Fragment fragment = ENSFolderFragment.getInstance(folder.getId(), folder.getType(), mDesign);
-                        FragmentManager fragmentManager = getFragmentManager();
-                        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, folder.getId() + "_" + folder.getType()).commit();
-                        return true;
+                        Fragment fragment = ENSFolderFragment.getInstance(folder.getId(), folder.getType());
+                        loadFragment(fragment, folder.getId()+ "_" + folder.getType());
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
                     }
                 };
 
-                MainActivity.this.getSupportActionBar().setListNavigationCallbacks(spinnerAdapter, listener);
+                mENSSpinner.setOnItemSelectedListener(listener);
+                mENSSpinner.setAdapter(spinnerAdapter);
+                setSpinner(mENSSpinner);
             }
 
             @Override
@@ -356,45 +356,51 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void selectRPG() {
-        mSelected = "RPG";
         this.setTitle("RPG");
-        Fragment fragment = RPGListFragment.getInstance();
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, "RPGList").commit();
-        getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        resetToolbar();
+        loadFragment(RPGListFragment.getInstance(), "RPG");
         invalidateOptionsMenu();
     }
 
     private void selectGB() {
-//		mSelected = "GB";
-//		this.setTitle("Gästebuch");
         ProfileActivity.getInstance(this, Self.getInstance(this).getUserID());
-//		Fragment fragment = GuestbookListFragment.newInstance(Self.getInstance(this).getUserID());
-//		FragmentManager fragmentManager = getFragmentManager();
-//		fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, "GBList").commit();
-//		getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-//		invalidateOptionsMenu();
     }
 
     private void selectEvent() {
-        mSelected = "EVENT";
         this.setTitle("Events");
-        Fragment fragment = EventListFragment.getInstance();
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, "EventList").commit();
-        getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        resetToolbar();
+        loadFragment(EventListFragment.getInstance(), "EventList");
         invalidateOptionsMenu();
     }
 
 
     private void selectHome() {
-        mSelected = "HOME";
         this.setTitle("Home");
-        Fragment fragment = HomeObjectFragment.getInstance();
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, "Home").commit();
-        getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        resetToolbar();
+        loadFragment(HomeObjectFragment.getInstance(), "Home");
         invalidateOptionsMenu();
+    }
+
+
+    public void loadFragment(Fragment pFragment, String pTag){
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.content_frame, pFragment, pTag).commit();
+    }
+
+    private void resetToolbar() {
+        if(currentSpinner != null){
+            mToolbar.removeView(currentSpinner);
+            currentSpinner = null;
+        }
+    }
+
+    private void setSpinner(Spinner pSpinner) {
+        if(currentSpinner != null){
+            mToolbar.removeView(currentSpinner);
+        }
+        currentSpinner = pSpinner;
+        this.setTitle("");
+        mToolbar.addView(currentSpinner);
     }
 
     /**

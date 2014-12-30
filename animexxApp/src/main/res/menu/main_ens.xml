@@ -14,8 +14,8 @@
   limitations under the License.
   -->
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"><item android:id="@+id/menu_settings" android:title="@string/menu_settings" app:showAsAction="never"></item>
-<item android:id="@+id/menu_new_ens" android:icon="@drawable/ic_action_ens_new" android:title="@string/action_reply" app:showAsAction="always|withText"></item>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+<item android:id="@+id/menu_ens_new" android:icon="@drawable/ic_action_ens_new" android:title="@string/action_ens_new" app:showAsAction="always|withText"></item>
     
     
 </menu>

@@ -22,13 +22,11 @@ public class ENSFolderAdapter extends BaseAdapter {
 
     List<ENSObject> mItems;
     Activity mContext;
-    long mDesign;
     ImageDownloaderCustom ImageLoader = new ImageDownloaderCustom("forenavatar");
     ImageLoaderCustom ImageLoaderProfile = new ImageLoaderCustom("profilbild");
 
-    public ENSFolderAdapter(List<ENSObject> pList, Activity pContext, long pDesign) {
+    public ENSFolderAdapter(List<ENSObject> pList, Activity pContext) {
         this.mItems = pList;
-        this.mDesign = pDesign;
         this.mContext = pContext;
     }
 
@@ -115,15 +113,7 @@ public class ENSFolderAdapter extends BaseAdapter {
         if (rowView == null) {
             LayoutInflater inflater = mContext.getLayoutInflater();
 
-            if (mDesign == 1) {
-                rowView = inflater.inflate(R.layout.listitem_ens, null);
-            } else if (mDesign == 2) {
-                rowView = inflater.inflate(R.layout.listitem_ens_2, null);
-            } else if (mDesign == 3) {
-                rowView = inflater.inflate(R.layout.listitem_ens_3, null);
-            } else if (mDesign == 4) {
-                rowView = inflater.inflate(R.layout.listitem_ens_4, null);
-            }
+            rowView = inflater.inflate(R.layout.listitem_ens, null);
 
             ViewHolder viewHolder = new ViewHolder();
             viewHolder.Title = (TextView) rowView.findViewById(R.id.ens_list_item_title);

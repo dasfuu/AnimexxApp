@@ -39,7 +39,6 @@ public class ENSFolderFragment extends Fragment implements AbsListView.OnItemCli
     ArrayList<ENSObject> mList;
     ENSFolderAdapter mAdapter;
     int mPrevTotalItemCount;
-    private long mDesign;
 
     static ENSFolderAdapter saveAdapter;
     static int saveItemCount, saveNextPage;
@@ -47,11 +46,10 @@ public class ENSFolderFragment extends Fragment implements AbsListView.OnItemCli
     static int saveScrollstate;
     private FeedbackListView mListView;
 
-    public static ENSFolderFragment getInstance(long pFolderID, String pType, long pDesign) {
+    public static ENSFolderFragment getInstance(long pFolderID, String pType) {
         ENSFolderFragment result = new ENSFolderFragment();
         Bundle args = new Bundle();
         args.putLong("mFolderID", pFolderID);
-        args.putLong("mDesign", pDesign);
         args.putString("mType", pType);
         result.setArguments(args);
         return result;
@@ -105,12 +103,11 @@ public class ENSFolderFragment extends Fragment implements AbsListView.OnItemCli
     private void init() {
         this.mType = this.getArguments().getString("mType");
         this.mFolderID = this.getArguments().getLong("mFolderID");
-        this.mDesign = this.getArguments().getLong("mDesign");
         mInitiated = false;
         mNextPage = 0;
         this.getListView().setOnScrollListener(this);
         mList = new ArrayList<ENSObject>();
-        mAdapter = new ENSFolderAdapter(mList, ENSFolderFragment.this.getActivity(), mDesign);
+        mAdapter = new ENSFolderAdapter(mList, ENSFolderFragment.this.getActivity());
         mListView.setAdapter(mAdapter);
         mListView.setOnItemClickListener(this);
 
@@ -122,7 +119,6 @@ public class ENSFolderFragment extends Fragment implements AbsListView.OnItemCli
     private void initOld() {
         this.mType = this.getArguments().getString("mType");
         this.mFolderID = this.getArguments().getLong("mFolderID");
-        this.mDesign = this.getArguments().getLong("mDesign");
         mInitiated = false;
         mNextPage = ENSFolderFragment.saveNextPage;
         this.getListView().setOnScrollListener(this);
