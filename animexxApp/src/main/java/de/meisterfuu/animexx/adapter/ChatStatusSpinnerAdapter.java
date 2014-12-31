@@ -15,12 +15,15 @@ import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.api.broker.ENSBroker;
 import de.meisterfuu.animexx.objects.ens.ENSFolderObject;
 
-public class ENSFolderSpinnerAdapter extends BaseAdapter {
+public class ChatStatusSpinnerAdapter extends BaseAdapter {
 
-    List<ENSFolderObject> mItems;
+    List<String> mItems;
     Activity mContext;
 
-    public ENSFolderSpinnerAdapter(List<ENSFolderObject> pList, Activity pContext) {
+    public ChatStatusSpinnerAdapter(Activity pContext) {
+        ArrayList<String> pList = new ArrayList<>();
+        pList.add("Online");
+        pList.add("Offline");
         this.mItems = pList;
         this.mContext = pContext;
     }
@@ -33,16 +36,13 @@ public class ENSFolderSpinnerAdapter extends BaseAdapter {
 
 
     static class ViewHolder {
-
         public TextView Title;
-        public ImageView Icon;
     }
 
     @Override
     public int getCount() {
         return mItems.size();
     }
-
 
     @Override
     public boolean areAllItemsEnabled() {
@@ -55,13 +55,13 @@ public class ENSFolderSpinnerAdapter extends BaseAdapter {
     }
 
     @Override
-    public ENSFolderObject getItem(int position) {
+    public String getItem(int position) {
         return mItems.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        return mItems.get(position).getId();
+        return position;
     }
 
     @Override
@@ -79,26 +79,14 @@ public class ENSFolderSpinnerAdapter extends BaseAdapter {
         View rowView = convertView;
         if (rowView == null) {
             LayoutInflater inflater = mContext.getLayoutInflater();
-            rowView = inflater.inflate(R.layout.listitem_ens_folder, null);
+            rowView = inflater.inflate(R.layout.listitem_chatstatus_spinner, null);
             ViewHolder viewHolder = new ViewHolder();
-            viewHolder.Title = (TextView) rowView.findViewById(R.id.ens_folder_title);
-            viewHolder.Icon = (ImageView) rowView.findViewById(R.id.ens_folder_icon);
+            viewHolder.Title = (TextView) rowView.findViewById(R.id.text1);
             rowView.setTag(viewHolder);
         }
 
         ViewHolder holder = (ViewHolder) rowView.getTag();
-        final ENSFolderObject Folder = mItems.get(position);
-
-        //Subject
-        holder.Title.setText(Folder.getName());
-
-        if (Folder.getType().equals(ENSBroker.TYPE_INBOX)) {
-            holder.Icon.setImageResource(R.drawable.ens_folder_in_white);
-        } else {
-            holder.Icon.setImageResource(R.drawable.ens_folder_out_white);
-        }
-
-        //holder.Icon.getDrawable().setColorFilter(mContext.getResources().getColor(R.color.animexx_blue), PorterDuff.Mode.MULTIPLY );
+        holder.Title.setText(getItem(position));
 
         return rowView;
     }
@@ -108,31 +96,19 @@ public class ENSFolderSpinnerAdapter extends BaseAdapter {
         View rowView = convertView;
         if (rowView == null) {
             LayoutInflater inflater = mContext.getLayoutInflater();
-            rowView = inflater.inflate(R.layout.listitem_ens_folder_dialog, null);
+            rowView = inflater.inflate(R.layout.listitem_chatstatus_spinner_dialog, null);
             ViewHolder viewHolder = new ViewHolder();
-            viewHolder.Title = (TextView) rowView.findViewById(R.id.ens_folder_title);
-            viewHolder.Icon = (ImageView) rowView.findViewById(R.id.ens_folder_icon);
+            viewHolder.Title = (TextView) rowView.findViewById(R.id.text1);
             rowView.setTag(viewHolder);
         }
 
         ViewHolder holder = (ViewHolder) rowView.getTag();
-        final ENSFolderObject Folder = mItems.get(position);
-
-        //Subject
-        holder.Title.setText(Folder.getName());
-
-        if (Folder.getType().equals(ENSBroker.TYPE_INBOX)) {
-            holder.Icon.setImageResource(R.drawable.ens_folder_in);
-        } else {
-            holder.Icon.setImageResource(R.drawable.ens_folder_out);
-        }
-
-        //holder.Icon.getDrawable().setColorFilter(mContext.getResources().getColor(R.color.animexx_blue), PorterDuff.Mode.MULTIPLY );
+        holder.Title.setText(getItem(position));
 
         return rowView;
     }
 
-    public void addAll(ArrayList<ENSFolderObject> list) {
+    public void addAll(ArrayList<String> list) {
         mItems.addAll(list);
         this.notifyDataSetChanged();
     }

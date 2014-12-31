@@ -22,6 +22,8 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 
+import java.util.ArrayList;
+
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.activitys.ens.ENSFolderFragment;
 import de.meisterfuu.animexx.activitys.ens.NewENSActivity;
@@ -29,6 +31,7 @@ import de.meisterfuu.animexx.activitys.events.EventListFragment;
 import de.meisterfuu.animexx.activitys.home.HomeObjectFragment;
 import de.meisterfuu.animexx.activitys.profiles.ProfileActivity;
 import de.meisterfuu.animexx.activitys.rpg.RPGListFragment;
+import de.meisterfuu.animexx.adapter.ChatStatusSpinnerAdapter;
 import de.meisterfuu.animexx.adapter.ENSFolderSpinnerAdapter;
 import de.meisterfuu.animexx.adapter.MainDrawerAdapter;
 import de.meisterfuu.animexx.api.Self;
@@ -280,8 +283,8 @@ public class MainActivity extends ActionBarActivity {
         invalidateOptionsMenu();
 
         mChatSpinner = new Spinner(mToolbar.getContext(), Spinner.MODE_DROPDOWN);
-        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, new String[]{"Online", "Offline"});
-        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        ChatStatusSpinnerAdapter spinnerArrayAdapter = new ChatStatusSpinnerAdapter(this);
         mChatSpinner.setAdapter(spinnerArrayAdapter);
 
         boolean status = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getBoolean("xmpp_status", false);
@@ -315,11 +318,8 @@ public class MainActivity extends ActionBarActivity {
 
     private void selectENS() {
 
-//		Fragment fragment = ENSFolderFragment.getInstance(1, ENSApi.TYPE_INBOX);
-//		FragmentManager fragmentManager = getFragmentManager();
-//		fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, "1_"+ENSApi.TYPE_INBOX).commit();
-
-        mENSSpinner = new Spinner(mToolbar.getContext(), Spinner.MODE_DROPDOWN);
+        loadFragment(ENSFolderFragment.getInstance(1, ENSBroker.TYPE_INBOX), "1_"+ENSBroker.TYPE_INBOX);
+        invalidateOptionsMenu();
 
         new ENSBroker(MainActivity.this).getFolderList(new Callback<ReturnObject<ENSFolderObject.ENSFolderObjectContainer>>() {
 
@@ -341,8 +341,9 @@ public class MainActivity extends ActionBarActivity {
                     }
                 };
 
-                mENSSpinner.setOnItemSelectedListener(listener);
+                mENSSpinner = new Spinner(mToolbar.getContext(), Spinner.MODE_DROPDOWN);
                 mENSSpinner.setAdapter(spinnerAdapter);
+                mENSSpinner.setOnItemSelectedListener(listener);
                 setSpinner(mENSSpinner);
             }
 
@@ -352,7 +353,6 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
-        invalidateOptionsMenu();
     }
 
     private void selectRPG() {
