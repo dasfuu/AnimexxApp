@@ -51,7 +51,11 @@ public class UserViewBig extends FrameLayout {
     private void init(final Context pContext) {
         this.mContext = pContext;
         if(sPicasso == null){
-            sPicasso = new Picasso.Builder(mContext).downloader(new PicassoDownloader(mContext, "forenavatar")).build();
+            try {
+                sPicasso = new Picasso.Builder(mContext).downloader(new PicassoDownloader(mContext, "forenavatar")).build();
+            } catch (Exception e){
+                e.printStackTrace();
+            }
         }
         mInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mLayout = (LinearLayout) mInflater.inflate(R.layout.view_user_big, null);

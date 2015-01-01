@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -77,8 +78,8 @@ public class HomeContactAdapter extends BaseAdapter {
     }
 
     static class ViewHolder {
-        public TextView Title, btLeft, btRight, Date;
-        public ImageView Image;
+        public TextView Title, btComments, btWeb, Date;
+        public ImageView Image, IcComments, IcWeb;
         public UserViewBig User;
     }
 
@@ -94,9 +95,11 @@ public class HomeContactAdapter extends BaseAdapter {
             ViewHolder viewHolder = new ViewHolder();
             viewHolder.Title = (TextView) rowView.findViewById(R.id.home_list_item_title);
             viewHolder.Date = (TextView) rowView.findViewById(R.id.home_list_item_date);
-            viewHolder.btLeft = (TextView) rowView.findViewById(R.id.home_list_item_button1);
-            viewHolder.btRight = (TextView) rowView.findViewById(R.id.home_list_item_button2);
+            viewHolder.btComments = (TextView) rowView.findViewById(R.id.home_list_item_button_comments);
+            viewHolder.btWeb = (TextView) rowView.findViewById(R.id.home_list_item_button_web);
             viewHolder.Image = (ImageView) rowView.findViewById(R.id.home_list_item_image);
+            viewHolder.IcComments = (ImageView) rowView.findViewById(R.id.home_list_item_ic_comments);
+            viewHolder.IcWeb = (ImageView) rowView.findViewById(R.id.home_list_item_ic_web);
             viewHolder.User = (UserViewBig) rowView.findViewById(R.id.home_list_item_author);
             rowView.setTag(viewHolder);
         }
@@ -130,23 +133,33 @@ public class HomeContactAdapter extends BaseAdapter {
             holder.User.setUser(obj.getVon());
         }
 
-//			System.out.println(obj.getBigImageURL());
+        if(obj.isCommentable()){
+            holder.btComments.setText(obj.getCommentCount()+" Kommentare");
+            holder.btComments.setVisibility(View.VISIBLE);
+            holder.IcComments.setVisibility(View.VISIBLE);
+            OnClickListener commentsClick = new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(mContext, "Comments", Toast.LENGTH_SHORT).show();
+                }
+            };
+            holder.btComments.setOnClickListener(commentsClick);
+            holder.IcComments.setOnClickListener(commentsClick);
+        } else {
+            holder.btComments.setVisibility(View.INVISIBLE);
+            holder.IcComments.setVisibility(View.INVISIBLE);
+        }
 
-//			holder.Image.getLayoutParams().height = obj.getBigImageHeight();
-//			ImageLoader.download(new ImageSaveObject(obj.getBigImageURL(), obj.getItemID()), holder.Image);
-
-
-//		} else {
-//
-//		}
-
-        holder.btLeft.setOnClickListener(new OnClickListener() {
-
+        holder.btWeb.setText("Web");
+        OnClickListener webClick = new OnClickListener() {
             @Override
             public void onClick(View v) {
 
             }
-        });
+        };
+        holder.btWeb.setOnClickListener(webClick);
+        holder.IcWeb.setOnClickListener(webClick);
+
 
         return rowView;
     }
