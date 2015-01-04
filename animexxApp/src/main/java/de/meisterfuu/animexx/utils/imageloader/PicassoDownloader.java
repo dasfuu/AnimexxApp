@@ -19,6 +19,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.util.Log;
 
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.OkUrlFactory;
@@ -29,7 +30,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.URL;
 
 
@@ -74,19 +74,11 @@ public class PicassoDownloader implements Downloader {
             cacheDir = new File(context.getCacheDir(), folderName);
         }
 
-        if (!cacheDir.exists()){
+        if (!cacheDir.exists()) {
             cacheDir.mkdirs();
         }
 
         return cacheDir;
-    }
-
-
-    protected HttpURLConnection openConnection(Uri uri) throws IOException {
-        HttpURLConnection connection = urlFactory.open(new URL(uri.toString()));
-        connection.setConnectTimeout(PicassoDownloader.DEFAULT_CONNECT_TIMEOUT);
-        connection.setReadTimeout(PicassoDownloader.DEFAULT_READ_TIMEOUT);
-        return connection;
     }
 
     protected OkHttpClient getClient() {
@@ -115,35 +107,29 @@ public class PicassoDownloader implements Downloader {
             return null;
         }
 
-        //Download
-        HttpURLConnection connection = openConnection(uri);
-        connection.setUseCaches(true);
+        com.squareup.okhttp.Request.Builder requestBuilder = new com.squareup.okhttp.Request.Builder().url(uri.toString());
 
-        int responseCode = connection.getResponseCode();
+        com.squareup.okhttp.Response response = getClient().newCall(requestBuilder.build()).execute();
+        int responseCode = response.code();
         if (responseCode >= 300) {
-            connection.disconnect();
-            throw new ResponseException(responseCode + " " + connection.getResponseMessage(),
-                    localCacheOnly, responseCode);
-        }
-
-        String responseSource = connection.getHeaderField(RESPONSE_SOURCE_OKHTTP);
-        if (responseSource == null) {
-            responseSource = connection.getHeaderField(RESPONSE_SOURCE_ANDROID);
+            response.body().close();
+            throw new ResponseException(responseCode + " " + response.message(), localCacheOnly,
+                    responseCode);
         }
 
         //Save to cache dir
         FileOutputStream outputStream = null;
-        InputStream inputStream = connection.getInputStream();
+        InputStream inputStream = response.body().byteStream();
 
         try {
 
             Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
 
             outputStream = new FileOutputStream(f);
+            Log.e("BITMAP", "SIZE: "+ (bitmap != null ? bitmap.getByteCount(): "null"));
             if(bitmap.compress(Bitmap.CompressFormat.WEBP, 90, outputStream)){
                 //return
-                boolean fromCache = PicassoDownloader.parseResponseSourceHeader(responseSource);
-                return new Response(bitmap, fromCache);
+                return new Response(bitmap, false);
             }
 
         } catch (Exception e) {

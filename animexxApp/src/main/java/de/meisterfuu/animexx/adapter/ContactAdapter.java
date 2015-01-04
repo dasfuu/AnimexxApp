@@ -99,7 +99,7 @@ public class ContactAdapter extends BaseAdapter {
         holder.Title.setText(user.getUsername());
 
         if (user.getAvatar() != null) {
-            mPicasso.load(user.getAvatar().getUrl()).placeholder(R.drawable.ic_contact_picture).error(R.drawable.ic_contact_picture).stableKey(user.getId() + "").into(holder.Image);
+            mPicasso.load(user.getAvatar().getUrl()).error(R.drawable.ic_contact_picture).stableKey(user.getId() + "").into(holder.Image);
         } else {
             holder.Image.setImageResource(R.drawable.ic_contact_picture);
         }

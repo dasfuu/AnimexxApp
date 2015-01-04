@@ -3,6 +3,7 @@ package de.meisterfuu.animexx.activitys.profiles;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import de.meisterfuu.animexx.R;
+import de.meisterfuu.animexx.activitys.AnimexxBaseFragment;
 import de.meisterfuu.animexx.objects.profile.ProfileObject;
 import de.meisterfuu.animexx.utils.imageloader.ImageDownloaderCustom;
 import de.meisterfuu.animexx.utils.imageloader.ImageSaveObject;
@@ -25,7 +27,7 @@ import de.meisterfuu.animexx.utils.views.TableDataView;
  * Use the {@link ProfileFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends AnimexxBaseFragment {
 
 
     private static final String USER_ID = "mUserID";
@@ -88,53 +90,59 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
-        if (mUser != null) {
-            profileImageFrame.setVisibility(View.VISIBLE);
-            onCallback(mUser);
-        } else {
-            profileImageFrame.setVisibility(View.GONE);
-            ProfileObject parentProfile = ((ProfileActivity) this.getActivity()).getProfile();
-            if (parentProfile != null) {
-                mUser = parentProfile;
-                onCallback(mUser);
-            }
+        profileImageFrame.setVisibility(View.GONE);
+        if(mUser != null){
+            load();
         }
-//		mApi.getProfile(mUserID, this);
     }
 
-    public void onCallback(final ProfileObject pObject) {
+    @Override
+    public void parentFinishedLoading(int pParentId) {
+        mUser = ((ProfileActivity) this.getActivity()).getProfile();
+        load();
 
+    }
+
+    public void load() {
 
         commonTable.clear();
         contactTable.clear();
 
         this.profileImageFrame.setVisibility(View.VISIBLE);
-        if (!pObject.getPictures().isEmpty()) {
-            Picasso picasso = new Picasso.Builder(this.getActivity()).downloader(new PicassoDownloader(this.getActivity(), "profilbild")).build();
-            picasso.load(pObject.getPictures().get(0).getGoodUrl()).noFade().stableKey(mUserID + "_0").into(profileImage, new Callback() {
+        if (mUser.getPictures() != null && !mUser.getPictures().isEmpty()) {
+            profileImageFrame.post(new Runnable() {
                 @Override
-                public void onSuccess() {
-                    profileImageFrame.setVisibility(View.VISIBLE);
-                }
+                public void run() {
+                    int x = profileImageFrame.getMeasuredWidth();
+                    int y = profileImageFrame.getMeasuredHeight();
+                    Log.e("MEASURE", x+ " "+y);
+                    Picasso picasso = new Picasso.Builder(ProfileFragment.this.getActivity()).downloader(new PicassoDownloader(ProfileFragment.this.getActivity(), "profilbild")).build();
+                    picasso.load(mUser.getPictures().get(0).getGoodUrl()).faceCenterCrop().resize(x,y).stableKey(mUserID + "_0").into(profileImage, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            profileImageFrame.setVisibility(View.VISIBLE);
+                        }
 
-                @Override
-                public void onError() {
-                    profileImageFrame.setVisibility(View.GONE);
+                        @Override
+                        public void onError() {
+                            profileImageFrame.setVisibility(View.GONE);
+                        }
+                    });
                 }
             });
+
             //mImageLoader.download(new ImageSaveObject(pObject.getPictures().get(0).getGoodUrl(), mUserID + "_0", false), profileImage);
         } else {
             this.profileImageFrame.setVisibility(View.GONE);
         }
 
         commonTable.clear();
-        commonTable.add(new TableDataView.TableDataEntity(pObject.getUsername(), R.drawable.ens_flags_forwarded_blue));
+        commonTable.add(new TableDataView.TableDataEntity(mUser.getUsername(), R.drawable.ens_flags_forwarded_blue));
 
-        for (ProfileObject.ProfileContactEntry entry : pObject.getContactData()) {
+        for (ProfileObject.ProfileContactEntry entry : mUser.getContactData()) {
             contactTable.add(new TableDataView.TableDataEntity(entry.getName() + ": " + entry.getValue(), -1));
         }
-        if (pObject.getContactData().isEmpty()) {
+        if (mUser.getContactData().isEmpty()) {
             this.contactFrame.setVisibility(View.GONE);
         } else {
             this.contactFrame.setVisibility(View.VISIBLE);

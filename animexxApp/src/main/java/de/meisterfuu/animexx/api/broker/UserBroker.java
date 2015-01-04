@@ -39,7 +39,7 @@ public class UserBroker extends BasicWebBroker {
             @Override
             public void success(final ReturnObject<ProfileObject> t, final Response response) {
 //				ApiEvent.ProfileEvent event = ;
-                EventBus.getBus().getOtto().post(new ApiEvent.ApiProxyEvent(new ApiEvent.ProfileEvent().setObj(t.getObj()).setCallerID(pCallerID)));
+                EventBus.getBus().getOtto().post(new ApiEvent.ProfileEvent().setObj(t.getObj()).setCallerID(pCallerID));
             }
 
             @Override

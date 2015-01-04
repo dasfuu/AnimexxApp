@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -14,6 +15,7 @@ import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.activitys.AnimexxBaseActivityAB;
 import de.meisterfuu.animexx.adapter.SectionsPagerAdapter;
 import de.meisterfuu.animexx.api.ApiEvent;
+import de.meisterfuu.animexx.api.FinishedLoadingEvent;
 import de.meisterfuu.animexx.api.broker.UserBroker;
 import de.meisterfuu.animexx.objects.profile.ProfileBoxObject;
 import de.meisterfuu.animexx.objects.profile.ProfileObject;
@@ -81,6 +83,8 @@ public class ProfileActivity extends AnimexxBaseActivityAB {
     @SuppressWarnings("unused")
     @Subscribe
     public void retrieveProfile(ApiEvent.ProfileEvent pEvent) {
+
+
         mUserName = pEvent.getObj().getUsername();
         mProfile = pEvent.getObj();
 
@@ -91,11 +95,9 @@ public class ProfileActivity extends AnimexxBaseActivityAB {
 
         }
 
-        profileFrag.onCallback(pEvent.getObj());
         gbFrag = GuestbookListFragment.newInstance(mUserID);
         mSectionsPagerAdapter.addFragmentBeginning(new SectionsPagerAdapter.FragmentHolder("Gästebuch", "GB", gbFrag, idcount++));
-        mSectionsPagerAdapter.notifyDataSetChanged();
-        mViewPager.setCurrentItem(1);
+
 
         for (ProfileBoxObject entry : pEvent.getObj().getBoxes()) {
             if (entry.getType().equals(ProfileBoxObject.TYPE_BESCHREIBUNG)) {
@@ -108,7 +110,11 @@ public class ProfileActivity extends AnimexxBaseActivityAB {
                 mSectionsPagerAdapter.addFragment(new SectionsPagerAdapter.FragmentHolder(entry.getTitle(), "box_fan", ProfilePageFanFragment.getInstance(this, mUserID, entry.getId()), idcount++));
             }
         }
+
         mSectionsPagerAdapter.notifyDataSetChanged();
+        mViewPager.setCurrentItem(1, false);
+
+        this.getEventBus().getOtto().post(new FinishedLoadingEvent(this.getCallerID()));
     }
 
     public long getUserId() {
