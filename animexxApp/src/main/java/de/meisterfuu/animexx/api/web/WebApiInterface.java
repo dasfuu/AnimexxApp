@@ -626,19 +626,19 @@ public interface WebApiInterface {
     @POST("/kontakte/get_gruppen/")
     void getContactGroups(Callback<ReturnObject<List<ContactGroupObject>>> pCallback);
 
-    @POST("/kontakte/get_kontakte/")
+    @POST("/kontakte/get_kontakte/?get_user_avatar=true")
     ReturnObject<List<UserObject>> getContacts();
 
-    @POST("/kontakte/get_kontakte/")
+    @POST("/kontakte/get_kontakte/?get_user_avatar=true")
     void getContacts(Callback<ReturnObject<List<UserObject>>> pCallback);
 
-    @POST("/kontakte/get_kontakte/")
+    @POST("/kontakte/get_kontakte/?get_user_avatar=true")
     @FormUrlEncoded
-    ReturnObject<List<UserObject>> getContactsByGroup(@Field("gruppe") int pGroup);
+    ReturnObject<List<UserObject>> getContactsByGroup(@Field("gruppe") long pGroup);
 
-    @POST("/kontakte/get_kontakte/")
+    @POST("/kontakte/get_kontakte/?get_user_avatar=true")
     @FormUrlEncoded
-    void getContactsByGroup(@Field("gruppe") int pGroup, Callback<ReturnObject<List<UserObject>>> pCallback);
+    void getContactsByGroup(@Field("gruppe") long pGroup, Callback<ReturnObject<List<UserObject>>> pCallback);
 
 
     //-------------------------------

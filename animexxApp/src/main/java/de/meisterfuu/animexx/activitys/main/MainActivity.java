@@ -25,6 +25,7 @@ import android.widget.SpinnerAdapter;
 import java.util.ArrayList;
 
 import de.meisterfuu.animexx.R;
+import de.meisterfuu.animexx.activitys.contacts.ContactFragment;
 import de.meisterfuu.animexx.activitys.ens.ENSFolderFragment;
 import de.meisterfuu.animexx.activitys.ens.NewENSActivity;
 import de.meisterfuu.animexx.activitys.events.EventListFragment;
@@ -268,9 +269,11 @@ public class MainActivity extends ActionBarActivity {
             selectChat();
         } else if (pCode.equals("HOME")) {
             selectHome();
+        } else if (pCode.equals("CONTACTS")) {
+            selectContacts();
         } else if (pCode.equals("SETTINGS")) {
             SettingsActivity.getInstance(this);
-        } else if (pCode.equals("GB")) {
+        } else if (pCode.equals("PROFIL")) {
             selectGB();
         }
 
@@ -353,6 +356,13 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
+    }
+
+    private void selectContacts() {
+        this.setTitle("Kontakte");
+        resetToolbar();
+        loadFragment(ContactFragment.getInstance(), "Kontakte");
+        invalidateOptionsMenu();
     }
 
     private void selectRPG() {

@@ -11,6 +11,7 @@ import de.meisterfuu.animexx.api.EventBus;
 import de.meisterfuu.animexx.api.web.ReturnObject;
 import de.meisterfuu.animexx.objects.SingleValueObjects;
 import de.meisterfuu.animexx.objects.UserObject;
+import de.meisterfuu.animexx.objects.contacts.ContactGroupObject;
 import de.meisterfuu.animexx.objects.profile.ProfileBoxObject;
 import de.meisterfuu.animexx.objects.profile.ProfileObject;
 import retrofit.Callback;
@@ -61,6 +62,36 @@ public class UserBroker extends BasicWebBroker {
         getWebApi().getApi().getMe(pCallback);
     }
 
+    /**
+     * @param pGroupId
+     */
+    public void getContacts(final long pGroupId, final int pCallerID) {
+        getWebApi().getApi().getContactsByGroup(pGroupId, new Callback<ReturnObject<List<UserObject>>>() {
+            @Override
+            public void success(final ReturnObject<List<UserObject>> t, final Response response) {
+                EventBus.getBus().getOtto().post(new ApiEvent.ApiProxyEvent(new ApiEvent.UserListEvent().setObj(t.getObj()).setCallerID(pCallerID)));
+            }
+
+            @Override
+            public void failure(final RetrofitError error) {
+
+            }
+        });
+    }
+
+    public void getContacts(final int pCallerID) {
+        getWebApi().getApi().getContacts(new Callback<ReturnObject<List<UserObject>>>() {
+            @Override
+            public void success(final ReturnObject<List<UserObject>> t, final Response response) {
+                EventBus.getBus().getOtto().post(new ApiEvent.ApiProxyEvent(new ApiEvent.UserListEvent().setObj(t.getObj()).setCallerID(pCallerID)));
+            }
+
+            @Override
+            public void failure(final RetrofitError error) {
+
+            }
+        });
+    }
 
     /**
      * @param pSearchString

@@ -25,7 +25,16 @@ public class MainDrawerAdapter extends BaseAdapter {
 
         mItems = new ArrayList<DrawerObject>();
 
-        DrawerObject temp = new DrawerObject();
+        DrawerObject temp;
+
+        temp = new DrawerObject();
+        temp.setIconId(R.drawable.ens_flags_forwarded_blue);
+        temp.setTitle("Home");
+        temp.setSubtitle("");
+        temp.setCode("HOME");
+        this.addItem(temp);
+
+        temp = new DrawerObject();
         temp.setIconId(R.drawable.ens_flags_forwarded_blue);
         temp.setTitle("ENS");
         temp.setSubtitle("");
@@ -55,16 +64,16 @@ public class MainDrawerAdapter extends BaseAdapter {
 
         temp = new DrawerObject();
         temp.setIconId(R.drawable.ens_flags_forwarded_blue);
-        temp.setTitle("Home");
+        temp.setTitle("Kontakte");
         temp.setSubtitle("");
-        temp.setCode("HOME");
+        temp.setCode("CONTACTS");
         this.addItem(temp);
 
         temp = new DrawerObject();
         temp.setIconId(R.drawable.ens_flags_forwarded_blue);
         temp.setTitle("Steckbrief");
         temp.setSubtitle("");
-        temp.setCode("GB");
+        temp.setCode("PROFIL");
         this.addItem(temp);
 
         temp = new DrawerObject();

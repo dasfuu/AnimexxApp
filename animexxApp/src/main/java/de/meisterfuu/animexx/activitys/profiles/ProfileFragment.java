@@ -129,7 +129,7 @@ public class ProfileFragment extends Fragment {
         }
 
         commonTable.clear();
-        commonTable.add(new TableDataView.TableDataEntity(pObject.getUsername(), R.drawable.ic_action_ens_new));
+        commonTable.add(new TableDataView.TableDataEntity(pObject.getUsername(), R.drawable.ens_flags_forwarded_blue));
 
         for (ProfileObject.ProfileContactEntry entry : pObject.getContactData()) {
             contactTable.add(new TableDataView.TableDataEntity(entry.getName() + ": " + entry.getValue(), -1));
