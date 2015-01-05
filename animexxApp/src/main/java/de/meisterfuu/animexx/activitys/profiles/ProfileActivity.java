@@ -91,8 +91,7 @@ public class ProfileActivity extends AnimexxBaseActivityAB {
         this.getSupportActionBar().setTitle(mUserName);
 
         if (!pEvent.getObj().isProfileShared()) {
-
-
+            return;
         }
 
         gbFrag = GuestbookListFragment.newInstance(mUserID);

@@ -32,6 +32,7 @@ import de.meisterfuu.animexx.activitys.events.EventListFragment;
 import de.meisterfuu.animexx.activitys.home.HomeObjectFragment;
 import de.meisterfuu.animexx.activitys.profiles.ProfileActivity;
 import de.meisterfuu.animexx.activitys.rpg.RPGListFragment;
+import de.meisterfuu.animexx.activitys.share.ImageUploadActivity;
 import de.meisterfuu.animexx.adapter.ChatStatusSpinnerAdapter;
 import de.meisterfuu.animexx.adapter.ENSFolderSpinnerAdapter;
 import de.meisterfuu.animexx.adapter.MainDrawerAdapter;
@@ -272,6 +273,7 @@ public class MainActivity extends ActionBarActivity {
         } else if (pCode.equals("CONTACTS")) {
             selectContacts();
         } else if (pCode.equals("SETTINGS")) {
+//            ImageUploadActivity.getInstance(this);
             SettingsActivity.getInstance(this);
         } else if (pCode.equals("PROFIL")) {
             selectGB();

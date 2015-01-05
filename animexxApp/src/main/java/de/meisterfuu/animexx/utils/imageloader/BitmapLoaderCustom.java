@@ -8,6 +8,12 @@ import java.io.File;
 
 public class BitmapLoaderCustom {
 
+
+    public static File getTestPictureFile(Context c) {
+        final File f = new File(getCacheDirectory(c, "test"), "test.png");
+        return f;
+    }
+
     public static Bitmap getUserBitmap(final String id, Context c) {
         ImageSaveObject url = new ImageSaveObject("", id);
 

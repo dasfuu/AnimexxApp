@@ -5,8 +5,10 @@ import com.google.gson.JsonElement;
 import java.util.List;
 import java.util.Map;
 
+import de.meisterfuu.animexx.objects.FileUploadReturnObject;
 import de.meisterfuu.animexx.objects.KarotalerStatsObject;
 import de.meisterfuu.animexx.objects.SingleValueObjects;
+import de.meisterfuu.animexx.objects.UploadedFile;
 import de.meisterfuu.animexx.objects.UserObject;
 import de.meisterfuu.animexx.objects.aidb.MangaObject;
 import de.meisterfuu.animexx.objects.contacts.ContactGroupObject;
@@ -36,6 +38,7 @@ import retrofit.http.FormUrlEncoded;
 import retrofit.http.Multipart;
 import retrofit.http.POST;
 import retrofit.http.Part;
+import retrofit.http.Path;
 import retrofit.http.Query;
 import retrofit.mime.TypedFile;
 
@@ -857,6 +860,33 @@ public interface WebApiInterface {
     void getPhotoSeries(@Field("reihe") String pId, Callback<ReturnObject<PhotoSeriesObject>> pCallback);
 
 
+    //-------------------------------
+    //Files
+    //-------------------------------
+
+    @POST("/mitglieder/files/list/?img_max_x=800&img_max_y=800&img_quality=90&img_format=jpg")
+    @FormUrlEncoded
+    ReturnObject<List<UploadedFile>> getFileList();
+
+    @POST("/mitglieder/files/list/?img_max_x=800&img_max_y=800&img_quality=90&img_format=jpg")
+    @FormUrlEncoded
+    void getFileList(Callback<ReturnObject<List<UploadedFile>>> pCallback);
+
+    @POST("/mitglieder/files/list/?img_max_x=800&img_max_y=800&img_quality=90&img_format=jpg")
+    @FormUrlEncoded
+    ReturnObject<List<UploadedFile>> getFileList(@Field("filename") String pFilename);
+
+    @POST("/mitglieder/files/list/?img_max_x=800&img_max_y=800&img_quality=90&img_format=jpg")
+    @FormUrlEncoded
+    void getFileList(@Field("filename") String pFilename, Callback<ReturnObject<List<UploadedFile>>> pCallback);
+
+    @POST("/mitglieder/files/list/?img_max_x=800&img_max_y=800&img_quality=90&img_format=jpg")
+    @Multipart
+    ReturnObject<FileUploadReturnObject> uploadFile(@Query("filename") String pFilename, @Part("file") TypedFile pFile);
+
+    @POST("/mitglieder/files/list/?img_max_x=800&img_max_y=800&img_quality=90&img_format=jpg")
+    @Multipart
+    void uploadFile(@Query("filename") String pFilename, @Part("file") TypedFile pFile,Callback<ReturnObject<FileUploadReturnObject>> pCallback);
 }
 
 
