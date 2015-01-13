@@ -37,6 +37,11 @@ public class RPGNotification extends BaseNotification {
     }
 
     @Override
+    public long getCollapseID() {
+        return pId;
+    }
+
+    @Override
     public String getTitle() {
         return pUserName;
     }
@@ -90,6 +95,15 @@ public class RPGNotification extends BaseNotification {
     public SpannableStringBuilder getMultiTextLine() {
         final SpannableStringBuilder spann = new SpannableStringBuilder();
         spann.append(pUserName);
+        spann.setSpan(new StyleSpan(Typeface.BOLD), 0, spann.length(), 0);
+        spann.append("   " + pTitle);
+        return spann;
+    }
+
+    @Override
+    public SpannableStringBuilder getCollapsedMultiTextLine() {
+        final SpannableStringBuilder spann = new SpannableStringBuilder();
+        spann.append("    ");
         spann.setSpan(new StyleSpan(Typeface.BOLD), 0, spann.length(), 0);
         spann.append("   " + pTitle);
         return spann;

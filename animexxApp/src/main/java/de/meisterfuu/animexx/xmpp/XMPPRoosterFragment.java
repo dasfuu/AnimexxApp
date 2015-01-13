@@ -4,11 +4,15 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
 
@@ -16,12 +20,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.activitys.AnimexxBaseFragment;
 import de.meisterfuu.animexx.activitys.main.MainActivity;
 import de.meisterfuu.animexx.adapter.XMPPRoosterAdapter;
 import de.meisterfuu.animexx.api.xmpp.ChatEvent;
 import de.meisterfuu.animexx.api.xmpp.RoosterEvent;
+import de.meisterfuu.animexx.api.xmpp.StatsuChangeEvent;
 import de.meisterfuu.animexx.api.xmpp.XMPPApi;
 import de.meisterfuu.animexx.objects.xmpp.XMPPRoosterObject;
 import de.meisterfuu.animexx.utils.views.FeedbackListView;
@@ -34,7 +41,13 @@ public class XMPPRoosterFragment extends AnimexxBaseFragment implements AdapterV
     ArrayList<XMPPRoosterObject> list;
     XMPPRoosterAdapter adapter;
     XMPPApi mApi;
-    private FeedbackListView mListView;
+
+    @InjectView(android.R.id.list)
+    FeedbackListView mListView;
+    @InjectView(R.id.statusFrame)
+    FrameLayout mStatusFrame;
+    @InjectView(R.id.statusText)
+    TextView mStatusText;
 
 
     public static XMPPRoosterFragment getInstance() {
@@ -50,8 +63,10 @@ public class XMPPRoosterFragment extends AnimexxBaseFragment implements AdapterV
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_xmpp_rooster, container, false);
-        mListView = (FeedbackListView) view.findViewById(android.R.id.list);
+        ButterKnife.inject(this, view);
+
         mListView.setOnItemClickListener(this);
+
         list = new ArrayList<XMPPRoosterObject>();
         adapter = new XMPPRoosterAdapter(list, this.getActivity());
         mListView.setAdapter(adapter);
@@ -73,6 +88,30 @@ public class XMPPRoosterFragment extends AnimexxBaseFragment implements AdapterV
         getRooster();
     }
 
+    @Subscribe
+    public void onStatusChange(StatsuChangeEvent event){
+
+        Handler handler = new Handler();
+        boolean shouldOnline = PreferenceManager.getDefaultSharedPreferences(this.getActivity()).getBoolean("xmpp_status", false);
+        boolean display = event.online || (!shouldOnline);
+
+        if(display){
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    mStatusFrame.setVisibility(View.GONE);
+                }
+            });
+        } else {
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    mStatusFrame.setVisibility(View.VISIBLE);
+                }
+            });
+        }
+    }
+
 
     @Subscribe
     public void onNewMessageReturn(RoosterEvent event){
@@ -89,6 +128,9 @@ public class XMPPRoosterFragment extends AnimexxBaseFragment implements AdapterV
         mApi.getRooster(new Callback<List<XMPPRoosterObject>>() {
             @Override
             public void success(List<XMPPRoosterObject> xmppRoosterObjects, Response response) {
+                if(xmppRoosterObjects == null){
+                    return;
+                }
                 final List<XMPPRoosterObject> temp = xmppRoosterObjects;
                 Collections.sort(temp);
                 list.clear();

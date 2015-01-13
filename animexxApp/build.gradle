@@ -40,8 +40,8 @@ dependencies {
     compile 'com.android.support:palette-v7:21.0.0'
     compile 'com.android.support:support-v13:21.0.0'
 
-    compile "org.igniterealtime.smack:smack-android-extensions:4.1.0-alpha5"
-    compile "org.igniterealtime.smack:smack-tcp:4.1.0-alpha5"
+    compile "org.igniterealtime.smack:smack-android-extensions:4.1.0-alpha6"
+    compile "org.igniterealtime.smack:smack-tcp:4.1.0-alpha6"
 
     compile 'com.google.android.gms:play-services:6.1.11'
     compile 'com.google.code.gson:gson:2.2.4'

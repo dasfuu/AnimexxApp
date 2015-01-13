@@ -164,27 +164,18 @@
   }</string>
     <string name="title_activity_xmpptest">XMPPTestActivity</string>
     <string name="title_activity_xmpprooster">XMPPRoosterActivity</string>
-    <string name="xmpp_notification_title_template">Neue Nachricht von %1$s</string>
-    <string name="xmpp_notification_placeholder_text_template">You said %1$s and lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam non enim magna. Morbi dictum, velit vel semper venenatis, magna odio volutpat velit, at ullamcorper nulla lacus sed turpis. Pellentesque vitae metus elit, nec tincidunt tellus. Integer sed nisl sem, ullamcorper ornare lacus. Duis ac mauris sed massa congue volutpat. Donec sed erat sit amet turpis viverra rhoncus sit amet nec magna. Donec lacinia ligula at libero volutpat volutpat nec nec tortor.</string>
     <string name="pref_title_xmpp_password">Passwort</string>
     <string name="pref_text_xmpp_password">Passwort wird nur für den Chat benötigt</string>
     <string name="debug_notification_title_template">Debug: %1$s</string>
-    <string name="debug_notification_placeholder_text_template">You said %1$s and lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam non enim magna. Morbi dictum, velit vel semper venenatis, magna odio volutpat velit, at ullamcorper nulla lacus sed turpis. Pellentesque vitae metus elit, nec tincidunt tellus. Integer sed nisl sem, ullamcorper ornare lacus. Duis ac mauris sed massa congue volutpat. Donec sed erat sit amet turpis viverra rhoncus sit amet nec magna. Donec lacinia ligula at libero volutpat volutpat nec nec tortor.</string>
     <string name="title_activity_animexx_debug">AnimexxDebugActivity</string>
     <string name="title_activity_single_event_description">Beschreibung</string>
-    <string name="rpgpost_notification_title_template">Rpgpost: %1$s</string>
-    <string name="rpgpost_notification_placeholder_text_template">You said %1$s and lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam non enim magna. Morbi dictum, velit vel semper venenatis, magna odio volutpat velit, at ullamcorper nulla lacus sed turpis. Pellentesque vitae metus elit, nec tincidunt tellus. Integer sed nisl sem, ullamcorper ornare lacus. Duis ac mauris sed massa congue volutpat. Donec sed erat sit amet turpis viverra rhoncus sit amet nec magna. Donec lacinia ligula at libero volutpat volutpat nec nec tortor.</string>
     <string name="rpg_detail">Details</string>
-    <string name="pref_title_ens_collapse">ENS Icons zusammenfassen</string>
-    <string name="pref_title_xmpp_status">Chat aktivieren</string>
     <string name="title_activity_image_upload">Upload</string>
     <string name="title_activity_locate_me">Wo bin ich?</string>
     <string name="title_activity_profile">Steckbrief</string>
     <string name="title_section1">Section 1</string>
     <string name="title_section2">Section 2</string>
     <string name="title_section3">Section 3</string>
-    <string name="new_message_notification_title_template">New message: %1$s</string>
-    <string name="new_message_notification_placeholder_text_template">You said %1$s and lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam non enim magna. Morbi dictum, velit vel semper venenatis, magna odio volutpat velit, at ullamcorper nulla lacus sed turpis. Pellentesque vitae metus elit, nec tincidunt tellus. Integer sed nisl sem, ullamcorper ornare lacus. Duis ac mauris sed massa congue volutpat. Donec sed erat sit amet turpis viverra rhoncus sit amet nec magna. Donec lacinia ligula at libero volutpat volutpat nec nec tortor.</string>
     <string name="send">Absenden</string>
     <string name="back">Zurück</string>
     <string name="title_activity_guestbook_post">Neuer Eintrag</string>
@@ -195,5 +186,14 @@
     <string name="title_activity_profile_page_html">ProfilePageHTMLActivity</string>
     <string name="title_activity_new_microblog">Microblog</string>
     <string name="action_ens_new">Neue ENS</string>
+    <string name="title_activity_feedback">Feedback</string>
+    <string name="patio_take_picture">Neues Foto</string>
+    <string name="patio_attach_picture">Bilder</string>
+    <string name="patio_remove_picture">Entfernen</string>
+    <string name="patio_action_cancel">Abbrechen</string>
+    <string name="patio_thumbnails_message">%1$d von %2$d Bildern ausgewählt</string>
+    <string name="title_activity_image_picker">Bilder</string>
+    <string name="patio_footer">%1$d von %2$d</string>
+    <string name="action_finished">Fertig</string>
 
 </resources>

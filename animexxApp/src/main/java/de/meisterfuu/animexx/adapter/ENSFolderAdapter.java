@@ -13,17 +13,13 @@ import java.util.List;
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.objects.UserObject;
 import de.meisterfuu.animexx.objects.ens.ENSObject;
-import de.meisterfuu.animexx.utils.imageloader.ImageDownloaderCustom;
-import de.meisterfuu.animexx.utils.imageloader.ImageLoaderCustom;
-import de.meisterfuu.animexx.utils.imageloader.ImageSaveObject;
+import de.meisterfuu.animexx.utils.imageloader.PicassoDownloader;
 
 
 public class ENSFolderAdapter extends BaseAdapter {
 
     List<ENSObject> mItems;
     Activity mContext;
-    ImageDownloaderCustom ImageLoader = new ImageDownloaderCustom("forenavatar");
-    ImageLoaderCustom ImageLoaderProfile = new ImageLoaderCustom("profilbild");
 
     public ENSFolderAdapter(List<ENSObject> pList, Activity pContext) {
         this.mItems = pList;
@@ -183,19 +179,13 @@ public class ENSFolderAdapter extends BaseAdapter {
 
         //holder.Avatar.getDrawable().set//.setColorFilter(mContext.getResources().getColor(R.color.animexx_blue), PorterDuff.Mode. );
         //Avatar
-        if (ImageLoaderProfile.exists(new ImageSaveObject("", target.getId() + ""), mContext)) {
+        if (target.getAvatar() != null) {
             holder.Avatar.setVisibility(View.VISIBLE);
-            ImageLoader.download(new ImageSaveObject("", target.getId() + ""), holder.Avatar);
+            System.out.println(target.getAvatar().getUrl());
+            PicassoDownloader.getAvatarPicasso(mContext).load(target.getAvatar().getUrl()).stableKey(PicassoDownloader.createAvatarKey(target.getId())).into(holder.Avatar);
         } else {
-            if (target.getAvatar() != null) {
-                holder.Avatar.setVisibility(View.VISIBLE);
-                ImageSaveObject image = new ImageSaveObject(target.getAvatar().getUrl(), target.getId() + "");
-                System.out.println(target.getAvatar().getUrl());
-                ImageLoader.download(image, holder.Avatar);
-            } else {
-                //holder.Avatar.setVisibility(View.GONE);
-                holder.Avatar.setImageResource(R.drawable.ic_contact_picture);
-            }
+            //holder.Avatar.setVisibility(View.GONE);
+            holder.Avatar.setImageResource(R.drawable.ic_contact_picture);
         }
 
 

@@ -13,6 +13,7 @@ import java.util.List;
 
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.objects.profile.GBInfoObject;
+import de.meisterfuu.animexx.utils.imageloader.PicassoDownloader;
 
 public class GBAvatarSpinnerAdapter extends BaseAdapter {
 
@@ -94,7 +95,7 @@ public class GBAvatarSpinnerAdapter extends BaseAdapter {
 //		media.animexx.onlinewelten.com/rpgs/charaktere/85/RPG-Id/charakterID_avatarID.jpg 
 //		85 ist RPG-ID Modulo 100
 
-        Picasso.with(mContext).load(avatar.getUrl()).stableKey("gbavatar_" + avatar.getId()).into(holder.Icon);
+        PicassoDownloader.getPicasso(mContext).load(avatar.getUrl()).stableKey(PicassoDownloader.createGBAvatarKey(avatar.getId())).into(holder.Icon);
         //ImageLoader.download(new ImageSaveObject("http://media.animexx.onlinewelten.com/rpgs/charaktere/"+mRPG.getId()%100+"/"+mRPG.getId()+"/"+mPlayer.getId()+"_"+chara.getId()+".jpg", mRPG.getId()+"_"+mPlayer.getId()+"_"+chara.getId()), holder.Icon);
 
 

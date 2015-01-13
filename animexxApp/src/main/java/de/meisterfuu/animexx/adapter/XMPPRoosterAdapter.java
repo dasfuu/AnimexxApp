@@ -1,6 +1,7 @@
 package de.meisterfuu.animexx.adapter;
 
 import android.app.Activity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,16 +14,13 @@ import java.util.List;
 
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.objects.xmpp.XMPPRoosterObject;
-import de.meisterfuu.animexx.utils.imageloader.ImageLoaderCustom;
-import de.meisterfuu.animexx.utils.imageloader.ImageSaveObject;
+import de.meisterfuu.animexx.utils.imageloader.PicassoDownloader;
 
 
 public class XMPPRoosterAdapter extends BaseAdapter {
 
     List<XMPPRoosterObject> mItems;
     Activity mContext;
-    ImageLoaderCustom ImageLoader = new ImageLoaderCustom("forenavatar");
-    ImageLoaderCustom ImageLoaderProfile = new ImageLoaderCustom("profilbild");
 
     public XMPPRoosterAdapter(List<XMPPRoosterObject> pList, Activity pContext) {
         this.mItems = pList;
@@ -55,6 +53,7 @@ public class XMPPRoosterAdapter extends BaseAdapter {
         public TextView Title, Subtitle;
         public ImageView Avatar;
         public TextView Message;
+        public ImageView StatusIcon;
     }
 
     @Override
@@ -111,6 +110,7 @@ public class XMPPRoosterAdapter extends BaseAdapter {
             viewHolder.Subtitle = (TextView) rowView.findViewById(R.id.xmpp_list_item_subtitle);
             viewHolder.Message = (TextView) rowView.findViewById(R.id.xmpp_list_item_msg);
             viewHolder.Avatar = (ImageView) rowView.findViewById(R.id.xmpp_list_item_avatar);
+            viewHolder.StatusIcon = (ImageView) rowView.findViewById(R.id.xmpp_list_item_status_icon);
 
             rowView.setTag(viewHolder);
         }
@@ -124,25 +124,25 @@ public class XMPPRoosterAdapter extends BaseAdapter {
 
         if (xmpp.getStatus() == XMPPRoosterObject.STATUS_ONLINE) {
             holder.Subtitle.setText("Online");
+            holder.StatusIcon.setImageResource(R.drawable.chat_status_marker_online);
         } else if (xmpp.getStatus() == XMPPRoosterObject.STATUS_AWAY) {
             holder.Subtitle.setText("Abwesend");
+            holder.StatusIcon.setImageResource(R.drawable.chat_status_marker_away);
         } else {
             holder.Subtitle.setText("Offline");
+            holder.StatusIcon.setImageResource(R.drawable.chat_status_marker_offline);
         }
 
 
         //Avatar
 
-        if (ImageLoaderProfile.exists(new ImageSaveObject("", xmpp.getAnimexxID() + ""), mContext)) {
-            holder.Avatar.setVisibility(View.VISIBLE);
-            ImageLoaderProfile.download(new ImageSaveObject("", xmpp.getAnimexxID() + ""), holder.Avatar);
-        } else if (ImageLoader.exists(new ImageSaveObject("", xmpp.getAnimexxID() + ""), mContext)) {
-            holder.Avatar.setVisibility(View.VISIBLE);
-            ImageLoader.download(new ImageSaveObject("", xmpp.getAnimexxID() + ""), holder.Avatar);
-        } else {
-            holder.Avatar.setVisibility(View.VISIBLE);
-            holder.Avatar.setImageResource(R.drawable.ic_contact_picture);
-        }
+        holder.Avatar.setVisibility(View.VISIBLE);
+        PicassoDownloader.getAvatarPicasso(mContext)
+                .load(PicassoDownloader.getAvatarURI(PicassoDownloader.createAvatarKey(xmpp.getAnimexxID()), mContext))
+                .stableKey(PicassoDownloader.createAvatarKey(xmpp.getAnimexxID()))
+                .placeholder(R.drawable.ic_contact_picture)
+                .error(R.drawable.ic_contact_picture)
+                .into(holder.Avatar);
 
         if (xmpp.latestMessage != null) {
             if (xmpp.latestMessage.isMe()) {

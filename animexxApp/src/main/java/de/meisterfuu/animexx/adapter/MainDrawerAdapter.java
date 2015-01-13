@@ -71,18 +71,24 @@ public class MainDrawerAdapter extends BaseAdapter {
 
         temp = new DrawerObject();
         temp.setIconId(R.drawable.ens_flags_forwarded_blue);
-        temp.setTitle("Steckbrief");
-        temp.setSubtitle("");
-        temp.setCode("PROFIL");
-        this.addItem(temp);
-
-        temp = new DrawerObject();
-        temp.setIconId(R.drawable.ens_flags_forwarded_blue);
         temp.setTitle("Einstellungen");
         temp.setSubtitle("");
         temp.setCode("SETTINGS");
         this.addItem(temp);
 
+        temp = new DrawerObject();
+        temp.setIconId(R.drawable.ens_flags_forwarded_blue);
+        temp.setTitle("Feedback");
+        temp.setSubtitle("");
+        temp.setCode("FEEDBACK");
+        this.addItem(temp);
+
+        temp = new DrawerObject();
+        temp.setIconId(R.drawable.ens_flags_forwarded_blue);
+        temp.setTitle("WebDAV(WIP)");
+        temp.setSubtitle("");
+        temp.setCode("FILES");
+        this.addItem(temp);
     }
 
     public void addItem(DrawerObject pItem) {

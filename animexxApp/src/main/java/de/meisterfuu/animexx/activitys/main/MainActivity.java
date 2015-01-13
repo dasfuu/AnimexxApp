@@ -12,35 +12,43 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.activitys.contacts.ContactFragment;
 import de.meisterfuu.animexx.activitys.ens.ENSFolderFragment;
+import de.meisterfuu.animexx.activitys.ens.FeedbackActivity;
 import de.meisterfuu.animexx.activitys.ens.NewENSActivity;
 import de.meisterfuu.animexx.activitys.events.EventListFragment;
 import de.meisterfuu.animexx.activitys.home.HomeObjectFragment;
 import de.meisterfuu.animexx.activitys.profiles.ProfileActivity;
 import de.meisterfuu.animexx.activitys.rpg.RPGListFragment;
+import de.meisterfuu.animexx.activitys.share.ImagePickerActivity;
 import de.meisterfuu.animexx.activitys.share.ImageUploadActivity;
 import de.meisterfuu.animexx.adapter.ChatStatusSpinnerAdapter;
 import de.meisterfuu.animexx.adapter.ENSFolderSpinnerAdapter;
 import de.meisterfuu.animexx.adapter.MainDrawerAdapter;
 import de.meisterfuu.animexx.api.Self;
 import de.meisterfuu.animexx.api.broker.ENSBroker;
+import de.meisterfuu.animexx.api.broker.UserBroker;
 import de.meisterfuu.animexx.api.web.ReturnObject;
 import de.meisterfuu.animexx.objects.DrawerObject;
 import de.meisterfuu.animexx.objects.ens.ENSFolderObject;
+import de.meisterfuu.animexx.utils.imageloader.PicassoDownloader;
 import de.meisterfuu.animexx.xmpp.XMPPRoosterFragment;
 import de.meisterfuu.animexx.xmpp.XMPPService;
 import retrofit.Callback;
@@ -59,6 +67,7 @@ public class MainActivity extends ActionBarActivity {
     private Spinner mChatSpinner;
     private Spinner currentSpinner;
     private Toolbar mToolbar;
+    private RelativeLayout profileHeader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +84,26 @@ public class MainActivity extends ActionBarActivity {
 
         mDrawerList.setAdapter(mAdapter);
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+
+        LayoutInflater inflater = (LayoutInflater)getSystemService(this.LAYOUT_INFLATER_SERVICE);
+        profileHeader = (RelativeLayout) inflater.inflate(R.layout.drawer_header_profile, null);
+        ImageView headerImage = (ImageView)profileHeader.findViewById(R.id.headerImage);
+        TextView headerText = (TextView)profileHeader.findViewById(R.id.headerText);
+        headerText.setText(Self.getInstance(this).getUsername());
+        PicassoDownloader.getAvatarPicasso(this)
+                .load(PicassoDownloader.getAvatarURI(PicassoDownloader.createAvatarKey(Self.getInstance(this).getUserID()), this))
+                .stableKey(PicassoDownloader.createAvatarKey(Self.getInstance(this).getUserID()))
+                .placeholder(R.drawable.ic_contact_picture)
+                .error(R.drawable.ic_contact_picture)
+                .into(headerImage);
+
+        profileHeader.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectProfile();
+            }
+        });
+        mDrawerList.addHeaderView(profileHeader);
 
         // Handle Toolbar
 
@@ -256,7 +285,7 @@ public class MainActivity extends ActionBarActivity {
     private void selectItem(String pCode) {
         if (mLastCode.equals(pCode)) return;
 
-        if (!pCode.equals("SETTINGS") && !pCode.equals("GB")) {
+        if (!pCode.equals("SETTINGS") && !pCode.equals("FEEDBACK") && !pCode.equals("FILES")) {
             mLastCode = pCode;
         }
 
@@ -275,8 +304,11 @@ public class MainActivity extends ActionBarActivity {
         } else if (pCode.equals("SETTINGS")) {
 //            ImageUploadActivity.getInstance(this);
             SettingsActivity.getInstance(this);
-        } else if (pCode.equals("PROFIL")) {
-            selectGB();
+//            ImagePickerActivity.getInstance(this);
+        } else if (pCode.equals("FEEDBACK")) {
+            FeedbackActivity.getInstance(this);
+        } else if (pCode.equals("FILES")) {
+            ImagePickerActivity.getInstance(this);
         }
 
     }
@@ -374,7 +406,7 @@ public class MainActivity extends ActionBarActivity {
         invalidateOptionsMenu();
     }
 
-    private void selectGB() {
+    private void selectProfile() {
         ProfileActivity.getInstance(this, Self.getInstance(this).getUserID());
     }
 

@@ -24,12 +24,16 @@ import android.util.Log;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.OkUrlFactory;
 import com.squareup.picasso.Downloader;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Request;
+import com.squareup.picasso.RequestHandler;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
 
 
@@ -38,11 +42,56 @@ import java.net.URL;
  */
 public class PicassoDownloader implements Downloader {
 
-    static final String RESPONSE_SOURCE_ANDROID = "X-Android-Response-Source";
-    static final String RESPONSE_SOURCE_OKHTTP = "OkHttp-Response-Source";
+    public static String createProfilePictureKey(long userID, long pictureID){
+        return "profile_"+userID+"_"+pictureID;
+    }
+    public static String createHomePictureKey(String id){
+        return "home_contact_"+id;
+    }
+    public static String createEventLogoKey(long id){
+        return "event_logo_"+id;
+    }
+    public static String createAvatarKey(long userID){
+        return "avatar_"+userID;
+    }
+    public static String createRPGAvatarKey(long rpgID, long avatarID, long charaID){
+        return "rpgavatar_"+rpgID+"_"+charaID+"_"+avatarID;
+    }
+    public static String createGBAvatarKey(long gbAvatarID){
+        return "gbavatar_"+gbAvatarID;
+    }
+    public static String createFileThumbnailKey(long fileID){
+        return "filethumb_"+fileID;
+    }
 
-    static final int DEFAULT_READ_TIMEOUT = 20 * 1000; // 20s
-    static final int DEFAULT_CONNECT_TIMEOUT = 15 * 1000; // 15s
+    private static Picasso sPicasso;
+    public static Picasso getPicasso(Context pContext){
+        if(sPicasso == null){
+            sPicasso = new Picasso.Builder(pContext).downloader(new PicassoDownloader(pContext, "picture_cache")).build();
+        }
+        return sPicasso;
+    }
+
+    private static Picasso sPicassoAvatar;
+    public static Picasso getAvatarPicasso(Context pContext){
+        if(sPicassoAvatar == null){
+            sPicassoAvatar = new Picasso.Builder(pContext).downloader(new PicassoDownloader(pContext, "forenavatar")).build();
+        }
+        return sPicassoAvatar;
+    }
+
+    public static Uri getAvatarURI(String key, Context pContext){
+        File externalFile = new File(createCacheDir(pContext, "forenavatar"), key+".webp");
+        return Uri.fromFile(externalFile);
+    }
+
+//    private static Picasso sPicassoProfile;
+//    public static Picasso getProfilePicturePicasso(Context pContext){
+//        if(sPicassoProfile == null){
+//            sPicassoProfile = new Picasso.Builder(pContext).downloader(new PicassoDownloader(pContext, "profilepicture")).build();
+//        }
+//        return sPicassoProfile;
+//    }
 
     private final OkUrlFactory urlFactory;
     private final File cacheDir;
@@ -97,13 +146,15 @@ public class PicassoDownloader implements Downloader {
             filename = uri.hashCode()+"";
         }
 
+        filename += ".webp";
         final File f = new File(cacheDir, filename);
 
         if(f.exists()){
             return new Response(new FileInputStream(f), true, -1);
         }
 
-        if (localCacheOnly) {
+        String host = uri.getHost();
+        if (localCacheOnly || host.equals("noDownload")) {
             return null;
         }
 
@@ -181,4 +232,5 @@ public class PicassoDownloader implements Downloader {
             return false;
         }
     }
+
 }

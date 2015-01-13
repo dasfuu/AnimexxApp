@@ -21,14 +21,12 @@ import de.meisterfuu.animexx.utils.views.RoundedImageView;
 
 public class ContactAdapter extends BaseAdapter {
 
-    private final Picasso mPicasso;
     List<UserObject> mItems;
     Activity mContext;
 
     public ContactAdapter(List<UserObject> pList, Activity pContext) {
         this.mItems = pList;
         this.mContext = pContext;
-        mPicasso = new Picasso.Builder(mContext).downloader(new PicassoDownloader(mContext, "forenavatar")).build();
     }
 
 
@@ -99,7 +97,7 @@ public class ContactAdapter extends BaseAdapter {
         holder.Title.setText(user.getUsername());
 
         if (user.getAvatar() != null) {
-            mPicasso.load(user.getAvatar().getUrl()).error(R.drawable.ic_contact_picture).stableKey(user.getId() + "").into(holder.Image);
+            PicassoDownloader.getAvatarPicasso(mContext).load(user.getAvatar().getUrl()).error(R.drawable.ic_contact_picture).stableKey(PicassoDownloader.createAvatarKey(user.getId())).into(holder.Image);
         } else {
             holder.Image.setImageResource(R.drawable.ic_contact_picture);
         }

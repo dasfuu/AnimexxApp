@@ -3,7 +3,6 @@ package de.meisterfuu.animexx.activitys.profiles;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,15 +10,11 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
 
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.activitys.AnimexxBaseFragment;
 import de.meisterfuu.animexx.objects.profile.ProfileObject;
-import de.meisterfuu.animexx.utils.imageloader.ImageDownloaderCustom;
-import de.meisterfuu.animexx.utils.imageloader.ImageSaveObject;
 import de.meisterfuu.animexx.utils.imageloader.PicassoDownloader;
-import de.meisterfuu.animexx.utils.views.FitImageView;
 import de.meisterfuu.animexx.utils.views.TableDataView;
 
 /**
@@ -41,7 +36,6 @@ public class ProfileFragment extends AnimexxBaseFragment {
 
 //	private UserApi mApi;
 
-    private ImageDownloaderCustom mImageLoader;
     private ProfileObject mUser;
     private FrameLayout profileImageFrame;
 
@@ -64,7 +58,6 @@ public class ProfileFragment extends AnimexxBaseFragment {
             mUserID = getArguments().getLong(USER_ID);
         }
 
-        mImageLoader = new ImageDownloaderCustom("profilbild");
     }
 
 
@@ -115,9 +108,7 @@ public class ProfileFragment extends AnimexxBaseFragment {
                 public void run() {
                     int x = profileImageFrame.getMeasuredWidth();
                     int y = profileImageFrame.getMeasuredHeight();
-                    Log.e("MEASURE", x+ " "+y);
-                    Picasso picasso = new Picasso.Builder(ProfileFragment.this.getActivity()).downloader(new PicassoDownloader(ProfileFragment.this.getActivity(), "profilbild")).build();
-                    picasso.load(mUser.getPictures().get(0).getGoodUrl()).faceCenterCrop().resize(x,y).stableKey(mUserID + "_0").into(profileImage, new Callback() {
+                    PicassoDownloader.getPicasso(ProfileFragment.this.getActivity()).load(mUser.getPictures().get(0).getGoodUrl()).faceCenterCrop().resize(x,y).stableKey(PicassoDownloader.createProfilePictureKey(mUserID, 0)).into(profileImage, new Callback() {
                         @Override
                         public void onSuccess() {
                             profileImageFrame.setVisibility(View.VISIBLE);
@@ -131,7 +122,6 @@ public class ProfileFragment extends AnimexxBaseFragment {
                 }
             });
 
-            //mImageLoader.download(new ImageSaveObject(pObject.getPictures().get(0).getGoodUrl(), mUserID + "_0", false), profileImage);
         } else {
             this.profileImageFrame.setVisibility(View.GONE);
         }

@@ -68,5 +68,13 @@
         <attr name="overlappingEventGap" format="dimension"/>
         <attr name="eventMarginVertical" format="dimension"/>
     </declare-styleable>
-
+    <declare-styleable name="Patio">
+        <attr name="maxPictures" format="integer"/>
+        <attr name="thumbnailWidth" format="dimension"/>
+        <attr name="thumbnailHeight" format="dimension"/>
+        <attr name="thumbnailsContainerBackground" format="color"/>
+        <attr name="thumbnailsContainerPadding" format="dimension"/>
+        <attr name="actionsTextColor" format="color"/>
+        <attr name="thumbnailsMessage" format="string"/>
+    </declare-styleable>
 </resources>

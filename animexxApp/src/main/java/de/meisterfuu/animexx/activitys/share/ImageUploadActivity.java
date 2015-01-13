@@ -1,49 +1,51 @@
 package de.meisterfuu.animexx.activitys.share;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
-import android.widget.TextView;
+
+import com.squareup.otto.Subscribe;
+
+import java.util.ArrayList;
 
 import de.meisterfuu.animexx.R;
-import de.meisterfuu.animexx.api.web.ReturnObject;
-import de.meisterfuu.animexx.api.web.WebAPI;
+import de.meisterfuu.animexx.activitys.AnimexxBaseActivityAB;
+import de.meisterfuu.animexx.adapter.FileUploadedAdapter;
+import de.meisterfuu.animexx.api.UploadProgressEvent;
 import de.meisterfuu.animexx.objects.FileUploadReturnObject;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
-import retrofit.mime.TypedFile;
+import de.meisterfuu.animexx.services.UploadService;
+import de.meisterfuu.animexx.utils.views.FeedbackListView;
 
-import static de.meisterfuu.animexx.utils.imageloader.BitmapLoaderCustom.getTestPictureFile;
-
-public class ImageUploadActivity extends Activity {
+public class ImageUploadActivity extends AnimexxBaseActivityAB {
 
 
 
-    public static void getInstance(Context pContext) {
+
+    public static void getInstance(Context pContext, ArrayList<String> files) {
         Intent i = new Intent().setClass(pContext, ImageUploadActivity.class);
+        Bundle b = new Bundle();
+        b.putStringArrayList("files", files);
+        i.putExtras(b);
         pContext.startActivity(i);
     }
+
+    private FeedbackListView mListview;
+    private FileUploadedAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_upload);
-        WebAPI api = new WebAPI(this);
-        TypedFile file = new TypedFile("image/png", getTestPictureFile(this));
-        api.getApi().uploadFile("/testfile.png", file, new Callback<ReturnObject<FileUploadReturnObject>>() {
-            @Override
-            public void success(ReturnObject<FileUploadReturnObject> r, Response response) {
-                ((TextView)findViewById(R.id.textView)).setText(r.getObj().toString());
-            }
+        mListview = (FeedbackListView) this.findViewById(R.id.listView);
+        mAdapter = new FileUploadedAdapter(new ArrayList<FileUploadReturnObject>(), this);
 
-            @Override
-            public void failure(RetrofitError error) {
+        mListview.setAdapter(mAdapter);
+        mListview.showLoading();
 
-            }
-        });
+        Bundle b = this.getIntent().getExtras();
+        ArrayList<String> files = b.getStringArrayList("files");
+        UploadService.startAction(this, files, this.getCallerID());
     }
 
     @Override
@@ -51,6 +53,17 @@ public class ImageUploadActivity extends Activity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.image_upload, menu);
         return true;
+    }
+
+    private boolean first = true;
+
+    @Subscribe
+    public void onItemUploaded(UploadProgressEvent event){
+        if(first){
+            mListview.showList();
+            first = false;
+        }
+        mAdapter.add(event.getObj().getObj());
     }
 
 }

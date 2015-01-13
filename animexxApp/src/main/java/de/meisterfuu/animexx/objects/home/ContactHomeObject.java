@@ -92,6 +92,11 @@ public class ContactHomeObject extends BasicHomeObject {
             return this.getComment();
         } else if (this.getEventType().equalsIgnoreCase("usernamechange")) {
             return "hat sich umbenannt(" + this.getComment() + ")";
+        } else if(this.getEventType().equalsIgnoreCase("geburtstag")) {
+            if((System.currentTimeMillis() - this.getServerTS()) < (1000*60*60*24)){
+                return this.getVon().getUsername()+" hat Heute Geburtstag.("+this.getComment()+")";
+            }
+            return this.getVon().getUsername()+" hatte Geburtstag.("+this.getComment()+")";
         } else if (this.getAuthor() != null && this.getEventType().contains("mag")) {
             return "empfiehlt \"" + this.getItemName() + "\" von " + this.getAuthor().getUsername() + ".";
         } else if (this.getComment() != null && !this.getEventType().equals("sb")) {

@@ -12,19 +12,14 @@ import java.util.List;
 
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.activitys.rpg.RPGDetailActivity;
-import de.meisterfuu.animexx.activitys.rpg.RPGDetailFragment;
 import de.meisterfuu.animexx.objects.rpg.RPGObject;
 import de.meisterfuu.animexx.utils.Helper;
-import de.meisterfuu.animexx.utils.imageloader.ImageDownloaderCustom;
-import de.meisterfuu.animexx.utils.imageloader.ImageLoaderCustom;
 
 
 public class RPGListAdapter extends BaseAdapter {
 
     List<RPGObject> mItems;
     Activity mContext;
-    ImageDownloaderCustom ImageLoader = new ImageDownloaderCustom("forenavatar");
-    ImageLoaderCustom ImageLoaderProfile = new ImageLoaderCustom("profilbild");
 
     public RPGListAdapter(List<RPGObject> pList, Activity pContext) {
         this.mItems = pList;

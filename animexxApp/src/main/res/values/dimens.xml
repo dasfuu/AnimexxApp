@@ -3,7 +3,9 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
-    
 
+    <dimen name="patio_default_thumbnail_width">100dp</dimen>
+    <dimen name="patio_default_thumbnail_height">100dp</dimen>
+    <dimen name="patio_default_thumbnails_container_padding">8dp</dimen>
 
 </resources>

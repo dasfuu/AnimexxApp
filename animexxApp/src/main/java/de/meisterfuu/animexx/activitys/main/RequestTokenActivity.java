@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import de.meisterfuu.animexx.Constants;
 import de.meisterfuu.animexx.R;
+import de.meisterfuu.animexx.api.Self;
 import de.meisterfuu.animexx.api.web.WebAPI;
 import de.meisterfuu.animexx.api.web.oauth.AccessToken;
 import retrofit.Callback;
@@ -66,6 +67,7 @@ public class RequestTokenActivity extends Activity {
             public void success(final AccessToken token, final Response response) {
                 mToken = token;
                 AccessToken.saveToken(mToken, RequestTokenActivity.this);
+                Self.getInstance(RequestTokenActivity.this).fetchSelf();
                 RequestTokenActivity.this.startActivity(new Intent(RequestTokenActivity.this, LoginActivity.class));
                 Log.i("OAuth", "Access Token Retrieved");
                 LadeMessage.setText("Login abgeschlossen! :)");

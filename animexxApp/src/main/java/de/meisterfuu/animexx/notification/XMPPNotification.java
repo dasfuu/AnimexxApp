@@ -39,6 +39,11 @@ public class XMPPNotification extends BaseNotification {
     }
 
     @Override
+    public long getCollapseID() {
+        return pUserId;
+    }
+
+    @Override
     public String getTitle() {
         if (pUserName.contains("animexx")) {
             return pUserName.split("@")[0];
@@ -96,6 +101,15 @@ public class XMPPNotification extends BaseNotification {
     public SpannableStringBuilder getMultiTextLine() {
         final SpannableStringBuilder spann = new SpannableStringBuilder();
         spann.append(getTitle());
+        spann.setSpan(new StyleSpan(Typeface.BOLD), 0, spann.length(), 0);
+        spann.append("   " + pTitle);
+        return spann;
+    }
+
+    @Override
+    public SpannableStringBuilder getCollapsedMultiTextLine() {
+        final SpannableStringBuilder spann = new SpannableStringBuilder();
+        spann.append("    ");
         spann.setSpan(new StyleSpan(Typeface.BOLD), 0, spann.length(), 0);
         spann.append("   " + pTitle);
         return spann;

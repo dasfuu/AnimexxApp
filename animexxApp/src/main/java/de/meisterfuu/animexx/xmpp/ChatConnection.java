@@ -1,15 +1,17 @@
 package de.meisterfuu.animexx.xmpp;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.squareup.otto.Subscribe;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ChatManager;
@@ -31,6 +33,7 @@ import org.jivesoftware.smack.packet.Message.Type;
 import org.jivesoftware.smack.packet.Packet;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
+import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import org.jivesoftware.smackx.ping.PingFailedListener;
 import org.jivesoftware.smackx.ping.PingManager;
 
@@ -56,8 +59,7 @@ import de.meisterfuu.animexx.objects.UserObject;
 import de.meisterfuu.animexx.objects.xmpp.XMPPMessageObject;
 import de.meisterfuu.animexx.objects.xmpp.XMPPRoosterObject;
 import de.meisterfuu.animexx.utils.Helper;
-import de.meisterfuu.animexx.utils.imageloader.ImageSaveObject;
-import de.meisterfuu.animexx.utils.imageloader.ImageSaverCustom;
+import de.meisterfuu.animexx.utils.imageloader.PicassoDownloader;
 
 public class ChatConnection implements ChatMessageListener, ChatManagerListener, RosterListener, PingFailedListener, ConnectionListener, PacketListener {
 
@@ -154,14 +156,15 @@ public class ChatConnection implements ChatMessageListener, ChatManagerListener,
 
         //Create TCPConnection
         if (getConnection() == null) {
-            ConnectionConfiguration config = new ConnectionConfiguration("jabber.animexx.de");
+            XMPPTCPConnectionConfiguration.XMPPTCPConnectionConfigurationBuilder builder = XMPPTCPConnectionConfiguration.builder();
+            builder.setHost("jabber.animexx.de");
+            builder.setServiceName("jabber.animexx.de");
+            builder.setResource(ressource);
+            builder.setUsernameAndPassword(userName, password);
+            builder.setRosterLoadedAtLogin(true);
 
-//			ConnectionConfiguration config = new ConnectionConfiguration("192.168.1.116");
-//			config.setSecurityMode(ConnectionConfiguration.SecurityMode.disabled);
-
-            config.setRosterLoadedAtLogin(true);
             Log.i(TAG, "mConnection = new TCPConnection(config) called");
-            mConnection = new XMPPTCPConnection(config);
+            mConnection = new XMPPTCPConnection(builder.build());
             connectionState = true;
         }
 
@@ -177,7 +180,7 @@ public class ChatConnection implements ChatMessageListener, ChatManagerListener,
         if (!getConnection().isAuthenticated()) {
             Log.i(TAG, ".login() called");
             try {
-                getConnection().login(userName, password, ressource);
+                getConnection().login();
             } catch (XMPPException e) {
                 PreferenceManager.getDefaultSharedPreferences(mApplicationContext).edit().putString("xmpp_password", null).apply();
                 postStatusEvent(false);
@@ -383,7 +386,6 @@ public class ChatConnection implements ChatMessageListener, ChatManagerListener,
     }
 
     private void newRoster() {
-        ImageSaverCustom loader = new ImageSaverCustom("forenavatar");
 
         ArrayList<String> names = new ArrayList<String>();
         for (RosterEntry obj : getConnection().getRoster().getEntries()) {
@@ -417,7 +419,22 @@ public class ChatConnection implements ChatMessageListener, ChatManagerListener,
                         temp.setAnimexxID(user_obj.getId());
                         if (user_obj.getAvatar() != null) {
                             temp.setLastAvatarURL(user_obj.getAvatar().getUrl());
-                            loader.download(new ImageSaveObject(temp.getLastAvatarURL(), temp.getAnimexxID() + ""), mApplicationContext);
+                            PicassoDownloader.getAvatarPicasso(mApplicationContext).load(temp.getLastAvatarURL()).stableKey(PicassoDownloader.createAvatarKey(temp.getAnimexxID())).into(new Target() {
+                                @Override
+                                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
+
+                                }
+
+                                @Override
+                                public void onBitmapFailed(Drawable drawable) {
+
+                                }
+
+                                @Override
+                                public void onPrepareLoad(Drawable drawable) {
+
+                                }
+                            });
                         }
                     }
                 }

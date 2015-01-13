@@ -880,11 +880,11 @@ public interface WebApiInterface {
     @FormUrlEncoded
     void getFileList(@Field("filename") String pFilename, Callback<ReturnObject<List<UploadedFile>>> pCallback);
 
-    @POST("/mitglieder/files/list/?img_max_x=800&img_max_y=800&img_quality=90&img_format=jpg")
+    @POST("/mitglieder/files/upload/?img_max_x=100&img_max_y=100&img_quality=80&img_format=jpg&thumbnail=1")
     @Multipart
     ReturnObject<FileUploadReturnObject> uploadFile(@Query("filename") String pFilename, @Part("file") TypedFile pFile);
 
-    @POST("/mitglieder/files/list/?img_max_x=800&img_max_y=800&img_quality=90&img_format=jpg")
+    @POST("/mitglieder/files/upload/?img_max_x=100&img_max_y=100&img_quality=80&img_format=jpg&thumbnail=1")
     @Multipart
     void uploadFile(@Query("filename") String pFilename, @Part("file") TypedFile pFile,Callback<ReturnObject<FileUploadReturnObject>> pCallback);
 }

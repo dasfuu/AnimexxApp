@@ -10,6 +10,7 @@ import android.text.SpannableStringBuilder;
  */
 public abstract class BaseNotification {
 
+    public abstract long getCollapseID();
     public abstract String getTitle();
     public abstract String getText();
     public abstract String getTicker();
@@ -23,6 +24,6 @@ public abstract class BaseNotification {
     public abstract int getColor();
 
     public abstract SpannableStringBuilder getMultiTextLine();
-
+    public abstract SpannableStringBuilder getCollapsedMultiTextLine();
 
 }

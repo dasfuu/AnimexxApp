@@ -2,10 +2,12 @@ package de.meisterfuu.animexx.activitys;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.view.View;
 
 import com.squareup.otto.DeadEvent;
 import com.squareup.otto.Subscribe;
 
+import butterknife.ButterKnife;
 import de.meisterfuu.animexx.api.ApiEvent;
 import de.meisterfuu.animexx.api.EventBus;
 import de.meisterfuu.animexx.api.FinishedLoadingEvent;

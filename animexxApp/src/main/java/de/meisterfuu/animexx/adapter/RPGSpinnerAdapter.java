@@ -14,14 +14,12 @@ import java.util.List;
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.api.Self;
 import de.meisterfuu.animexx.objects.rpg.RPGObject;
-import de.meisterfuu.animexx.utils.imageloader.ImageDownloaderCustom;
 
 public class RPGSpinnerAdapter extends BaseAdapter {
 
     List<RPGObject.PlayerObject> mItems;
     Activity mContext;
     long mUserID;
-    ImageDownloaderCustom ImageLoader = new ImageDownloaderCustom("rpgavatar");
     long mRPGID;
 
     public RPGSpinnerAdapter(ArrayList<RPGObject.PlayerObject> pList, long pID, Activity pContext) {

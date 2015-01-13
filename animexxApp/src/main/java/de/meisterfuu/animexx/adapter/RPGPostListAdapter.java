@@ -17,8 +17,7 @@ import java.util.List;
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.objects.rpg.RPGPostObject;
 import de.meisterfuu.animexx.utils.Helper;
-import de.meisterfuu.animexx.utils.imageloader.ImageDownloaderCustom;
-import de.meisterfuu.animexx.utils.imageloader.ImageSaveObject;
+import de.meisterfuu.animexx.utils.imageloader.PicassoDownloader;
 
 
 public class RPGPostListAdapter extends BaseAdapter {
@@ -26,7 +25,6 @@ public class RPGPostListAdapter extends BaseAdapter {
     List<RPGPostObject> mItems;
     Activity mContext;
     long mRPGID;
-    ImageDownloaderCustom ImageLoader = new ImageDownloaderCustom("rpgavatar");
 
     public RPGPostListAdapter(List<RPGPostObject> pList, Activity pContext, long pRPGID) {
         this.mItems = pList;
@@ -34,7 +32,6 @@ public class RPGPostListAdapter extends BaseAdapter {
         this.mRPGID = pRPGID;
     }
 
-    boolean mLoading;
 
     @Override
     public void notifyDataSetChanged() {
@@ -135,7 +132,7 @@ public class RPGPostListAdapter extends BaseAdapter {
 
         if (RPG.getAvatarURL() != null) {
             holder.Avatar.setVisibility(View.VISIBLE);
-            ImageLoader.download(new ImageSaveObject(RPG.getAvatarURL(), mRPGID + "_" + RPG.getCharacterID() + "_" + RPG.getAvatarID()), holder.Avatar, false);
+            PicassoDownloader.getPicasso(mContext).load(RPG.getAvatarURL()).stableKey(PicassoDownloader.createRPGAvatarKey(mRPGID, RPG.getCharacterID(), RPG.getAvatarID())).into(holder.Avatar);
         } else {
             holder.Avatar.setVisibility(View.GONE);
         }

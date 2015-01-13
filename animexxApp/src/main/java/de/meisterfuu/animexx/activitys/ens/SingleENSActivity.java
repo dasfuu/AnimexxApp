@@ -27,9 +27,7 @@ import de.meisterfuu.animexx.objects.UserObject;
 import de.meisterfuu.animexx.objects.ens.ENSDraftObject;
 import de.meisterfuu.animexx.objects.ens.ENSObject;
 import de.meisterfuu.animexx.utils.Helper;
-import de.meisterfuu.animexx.utils.imageloader.ImageDownloaderCustom;
-import de.meisterfuu.animexx.utils.imageloader.ImageLoaderCustom;
-import de.meisterfuu.animexx.utils.imageloader.ImageSaveObject;
+import de.meisterfuu.animexx.utils.imageloader.PicassoDownloader;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -48,8 +46,6 @@ public class SingleENSActivity extends AnimexxBaseActivityAB {
     Boolean mLoaded = false;
 
 
-    ImageDownloaderCustom ImageLoader = new ImageDownloaderCustom("forenavatar");
-    ImageLoaderCustom ImageLoaderProfile = new ImageLoaderCustom("profilbild");
 
     SimpleDateFormat sdf = new SimpleDateFormat("'Datum: 'HH:mm dd.MM.yyyy", Locale.getDefault());
 
@@ -131,16 +127,11 @@ public class SingleENSActivity extends AnimexxBaseActivityAB {
                     mUser.setText(target.getUsername());
                 }
 
-                if (ImageLoaderProfile.exists(new ImageSaveObject("", target.getId() + ""), SingleENSActivity.this)) {
-                    ImageLoaderProfile.download(new ImageSaveObject("", target.getId() + ""), mAvatar);
+                if (target.getAvatar() != null) {
+                    System.out.println(target.getAvatar().getUrl());
+                    PicassoDownloader.getAvatarPicasso(SingleENSActivity.this).load(target.getAvatar().getUrl()).stableKey(PicassoDownloader.createAvatarKey(target.getId())).into(mAvatar);
                 } else {
-                    if (target.getAvatar() != null) {
-                        ImageSaveObject image = new ImageSaveObject(target.getAvatar().getUrl(), target.getId() + "");
-                        System.out.println(target.getAvatar().getUrl());
-                        ImageLoader.download(image, mAvatar);
-                    } else {
-                        mAvatar.setImageResource(R.drawable.ic_contact_picture);
-                    }
+                    mAvatar.setImageResource(R.drawable.ic_contact_picture);
                 }
 
                 mAvatar.setOnClickListener(new View.OnClickListener() {

@@ -7,7 +7,6 @@
             android:summaryOff="Benachrichtigungen sind aus."
             android:summaryOn="Benachrichtigungen sind an."
             android:title="@string/pref_title_new_message_notifications" />
-
         <RingtonePreference
             android:defaultValue="content://settings/system/notification_sound"
             android:dependency="notifications_new_message"
@@ -17,23 +16,12 @@
             android:showSilent="true"
             android:summary="Wähle einen Benachrichtigungston"
             android:title="@string/pref_title_ringtone" />
-
         <CheckBoxPreference
             android:defaultValue="true"
             android:dependency="notifications_new_message"
             android:key="notifications_new_message_vibrate"
             android:title="@string/pref_title_vibrate" />
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:dependency="notifications_new_message"
-            android:key="notifications_new_message_ens_collapse"
-            android:title="@string/pref_title_ens_collapse" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="Chat" >
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="xmpp_status"
-            android:title="@string/pref_title_xmpp_status" />
-    </PreferenceCategory>
+
 
 </PreferenceScreen>

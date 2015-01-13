@@ -14,15 +14,13 @@ import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.api.Self;
 import de.meisterfuu.animexx.objects.rpg.RPGObject;
 import de.meisterfuu.animexx.objects.rpg.RPGObject.PlayerAvatarObject;
-import de.meisterfuu.animexx.utils.imageloader.ImageDownloaderCustom;
-import de.meisterfuu.animexx.utils.imageloader.ImageSaveObject;
+import de.meisterfuu.animexx.utils.imageloader.PicassoDownloader;
 
 public class RPGAvatarSpinnerAdapter extends BaseAdapter {
 
     List<RPGObject.PlayerAvatarObject> mItems;
     Activity mContext;
     long mUserID;
-    ImageDownloaderCustom ImageLoader = new ImageDownloaderCustom("rpgavatar");
     RPGObject mRPG;
     RPGObject.PlayerObject mPlayer;
 
@@ -112,11 +110,8 @@ public class RPGAvatarSpinnerAdapter extends BaseAdapter {
 
 //		media.animexx.onlinewelten.com/rpgs/charaktere/85/RPG-Id/charakterID_avatarID.jpg 
 //		85 ist RPG-ID Modulo 100
-
-        ImageLoader.download(new ImageSaveObject("http://media.animexx.onlinewelten.com/rpgs/charaktere/" + mRPG.getId() % 100 + "/" + mRPG.getId() + "/" + mPlayer.getId() + "_" + chara.getId() + ".jpg", mRPG.getId() + "_" + mPlayer.getId() + "_" + chara.getId()), holder.Icon);
-
-
-        //holder.Icon.getDrawable().setColorFilter(mContext.getResources().getColor(R.color.animexx_blue), PorterDuff.Mode.MULTIPLY );
+        String url = "http://media.animexx.onlinewelten.com/rpgs/charaktere/" + (mRPG.getId() % 100) + "/" + mRPG.getId() + "/" + mPlayer.getId() + "_" + chara.getId() + ".jpg";
+        PicassoDownloader.getPicasso(mContext).load(url).stableKey(PicassoDownloader.createRPGAvatarKey(mRPG.getId(), mPlayer.getId(), chara.getId())).into(holder.Icon);
 
         return rowView;
     }

@@ -10,15 +10,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.objects.home.ContactHomeObject;
 import de.meisterfuu.animexx.utils.Helper;
-import de.meisterfuu.animexx.utils.imageloader.ImageDownloaderCustom;
 import de.meisterfuu.animexx.utils.imageloader.PicassoDownloader;
 import de.meisterfuu.animexx.utils.views.UserViewBig;
 
@@ -27,14 +24,10 @@ public class HomeContactAdapter extends BaseAdapter {
 
     List<ContactHomeObject> mItems;
     Activity mContext;
-    ImageDownloaderCustom ImageLoader = new ImageDownloaderCustom("home_contact");
-    private Picasso mPicasso;
 
     public HomeContactAdapter(List<ContactHomeObject> pList, Activity pContext) {
         this.mItems = pList;
         this.mContext = pContext;
-        mPicasso = new Picasso.Builder(pContext).downloader(new PicassoDownloader(pContext, "home_contacts")).build();
-        mPicasso.setIndicatorsEnabled(false);
     }
 
     @Override
@@ -123,7 +116,7 @@ public class HomeContactAdapter extends BaseAdapter {
                 height = 300;
             }
             holder.Image.getLayoutParams().height = height;
-            mPicasso.load(obj.getBigImageURL()).stableKey("home_contact_" + obj.getItemID()).into(holder.Image);
+            PicassoDownloader.getPicasso(mContext).load(obj.getBigImageURL()).stableKey(PicassoDownloader.createHomePictureKey(obj.getItemID())).into(holder.Image);
         }
 
         holder.User.setVisibility(View.GONE);

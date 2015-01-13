@@ -14,8 +14,7 @@ import android.widget.TextView;
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.activitys.AnimexxBaseFragment;
 import de.meisterfuu.animexx.objects.event.EventObject;
-import de.meisterfuu.animexx.utils.imageloader.ImageDownloaderCustom;
-import de.meisterfuu.animexx.utils.imageloader.ImageSaveObject;
+import de.meisterfuu.animexx.utils.imageloader.PicassoDownloader;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,7 +30,6 @@ public class SingleEventFragment extends AnimexxBaseFragment {
         return fragment;
     }
 
-    ImageDownloaderCustom ImageLoader = new ImageDownloaderCustom("event_logo");
 
     EventObject mEvent;
     //private GoogleMap mMap;
@@ -97,7 +95,7 @@ public class SingleEventFragment extends AnimexxBaseFragment {
     private void loadEvent(){
         mEvent = ((SingleEventActivity)getActivity()).getEvent();
         if (mEvent.getLogo() != null && !mEvent.getLogo().isEmpty()) {
-            ImageLoader.download(new ImageSaveObject(mEvent.getLogo(), "" + mEvent.getId()), mLogo);
+            PicassoDownloader.getAvatarPicasso(getActivity()).load(mEvent.getLogo()).stableKey(PicassoDownloader.createEventLogoKey(mEvent.getId())).into(mLogo);
         } else {
             mLogo.setVisibility(View.GONE);
         }

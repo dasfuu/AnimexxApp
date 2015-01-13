@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.meisterfuu.animexx"
-    android:versionCode="71"
+    android:versionCode="72"
     android:versionName="2.0" >
 
     <uses-sdk
@@ -16,6 +16,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" android:required="false"/>
 
     <!-- GCM Permissions -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -176,7 +178,6 @@
                 <action android:name="de.meisterfuu.animexx.xmpp.start" />
             </intent-filter>
         </service>
-
         <service
             android:name=".services.ENSQueueService"
             android:exported="false" >
@@ -195,10 +196,8 @@
             -->
         </activity>
 
-        <receiver
-            android:name=".xmpp.ConnectionManager$AlarmReceiver" >
+        <receiver android:name=".xmpp.ConnectionManager$AlarmReceiver" >
         </receiver>
-
         <receiver android:name=".notification.RPGNotificationManager$NotificationDismissedReceiver" >
             <intent-filter>
                 <action android:name="de.meisterfuu.animexx.xmpp.start" />
@@ -241,7 +240,27 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.meisterfuu.animexx.activitys.main.MainActivity" />
         </activity>
+        <activity
+            android:name=".activitys.ens.MainActivity"
+            android:label="@string/title_activity_main" >
+        </activity>
+        <activity
+            android:name=".activitys.ens.FeedbackActivity"
+            android:label="@string/title_activity_feedback"
+            android:parentActivityName=".activitys.main.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.meisterfuu.animexx.activitys.main.MainActivity" />
+        </activity>
+        <activity
+            android:name=".activitys.share.ImagePickerActivity"
+            android:label="@string/title_activity_image_picker" >
+        </activity>
 
+        <service
+            android:name=".services.UploadService"
+            android:exported="false" >
+        </service>
     </application>
 
 </manifest>

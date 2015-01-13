@@ -24,6 +24,7 @@ import de.meisterfuu.animexx.objects.UserObject;
 import de.meisterfuu.animexx.objects.profile.GBEntryObject;
 import de.meisterfuu.animexx.objects.profile.GBListObject;
 import de.meisterfuu.animexx.utils.Helper;
+import de.meisterfuu.animexx.utils.imageloader.PicassoDownloader;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -168,7 +169,7 @@ public class GBListAdapter extends BaseAdapter implements Callback<ReturnObject<
 
         if (gb_entry.getAvatarURL() != null) {
             holder.Avatar.setVisibility(View.VISIBLE);
-            Picasso.with(mContext).load(gb_entry.getAvatarURL()).into(holder.Avatar);
+            PicassoDownloader.getPicasso(mContext).load(gb_entry.getAvatarURL()).stableKey(PicassoDownloader.createGBAvatarKey(gb_entry.getAvatarURL().hashCode())).into(holder.Avatar);
         } else {
             holder.Avatar.setVisibility(View.GONE);
         }
