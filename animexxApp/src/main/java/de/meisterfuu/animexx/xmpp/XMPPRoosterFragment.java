@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -90,23 +91,23 @@ public class XMPPRoosterFragment extends AnimexxBaseFragment implements AdapterV
 
     @Subscribe
     public void onStatusChange(StatsuChangeEvent event){
-
+        Log.d("onStatusChange()", event.status.toString());
         Handler handler = new Handler();
         boolean shouldOnline = PreferenceManager.getDefaultSharedPreferences(this.getActivity()).getBoolean("xmpp_status", false);
-        boolean display = (!event.equals(SmackConnection.ConnectionState.CONNECTED)) && (shouldOnline);
+        boolean display = (!event.status.equals(SmackConnection.ConnectionState.CONNECTED)) && (shouldOnline);
 
-        if(!display){
+        if(display){
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-                    mStatusFrame.setVisibility(View.GONE);
+                    mStatusFrame.setVisibility(View.VISIBLE);
                 }
             });
         } else {
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-                    mStatusFrame.setVisibility(View.VISIBLE);
+                    mStatusFrame.setVisibility(View.GONE);
                 }
             });
         }
