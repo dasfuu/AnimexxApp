@@ -16,6 +16,8 @@ import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.activitys.main.MainActivity;
 import de.meisterfuu.animexx.notification.ENSNotification;
 import de.meisterfuu.animexx.notification.ENSNotificationManager;
+import de.meisterfuu.animexx.notification.GBNotification;
+import de.meisterfuu.animexx.notification.GBNotificationManager;
 import de.meisterfuu.animexx.notification.RPGNotification;
 import de.meisterfuu.animexx.notification.RPGNotificationManager;
 import de.meisterfuu.animexx.receiver.GcmBroadcastReceiver;
@@ -25,7 +27,6 @@ public class GcmIntentService extends IntentService {
     public static final int NOTIFICATION_ID = 1;
     private static final String TAG = "GcmIntentService";
     private NotificationManager mNotificationManager;
-    NotificationCompat.Builder builder;
 
     public static final String NEW_POST = "de.meisterfuu.animexx.new";
 
@@ -68,6 +69,13 @@ public class GcmIntentService extends IntentService {
                 } else if (extras.getString("type").equalsIgnoreCase("XXEventRPGPosting")) {
                     RPGNotificationManager manager = new RPGNotificationManager(this);
                     manager.addNotification(new RPGNotification(extras.getString("title"),  Long.parseLong(extras.getString("id")), extras.getString("from_username"), Long.parseLong(extras.getString("from_id"))));
+                    manager.show();
+                    Intent i = new Intent(GcmIntentService.NEW_POST);
+                    i.setPackage(this.getPackageName());
+                    this.sendBroadcast(intent);
+                } else if (extras.getString("type").equalsIgnoreCase("XXEventGaestebuch")) {
+                    GBNotificationManager manager = new GBNotificationManager(this);
+                    manager.addNotification(new GBNotification(extras.getString("title"),  Long.parseLong(extras.getString("id")), extras.getString("from_username"), Long.parseLong(extras.getString("from_id"))));
                     manager.show();
                     Intent i = new Intent(GcmIntentService.NEW_POST);
                     i.setPackage(this.getPackageName());

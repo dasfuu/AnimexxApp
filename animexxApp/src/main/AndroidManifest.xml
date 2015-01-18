@@ -4,10 +4,6 @@
     android:versionCode="72"
     android:versionName="2.0" >
 
-    <uses-sdk
-        android:minSdkVersion="15"
-        android:targetSdkVersion="18" />
-
     <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true" />
@@ -199,13 +195,12 @@
         <receiver android:name=".xmpp.ConnectionManager$AlarmReceiver" >
         </receiver>
         <receiver android:name=".notification.RPGNotificationManager$NotificationDismissedReceiver" >
-            <intent-filter>
-                <action android:name="de.meisterfuu.animexx.xmpp.start" />
-            </intent-filter>
         </receiver>
         <receiver android:name=".notification.ENSNotificationManager$NotificationDismissedReceiver" >
         </receiver>
         <receiver android:name=".notification.XMPPNotificationManager$NotificationDismissedReceiver" >
+        </receiver>
+        <receiver android:name=".notification.GBNotificationManager$NotificationDismissedReceiver" >
         </receiver>
 
         <meta-data
@@ -239,10 +234,6 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.meisterfuu.animexx.activitys.main.MainActivity" />
-        </activity>
-        <activity
-            android:name=".activitys.ens.MainActivity"
-            android:label="@string/title_activity_main" >
         </activity>
         <activity
             android:name=".activitys.ens.FeedbackActivity"

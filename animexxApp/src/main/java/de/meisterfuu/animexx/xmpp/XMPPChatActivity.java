@@ -186,8 +186,14 @@ public class XMPPChatActivity extends AnimexxBaseActivityAB {
 
     @Subscribe
     public void onStatusChange(StatsuChangeEvent event){
-        if(mNewMessageBt != null)mNewMessageBt.setEnabled(event.online);
-        if(mNewMessageTx != null)mNewMessageTx.setEnabled(event.online);
+        if(event.status.equals(SmackConnection.ConnectionState.CONNECTED)){
+            if(mNewMessageBt != null)mNewMessageBt.setEnabled(true);
+            if(mNewMessageTx != null)mNewMessageTx.setEnabled(true);
+        } else {
+            if(mNewMessageBt != null)mNewMessageBt.setEnabled(false);
+            if(mNewMessageTx != null)mNewMessageTx.setEnabled(false);
+        }
+
     }
 
     @Subscribe

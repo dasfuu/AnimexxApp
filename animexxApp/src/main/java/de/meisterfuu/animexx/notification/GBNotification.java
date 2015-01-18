@@ -9,28 +9,28 @@ import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
 
 import de.meisterfuu.animexx.R;
-import de.meisterfuu.animexx.activitys.ens.SingleENSActivity;
-import de.meisterfuu.animexx.activitys.rpg.RPGListFragment;
+import de.meisterfuu.animexx.activitys.profiles.ProfileActivity;
+import de.meisterfuu.animexx.api.Self;
 import de.meisterfuu.animexx.utils.imageloader.BitmapLoaderCustom;
+import de.meisterfuu.animexx.xmpp.XMPPRoosterFragment;
 
 /**
  * Created by Furuha on 25.12.2014.
  */
-public class ENSNotification extends BaseNotification {
+public class GBNotification extends BaseNotification {
 
     private String pTitle;
     private long pId;
     private String pUserName;
     private long pUserId;
 
-    public ENSNotification() {
-        this.pTitle = "Neue ENS";
-        this.pId = 0;
+    public GBNotification() {
+        this.pTitle = "Neuer Gästebucheintrag";
         this.pUserName = "Unbekannt";
         this.pUserId = 0;
     }
 
-    public ENSNotification(String pTitle, long pId, String pUserName, long pUserId) {
+    public GBNotification(String pTitle, long pId, String pUserName, long pUserId) {
         this.pTitle = pTitle;
         this.pId = pId;
         this.pUserName = pUserName;
@@ -39,37 +39,37 @@ public class ENSNotification extends BaseNotification {
 
     @Override
     public long getCollapseID() {
-        return pId;
+        return pUserId;
     }
 
     @Override
     public String getTitle() {
-        return pUserName;
+            return pUserName;
     }
 
     @Override
     public String getText() {
-        return pTitle;
+        return "Neuer Gästebucheintrag von "+pTitle;
     }
 
     @Override
     public String getTicker() {
-        return "Neue ENS von " + pUserName;
+        return pTitle;
     }
 
     @Override
     public int getIcon() {
-        return R.drawable.ic_stat_ens;
+        return R.drawable.ic_gb;
     }
 
     @Override
     public Bitmap getPicture(Context pContext) {
-        return BitmapLoaderCustom.getUserBitmap(pUserId + "", pContext);
+        return BitmapLoaderCustom.getUserBitmap(pUserId+"", pContext);
     }
 
     @Override
     public PendingIntent getIntent(Context pContext) {
-        return SingleENSActivity.getPendingIntent(pContext, pId);
+        return ProfileActivity.getPendingIntent(pContext, Self.getInstance(pContext).getUserID());
     }
 
     @Override
@@ -95,7 +95,7 @@ public class ENSNotification extends BaseNotification {
     @Override
     public SpannableStringBuilder getMultiTextLine() {
         final SpannableStringBuilder spann = new SpannableStringBuilder();
-        spann.append(pUserName);
+        spann.append(getTitle());
         spann.setSpan(new StyleSpan(Typeface.BOLD), 0, spann.length(), 0);
         spann.append("   " + pTitle);
         return spann;
@@ -109,4 +109,6 @@ public class ENSNotification extends BaseNotification {
         spann.append("   " + pTitle);
         return spann;
     }
+
+
 }

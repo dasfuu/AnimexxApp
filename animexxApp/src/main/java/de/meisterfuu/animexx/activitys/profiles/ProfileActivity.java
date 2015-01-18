@@ -1,5 +1,6 @@
 package de.meisterfuu.animexx.activitys.profiles;
 
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -36,6 +37,14 @@ public class ProfileActivity extends AnimexxBaseActivityAB {
         args.putLong("id", pUserID);
         i.putExtras(args);
         pContext.startActivity(i);
+    }
+
+    public static PendingIntent getPendingIntent(Context pContext, long pUserID) {
+        Intent i = new Intent().setClass(pContext, ProfileActivity.class);
+        Bundle args = new Bundle();
+        args.putLong("id", pUserID);
+        i.putExtras(args);
+        return PendingIntent.getActivity(pContext,0,i,0);
     }
 
     /**

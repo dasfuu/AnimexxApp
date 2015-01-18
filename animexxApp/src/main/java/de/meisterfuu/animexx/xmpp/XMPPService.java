@@ -13,6 +13,8 @@ import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.api.EventBus;
 import de.meisterfuu.animexx.api.xmpp.StatsuChangeEvent;
 
+import static de.meisterfuu.animexx.xmpp.SmackConnection.ConnectionState;
+
 public class XMPPService extends Service {
 
     public static final String TAG = "XMPP";
@@ -32,7 +34,7 @@ public class XMPPService extends Service {
 
     public static final String BUNDLE_DIRECTION_OUT = "OUT";
     public static final String BUNDLE_DIRECTION_IN = "IN";
-    private boolean oldEvent = false;
+    private ConnectionState oldEvent = ConnectionState.DISCONNECTED;
 
     @Override
     public void onCreate() {
@@ -42,21 +44,15 @@ public class XMPPService extends Service {
         EventBus.getBus().getOtto().register(this);
     }
 
-
-
     @Subscribe
     public void onStatusChange(StatsuChangeEvent event){
-        if(event.online == oldEvent){
+        if(event.status == oldEvent){
             return;
         } 
         
-        oldEvent = event.online;
+        oldEvent = event.status;
         
-        if(event.online){
-//            final NotificationManager notificationManager = (NotificationManager) getApplicationContext()
-//                    .getSystemService(getApplicationContext().NOTIFICATION_SERVICE);
-//
-//            notificationManager.notify(42, getNotificationOnline());
+        if(!event.status.equals(ConnectionState.DISCONNECTED)){
             this.startForeground(42, getNotificationOnline());
         } else {
             this.startForeground(42, getNotificationOffline());

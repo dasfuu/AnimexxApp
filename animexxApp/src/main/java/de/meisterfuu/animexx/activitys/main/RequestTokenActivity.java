@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 import de.meisterfuu.animexx.Constants;
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.api.Self;
@@ -37,6 +40,7 @@ public class RequestTokenActivity extends Activity {
 
 
     private void getRequestToken() {
+
         LadeMessage.setText("Browser starten...");
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(Constants.OAUTH_URL));
 

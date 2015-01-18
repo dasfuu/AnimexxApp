@@ -15,16 +15,16 @@ import android.util.Log;
 
 import de.meisterfuu.animexx.Debug;
 import de.meisterfuu.animexx.DebugNotification;
-import de.meisterfuu.animexx.api.EventBus;
-import de.meisterfuu.animexx.api.xmpp.StatsuChangeEvent;
 import de.meisterfuu.animexx.utils.Helper;
+
+import static de.meisterfuu.animexx.xmpp.SmackConnection.ConnectionState;
 
 public class ConnectionManager {
 
     private static ConnectionManager mThis;
 
     private XMPPService mService;
-    private ChatConnection mConnection;
+    private SmackConnection mConnection;
 
     private boolean mActive = false;
 
@@ -50,11 +50,9 @@ public class ConnectionManager {
 
                     if (net != null && net.isConnected()) {
                         Log.i(TAG, "Network " + net.getTypeName() + " connected");
-                        step = 0;
-                        checkTick();
+                        tryConnect();
                     } else if (intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, Boolean.FALSE)) {
                         Log.d(TAG, "Lost connectivity");
-//						scheduleCheck();
                     }
                 }
 
@@ -85,7 +83,7 @@ public class ConnectionManager {
                     public void run() {
                         Looper.prepare();
                         mTHandler = new Handler();
-                        checkTick();
+                        tryConnect();
                         Looper.loop();
                     }
 
@@ -108,39 +106,23 @@ public class ConnectionManager {
         });
     }
 
-    private void initConnection() {
-        mConnection = new ChatConnection(mService, this);
-        mConnection.connect();
-    }
-
-
-    private long calls;
-    private long calls_count;
-
     private int step = 0;
     private int[] time = new int[]{1, 3, 5, 5, 10, 10, 10, 10, 30, 60};
 
-    public void checkTick() {
-
-        // Debug Notification every ~50s
-        if (Debug.SHOW_DEBUG_NOTIFICATION) {
-            if ((calls++) % 5 == 0)
-                DebugNotification.notify(mService, "ReconManager is alive " + (++calls_count), 433962);
-        }
+    public void tryConnect() {
 
         // Check in ConnectionThread
         if (mTHandler != null) {
             mTHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    if (mConnection != null) {
-                        mConnection.ping();
-                    }
-
-                    if (!check()) {
-                        scheduleCheck();
-                    } else {
+                    if (connect()) {
+                        //reset step counter
                         step = 0;
+                    } else {
+                        sheduleNextConnect();
+                        //increase step counter
+                        step++;
                     }
 
                 }
@@ -149,15 +131,16 @@ public class ConnectionManager {
             Log.d(TAG, "Chat mTHandler is NULL");
         }
 
-
     }
 
-    public void scheduleCheck() {
+    public void sheduleNextConnect() {
 
+        //prevent step counter getting out of bounds
         if (step >= time.length) {
             step = time.length - 1;
         }
 
+        //schedule the next alarm
         Intent alarm = new Intent(mService, AlarmReceiver.class);
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
             alarm.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
@@ -168,7 +151,7 @@ public class ConnectionManager {
 
     }
 
-    private boolean check() {
+    private boolean connect() {
         try {
             if (!mActive) {
                 // return if stopped
@@ -177,30 +160,34 @@ public class ConnectionManager {
 
             if (mConnection == null) {
                 // (re)create connection
-                initConnection();
+                mConnection = new SmackConnection(mService);
             }
 
-            // connection is not ok
-            if (!mConnection.isConnected() && mConnection.shouldConnect()) {
-                Log.i(TAG, "ChatConnection.connect() called in ReconManager");
-                DebugNotification.notify(mService, "ReconManager is working", 433961);
-                mConnection.connect();
-            }
-
-            if (mConnection.isConnected() && mConnection.shouldConnect()) {
-                return true;
-            }
-
+            //Check network
             final ConnectivityManager connectivityManager = (ConnectivityManager) mService.getSystemService(Context.CONNECTIVITY_SERVICE);
             final NetworkInfo net = connectivityManager.getActiveNetworkInfo();
 
+            //No network -> return true here to stop try reconnecting
             if(net == null || !net.isAvailable()){
                 return true;
             }
 
-            // Something bad happened
+            // connection is not ok -> reconnect
+            if (SmackConnection.getStatus().equals(ConnectionState.DISCONNECTED) && mConnection.shouldConnect()) {
+                Log.i(TAG, "SmackConnection.connect() called in ConnectionManager");
+                mConnection.connect();
+            }
+
+            // check if reconnect was succesfull
+            if (!SmackConnection.getStatus().equals(ConnectionState.DISCONNECTED) && mConnection.shouldConnect()) {
+                return true;
+            }
+
+            //it wasn't...
+            return false;
+
+        // Something bad happened
         } catch (Exception e) {
-            DebugNotification.notify(mService, "Exception in ReconManager", 433963);
             e.printStackTrace();
             Helper.sendStacTrace(e, mService);
         }
@@ -214,9 +201,8 @@ public class ConnectionManager {
         public void onReceive(Context context, Intent intent) {
             try {
                 // Recon
-                ConnectionManager.getInstance().checkTick();
+                ConnectionManager.getInstance().tryConnect();
             } catch (Exception e) {
-                DebugNotification.notify(context, "Exception in ReconManager Alarm", 433964);
                 e.printStackTrace();
                 Helper.sendStacTrace(e, context);
             }
