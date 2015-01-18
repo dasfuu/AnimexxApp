@@ -20,8 +20,7 @@
             android:paddingRight="8dp"
             android:paddingTop="8dp"
             android:paddingBottom="0dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/test1" />
+            android:scaleType="centerCrop" />
 
         <de.meisterfuu.animexx.utils.views.UserViewBig
             android:id="@+id/home_list_item_author"
