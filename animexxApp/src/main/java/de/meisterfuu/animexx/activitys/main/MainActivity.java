@@ -89,7 +89,13 @@ public class MainActivity extends ActionBarActivity {
         profileHeader = (RelativeLayout) inflater.inflate(R.layout.drawer_header_profile, null);
         ImageView headerImage = (ImageView)profileHeader.findViewById(R.id.headerImage);
         TextView headerText = (TextView)profileHeader.findViewById(R.id.headerText);
-        headerText.setText(Self.getInstance(this).getUsername());
+        String name = Self.getInstance(this).getUsername();
+        if(name != null && !name.isEmpty()){
+            headerText.setText(Self.getInstance(this).getUsername());
+        } else {
+            headerText.setText("Ich");
+        }
+
         PicassoDownloader.getAvatarPicasso(this)
                 .load(PicassoDownloader.getAvatarURI(PicassoDownloader.createAvatarKey(Self.getInstance(this).getUserID()), this))
                 .stableKey(PicassoDownloader.createAvatarKey(Self.getInstance(this).getUserID()))

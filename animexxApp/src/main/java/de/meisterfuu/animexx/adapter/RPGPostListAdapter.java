@@ -115,7 +115,7 @@ public class RPGPostListAdapter extends BaseAdapter {
         } else {
             holder.Title.setText(RPG.getCharacterName());
         }
-        holder.Subtitle.setText(Helper.TimestampToString(Helper.toTimestamp(RPG.getDate(), "yyyy-MM-dd hh:mm:ss"), false));
+        holder.Subtitle.setText(Helper.agoString(Helper.toTimestamp(RPG.getDate(), "yyyy-MM-dd hh:mm:ss"), false));
 
         if (RPG.isAction()) {
             holder.Post.setTypeface(null, Typeface.ITALIC);

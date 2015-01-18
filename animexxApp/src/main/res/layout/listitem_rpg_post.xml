@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/rpgpost_container"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="#FFFFFF"
-    android:orientation="vertical" >
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:id="@+id/rpgpost_container"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="#FFFFFF"
+              android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -19,14 +20,16 @@
                 android:gravity="center_vertical"
                 android:orientation="vertical" >
 
-                <TextView
+                <com.devspark.robototextview.widget.RobotoTextView
+                    app:typeface="roboto_regular"
                     android:id="@+id/rpgpost_item_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Medium Text"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
-                <TextView
+                <com.devspark.robototextview.widget.RobotoTextView
+                    app:typeface="roboto_regular"
                     android:id="@+id/rpgpost_item_subtitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -43,7 +46,8 @@
                 android:src="@drawable/ic_contact_picture" />
         </LinearLayout>
 
-        <TextView
+    <com.devspark.robototextview.widget.RobotoTextView
+        app:typeface="roboto_regular"
             android:id="@+id/rpgpost_item_post"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

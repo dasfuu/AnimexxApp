@@ -4,7 +4,7 @@
         android:id="@+id/send"
         android:icon="@drawable/ic_action_send"
         app:showAsAction="always|withText"
-        android:title="@string/ens_send">
+        android:title="@string/menu_new_ens">
     </item>
 
 </menu>

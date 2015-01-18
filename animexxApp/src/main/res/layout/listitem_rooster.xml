@@ -48,7 +48,8 @@
                     android:layout_marginRight="4dp"
                     android:src="@drawable/chat_status_marker_online"/>
 
-                <TextView
+                        <com.devspark.robototextview.widget.RobotoTextView
+            app:typeface="roboto_regular"
                     android:id="@+id/xmpp_list_item_subtitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -59,14 +60,16 @@
 
             </LinearLayout>
 
-            <TextView
+                    <com.devspark.robototextview.widget.RobotoTextView
+            app:typeface="roboto_regular"
                 android:id="@+id/xmpp_list_item_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="User1"
                 android:textSize="16sp" />
 
-            <TextView
+                    <com.devspark.robototextview.widget.RobotoTextView
+            app:typeface="roboto_regular"
                 android:id="@+id/xmpp_list_item_msg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

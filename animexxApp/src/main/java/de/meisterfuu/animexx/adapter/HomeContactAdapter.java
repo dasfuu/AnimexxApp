@@ -104,7 +104,7 @@ public class HomeContactAdapter extends BaseAdapter {
 
         //Text
         holder.Title.setText(obj.toString());
-        holder.Date.setText(Helper.TimestampToString(obj.getServerTS() * 1000, false));
+        holder.Date.setText(Helper.agoString(obj.getServerTS() * 1000, false));
 
 
         holder.Image.setVisibility(View.GONE);

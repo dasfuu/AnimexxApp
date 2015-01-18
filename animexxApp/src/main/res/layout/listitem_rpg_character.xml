@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/rpg_list_item_root"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+                                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                                    android:id="@+id/rpg_list_item_root"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content">
 
     <LinearLayout
         android:id="@+id/card"
@@ -32,14 +33,16 @@
                 android:orientation="vertical"
                 android:paddingLeft="8dp" >
 
-                <TextView
+                <com.devspark.robototextview.widget.RobotoTextView
+                    app:typeface="roboto_regular"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:text="Large Text"
                     android:id="@+id/activity_rpchara_title"/>
 
-                <TextView
+                <com.devspark.robototextview.widget.RobotoTextView
+                    app:typeface="roboto_regular"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="New Text"
@@ -54,7 +57,8 @@
             android:paddingRight="8dp"
             android:paddingTop="8dp"/>
 
-        <TextView
+        <com.devspark.robototextview.widget.RobotoTextView
+            app:typeface="roboto_regular"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingRight="8dp"

@@ -110,7 +110,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 //                for(String s: gcm.getActiveIds().getIds()){
 //                        Log.e("GCM IDs", s);
 //                }
-//                //gcm.deleteID(gcm.getActiveIds().getIds());
+//                gcm.deleteID(gcm.getActiveIds().getIds());
 //            }
 //        }).start();
 

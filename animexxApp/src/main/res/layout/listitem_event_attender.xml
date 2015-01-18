@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/event_attender_list_item_root"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content" >
+                                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                                    android:id="@+id/event_attender_list_item_root"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,7 +17,8 @@
             android:orientation="vertical"
             android:padding="8dp" >
 
-            <TextView
+            <com.devspark.robototextview.widget.RobotoTextView
+                app:typeface="roboto_regular"
                 android:id="@+id/event_attender_list_item_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -29,7 +31,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
 
-                <TextView
+                <com.devspark.robototextview.widget.RobotoTextView
+                    app:typeface="roboto_regular"
                     android:id="@+id/event_attender_list_item_subtitle"
                     android:layout_marginTop="8dp"
                     android:layout_width="match_parent"

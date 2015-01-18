@@ -36,36 +36,17 @@ public class NewENSActivity extends AnimexxBaseActivityAB {
         pContext.startActivity(i);
     }
 
+    public static void getInstance(Context pContext, long pUserId, String pUsername) {
+        Intent i = new Intent().setClass(pContext, NewENSActivity.class);
+        Bundle args = new Bundle();
+        args.putLong("UserID", pUserId);
+        args.putString("UserName", pUsername);
+        i.putExtras(args);
+        pContext.startActivity(i);
+    }
+
     public static void getInstanceBlank(final Context pContext) {
-        final ENSDraftObject draft = new ENSDraftObject();
-        draft.setMessage("");
-        ArrayList<Long> recip = new ArrayList<Long>();
-        ArrayList<String> recip_name = new ArrayList<String>();
-        draft.setRecipients(recip);
-        draft.setRecipients_name(recip_name);
-        draft.setSubject("");
-        draft.setReferenceType(null);
-        draft.setSignature("");
-
-        final ENSBroker mAPI = new ENSBroker(pContext);
-        mAPI.saveENSDraft(draft, new Callback<Boolean>() {
-            @Override
-            public void success(Boolean aBoolean, Response response) {
-                Intent i = new Intent().setClass(pContext, NewENSActivity.class);
-                Bundle args = new Bundle();
-                args.putLong("ENSDraftObject", draft.getID());
-                i.putExtras(args);
-                pContext.startActivity(i);
-                mAPI.close();
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-
-            }
-        });
-
-
+        getInstance(pContext);
     }
 
     public static void getInstance(Context pContext) {
@@ -100,32 +81,66 @@ public class NewENSActivity extends AnimexxBaseActivityAB {
         mHeader.setVisibility(View.GONE);
         mBody.setVisibility(View.GONE);
 
-        Bundle extras = this.getIntent().getExtras();
-        mDraftID = extras.getLong("ENSDraftObject");
         mAPI = new ENSBroker(this);
 
+        Bundle extras = this.getIntent().getExtras();
+        if(extras.containsKey("ENSDraftObject")){
+            mDraftID = extras.getLong("ENSDraftObject");
+            loadDraft();
+            return;
+        } else if(extras.containsKey("UserID")){
+            long userid = extras.getLong("UserID");
+            String username = extras.getString("UserName");
+            mENSDraft = new ENSDraftObject();
+            mENSDraft.setSubject("");
+            mENSDraft.setReferenceType(null);
+            mENSDraft.setSignature("");
+            ArrayList<Long> recip = new ArrayList<Long>();
+            recip.add(userid);
+            ArrayList<String> recip_name = new ArrayList<String>();
+            recip_name.add(username);
+            mENSDraft.setRecipients(recip);
+            mENSDraft.setRecipients_name(recip_name);
+        } else {
+            mENSDraft = new ENSDraftObject();
+            mENSDraft.setSubject("");
+            mENSDraft.setReferenceType(null);
+            mENSDraft.setSignature("");
+            ArrayList<Long> recip = new ArrayList<Long>();
+            ArrayList<String> recip_name = new ArrayList<String>();
+            mENSDraft.setRecipients(recip);
+            mENSDraft.setRecipients_name(recip_name);
+        }
+
+        fillViews();
+
+    }
+
+    private void fillViews() {
+        mMessage.setText(mENSDraft.getMessage());
+        mSubject.setText(mENSDraft.getSubject());
+        if (mENSDraft.getRecipients_name().size() > 0) {
+            mSearch.setText(mENSDraft.getRecipients_name().get(0) + ", ");
+        }
+
+
+        mHeader.setVisibility(View.VISIBLE);
+        mBody.setVisibility(View.VISIBLE);
+    }
+
+    private void loadDraft() {
         mAPI.getENSDraft(mDraftID, new Callback<ENSDraftObject>() {
             @Override
             public void success(ENSDraftObject ensDraftObject, Response response) {
                 mENSDraft = ensDraftObject;
 
-                mMessage.setText(mENSDraft.getMessage());
-                mSubject.setText(mENSDraft.getSubject());
-                if (mENSDraft.getRecipients_name().size() > 0) {
-                    mSearch.setText(mENSDraft.getRecipients_name().get(0) + ", ");
-                }
-
-
-                mHeader.setVisibility(View.VISIBLE);
-                mBody.setVisibility(View.VISIBLE);
+                fillViews();
             }
 
             @Override
             public void failure(RetrofitError error) {
-
             }
         });
-
     }
 
     @Override

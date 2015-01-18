@@ -11,6 +11,7 @@ import java.util.List;
 
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.objects.event.EventRoomProgramObject;
+import de.meisterfuu.animexx.utils.Helper;
 
 
 public class RoomEventAdapter extends BaseAdapter {
@@ -92,9 +93,11 @@ public class RoomEventAdapter extends BaseAdapter {
         //Init
         //holder.Color.setBackgroundResource(R.color.animexx_blue);
 
+        String start = Helper.toDateTimeString(Helper.toTimestamp(Event.getStartUtc()));
+        String end = Helper.toDateTimeString(Helper.toTimestamp(Event.getEndUtc()));
 
         holder.Title.setText(Event.getName());
-        holder.Subtitle.setText("Im " + Event.getRoomName() +"\n" + Event.getStartServer() + " - " + Event.getEndServer());
+        holder.Subtitle.setText("Im " + Event.getRoomName() +"\n" + start + " - " + end);
 
 
         return rowView;

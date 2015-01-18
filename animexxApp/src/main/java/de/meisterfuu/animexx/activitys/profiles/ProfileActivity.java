@@ -14,10 +14,12 @@ import com.squareup.otto.Subscribe;
 
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.activitys.AnimexxBaseActivityAB;
+import de.meisterfuu.animexx.activitys.ens.NewENSActivity;
 import de.meisterfuu.animexx.adapter.SectionsPagerAdapter;
 import de.meisterfuu.animexx.api.ApiEvent;
 import de.meisterfuu.animexx.api.FinishedLoadingEvent;
 import de.meisterfuu.animexx.api.broker.UserBroker;
+import de.meisterfuu.animexx.objects.ens.ENSDraftObject;
 import de.meisterfuu.animexx.objects.profile.ProfileBoxObject;
 import de.meisterfuu.animexx.objects.profile.ProfileObject;
 
@@ -146,8 +148,11 @@ public class ProfileActivity extends AnimexxBaseActivityAB {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.ens) {
+            if(mUserName != null){
+                NewENSActivity.getInstance(this, mUserID, mUserName);
+                return true;
+            }
         }
         return super.onOptionsItemSelected(item);
     }

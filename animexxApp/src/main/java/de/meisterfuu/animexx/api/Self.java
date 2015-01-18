@@ -29,9 +29,9 @@ public class Self {
 
     public static Self getInstance(Context pContext) {
         if (mSelf == null) {
-            mSelf = new Self(pContext);
+            mSelf = new Self(pContext.getApplicationContext());
         } else {
-            mSelf.mContext = pContext;
+            mSelf.mContext = pContext.getApplicationContext();
         }
         return mSelf;
     }

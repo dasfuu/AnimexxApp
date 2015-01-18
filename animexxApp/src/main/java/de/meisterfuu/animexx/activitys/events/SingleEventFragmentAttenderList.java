@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.List;
 
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.activitys.AnimexxBaseFragment;
+import de.meisterfuu.animexx.activitys.profiles.ProfileActivity;
 import de.meisterfuu.animexx.adapter.EventAttenderAdapter;
 import de.meisterfuu.animexx.adapter.RoomEventAdapter;
 import de.meisterfuu.animexx.api.broker.EventBroker;
@@ -29,7 +31,7 @@ import retrofit.client.Response;
  * Use the {@link de.meisterfuu.animexx.activitys.events.SingleEventFragmentAttenderList#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SingleEventFragmentAttenderList extends AnimexxBaseFragment implements Callback<ReturnObject<List<EventAttender>>> {
+public class SingleEventFragmentAttenderList extends AnimexxBaseFragment implements Callback<ReturnObject<List<EventAttender>>>, AdapterView.OnItemClickListener {
     private static final String ID_PARAM = "mEventId";
 
 
@@ -77,6 +79,7 @@ public class SingleEventFragmentAttenderList extends AnimexxBaseFragment impleme
         mList = new ArrayList<>();
         mAdapter = new EventAttenderAdapter(mList, getActivity());
         mListView.setAdapter(mAdapter);
+        mListView.setOnItemClickListener(this);
         return view;
     }
 
@@ -103,4 +106,8 @@ public class SingleEventFragmentAttenderList extends AnimexxBaseFragment impleme
 
     }
 
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        ProfileActivity.getInstance(this.getActivity(), id);
+    }
 }

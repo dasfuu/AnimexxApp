@@ -5,7 +5,8 @@
     android:layout_height="wrap_content"
     android:gravity="center" xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <TextView
+            <com.devspark.robototextview.widget.RobotoTextView
+            app:typeface="roboto_regular"
         android:id="@+id/ens_list_item_color"
         android:layout_width="20dp"
         android:layout_height="match_parent"
@@ -43,7 +44,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
 
-                <TextView
+                        <com.devspark.robototextview.widget.RobotoTextView
+            app:typeface="roboto_regular"
                     android:id="@+id/ens_list_item_subtitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -66,7 +68,8 @@
                     android:src="@drawable/ens_flags_forwarded" />
             </LinearLayout>
 
-            <TextView
+                    <com.devspark.robototextview.widget.RobotoTextView
+            app:typeface="roboto_regular"
                 android:id="@+id/ens_list_item_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

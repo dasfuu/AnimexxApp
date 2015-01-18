@@ -125,7 +125,6 @@ public class MainDrawerAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         // Declare Variables
         TextView txtTitle;
-        TextView txtSubTitle;
         ImageView imgIcon;
 
         inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -134,12 +133,10 @@ public class MainDrawerAdapter extends BaseAdapter {
         DrawerObject item = mItems.get(position);
 
         txtTitle = (TextView) itemView.findViewById(R.id.drawer_item_title);
-        txtSubTitle = (TextView) itemView.findViewById(R.id.drawer_item_subtitle);
         imgIcon = (ImageView) itemView.findViewById(R.id.drawer_item_icon);
 
         // Set test
         txtTitle.setText(item.getTitle());
-        txtSubTitle.setText(item.getSubtitle());
 
         //Set icon
         if (item.getIconId() != 0) {

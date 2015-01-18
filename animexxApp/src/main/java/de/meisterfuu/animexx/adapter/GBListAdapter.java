@@ -11,8 +11,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -162,7 +160,7 @@ public class GBListAdapter extends BaseAdapter implements Callback<ReturnObject<
         } else {
             holder.Title.setText(new UserObject().getUsername());
         }
-        holder.Subtitle.setText(Helper.TimestampToString(Helper.toTimestamp(gb_entry.getDate(), "yyyy-MM-dd hh:mm:ss"), false));
+        holder.Subtitle.setText(Helper.agoString(Helper.toTimestamp(gb_entry.getDate(), "yyyy-MM-dd hh:mm:ss"), false));
 
 
         holder.Post.setText(Html.fromHtml(gb_entry.getHtml()));

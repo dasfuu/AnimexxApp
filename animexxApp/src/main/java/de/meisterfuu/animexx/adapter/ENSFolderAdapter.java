@@ -13,6 +13,7 @@ import java.util.List;
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.objects.UserObject;
 import de.meisterfuu.animexx.objects.ens.ENSObject;
+import de.meisterfuu.animexx.utils.Helper;
 import de.meisterfuu.animexx.utils.imageloader.PicassoDownloader;
 
 
@@ -134,13 +135,14 @@ public class ENSFolderAdapter extends BaseAdapter {
 
         //Username / Avatar
         UserObject target = new UserObject();
+        String sub = "";
         if (ENS.getAn_ordner() > 0) {
 
             target = ENS.getReply_to();
             if (target == null) target = ENS.getVon();
             if (target == null) target = new UserObject();
 
-            holder.Subtitle.setText("Von " + target.getUsername());
+            sub = "Von " + target.getUsername();
             if (ENS.isRead()) {
                 holder.Color.setBackgroundResource(R.color.bg_blue2);
             }
@@ -152,12 +154,13 @@ public class ENSFolderAdapter extends BaseAdapter {
                 }
             }
             if (target == null) target = new UserObject();
-            holder.Subtitle.setText("An " + target.getUsername());
+            sub = "An " + target.getUsername();
             if (ENS.isOutboxRead()) {
                 holder.Color.setBackgroundResource(R.color.bg_blue2);
             }
         }
-
+        sub += " am "+ Helper.toDateTimeString(Helper.toTimestamp(ENS.getDate()));
+        holder.Subtitle.setText(sub);
         //Flags
         if (ENS.isAnswered()) {
             holder.Flag_Answered.setImageResource(R.drawable.ens_flags_answered_blue);

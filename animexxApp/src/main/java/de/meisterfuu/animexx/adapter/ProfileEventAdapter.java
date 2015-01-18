@@ -11,6 +11,7 @@ import java.util.List;
 
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.objects.profile.ProfileBoxObject;
+import de.meisterfuu.animexx.utils.Helper;
 
 
 public class ProfileEventAdapter extends BaseAdapter {
@@ -94,7 +95,11 @@ public class ProfileEventAdapter extends BaseAdapter {
 
 
         holder.Title.setText(Event.getName());
-        holder.Subtitle.setText(Event.getDateFrom() + " - " + Event.getDateTo());
+
+        String start = Helper.toDateString(Helper.dateToTimestamp(Event.getDateFrom()));
+        String end = Helper.toDateString(Helper.dateToTimestamp(Event.getDateTo()));
+
+        holder.Subtitle.setText(start + " - " + end);
 
 
         return rowView;

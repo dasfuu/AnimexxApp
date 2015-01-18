@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.text.ParseException;
 import java.util.Calendar;
@@ -93,43 +92,7 @@ public class Helper {
         }
     }
 
-
-    public static long toTimestamp(String date, String format) {
-        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat(format, Locale.GERMANY);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-        java.util.Date temp;
-
-        try {
-            temp = sdf.parse(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return -1;
-        }
-        return temp.getTime();
-    }
-
-
-    public static String DateToString(String date, boolean Short) {
-
-        if (date.equalsIgnoreCase("Aktuell")) {
-            return "Aktuell";
-        }
-        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.GERMANY);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-        java.util.Date temp;
-
-        try {
-            temp = sdf.parse(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return "Error";
-        }
-
-        return TimestampToString(temp.getTime(), Short);
-
-    }
-
-    public static String TimestampToString(long time, boolean Short) {
+    public static String agoString(long time, boolean Short) {
 
 
         //java.util.Date Now = new java.util.Date();
@@ -172,38 +135,19 @@ public class Helper {
 
     }
 
-
-    public static long HowLongAgo(String timestamp) {
-        Long tempo;
-        try {
-            tempo = Long.parseLong(timestamp);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return 0;
-        }
-
-        java.util.Date Now = new java.util.Date();
-
-        long diff = (Now.getTime() - tempo);
-        if (diff < 0) return 0;
-
-        diff /= 1000;
-
-        return diff;
-
+    public static String toDateString(long timestamp){
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd.MM.yyyy", Locale.GERMANY);
+        return sdf.format(timestamp);
     }
 
-
-    public static long TimestampBeforeSec(long sec) {
-        java.util.Date Now = new java.util.Date();
-        return Now.getTime() - sec;
+    public static String toTimeString(long timestamp){
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("HH:mm", Locale.GERMANY);
+        return sdf.format(timestamp);
     }
 
-    public static void doToast(String s, Context c) {
-        CharSequence text = s;
-        int duration = Toast.LENGTH_SHORT;
-        Toast toast = Toast.makeText(c, text, duration);
-        toast.show();
+    public static String toDateTimeString(long timestamp){
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMANY);
+        return sdf.format(timestamp);
     }
 
     public static long toTimestamp(String utcString){
@@ -217,5 +161,29 @@ public class Helper {
         return 0;
     }
 
+    public static long dateToTimestamp(String utcString){
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd", Locale.GERMANY);
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        try {
+            return sdf.parse(utcString).getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public static long toTimestamp(String date, String format) {
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat(format, Locale.GERMANY);
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        java.util.Date temp;
+
+        try {
+            temp = sdf.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return -1;
+        }
+        return temp.getTime();
+    }
 
 }

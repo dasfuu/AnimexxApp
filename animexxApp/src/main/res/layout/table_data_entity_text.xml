@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:orientation="horizontal"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
@@ -8,14 +9,16 @@
               android:paddingTop="2dp"
               android:paddingBottom="2dp">
 
-    <TextView
+    <com.devspark.robototextview.widget.RobotoTextView
+        app:typeface="roboto_regular"
         android:layout_width="200dp"
         android:layout_weight="1"
         android:layout_height="wrap_content"
         android:text="Medium Text"
         android:id="@+id/table_item_text_left"/>
 
-    <TextView
+    <com.devspark.robototextview.widget.RobotoTextView
+        app:typeface="roboto_regular"
         android:layout_width="fill_parent"
         android:layout_weight="1"
         android:layout_height="wrap_content"

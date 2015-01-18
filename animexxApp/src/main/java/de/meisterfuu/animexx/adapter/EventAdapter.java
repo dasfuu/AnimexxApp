@@ -11,6 +11,7 @@ import java.util.List;
 
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.objects.event.EventObject;
+import de.meisterfuu.animexx.utils.Helper;
 
 
 public class EventAdapter extends BaseAdapter {
@@ -93,9 +94,11 @@ public class EventAdapter extends BaseAdapter {
         //Init
         //holder.Color.setBackgroundResource(R.color.animexx_blue);
 
+        String start = Helper.toDateString(Helper.dateToTimestamp(Event.getStartDate()));
+        String end = Helper.toDateString(Helper.dateToTimestamp(Event.getEndDate()));
 
         holder.Title.setText(Event.getName());
-        holder.Subtitle.setText("In " + Event.getCity() + " / " + Event.getAttendees() + " Besucher \n" + Event.getStartDate() + " - " + Event.getEndDate());
+        holder.Subtitle.setText("In " + Event.getCity() + " / " + Event.getAttendees() + " Besucher \n" + start + " bis " + end);
 
 
         return rowView;

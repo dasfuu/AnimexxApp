@@ -25,7 +25,8 @@
                 app:corner_radius="200dp"
                 app:is_oval="true" />
 
-                <TextView
+                        <com.devspark.robototextview.widget.RobotoTextView
+            app:typeface="roboto_regular"
                     android:id="@+id/listitem_file_title"
                     android:padding="8dp"
                     android:layout_width="wrap_content"

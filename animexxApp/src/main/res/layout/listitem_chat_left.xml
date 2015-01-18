@@ -21,13 +21,15 @@
             android:orientation="vertical"
             android:padding="5dp" >
 
-            <TextView
+                    <com.devspark.robototextview.widget.RobotoTextView
+            app:typeface="roboto_regular"
                 android:id="@+id/chat_message_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="TextView" />
 
-            <TextView
+                    <com.devspark.robototextview.widget.RobotoTextView
+            app:typeface="roboto_regular"
                 android:id="@+id/chat_message_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

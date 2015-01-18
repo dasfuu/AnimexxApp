@@ -18,7 +18,8 @@
         android:scaleType="centerCrop"
         app:is_oval="true" />
 
-    <TextView
+    <com.devspark.robototextview.widget.RobotoTextView
+        app:typeface="roboto_light"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"

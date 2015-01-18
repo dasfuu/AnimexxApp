@@ -61,7 +61,7 @@ public interface WebApiInterface {
     //STECKBRIEFE
     //-------------------------------
 
-    @POST("/mitglieder/steckbrief/?img_max_x=800&img_max_y=800&img_quality=85&img_format=jpg&fuu=bar")
+    @POST("/mitglieder/steckbrief/?img_max_x=800&img_max_y=800&img_quality=85&img_format=jpg")
     @FormUrlEncoded
     ReturnObject<ProfileObject> getProfile(@Field("user_id") long user_id,
                                            @Field("allefotos") int allefotos,
@@ -70,7 +70,7 @@ public interface WebApiInterface {
                                            @Field("mit_selbstbeschreibung") int mit_selbstbeschreibung,
                                            @Field("mit_boxen_infos") int mit_boxen_infos);
 
-    @POST("/mitglieder/steckbrief/?img_max_x=800&img_max_y=800&img_quality=85&img_format=jpg&fuu=bar")
+    @POST("/mitglieder/steckbrief/?img_max_x=800&img_max_y=800&img_quality=85&img_format=jpg")
     @FormUrlEncoded
     void getProfile(@Field("user_id") long user_id,
                     @Field("allefotos") int allefotos,

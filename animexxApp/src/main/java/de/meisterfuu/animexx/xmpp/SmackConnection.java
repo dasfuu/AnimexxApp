@@ -86,8 +86,6 @@ public class SmackConnection implements ConnectionListener, ChatManagerListener,
         Log.i(TAG, "ChatConnection()");
 
         mApplicationContext = pContext.getApplicationContext();
-        mPassword = PreferenceManager.getDefaultSharedPreferences(mApplicationContext).getString("xmpp_password", null);
-        String jid = PreferenceManager.getDefaultSharedPreferences(mApplicationContext).getString("xmpp_jid", null);
 
         mApi = new XMPPApi(mApplicationContext);
 
@@ -118,10 +116,10 @@ public class SmackConnection implements ConnectionListener, ChatManagerListener,
         mUsername = Self.getInstance(mApplicationContext).getUsername();
 
         //Password?
-        String password = PreferenceManager.getDefaultSharedPreferences(mApplicationContext).getString("xmpp_password", null);
-        if (password == null) {
-            password = mApi.NTgetNewChatAuth();
-            PreferenceManager.getDefaultSharedPreferences(mApplicationContext).edit().putString("xmpp_password", password).apply();
+        mPassword = PreferenceManager.getDefaultSharedPreferences(mApplicationContext).getString("xmpp_password", null);
+        if (mPassword == null) {
+            mPassword = mApi.NTgetNewChatAuth();
+            PreferenceManager.getDefaultSharedPreferences(mApplicationContext).edit().putString("xmpp_password", mPassword).apply();
         }
 
 

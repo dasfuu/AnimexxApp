@@ -70,13 +70,15 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content" >
 
-                            <TextView
+                                    <com.devspark.robototextview.widget.RobotoTextView
+            app:typeface="roboto_regular"
                                 android:id="@+id/activity_ens_single_user_label"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginRight="5dp" />
 
-                            <TextView
+                                    <com.devspark.robototextview.widget.RobotoTextView
+            app:typeface="roboto_regular"
                                 android:id="@+id/activity_ens_single_user"
                                 android:layout_width="0dip"
                                 android:layout_height="wrap_content"
@@ -87,14 +89,16 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content" >
 
-                            <TextView
+                                    <com.devspark.robototextview.widget.RobotoTextView
+            app:typeface="roboto_regular"
                                 android:id="@+id/activity_ens_single_date"
                                 android:layout_width="0dip"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="2" />
                         </LinearLayout>
 
-                        <TextView
+                                <com.devspark.robototextview.widget.RobotoTextView
+            app:typeface="roboto_regular"
                             android:id="@+id/activity_ens_single_subject"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -118,7 +122,8 @@
                     android:layout_marginTop="10dp"
                     android:orientation="vertical" >
 
-                    <TextView
+                            <com.devspark.robototextview.widget.RobotoTextView
+            app:typeface="roboto_regular"
                         android:id="@+id/activity_ens_single_message"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
