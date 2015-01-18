@@ -110,7 +110,7 @@ public class ConnectionManager {
     private int[] time = new int[]{1, 3, 5, 5, 10, 10, 10, 10, 30, 60};
 
     public void tryConnect() {
-
+        Log.d(TAG, "tryConnect()");
         // Check in ConnectionThread
         if (mTHandler != null) {
             mTHandler.post(new Runnable() {
@@ -173,13 +173,13 @@ public class ConnectionManager {
             }
 
             // connection is not ok -> reconnect
-            if (SmackConnection.getStatus().equals(ConnectionState.DISCONNECTED) && mConnection.shouldConnect()) {
+            if ((SmackConnection.getStatus().equals(ConnectionState.DISCONNECTED) || (SmackConnection.getStatus().equals(ConnectionState.ERROR))) && mConnection.shouldConnect()) {
                 Log.i(TAG, "SmackConnection.connect() called in ConnectionManager");
                 mConnection.connect();
             }
 
             // check if reconnect was succesfull
-            if (!SmackConnection.getStatus().equals(ConnectionState.DISCONNECTED) && mConnection.shouldConnect()) {
+            if (!(SmackConnection.getStatus().equals(ConnectionState.DISCONNECTED) || (SmackConnection.getStatus().equals(ConnectionState.ERROR))) && mConnection.shouldConnect()) {
                 return true;
             }
 

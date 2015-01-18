@@ -40,19 +40,6 @@ public class XMPPApi extends BasicWebBroker {
 
     //Public Methods
 
-    /**
-     *
-     */
-    public static void sendMessage(final String pToJID, final String pMessage, Context pContext) {
-        Intent intent = new Intent(XMPPService.SEND_MESSAGE);
-        intent.setPackage(pContext.getPackageName());
-        intent.putExtra(XMPPService.BUNDLE_MESSAGE_BODY, pMessage);
-        intent.putExtra(XMPPService.BUNDLE_TO, pToJID);
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
-            intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
-        }
-        pContext.sendBroadcast(intent);
-    }
 
     /**
      * @param pCallback

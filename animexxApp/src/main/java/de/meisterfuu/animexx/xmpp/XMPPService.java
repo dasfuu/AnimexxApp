@@ -19,21 +19,6 @@ public class XMPPService extends Service {
 
     public static final String TAG = "XMPP";
 
-    public static final String NEW_MESSAGE = "de.meisterfuu.animexx.xmpp.newmessage";
-    public static final String SEND_MESSAGE = "de.meisterfuu.animexx.xmpp.sendmessage";
-    public static final String SEND_MESSAGE_OK = "de.meisterfuu.animexx.xmpp.sendmessage.ok";
-    public static final String SEND_MESSAGE_BAD = "de.meisterfuu.animexx.xmpp.sendmessage.bad";
-    public static final String NEW_CHAT = "de.meisterfuu.animexx.xmpp.newchat";
-    public static final String NEW_ROOSTER = "de.meisterfuu.animexx.xmpp.newrooster";
-
-    public static final String BUNDLE_FROM = "b_from";
-    public static final String BUNDLE_DIRECTION = "b_direc";
-    public static final String BUNDLE_TO = "b_to";
-    public static final String BUNDLE_TIME = "b_time";
-    public static final String BUNDLE_MESSAGE_BODY = "b_body";
-
-    public static final String BUNDLE_DIRECTION_OUT = "OUT";
-    public static final String BUNDLE_DIRECTION_IN = "IN";
     private ConnectionState oldEvent = ConnectionState.DISCONNECTED;
 
     @Override
@@ -52,10 +37,14 @@ public class XMPPService extends Service {
         
         oldEvent = event.status;
         
-        if(!event.status.equals(ConnectionState.DISCONNECTED)){
+        if(!event.status.equals(ConnectionState.DISCONNECTED) && !event.status.equals(ConnectionState.ERROR)){
             this.startForeground(42, getNotificationOnline());
         } else {
             this.startForeground(42, getNotificationOffline());
+        }
+
+        if(event.status.equals(ConnectionState.ERROR)){
+            ConnectionManager.getInstance().tryConnect();
         }
     }
 

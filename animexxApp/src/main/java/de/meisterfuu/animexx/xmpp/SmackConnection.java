@@ -65,7 +65,7 @@ public class SmackConnection implements ConnectionListener, ChatManagerListener,
 
 
     public static enum ConnectionState {
-        CONNECTED, CONNECTING, RECONNECTING, DISCONNECTED;
+        CONNECTED, CONNECTING, RECONNECTING, DISCONNECTED, ERROR;
     }
     public static ConnectionState sConnectionState;
 
@@ -324,7 +324,7 @@ public class SmackConnection implements ConnectionListener, ChatManagerListener,
 
     @Override
     public void connectionClosedOnError(Exception e) {
-        sConnectionState = ConnectionState.DISCONNECTED;
+        sConnectionState = ConnectionState.ERROR;
         Log.i(TAG, "connectionClosedOnError()");
         postStatusEvent(sConnectionState);
     }
@@ -345,7 +345,7 @@ public class SmackConnection implements ConnectionListener, ChatManagerListener,
 
     @Override
     public void reconnectionFailed(Exception e) {
-        sConnectionState = ConnectionState.DISCONNECTED;
+        sConnectionState = ConnectionState.ERROR;
         Log.i(TAG, "reconnectionFailed()");
         postStatusEvent(sConnectionState);
     }

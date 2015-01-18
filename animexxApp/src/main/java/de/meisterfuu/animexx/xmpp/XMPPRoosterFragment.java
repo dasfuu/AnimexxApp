@@ -93,9 +93,9 @@ public class XMPPRoosterFragment extends AnimexxBaseFragment implements AdapterV
 
         Handler handler = new Handler();
         boolean shouldOnline = PreferenceManager.getDefaultSharedPreferences(this.getActivity()).getBoolean("xmpp_status", false);
-        boolean display = (!event.equals(SmackConnection.ConnectionState.CONNECTED)) || (!shouldOnline);
+        boolean display = (!event.equals(SmackConnection.ConnectionState.CONNECTED)) && (shouldOnline);
 
-        if(display){
+        if(!display){
             handler.post(new Runnable() {
                 @Override
                 public void run() {
