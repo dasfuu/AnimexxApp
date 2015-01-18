@@ -145,7 +145,9 @@ public class RPGPostListActivity extends AnimexxBaseActivityAB implements PanelS
                 };
 
                 RPGPostListActivity.this.getSupportActionBar().setListNavigationCallbacks(spinnerAdapter, listener);
-
+                if(!mRPG.isTofu()){
+                    mSpinnerAvatar.setVisibility(View.GONE);
+                }
                 loadPosts();
             }
 
@@ -260,7 +262,9 @@ public class RPGPostListActivity extends AnimexxBaseActivityAB implements PanelS
         final ProgressDialog dialog = new ProgressDialog(this);
         dialog.setTitle("Sende...");
         RPGDraftObject draft = new RPGDraftObject();
-        draft.setAvatarID(mSpinnerAvatar.getSelectedItemId());
+        if(mRPG.isTofu()){
+            draft.setAvatarID(mSpinnerAvatar.getSelectedItemId());
+        }
         draft.setCharaID(mCharaID);
         if (mCBInTime.isChecked()) {
             draft.setInTime(1);
