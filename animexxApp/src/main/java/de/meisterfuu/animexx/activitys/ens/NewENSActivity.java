@@ -84,11 +84,11 @@ public class NewENSActivity extends AnimexxBaseActivityAB {
         mAPI = new ENSBroker(this);
 
         Bundle extras = this.getIntent().getExtras();
-        if(extras.containsKey("ENSDraftObject")){
+        if(extras != null && extras.containsKey("ENSDraftObject")){
             mDraftID = extras.getLong("ENSDraftObject");
             loadDraft();
             return;
-        } else if(extras.containsKey("UserID")){
+        } else if(extras != null && extras.containsKey("UserID")){
             long userid = extras.getLong("UserID");
             String username = extras.getString("UserName");
             mENSDraft = new ENSDraftObject();

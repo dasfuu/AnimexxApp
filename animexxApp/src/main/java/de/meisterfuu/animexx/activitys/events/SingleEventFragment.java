@@ -34,8 +34,7 @@ public class SingleEventFragment extends AnimexxBaseFragment {
     EventObject mEvent;
     //private GoogleMap mMap;
 
-    FrameLayout mHeader, mPages, mMapContainer;
-    LinearLayout mPagesList;
+    FrameLayout mHeader;
     ImageView mLogo;
     TextView mStart, mEnd, mAddress, mCount, mAnimexxStatus, mSection;
 
@@ -62,10 +61,6 @@ public class SingleEventFragment extends AnimexxBaseFragment {
         View view = inflater.inflate(R.layout.fragment_single_event, container, false);
 
         mHeader = (FrameLayout) view.findViewById(R.id.activity_event_single_header);
-        mMapContainer = (FrameLayout) view.findViewById(R.id.activity_event_single_map);
-        mPages = (FrameLayout) view.findViewById(R.id.activity_event_single_pagelist);
-
-        mPagesList = (LinearLayout) view.findViewById(R.id.activity_event_single_pagelist_list);
 
         mLogo = (ImageView) view.findViewById(R.id.activity_event_single_user_avatar);
 
@@ -77,8 +72,6 @@ public class SingleEventFragment extends AnimexxBaseFragment {
         mSection = (TextView) view.findViewById(R.id.activity_event_single_type_text);
 
         mHeader.setVisibility(View.GONE);
-        mMapContainer.setVisibility(View.GONE);
-        mPages.setVisibility(View.GONE);
 
         return view;
     }

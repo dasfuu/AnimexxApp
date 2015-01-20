@@ -18,15 +18,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
-
-import java.util.ArrayList;
 
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.activitys.contacts.ContactFragment;
@@ -38,13 +34,11 @@ import de.meisterfuu.animexx.activitys.home.HomeObjectFragment;
 import de.meisterfuu.animexx.activitys.profiles.ProfileActivity;
 import de.meisterfuu.animexx.activitys.rpg.RPGListFragment;
 import de.meisterfuu.animexx.activitys.share.ImagePickerActivity;
-import de.meisterfuu.animexx.activitys.share.ImageUploadActivity;
 import de.meisterfuu.animexx.adapter.ChatStatusSpinnerAdapter;
 import de.meisterfuu.animexx.adapter.ENSFolderSpinnerAdapter;
 import de.meisterfuu.animexx.adapter.MainDrawerAdapter;
 import de.meisterfuu.animexx.api.Self;
 import de.meisterfuu.animexx.api.broker.ENSBroker;
-import de.meisterfuu.animexx.api.broker.UserBroker;
 import de.meisterfuu.animexx.api.web.ReturnObject;
 import de.meisterfuu.animexx.objects.DrawerObject;
 import de.meisterfuu.animexx.objects.ens.ENSFolderObject;
@@ -314,7 +308,7 @@ public class MainActivity extends ActionBarActivity {
         } else if (pCode.equals("FEEDBACK")) {
             FeedbackActivity.getInstance(this);
         } else if (pCode.equals("FILES")) {
-            ImagePickerActivity.getInstance(this);
+            ImagePickerActivity.getInstance(this, 3);
         }
 
     }
