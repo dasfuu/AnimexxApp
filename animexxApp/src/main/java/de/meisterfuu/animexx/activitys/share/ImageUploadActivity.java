@@ -3,6 +3,7 @@ package de.meisterfuu.animexx.activitys.share;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 
 import com.squareup.otto.Subscribe;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.activitys.AnimexxBaseActivityAB;
+import de.meisterfuu.animexx.activitys.home.NewMicroblogActivity;
 import de.meisterfuu.animexx.adapter.FileUploadedAdapter;
 import de.meisterfuu.animexx.api.UploadProgressEvent;
 import de.meisterfuu.animexx.objects.FileUploadReturnObject;
@@ -20,7 +22,7 @@ import de.meisterfuu.animexx.utils.views.FeedbackListView;
 public class ImageUploadActivity extends AnimexxBaseActivityAB {
 
 
-
+    ArrayList<String> files;
 
     public static void getInstance(Context pContext, ArrayList<String> files) {
         Intent i = new Intent().setClass(pContext, ImageUploadActivity.class);
@@ -44,7 +46,7 @@ public class ImageUploadActivity extends AnimexxBaseActivityAB {
         mListview.showLoading();
 
         Bundle b = this.getIntent().getExtras();
-        ArrayList<String> files = b.getStringArrayList("files");
+        files = b.getStringArrayList("files");
         UploadService.startAction(this, files, this.getCallerID());
     }
 
@@ -64,6 +66,17 @@ public class ImageUploadActivity extends AnimexxBaseActivityAB {
             first = false;
         }
         mAdapter.add(event.getObj().getObj());
+
+        if(mAdapter.getCount() == files.size() && files.size() == 1){
+
+            PreferenceManager.getDefaultSharedPreferences(this).edit()
+                    .putString("mb_draft_url", event.getObj().getObj().getUrlThumb())
+                    .putLong("mb_draft_id", event.getObj().getObj().getId())
+                    .commit();
+
+            NewMicroblogActivity.getInstance(this);
+            finish();
+        }
     }
 
 }

@@ -214,6 +214,14 @@ public class Patio extends LinearLayout implements View.OnClickListener {
         updateThumbnailsMessage();
     }
 
+    public void setMaxPictures(int maxPictures){
+        mMaxPictures = maxPictures;
+        if(mMaxPictures <= 0) {
+            mMaxPictures = DEFAULT_MAX_PICTURES;
+        }
+        updateThumbnailsMessage();
+    }
+
     public void restoreState(ArrayList<String> thumbnailsPaths, String takePicturePath) {
         for(String thumbnailPath : thumbnailsPaths) {
             addThumbnail(thumbnailPath);

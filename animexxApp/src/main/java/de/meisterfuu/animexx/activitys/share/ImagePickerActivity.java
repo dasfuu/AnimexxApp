@@ -13,11 +13,14 @@ import de.meisterfuu.animexx.utils.patio.Patio;
 
 public class ImagePickerActivity extends AnimexxBaseActivityAB implements Patio.PatioCallbacks {
 
-    public static void getInstance(Context pContext) {
+
+    public static void getInstance(Context pContext, int count) {
         Intent i = new Intent().setClass(pContext, ImagePickerActivity.class);
+        Bundle args = new Bundle();
+        args.putInt("count", count);
+        i.putExtras(args);
         pContext.startActivity(i);
     }
-
 
     public static final int REQUEST_CODE_TAKE_PICTURE = 1000;
     public static final int REQUEST_CODE_ATTACH_PICTURE = 2000;
@@ -29,6 +32,9 @@ public class ImagePickerActivity extends AnimexxBaseActivityAB implements Patio.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_picker);
         mPatio = (Patio) findViewById(R.id.patio);
+
+        int count = this.getIntent().getExtras().getInt("count");
+        mPatio.setMaxPictures(count);
         mPatio.setCallbacksListener(this);
     }
 
