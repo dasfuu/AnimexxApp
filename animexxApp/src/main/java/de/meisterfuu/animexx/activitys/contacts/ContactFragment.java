@@ -12,6 +12,8 @@ import android.widget.AdapterView;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import de.meisterfuu.animexx.R;
@@ -72,6 +74,12 @@ public class ContactFragment extends AnimexxBaseFragment implements AdapterView.
 
     @Subscribe
     public void receiveUser(ApiEvent.UserListEvent event){
+        Collections.sort(event.getObj(), new Comparator<UserObject>() {
+            @Override
+            public int compare(UserObject lhs, UserObject rhs) {
+                return lhs.getUsername().toLowerCase().compareTo(rhs.getUsername().toLowerCase());
+            }
+        });
         mAdapter.addAll(event.getObj());
         mListView.showList();
     }

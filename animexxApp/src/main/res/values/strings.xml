@@ -195,5 +195,6 @@
     <string name="title_activity_image_picker">Bilder</string>
     <string name="patio_footer">%1$d von %2$d</string>
     <string name="action_finished">Fertig</string>
+    <string name="title_activity_web_dav_image">Dateien</string>
 
 </resources>

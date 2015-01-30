@@ -42,7 +42,9 @@ public class ENSDraftObject implements Serializable {
     long referenceID;
 
     public ENSDraftObject() {
-
+        signature = "";
+        message = "";
+        subject = "";
     }
 
     public long getID() {

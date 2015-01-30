@@ -76,9 +76,6 @@ public class MainActivity extends ActionBarActivity {
         // Set shadow
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
-        mDrawerList.setAdapter(mAdapter);
-        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-
         LayoutInflater inflater = (LayoutInflater)getSystemService(this.LAYOUT_INFLATER_SERVICE);
         profileHeader = (RelativeLayout) inflater.inflate(R.layout.drawer_header_profile, null);
         ImageView headerImage = (ImageView)profileHeader.findViewById(R.id.headerImage);
@@ -104,6 +101,9 @@ public class MainActivity extends ActionBarActivity {
             }
         });
         mDrawerList.addHeaderView(profileHeader);
+
+        mDrawerList.setAdapter(mAdapter);
+        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
         // Handle Toolbar
 

@@ -16,7 +16,7 @@
         android:paddingBottom="8dp"
         android:clipToPadding="false"
         android:divider="@android:color/transparent"
-        android:dividerHeight="8dp"/>
+        android:dividerHeight="0dp"/>
 
 
     <com.melnykov.fab.FloatingActionButton

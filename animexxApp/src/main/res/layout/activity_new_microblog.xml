@@ -16,22 +16,32 @@ android:layout_height="match_parent">
     android:orientation="vertical"
     android:layout_below="@+id/toolbar">
 
-    <Button
-        android:id="@+id/activity_new_microblog_add_picture"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:text="@string/patio_attach_picture"
-        android:textColor="@android:color/darker_gray"
-        android:drawableLeft="@drawable/ic_patio_gallery"
-        android:drawableStart="@drawable/ic_patio_gallery"
-        style="@style/PatioToolbarButton"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/white">
+        <Button
+            android:id="@+id/activity_new_microblog_add_picture"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:text="@string/patio_attach_picture"
+            android:textColor="@android:color/darker_gray"
+            android:drawableLeft="@drawable/ic_patio_gallery"
+            android:drawableStart="@drawable/ic_patio_gallery"
+            style="@style/PatioToolbarButton"/>
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="100dp"
-        android:visibility="gone"
-        android:id="@+id/activity_new_microblog_picture"/>
-
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:padding="8dp"
+            android:scaleType="centerCrop"
+            android:cropToPadding="true"
+            android:layout_weight="10"
+            android:src="@drawable/test1"
+            android:visibility="visible"
+            android:id="@+id/activity_new_microblog_picture"/>
+    </LinearLayout>
     <LinearLayout
         android:id="@+id/container"
         android:layout_width="match_parent"

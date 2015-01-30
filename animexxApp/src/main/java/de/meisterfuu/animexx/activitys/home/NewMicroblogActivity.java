@@ -39,6 +39,8 @@ public class NewMicroblogActivity extends AnimexxBaseActivityAB implements View.
     private long pictureID;
     private String pictureThumb;
 
+    private boolean success = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,18 +55,31 @@ public class NewMicroblogActivity extends AnimexxBaseActivityAB implements View.
 
     @Override
     public void onClick(View v) {
-        ImagePickerActivity.getInstance(this, 1);
-        finish();
+        if(pictureID == -1){
+            ImagePickerActivity.getInstance(this, 1);
+            finish();
+        } else {
+            PreferenceManager.getDefaultSharedPreferences(NewMicroblogActivity.this).edit()
+                    .remove("mb_draft_url")
+                    .remove("mb_draft_id")
+                    .commit();
+            pictureID = -1;
+            pictureThumb = "";
+            mPicture.setVisibility(View.GONE);
+            mButton.setText(getResources().getText(R.string.patio_attach_picture));
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        PreferenceManager.getDefaultSharedPreferences(this).edit()
-                .putString("mb_draft_text", mText.getText().toString())
-                .putString("mb_draft_url", pictureThumb)
-                .putLong("mb_draft_id", pictureID)
-                .commit();
+        if(!success){
+            PreferenceManager.getDefaultSharedPreferences(this).edit()
+                    .putString("mb_draft_text", mText.getText().toString())
+                    .putString("mb_draft_url", pictureThumb)
+                    .putLong("mb_draft_id", pictureID)
+                    .commit();
+        }
     }
 
     @Override
@@ -78,8 +93,10 @@ public class NewMicroblogActivity extends AnimexxBaseActivityAB implements View.
         if(pictureID != -1){
             mPicture.setVisibility(View.VISIBLE);
             PicassoDownloader.getPicasso(this).load(pictureThumb).into(mPicture);
+            mButton.setText("Bild entfernen");
         } else {
             mPicture.setVisibility(View.GONE);
+            mButton.setText(getResources().getText(R.string.patio_attach_picture));
         }
 
     }
@@ -119,6 +136,7 @@ public class NewMicroblogActivity extends AnimexxBaseActivityAB implements View.
     @Override
     public void success(ReturnObject<ContactHomeObject> contactHomeObjectReturnObject, Response response) {
         if (contactHomeObjectReturnObject.getObj() != null) {
+            success = true;
             PreferenceManager.getDefaultSharedPreferences(NewMicroblogActivity.this).edit()
                     .remove("mb_draft_text")
                     .remove("mb_draft_url")

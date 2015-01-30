@@ -67,9 +67,9 @@ public class SmackConnection implements ConnectionListener, ChatManagerListener,
     public static enum ConnectionState {
         CONNECTED, CONNECTING, RECONNECTING, DISCONNECTED, ERROR;
     }
-    public static ConnectionState sConnectionState;
+    public ConnectionState sConnectionState;
 
-    public static ConnectionState getStatus(){
+    public ConnectionState getStatus(){
         return sConnectionState;
     }
 
@@ -78,6 +78,7 @@ public class SmackConnection implements ConnectionListener, ChatManagerListener,
     private String mPassword;
     private String mUsername;
     private final String ressource;
+    private PingManager pingManager;
 
     private XMPPTCPConnection mConnection;
     private XMPPApi mApi;
@@ -112,40 +113,57 @@ public class SmackConnection implements ConnectionListener, ChatManagerListener,
         Log.i(TAG, "connect()");
 
 
-        //Get Username
-        mUsername = Self.getInstance(mApplicationContext).getUsername();
+        if(mConnection == null) {
+            //Get Username
+            mUsername = Self.getInstance(mApplicationContext).getUsername();
 
-        //Password?
-        mPassword = PreferenceManager.getDefaultSharedPreferences(mApplicationContext).getString("xmpp_password", null);
-        if (mPassword == null) {
-            mPassword = mApi.NTgetNewChatAuth();
-            PreferenceManager.getDefaultSharedPreferences(mApplicationContext).edit().putString("xmpp_password", mPassword).apply();
+            //Password?
+            mPassword = PreferenceManager.getDefaultSharedPreferences(mApplicationContext).getString("xmpp_password", null);
+            if (mPassword == null) {
+                mPassword = mApi.NTgetNewChatAuth();
+                PreferenceManager.getDefaultSharedPreferences(mApplicationContext).edit().putString("xmpp_password", mPassword).apply();
+            }
+
+
+            XMPPTCPConnectionConfiguration.XMPPTCPConnectionConfigurationBuilder builder = XMPPTCPConnectionConfiguration.builder();
+            builder.setHost("jabber.animexx.de");
+            builder.setServiceName("jabber.animexx.de");
+            builder.setResource(ressource);
+            builder.setUsernameAndPassword(mUsername, mPassword);
+            builder.setRosterLoadedAtLogin(true);
+
+
+            mConnection = new XMPPTCPConnection(builder.build());
+            //Set ConnectionListener here to catch initial connect();
+            mConnection.addConnectionListener(this);
+
+            PingManager.setDefaultPingInterval(300); //Ping every 5 minutes
+
+            pingManager = PingManager.getInstanceFor(mConnection);
+            pingManager.registerPingFailedListener(this);
+
+            ChatManager.getInstanceFor(mConnection).addChatListener(this);
+            mConnection.getRoster().addRosterListener(this);
         }
-
-
-        XMPPTCPConnectionConfiguration.XMPPTCPConnectionConfigurationBuilder builder = XMPPTCPConnectionConfiguration.builder();
-        builder.setHost("jabber.animexx.de");
-        builder.setServiceName("jabber.animexx.de");
-        builder.setResource(ressource);
-        builder.setUsernameAndPassword(mUsername, mPassword);
-        builder.setRosterLoadedAtLogin(true);
-
-
-        mConnection = new XMPPTCPConnection(builder.build());
-
-        //Set ConnectionListener here to catch initial connect();
-        mConnection.addConnectionListener(this);
 
         mConnection.connect();
         mConnection.login();
 
-        PingManager.setDefaultPingInterval(600); //Ping every 10 minutes
-        PingManager pingManager = PingManager.getInstanceFor(mConnection);
-        pingManager.registerPingFailedListener(this);
+    }
 
-        ChatManager.getInstanceFor(mConnection).addChatListener(this);
-        mConnection.getRoster().addRosterListener(this);
+    public boolean ping() {
+        try {
+            pingManager.pingMyServer(true);
+            return true;
+        } catch (SmackException.NotConnectedException e) {
+            sConnectionState = ConnectionState.ERROR;
+            postStatusEvent(sConnectionState);
+            return false;
+        }
+    }
 
+    public boolean isAuthenticated(){
+        return mConnection.isAuthenticated();
     }
 
     public void disconnect() {
@@ -159,6 +177,9 @@ public class SmackConnection implements ConnectionListener, ChatManagerListener,
             e.printStackTrace();
         }
 
+
+        postStatusEvent(sConnectionState);
+
         mConnection = null;
 
         Handler handler = new Handler(Looper.getMainLooper());
@@ -168,10 +189,6 @@ public class SmackConnection implements ConnectionListener, ChatManagerListener,
                 EventBus.getBus().getOtto().unregister(SmackConnection.this);
             }
         });
-    }
-
-    public boolean shouldConnect() {
-        return PreferenceManager.getDefaultSharedPreferences(mApplicationContext).getBoolean("xmpp_status", false);
     }
 
     private String getBareJID(String from) {
@@ -221,7 +238,8 @@ public class SmackConnection implements ConnectionListener, ChatManagerListener,
         try {
             chat.sendMessage(message);
         } catch (SmackException.NotConnectedException e) {
-            sConnectionState = ConnectionState.DISCONNECTED;
+            sConnectionState = ConnectionState.ERROR;
+            postStatusEvent(sConnectionState);
             e.printStackTrace();
             Helper.sendStacTrace(e, mApplicationContext);
             throw e;
@@ -303,7 +321,7 @@ public class SmackConnection implements ConnectionListener, ChatManagerListener,
 
     @Override
     public void connected(XMPPConnection connection) {
-        sConnectionState = ConnectionState.CONNECTED;
+        sConnectionState = ConnectionState.DISCONNECTED;
         Log.i(TAG, "connected()");
         postStatusEvent(sConnectionState);
     }
@@ -331,23 +349,17 @@ public class SmackConnection implements ConnectionListener, ChatManagerListener,
 
     @Override
     public void reconnectingIn(int seconds) {
-        sConnectionState = ConnectionState.RECONNECTING;
-        Log.i(TAG, "reconnectingIn()");
-        postStatusEvent(sConnectionState);
+        throw new IllegalStateException();
     }
 
     @Override
     public void reconnectionSuccessful() {
-        sConnectionState = ConnectionState.CONNECTED;
-        Log.i(TAG, "reconnectionSuccessful()");
-        postStatusEvent(sConnectionState);
+        throw new IllegalStateException();
     }
 
     @Override
     public void reconnectionFailed(Exception e) {
-        sConnectionState = ConnectionState.ERROR;
-        Log.i(TAG, "reconnectionFailed()");
-        postStatusEvent(sConnectionState);
+        throw new IllegalStateException();
     }
 
     //RosterListener
@@ -462,6 +474,8 @@ public class SmackConnection implements ConnectionListener, ChatManagerListener,
     @Override
     public void pingFailed() {
         Log.i(TAG, "pingFailed()");
+        sConnectionState = ConnectionState.ERROR;
+        postStatusEvent(sConnectionState);
     }
 
     @Override

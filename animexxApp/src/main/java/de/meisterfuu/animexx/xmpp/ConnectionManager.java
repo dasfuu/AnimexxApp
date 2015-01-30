@@ -169,17 +169,18 @@ public class ConnectionManager {
 
             //No network -> return true here to stop try reconnecting
             if(net == null || !net.isAvailable()){
+                Log.i(TAG, "No network in ConnectionManager");
                 return true;
             }
 
             // connection is not ok -> reconnect
-            if ((SmackConnection.getStatus().equals(ConnectionState.DISCONNECTED) || (SmackConnection.getStatus().equals(ConnectionState.ERROR))) && mConnection.shouldConnect()) {
+            if (!mConnection.getStatus().equals(ConnectionState.CONNECTED) || !mConnection.isAuthenticated()) {
                 Log.i(TAG, "SmackConnection.connect() called in ConnectionManager");
                 mConnection.connect();
             }
 
             // check if reconnect was succesfull
-            if (!(SmackConnection.getStatus().equals(ConnectionState.DISCONNECTED) || (SmackConnection.getStatus().equals(ConnectionState.ERROR))) && mConnection.shouldConnect()) {
+            if (mConnection.ping()) {
                 return true;
             }
 

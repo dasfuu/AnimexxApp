@@ -13,7 +13,10 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-feature android:name="android.hardware.camera" android:required="false"/>
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
 
     <!-- GCM Permissions -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -252,6 +255,11 @@
             android:name=".services.UploadService"
             android:exported="false" >
         </service>
+
+        <activity
+            android:name=".activitys.share.WebDavImageActivity"
+            android:label="@string/title_activity_web_dav_image" >
+        </activity>
     </application>
 
 </manifest>

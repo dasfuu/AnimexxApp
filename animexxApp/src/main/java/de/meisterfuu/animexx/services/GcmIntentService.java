@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -45,6 +46,7 @@ public class GcmIntentService extends IntentService {
         // in your BroadcastReceiver.
         String messageType = gcm.getMessageType(intent);
 
+        boolean notify = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("notifications_new_message", true);
         if (!extras.isEmpty()) {  // has effect of unparcelling Bundle
 
 			/*
@@ -55,30 +57,36 @@ public class GcmIntentService extends IntentService {
 			 */
 
             if (GoogleCloudMessaging.MESSAGE_TYPE_SEND_ERROR.equals(messageType)) {
-                sendNotification("Send error: " + extras.toString());
+//                sendNotification("Send error: " + extras.toString());
 
             } else if (GoogleCloudMessaging.MESSAGE_TYPE_DELETED.equals(messageType)) {
-                sendNotification("Deleted messages on server: " + extras.toString());
+//                sendNotification("Deleted messages on server: " + extras.toString());
 
                 // If it's a regular GCM message, do some work.
             } else if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
                 if (extras.getString("type").equalsIgnoreCase("XXEventENS")) {
-                    ENSNotificationManager manager = new ENSNotificationManager(this);
-                    manager.addNotification(new ENSNotification(extras.getString("title"), Long.parseLong(extras.getString("id")), extras.getString("from_username"),  Long.parseLong(extras.getString("from_id"))));
-                    manager.show();
-                } else if (extras.getString("type").equalsIgnoreCase("XXEventRPGPosting")) {
-                    if(Long.parseLong(extras.getString("from_id")) != Self.getInstance(this).getUserID()){
-                        RPGNotificationManager manager = new RPGNotificationManager(this);
-                        manager.addNotification(new RPGNotification(extras.getString("title"),  Long.parseLong(extras.getString("id")), extras.getString("from_username"), Long.parseLong(extras.getString("from_id"))));
+                    if(notify){
+                        ENSNotificationManager manager = new ENSNotificationManager(this);
+                        manager.addNotification(new ENSNotification(extras.getString("title"), Long.parseLong(extras.getString("id")), extras.getString("from_username"),  Long.parseLong(extras.getString("from_id"))));
                         manager.show();
-                        Intent i = new Intent(GcmIntentService.NEW_POST);
-                        i.setPackage(this.getPackageName());
-                        this.sendBroadcast(intent);
+                    }
+                } else if (extras.getString("type").equalsIgnoreCase("XXEventRPGPosting")) {
+                    if(notify) {
+                        if (Long.parseLong(extras.getString("from_id")) != Self.getInstance(this).getUserID()) {
+                            RPGNotificationManager manager = new RPGNotificationManager(this);
+                            manager.addNotification(new RPGNotification(extras.getString("title"), Long.parseLong(extras.getString("id")), extras.getString("from_username"), Long.parseLong(extras.getString("from_id"))));
+                            manager.show();
+                            Intent i = new Intent(GcmIntentService.NEW_POST);
+                            i.setPackage(this.getPackageName());
+                            this.sendBroadcast(intent);
+                        }
                     }
                 } else if (extras.getString("type").equalsIgnoreCase("XXEventGaestebuch")) {
-                    GBNotificationManager manager = new GBNotificationManager(this);
-                    manager.addNotification(new GBNotification(extras.getString("title"),  Long.parseLong(extras.getString("id")), extras.getString("from_username"), Long.parseLong(extras.getString("from_id"))));
-                    manager.show();
+                    if(notify) {
+                        GBNotificationManager manager = new GBNotificationManager(this);
+                        manager.addNotification(new GBNotification(extras.getString("title"), Long.parseLong(extras.getString("id")), extras.getString("from_username"), Long.parseLong(extras.getString("from_id"))));
+                        manager.show();
+                    }
                 } else {
                     // Post notification of unknown received message.
                     if (Debug.SHOW_DEBUG_NOTIFICATION) sendNotification("Received: " + extras.toString());

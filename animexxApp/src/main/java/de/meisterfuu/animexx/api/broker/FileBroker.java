@@ -3,7 +3,12 @@ package de.meisterfuu.animexx.api.broker;
 
 import android.content.Context;
 
+import java.util.List;
+
+import de.meisterfuu.animexx.api.web.ReturnObject;
 import de.meisterfuu.animexx.objects.FileUploadObject;
+import de.meisterfuu.animexx.objects.UploadedFile;
+import retrofit.Callback;
 
 public class FileBroker extends BasicWebBroker {
 
@@ -21,4 +26,7 @@ public class FileBroker extends BasicWebBroker {
     }
 
 
+    public void getFileList(Callback<ReturnObject<List<UploadedFile>>> c){
+        this.getWebApi().getApi().getFileList(c);
+    }
 }
