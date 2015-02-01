@@ -3,6 +3,7 @@ package de.meisterfuu.animexx.activitys.home;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +33,7 @@ import retrofit.client.Response;
  * Large screen devices (such as tablets) are supported by replacing the ListView with a GridView.
  * <p/>
  */
-public class HomeObjectFragment extends Fragment implements AbsListView.OnItemClickListener, View.OnClickListener {
+public class HomeObjectFragment extends Fragment implements AbsListView.OnItemClickListener, View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
 
     /**
@@ -54,6 +55,7 @@ public class HomeObjectFragment extends Fragment implements AbsListView.OnItemCl
 
     private FloatingActionButton mFloatButton;
     private boolean paused;
+    private SwipeRefreshLayout mSwipeLayout;
 
     public static Fragment getInstance() {
         Fragment fragment = new HomeObjectFragment();
@@ -86,10 +88,17 @@ public class HomeObjectFragment extends Fragment implements AbsListView.OnItemCl
         View view = inflater.inflate(R.layout.fragment_homeobject_list, container, false);
         mListView = (FeedbackListView) view.findViewById(android.R.id.list);
         mFloatButton = (FloatingActionButton) view.findViewById(R.id.home_float_new);
+        mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
         mAPI = new HomeBroker(this.getActivity());
 
         mFloatButton.setOnClickListener(this);
         mFloatButton.attachToListView(mListView);
+
+
+        mSwipeLayout.setOnRefreshListener(this);
+        mSwipeLayout.setColorSchemeResources(R.color.animexx_blue,
+                R.color.white);
+        mSwipeLayout.setEnabled(false);
 
         init();
 
@@ -138,6 +147,7 @@ public class HomeObjectFragment extends Fragment implements AbsListView.OnItemCl
 
         if (paused) {
             paused = false;
+            mSwipeLayout.setRefreshing(true);
             loadNew();
         }
     }
@@ -171,6 +181,7 @@ public class HomeObjectFragment extends Fragment implements AbsListView.OnItemCl
         mAPI.getContactWidgetList(new Callback<ReturnObject<List<ContactHomeObject>>>() {
             @Override
             public void success(ReturnObject<List<ContactHomeObject>> listReturnObject, Response response) {
+                mSwipeLayout.setRefreshing(false);
                 if(listReturnObject.getObj().size() == 0){
                     return;
                 }
@@ -206,7 +217,7 @@ public class HomeObjectFragment extends Fragment implements AbsListView.OnItemCl
 
             @Override
             public void failure(RetrofitError error) {
-
+                mSwipeLayout.setRefreshing(false);
             }
         });
     }
@@ -216,6 +227,7 @@ public class HomeObjectFragment extends Fragment implements AbsListView.OnItemCl
         mAPI.getContactWidgetList(new Callback<ReturnObject<List<ContactHomeObject>>>() {
             @Override
             public void success(ReturnObject<List<ContactHomeObject>> listReturnObject, Response response) {
+                mSwipeLayout.setEnabled(true);
                 mListView.showList();
                 List<ContactHomeObject> list = listReturnObject.getObj();
                 ArrayList<ContactHomeObject> list_ = new ArrayList<ContactHomeObject>();
@@ -233,6 +245,7 @@ public class HomeObjectFragment extends Fragment implements AbsListView.OnItemCl
                 if(mAdapter.getCount() == 0){
                     mListView.showError("Keine Einträge");
                 }
+
             }
 
             @Override
@@ -246,5 +259,10 @@ public class HomeObjectFragment extends Fragment implements AbsListView.OnItemCl
     @Override
     public void onClick(View v) {
         NewMicroblogActivity.getInstance(this.getActivity());
+    }
+
+    @Override
+    public void onRefresh() {
+        loadNew();
     }
 }
