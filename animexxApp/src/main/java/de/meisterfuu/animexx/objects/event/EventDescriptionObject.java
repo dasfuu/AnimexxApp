@@ -58,6 +58,9 @@ public class EventDescriptionObject implements Serializable {
     }
 
     public String getPageName() {
+        if(pageName == null || pageName.isEmpty()){
+            return "Seite";
+        }
         return pageName;
     }
 

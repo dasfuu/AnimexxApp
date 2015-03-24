@@ -88,13 +88,13 @@ public class HomeObjectFragment extends Fragment implements AbsListView.OnItemCl
         View view = inflater.inflate(R.layout.fragment_homeobject_list, container, false);
         mListView = (FeedbackListView) view.findViewById(android.R.id.list);
         mFloatButton = (FloatingActionButton) view.findViewById(R.id.home_float_new);
-        mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
+
         mAPI = new HomeBroker(this.getActivity());
 
         mFloatButton.setOnClickListener(this);
         mFloatButton.attachToListView(mListView);
 
-
+        mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
         mSwipeLayout.setOnRefreshListener(this);
         mSwipeLayout.setColorSchemeResources(R.color.animexx_blue,
                 R.color.white);

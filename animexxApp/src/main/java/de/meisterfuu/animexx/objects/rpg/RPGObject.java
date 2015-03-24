@@ -409,6 +409,9 @@ public class RPGObject implements Comparable<RPGObject> {
         @SerializedName("hauptbild_y")
         int mainPictureY;
 
+        @SerializedName("hauptbild_url")
+        String mainPictureUrl;
+
 
         public PlayerObject() {
 
@@ -518,7 +521,13 @@ public class RPGObject implements Comparable<RPGObject> {
             this.avatars = avatars;
         }
 
+        public String getMainPictureUrl() {
+            return mainPictureUrl;
+        }
 
+        public void setMainPictureUrl(String mainPictureUrl) {
+            this.mainPictureUrl = mainPictureUrl;
+        }
     }
 
     public static class PlayerAvatarObject {
@@ -628,6 +637,9 @@ public class RPGObject implements Comparable<RPGObject> {
         }
 
         public String getName() {
+            if(name == null || name.isEmpty()){
+                return "Seite";
+            }
             return name;
         }
 

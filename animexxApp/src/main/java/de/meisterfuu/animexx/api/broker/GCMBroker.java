@@ -107,8 +107,8 @@ public class GCMBroker extends BasicWebBroker {
         int registeredVersion = prefs.getInt("gcm_app_ver", Integer.MIN_VALUE);
         int currentVersion = getAppVersion(context);
         if (registeredVersion != currentVersion) {
-            Log.e("Animexx GCM", "WRONG VERSION");
-            return null;
+            Log.e("Animexx GCM", "WRONG VERSION - Ignore to fix multiple gcm IDs?");
+//            return null;
         }
         return registrationId;
     }

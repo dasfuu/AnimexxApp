@@ -49,12 +49,12 @@ dependencies {
     //GridView
     compile 'com.etsy.android.grid:library:1.0.5'
     //SlidingPanel
-    compile 'com.sothree.slidinguppanel:library:+'
+    compile 'com.sothree.slidinguppanel:library:2.0.+'
     //ListView Animation
     compile 'com.nhaarman.listviewanimations:library:2.6.0'
     compile 'commons-codec:commons-codec:+'
     //FloatingActionButton
-    compile 'com.melnykov:floatingactionbutton:1.0.6'
+    compile 'com.melnykov:floatingactionbutton:1.2.0'
     //Roboto TextView
     compile 'com.github.johnkil.android-robototextview:robototextview:2.2.0'
 

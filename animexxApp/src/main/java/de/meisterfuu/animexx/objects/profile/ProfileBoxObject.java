@@ -73,6 +73,9 @@ public class ProfileBoxObject {
     }
 
     public String getTitle() {
+        if(title == null || title.isEmpty()){
+            return "Seite";
+        }
         return title;
     }
 

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,13 +31,14 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class RPGListFragment extends AnimexxBaseFragment implements AdapterView.OnItemClickListener {
+public class RPGListFragment extends AnimexxBaseFragment implements AdapterView.OnItemClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     RPGBroker mAPI;
     ArrayList<RPGObject> mList;
     RPGListAdapter mAdapter;
     SharedPreferences config;
     private FeedbackListView mListView;
+    private SwipeRefreshLayout mSwipeLayout;
 
     public static RPGListFragment getInstance() {
         RPGListFragment result = new RPGListFragment();
@@ -56,7 +58,13 @@ public class RPGListFragment extends AnimexxBaseFragment implements AdapterView.
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_rpg_list, container, false);
-        mListView = (FeedbackListView) view.findViewById(android.R.id.list);mListView.setOnItemClickListener(this);
+        mListView = (FeedbackListView) view.findViewById(android.R.id.list);
+        mListView.setOnItemClickListener(this);
+        mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
+        mSwipeLayout.setOnRefreshListener(this);
+        mSwipeLayout.setColorSchemeResources(R.color.animexx_blue,
+                R.color.white);
+        mSwipeLayout.setEnabled(false);
         return view;
     }
 
@@ -118,5 +126,10 @@ public class RPGListFragment extends AnimexxBaseFragment implements AdapterView.
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         RPGPostListActivity.getInstance(this.getActivity(), mAdapter.getItem(position).getId());
+    }
+
+    @Override
+    public void onRefresh() {
+
     }
 }

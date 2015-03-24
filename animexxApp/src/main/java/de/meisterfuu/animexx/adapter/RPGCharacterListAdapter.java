@@ -2,10 +2,12 @@ package de.meisterfuu.animexx.adapter;
 
 import android.app.Activity;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -13,6 +15,7 @@ import java.util.List;
 
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.objects.rpg.RPGObject;
+import de.meisterfuu.animexx.utils.imageloader.PicassoDownloader;
 import de.meisterfuu.animexx.utils.views.TableDataView;
 import de.meisterfuu.animexx.utils.views.UserViewBig;
 
@@ -37,6 +40,7 @@ public class RPGCharacterListAdapter extends BaseAdapter {
         public TextView Title, Subtitle, Status;
         public UserViewBig User;
         public TableDataView Table;
+        public ImageView Image;
     }
 
     @Override
@@ -89,6 +93,7 @@ public class RPGCharacterListAdapter extends BaseAdapter {
             viewHolder.Status = (TextView) rowView.findViewById(R.id.activity_rpchara_status);
             viewHolder.User = (UserViewBig) rowView.findViewById(R.id.activity_rpchara_user);
             viewHolder.Table = (TableDataView) rowView.findViewById(R.id.activity_rpchara_table);
+            viewHolder.Image = (ImageView) rowView.findViewById(R.id.activity_rpchara_img);
             rowView.setTag(viewHolder);
         }
 
@@ -105,6 +110,12 @@ public class RPGCharacterListAdapter extends BaseAdapter {
             holder.User.setVisibility(View.GONE);
             holder.Status.setVisibility(View.VISIBLE);
             holder.Status.setText("Offen");
+        }
+
+        if(chara.getMainPictureUrl() != null){
+            PicassoDownloader.getPicasso(mContext).load(chara.getMainPictureUrl()).stableKey(PicassoDownloader.createRPGCharaMainImageKey(chara.getRpgId(), chara.getId())).into(holder.Image);
+        } else {
+            holder.Image.setImageResource(R.drawable.ic_contact_picture);
         }
 
         if(chara.getDescription() != null){

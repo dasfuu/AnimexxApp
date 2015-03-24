@@ -11,13 +11,25 @@
         android:layout_width="match_parent"
         layout="@layout/toolbar" />
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar">
     <GridView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/gridView"
-        android:layout_below="@+id/toolbar"
         android:numColumns="3"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"/>
+
+    <com.melnykov.fab.FloatingActionButton
+        android:id="@+id/webdav_float_upload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_action_plus" />
+    </FrameLayout>
 
 </RelativeLayout>

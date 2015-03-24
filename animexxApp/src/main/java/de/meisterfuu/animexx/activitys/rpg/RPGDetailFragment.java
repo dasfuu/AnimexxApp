@@ -55,7 +55,7 @@ public class RPGDetailFragment extends AnimexxBaseFragment implements Callback<R
         mTitle.setText(mRPG.getName());
         mSubtitle.setText(mRPG.getTopicName());
 
-        mTableView.add(new TableDataView.TableDataEntity(mRPG.getPlayerCount()+" Charaktere", R.drawable.ens_flags_forwarded_blue));
+//        mTableView.add(new TableDataView.TableDataEntity(mRPG.getPlayerCount()+" Charaktere", R.drawable.ens_flags_forwarded_blue));
         mTableView.add(new TableDataView.TableDataEntity(mRPG.getPostCount()+" Beiträge", R.drawable.ens_flags_forwarded_blue));
         if(mRPG.isTofu()){
             mTableView.add(new TableDataView.TableDataEntity("Tofu", R.drawable.ens_flags_forwarded_blue));

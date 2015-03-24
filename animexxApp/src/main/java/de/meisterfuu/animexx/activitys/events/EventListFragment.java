@@ -2,6 +2,7 @@ package de.meisterfuu.animexx.activitys.events;
 
 import android.app.ListFragment;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,12 +24,13 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class EventListFragment extends AnimexxBaseFragment implements AdapterView.OnItemClickListener {
+public class EventListFragment extends AnimexxBaseFragment implements AdapterView.OnItemClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     EventBroker mAPI;
     ArrayList<EventObject> mList;
     EventAdapter mAdapter;
     private FeedbackListView mListView;
+    private SwipeRefreshLayout mSwipeLayout;
 
     public static EventListFragment getInstance() {
         EventListFragment result = new EventListFragment();
@@ -44,6 +46,11 @@ public class EventListFragment extends AnimexxBaseFragment implements AdapterVie
         View view = inflater.inflate(R.layout.fragment_event_list, container, false);
         mListView = (FeedbackListView) view.findViewById(android.R.id.list);
         mListView.setOnItemClickListener(this);
+        mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
+        mSwipeLayout.setOnRefreshListener(this);
+        mSwipeLayout.setColorSchemeResources(R.color.animexx_blue,
+                R.color.white);
+        mSwipeLayout.setEnabled(false);
         return view;
     }
 
@@ -91,12 +98,15 @@ public class EventListFragment extends AnimexxBaseFragment implements AdapterVie
                 mListView.showError("Es ist ein Fehler aufgetreten");
             }
         });
-
-
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         SingleEventActivity.getInstance(this.getActivity(), id);
+    }
+
+    @Override
+    public void onRefresh() {
+
     }
 }

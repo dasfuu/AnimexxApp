@@ -15,6 +15,7 @@ import android.widget.Toast;
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.activitys.AnimexxBaseActivityAB;
 import de.meisterfuu.animexx.activitys.share.ImagePickerActivity;
+import de.meisterfuu.animexx.activitys.share.WebDavImageActivity;
 import de.meisterfuu.animexx.api.broker.HomeBroker;
 import de.meisterfuu.animexx.api.web.ReturnObject;
 import de.meisterfuu.animexx.objects.FileUploadReturnObject;
@@ -56,7 +57,7 @@ public class NewMicroblogActivity extends AnimexxBaseActivityAB implements View.
     @Override
     public void onClick(View v) {
         if(pictureID == -1){
-            ImagePickerActivity.getInstance(this, 1);
+            WebDavImageActivity.getInstance(this, 0);
             finish();
         } else {
             PreferenceManager.getDefaultSharedPreferences(NewMicroblogActivity.this).edit()
@@ -92,7 +93,7 @@ public class NewMicroblogActivity extends AnimexxBaseActivityAB implements View.
 
         if(pictureID != -1){
             mPicture.setVisibility(View.VISIBLE);
-            PicassoDownloader.getPicasso(this).load(pictureThumb).into(mPicture);
+            PicassoDownloader.getPicasso(this).load(pictureThumb).stableKey(PicassoDownloader.createFileThumbnailKey(pictureID)).into(mPicture);
             mButton.setText("Bild entfernen");
         } else {
             mPicture.setVisibility(View.GONE);

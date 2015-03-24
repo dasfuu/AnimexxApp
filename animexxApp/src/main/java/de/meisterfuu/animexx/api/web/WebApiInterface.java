@@ -865,11 +865,9 @@ public interface WebApiInterface {
     //-------------------------------
 
     @POST("/mitglieder/files/list/?img_max_x=800&img_max_y=800&img_quality=90&img_format=jpg")
-    @FormUrlEncoded
     ReturnObject<List<UploadedFile>> getFileList();
 
     @POST("/mitglieder/files/list/?img_max_x=800&img_max_y=800&img_quality=90&img_format=jpg")
-    @FormUrlEncoded
     void getFileList(Callback<ReturnObject<List<UploadedFile>>> pCallback);
 
     @POST("/mitglieder/files/list/?img_max_x=800&img_max_y=800&img_quality=90&img_format=jpg")

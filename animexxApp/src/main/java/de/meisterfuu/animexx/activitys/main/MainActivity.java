@@ -34,6 +34,7 @@ import de.meisterfuu.animexx.activitys.home.HomeObjectFragment;
 import de.meisterfuu.animexx.activitys.profiles.ProfileActivity;
 import de.meisterfuu.animexx.activitys.rpg.RPGListFragment;
 import de.meisterfuu.animexx.activitys.share.ImagePickerActivity;
+import de.meisterfuu.animexx.activitys.share.WebDavImageActivity;
 import de.meisterfuu.animexx.adapter.ChatStatusSpinnerAdapter;
 import de.meisterfuu.animexx.adapter.ENSFolderSpinnerAdapter;
 import de.meisterfuu.animexx.adapter.MainDrawerAdapter;
@@ -239,9 +240,6 @@ public class MainActivity extends ActionBarActivity {
         } else if (mLastCode.equals("RPG")) {
             MenuInflater inflater = getMenuInflater();
             inflater.inflate(R.menu.main_rpg, menu);
-        } else if (mLastCode.equals("EVENT")) {
-            MenuInflater inflater = getMenuInflater();
-            inflater.inflate(R.menu.main_rpg, menu);
         } else if (mLastCode.equals("XMPP")) {
             MenuInflater inflater = getMenuInflater();
             inflater.inflate(R.menu.main_xmpp, menu);
@@ -259,9 +257,6 @@ public class MainActivity extends ActionBarActivity {
         }
 
         switch (item.getItemId()) {
-            case R.id.menu_ens_new:
-                NewENSActivity.getInstanceBlank(this);
-                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -302,13 +297,11 @@ public class MainActivity extends ActionBarActivity {
         } else if (pCode.equals("CONTACTS")) {
             selectContacts();
         } else if (pCode.equals("SETTINGS")) {
-//            ImageUploadActivity.getInstance(this);
             SettingsActivity.getInstance(this);
-//            ImagePickerActivity.getInstance(this);
         } else if (pCode.equals("FEEDBACK")) {
             FeedbackActivity.getInstance(this);
         } else if (pCode.equals("FILES")) {
-            ImagePickerActivity.getInstance(this, 3);
+            WebDavImageActivity.getInstance(this, 3);
         }
 
     }

@@ -67,16 +67,7 @@ public class ImageUploadActivity extends AnimexxBaseActivityAB {
         }
         mAdapter.add(event.getObj().getObj());
 
-        if(mAdapter.getCount() == files.size() && files.size() == 1){
-
-            PreferenceManager.getDefaultSharedPreferences(this).edit()
-                    .putString("mb_draft_url", event.getObj().getObj().getUrlThumb())
-                    .putLong("mb_draft_id", event.getObj().getObj().getId())
-                    .commit();
-
-            NewMicroblogActivity.getInstance(this);
-            finish();
-        }
+        finish();
     }
 
 }

@@ -53,6 +53,12 @@ public class FeedbackActivity extends AnimexxBaseActivityAB {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.send) {
+
+            if(text.getText() == null || text.getText().length() == 0){
+                Toast.makeText(this, "Bitte gib eine Nachricht ein.", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+
             ENSDraftObject draft = new ENSDraftObject();
 
             draft.setMessage(text.getText().toString());

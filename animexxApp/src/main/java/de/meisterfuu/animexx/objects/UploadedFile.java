@@ -7,11 +7,20 @@ import com.google.gson.annotations.SerializedName;
  */
 public class UploadedFile {
 
+    @SerializedName("id")
+    long id;
+
 //        "filename":"\/files\/03---Art.png",
     @SerializedName("filename")
     String filename;
 
 //            "url":"https:\/\/media.animexx.de\/himitsu\/mitglieder\/files\/2\/2\/files\/03---Art.png?st=abcdefghi&e=12345678",
+    @SerializedName("share_url")
+    String shareUrl;
+
+    @SerializedName("thumbnail")
+    String thumbnailUrl;
+
     @SerializedName("url")
     String url;
 
@@ -101,5 +110,29 @@ public class UploadedFile {
 
     public void setUploadTimeUtc(String uploadTimeUtc) {
         this.uploadTimeUtc = uploadTimeUtc;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getShareUrl() {
+        return shareUrl;
+    }
+
+    public void setShareUrl(String shareUrl) {
+        this.shareUrl = shareUrl;
+    }
+
+    public String getThumbnailUrl() {
+        return thumbnailUrl;
+    }
+
+    public void setThumbnailUrl(String thumbnailUrl) {
+        this.thumbnailUrl = thumbnailUrl;
     }
 }

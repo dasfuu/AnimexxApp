@@ -63,6 +63,9 @@ public class PicassoDownloader implements Downloader {
     public static String createFileThumbnailKey(long fileID){
         return "filethumb_"+fileID;
     }
+    public static String createRPGCharaMainImageKey(long rpgID, long charaID){
+        return "rpgchara_"+rpgID+"_"+charaID;
+    }
 
     private static Picasso sPicasso;
     public static Picasso getPicasso(Context pContext){

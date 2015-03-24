@@ -21,6 +21,7 @@ public class ENSFolderAdapter extends BaseAdapter {
 
     List<ENSObject> mItems;
     Activity mContext;
+    NearEndListener mEndListener;
 
     public ENSFolderAdapter(List<ENSObject> pList, Activity pContext) {
         this.mItems = pList;
@@ -29,6 +30,9 @@ public class ENSFolderAdapter extends BaseAdapter {
 
     boolean mLoading = false;
 
+    public void setNearEndListener(NearEndListener mEndListener) {
+        this.mEndListener = mEndListener;
+    }
 
     public void startLoadingAnimation() {
         mLoading = true;
@@ -100,6 +104,10 @@ public class ENSFolderAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        if(mEndListener != null){
+            mEndListener.nearsEnd(this.getCount()-position-1);
+        }
+
         if (getItemViewType(position) == 1) {
             LayoutInflater inflater = mContext.getLayoutInflater();
             return inflater.inflate(R.layout.listitem_loading, null);
@@ -200,5 +208,17 @@ public class ENSFolderAdapter extends BaseAdapter {
         this.notifyDataSetChanged();
     }
 
+
+    public void clear() {
+        mItems.clear();
+        this.notifyDataSetChanged();
+    }
+
+
+    public static interface NearEndListener{
+
+        public void nearsEnd(int elementsLeft);
+
+    }
 
 }

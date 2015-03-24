@@ -63,7 +63,7 @@ public class FileAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        return position;
+        return getItem(position).getId();
     }
 
     @Override
@@ -93,12 +93,12 @@ public class FileAdapter extends BaseAdapter {
         final UploadedFile obj = mItems.get(position);
 
 
-        if (obj.getUrl() != null) {
+        if (obj.getThumbnailUrl() != null) {
             holder.Image.setVisibility(View.VISIBLE);
-            Picasso.with(mContext).load(R.drawable.test1).into(holder.Image);
-            //PicassoDownloader.getPicasso(mContext).load(obj.getUrl()).stableKey(PicassoDownloader.createFileThumbnailKey(obj.getId())).into(holder.Image);
+//            Picasso.with(mContext).load(obj.getThumbnailUrl()).into(holder.Image);
+            PicassoDownloader.getPicasso(mContext).load(obj.getThumbnailUrl()).stableKey(PicassoDownloader.createFileThumbnailKey(obj.getId())).into(holder.Image);
         } else {
-            holder.Image.setVisibility(View.GONE);
+            holder.Image.setVisibility(View.INVISIBLE);
         }
 
         return rowView;
