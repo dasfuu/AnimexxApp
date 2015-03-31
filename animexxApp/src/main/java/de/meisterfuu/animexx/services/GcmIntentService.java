@@ -12,6 +12,9 @@ import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import de.meisterfuu.animexx.Debug;
 import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.activitys.main.MainActivity;
@@ -26,12 +29,18 @@ import de.meisterfuu.animexx.receiver.GcmBroadcastReceiver;
 
 public class GcmIntentService extends IntentService {
 
+    public static HashMap<Integer, Long> doubleMap = new HashMap<>();
+
+    public static HashMap<Integer, Long> getDoubleMap(){
+        return doubleMap;
+    }
+
+
     public static final int NOTIFICATION_ID = 1;
     private static final String TAG = "GcmIntentService";
     private NotificationManager mNotificationManager;
 
     public static final String NEW_POST = "de.meisterfuu.animexx.new";
-
 
     public GcmIntentService() {
         super("GcmIntentService");
@@ -41,12 +50,15 @@ public class GcmIntentService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         Bundle extras = intent.getExtras();
+
         GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(this);
         // The getMessageType() intent parameter must be the intent you received
         // in your BroadcastReceiver.
         String messageType = gcm.getMessageType(intent);
 
         boolean notify = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("notifications_new_message", true);
+        boolean notifyRPG = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("notifications_new_rpg_message", true);
+        boolean notifyENS = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("notifications_new_ens_message", true);
         if (!extras.isEmpty()) {  // has effect of unparcelling Bundle
 
 			/*
@@ -64,22 +76,39 @@ public class GcmIntentService extends IntentService {
 
                 // If it's a regular GCM message, do some work.
             } else if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
+                String url = extras.getString("link");
+                if(url != null && !url.isEmpty()){
+                    int hash = url.hashCode();
+                    int hash2 = (""+url).hashCode();
+                    Log.d("GCM", "Hash: "+hash+" "+hash2);
+                    for(Map.Entry<Integer, Long> entry: GcmIntentService.getDoubleMap().entrySet()){
+                        if( System.currentTimeMillis() - entry.getValue() < 30000){
+                            GcmIntentService.getDoubleMap().remove(entry.getKey());
+                        }
+                    }
+                    if(GcmIntentService.getDoubleMap().containsKey(hash)){
+                        return;
+                    }
+                    GcmIntentService.getDoubleMap().put(hash, System.currentTimeMillis());
+                }
+
+                Log.d("GCM", "Type: "+extras.getString("type"));
                 if (extras.getString("type").equalsIgnoreCase("XXEventENS")) {
-                    if(notify){
+                    if(notifyENS){
                         ENSNotificationManager manager = new ENSNotificationManager(this);
                         manager.addNotification(new ENSNotification(extras.getString("title"), Long.parseLong(extras.getString("id")), extras.getString("from_username"),  Long.parseLong(extras.getString("from_id"))));
                         manager.show();
                     }
                 } else if (extras.getString("type").equalsIgnoreCase("XXEventRPGPosting")) {
-                    if(notify) {
-                        if (Long.parseLong(extras.getString("from_id")) != Self.getInstance(this).getUserID()) {
+                    if(notifyRPG) {
+                        if (Long.parseLong(extras.getString("from_id")) != Self.getInstance(this).getUserID() && RPGNotificationManager.currentRPG != Long.parseLong(extras.getString("id"))) {
                             RPGNotificationManager manager = new RPGNotificationManager(this);
                             manager.addNotification(new RPGNotification(extras.getString("title"), Long.parseLong(extras.getString("id")), extras.getString("from_username"), Long.parseLong(extras.getString("from_id"))));
                             manager.show();
-                            Intent i = new Intent(GcmIntentService.NEW_POST);
-                            i.setPackage(this.getPackageName());
-                            this.sendBroadcast(intent);
                         }
+                        Intent i = new Intent(GcmIntentService.NEW_POST);
+                        i.setPackage(this.getPackageName());
+                        this.sendBroadcast(intent);
                     }
                 } else if (extras.getString("type").equalsIgnoreCase("XXEventGaestebuch")) {
                     if(notify) {

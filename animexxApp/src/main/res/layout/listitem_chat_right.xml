@@ -24,6 +24,8 @@
             <com.devspark.robototextview.widget.RobotoTextView
                 app:typeface="roboto_regular"
                 android:id="@+id/chat_message_text"
+                android:linksClickable="true"
+                android:textIsSelectable="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="TextView" />

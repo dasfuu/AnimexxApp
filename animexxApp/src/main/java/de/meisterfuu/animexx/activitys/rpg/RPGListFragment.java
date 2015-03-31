@@ -13,7 +13,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -22,6 +30,7 @@ import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.activitys.AnimexxBaseFragment;
 import de.meisterfuu.animexx.activitys.main.MainActivity;
 import de.meisterfuu.animexx.adapter.RPGListAdapter;
+import de.meisterfuu.animexx.api.broker.ENSBroker;
 import de.meisterfuu.animexx.api.broker.RPGBroker;
 import de.meisterfuu.animexx.api.web.ReturnObject;
 import de.meisterfuu.animexx.objects.rpg.RPGObject;
@@ -103,6 +112,13 @@ public class RPGListFragment extends AnimexxBaseFragment implements AdapterView.
         mAPI.getRPGList(new Callback<ReturnObject<List<RPGObject>>>() {
             @Override
             public void success(ReturnObject<List<RPGObject>> listReturnObject, Response response) {
+//                 try {
+//                    ENSBroker.sendENSDEBUG(new Gson().toJson(listReturnObject), "RPG", getActivity());
+//                    mListView.showError("Debug log gesendet");
+//                    Toast.makeText(getActivity(), "Error 1", Toast.LENGTH_SHORT).show();
+//                 } catch (Exception e) {
+//                    e.printStackTrace();
+//                 }
                 mListView.showList();
                 List<RPGObject> list = listReturnObject.getObj();
                 list.removeAll(Collections.singleton(null));
@@ -115,6 +131,32 @@ public class RPGListFragment extends AnimexxBaseFragment implements AdapterView.
 
             @Override
             public void failure(RetrofitError error) {
+
+//                try {
+//                    StringWriter errors = new StringWriter();
+//                    error.printStackTrace(new PrintWriter(errors));
+//                    ENSBroker.sendENSDEBUG(errors.toString() + "", "RPG", getActivity());
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//
+//                try {
+//                    BufferedReader reader = null;
+//                    StringBuilder sb = new StringBuilder();
+//                    reader = new BufferedReader(new InputStreamReader(error.getResponse().getBody().in()));
+//
+//                    String line;
+//
+//                    while ((line = reader.readLine()) != null) {
+//                        sb.append(line);
+//                    }
+//                    String result = sb.toString();
+//                    ENSBroker.sendENSDEBUG(result + "", "RPG", getActivity());
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+
+                Toast.makeText(getActivity(), "Error 2", Toast.LENGTH_SHORT).show();
                 error.printStackTrace();
                 mListView.showError("Es ist ein Fehler aufgetreten");
             }

@@ -19,6 +19,8 @@ import de.meisterfuu.animexx.activitys.rpg.RPGListFragment;
  */
 public class RPGNotificationManager extends BaseNotificationManager<RPGNotification> {
 
+    public static long currentRPG = -1;
+
     public RPGNotificationManager(Context pContext) {
         super(pContext);
     }

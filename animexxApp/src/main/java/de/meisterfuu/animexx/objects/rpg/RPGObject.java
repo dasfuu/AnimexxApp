@@ -215,7 +215,7 @@ public class RPGObject implements Comparable<RPGObject> {
 
     public String getLastPostDate() {
         if (lastPostDate == null) {
-            return "";
+            return "0";
         }
         return lastPostDate;
     }
@@ -698,6 +698,6 @@ public class RPGObject implements Comparable<RPGObject> {
 
     @Override
     public int compareTo(RPGObject another) {
-        return -1 * this.getLastPostDate().compareTo(another.getLastPostDate());
+          return -1 * this.getLastPostDate().compareTo(another.getLastPostDate());
     }
 }

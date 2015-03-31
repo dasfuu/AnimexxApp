@@ -205,14 +205,14 @@ public class SingleENSActivity extends AnimexxBaseActivityAB {
 
     private void forward() {
         final ENSDraftObject draft = new ENSDraftObject();
-        draft.setMessage(mENS.getMessage_raw());
+        draft.setMessage(mENS.getMessage());
         ArrayList<Long> recip = new ArrayList<Long>();
-        recip.add(target.getId());
+//        recip.add(target.getId());
         ArrayList<String> recip_name = new ArrayList<String>();
-        recip_name.add(target.getUsername());
+//        recip_name.add(target.getUsername());
         draft.setRecipients(recip);
         draft.setRecipients_name(recip_name);
-        draft.setSubject(Helper.BetreffRe(mENS.getSubject()));
+        draft.setSubject("Fw:"+mENS.getSubject());
         draft.setReferenceID(mENS.getId());
         draft.setReferenceType("forward");
         mAPI.saveENSDraft(draft, new Callback<Boolean>() {
@@ -255,7 +255,7 @@ public class SingleENSActivity extends AnimexxBaseActivityAB {
 
     private void answerQuote() {
         final ENSDraftObject draft = new ENSDraftObject();
-        draft.setMessage(mENS.getMessage_raw());
+        draft.setMessage(mENS.getMessage());
         ArrayList<Long> recip = new ArrayList<Long>();
         recip.add(target.getId());
         ArrayList<String> recip_name = new ArrayList<String>();

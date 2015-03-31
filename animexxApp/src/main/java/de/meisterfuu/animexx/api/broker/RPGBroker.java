@@ -1,6 +1,8 @@
 package de.meisterfuu.animexx.api.broker;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import java.util.List;
 
@@ -27,7 +29,8 @@ public class RPGBroker extends BasicWebBroker {
      * @param pCallback
      */
     public void getRPGList(final Callback<ReturnObject<List<RPGObject>>> pCallback) {
-        getWebApi().getApi().getRPGList(1, 0, 30, pCallback);
+        boolean finished = PreferenceManager.getDefaultSharedPreferences(getContext()).getBoolean("rpg_show_finished", true);
+        getWebApi().getApi().getRPGList(finished ? 1 : 0, 0, 30, pCallback);
     }
 
     /**

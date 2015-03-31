@@ -98,7 +98,7 @@ public class SmackConnection implements ConnectionListener, ChatManagerListener,
 
         Random r = new Random();
         int res_attach = r.nextInt();
-        ressource = "AndroidApp_2_"+res_attach;
+        ressource = "AndroidApp_2_"+(android.os.Build.MODEL.hashCode());
 
         Handler handler = new Handler(Looper.getMainLooper());
         handler.post(new Runnable() {
@@ -297,9 +297,11 @@ public class SmackConnection implements ConnectionListener, ChatManagerListener,
                 if (carbonCopied) {
                     //No Notification
                 } else {
-                    XMPPNotificationManager manager = new XMPPNotificationManager(mApplicationContext);
-                    manager.addNotification(new XMPPNotification(message.getBody(), fromJID, id));
-                    manager.show();
+                    if(!fromJID.split("/")[0].equalsIgnoreCase(XMPPNotificationManager.currentChat)){
+                        XMPPNotificationManager manager = new XMPPNotificationManager(mApplicationContext);
+                        manager.addNotification(new XMPPNotification(message.getBody(), fromJID, id));
+                        manager.show();
+                    }
                 }
 
 

@@ -26,6 +26,7 @@ import de.meisterfuu.animexx.api.xmpp.SendMessageEvent;
 import de.meisterfuu.animexx.api.xmpp.SendMessageReturnEvent;
 import de.meisterfuu.animexx.api.xmpp.StatsuChangeEvent;
 import de.meisterfuu.animexx.api.xmpp.XMPPApi;
+import de.meisterfuu.animexx.notification.XMPPNotificationManager;
 import de.meisterfuu.animexx.objects.UserObject;
 import de.meisterfuu.animexx.objects.xmpp.XMPPHistoryObject;
 import de.meisterfuu.animexx.objects.xmpp.XMPPMessageObject;
@@ -169,7 +170,7 @@ public class XMPPChatActivity extends AnimexxBaseActivityAB {
     public void onResume() {
         super.onResume();
         if (mApi == null) mApi = new XMPPApi(this);
-
+        XMPPNotificationManager.currentChat = this.mjabberName;
         showHistory();
 
     }
@@ -216,6 +217,7 @@ public class XMPPChatActivity extends AnimexxBaseActivityAB {
     public void onPause() {
         super.onPause();
         mApi.close();
+        XMPPNotificationManager.currentChat = null;
         mApi = null;
     }
 

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -80,7 +81,7 @@ public class FeedbackActivity extends AnimexxBaseActivityAB {
                 e.printStackTrace();
             }
 
-            draft.setSignature("Feedback "+versionName+" ("+version+")");
+            draft.setSignature("Feedback "+versionName+" ("+version+") || "+ Build.VERSION.SDK_INT+" || "+ Build.MANUFACTURER +" "+ Build.MODEL);
 
             new ENSBroker(this).sendENS(draft, new Callback<Long>() {
                 @Override

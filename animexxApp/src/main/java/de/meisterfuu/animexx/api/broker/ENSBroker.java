@@ -2,6 +2,7 @@ package de.meisterfuu.animexx.api.broker;
 
 import android.content.Context;
 import android.os.Handler;
+import android.widget.Toast;
 
 import com.google.gson.annotations.SerializedName;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
@@ -22,6 +23,7 @@ import de.meisterfuu.animexx.objects.ens.ENSQueueObject;
 import de.meisterfuu.animexx.services.ENSQueueService;
 import retrofit.Callback;
 import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 
 public class ENSBroker extends BasicWebBroker {
@@ -99,12 +101,25 @@ public class ENSBroker extends BasicWebBroker {
         draft.setSignature("");
         draft.setSubject(title);
         draft.setReferenceType(null);
-        ENSQueueObject qObj = new ENSQueueObject();
-        qObj.setDraft(draft);
-        qObj.setSubject(draft.getSubject());
-        api.saveQueueToDB(qObj);
-        ENSQueueService.startAction(c);
-        api.close();
+//        ENSQueueObject qObj = new ENSQueueObject();
+//        qObj.setDraft(draft);
+//        qObj.setSubject(draft.getSubject());
+//        api.saveQueueToDB(qObj);
+//        ENSQueueService.startAction(c);
+//        api.close();
+
+        api.sendENS(draft, new Callback<Long>() {
+            @Override
+            public void success(Long aLong, Response response) {
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
+
     }
 
     /**

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -31,6 +32,7 @@ import de.meisterfuu.animexx.adapter.RPGPostListAdapter;
 import de.meisterfuu.animexx.adapter.RPGSpinnerAdapter;
 import de.meisterfuu.animexx.api.broker.RPGBroker;
 import de.meisterfuu.animexx.api.web.ReturnObject;
+import de.meisterfuu.animexx.notification.RPGNotificationManager;
 import de.meisterfuu.animexx.objects.rpg.RPGDraftObject;
 import de.meisterfuu.animexx.objects.rpg.RPGObject;
 import de.meisterfuu.animexx.objects.rpg.RPGPostObject;
@@ -90,6 +92,15 @@ public class RPGPostListActivity extends AnimexxBaseActivityAB implements PanelS
     public void onPause() {
         unregisterReceiver(mReceiver);
         paused = true;
+        RPGNotificationManager.currentRPG = -1;
+
+        String postDraft = mEditPost.getText().toString();
+        if(postDraft != null && !postDraft.isEmpty()){
+            PreferenceManager.getDefaultSharedPreferences(this).edit().putString("rpg_draft_"+mRPGID, mEditPost.getText().toString()).commit();
+        } else {
+            PreferenceManager.getDefaultSharedPreferences(this).edit().remove("rpg_draft_"+mRPGID).commit();
+        }
+
         super.onPause();
     }
 
@@ -115,6 +126,10 @@ public class RPGPostListActivity extends AnimexxBaseActivityAB implements PanelS
         if (paused) {
             refreshList();
         }
+
+        RPGNotificationManager.currentRPG = mRPGID;
+
+        mEditPost.setText(PreferenceManager.getDefaultSharedPreferences(this).getString("rpg_draft_"+mRPGID, ""));
 
         super.onResume();
     }
@@ -214,6 +229,8 @@ public class RPGPostListActivity extends AnimexxBaseActivityAB implements PanelS
 
     @Override
     public void onPanelCollapsed(View panel) {
+        hideKeyboard();
+        mSlidingLayout.invalidate();
         if(mEditPost.getText().toString().isEmpty()){
             mToggleLabel.setText("Neuer Post");
         } else {

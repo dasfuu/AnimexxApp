@@ -26,8 +26,6 @@ public class RPGListAdapter extends BaseAdapter {
         this.mContext = pContext;
     }
 
-    boolean mLoading;
-
     @Override
     public void notifyDataSetChanged() {
         super.notifyDataSetChanged();
@@ -98,10 +96,12 @@ public class RPGListAdapter extends BaseAdapter {
         //Init
 
         //Subject
-        holder.Title.setText(RPG.getName());
+        holder.Title.setText(RPG.getName() + "");
         holder.Date.setText("Letzter Post von " + RPG.getLastPlayer() + " " + Helper.agoString(Helper.toTimestamp(RPG.getLastPostDate(), "yyyy-MM-dd hh:mm:ss"), false));
         holder.Count.setText(RPG.getPostCount() + " Posts");
-        holder.Topic.setText(RPG.getTopicName());
+        holder.Topic.setText(RPG.getTopicName() + "");
+
+
 
         holder.Detail.setOnClickListener(new OnClickListener() {
 

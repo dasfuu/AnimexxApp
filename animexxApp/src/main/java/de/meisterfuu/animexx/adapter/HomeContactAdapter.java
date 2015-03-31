@@ -1,6 +1,8 @@
 package de.meisterfuu.animexx.adapter;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -126,6 +128,7 @@ public class HomeContactAdapter extends BaseAdapter {
             holder.User.setUser(obj.getVon());
         }
 
+        obj.setCommentable(false);
         if(obj.isCommentable()){
             holder.btComments.setText(obj.getCommentCount()+" Kommentare");
             holder.btComments.setVisibility(View.VISIBLE);
@@ -147,7 +150,8 @@ public class HomeContactAdapter extends BaseAdapter {
         OnClickListener webClick = new OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://animexx.onlinewelten.com"+obj.getRelativeURL()));
+                mContext.startActivity(browserIntent);
             }
         };
         holder.btWeb.setOnClickListener(webClick);

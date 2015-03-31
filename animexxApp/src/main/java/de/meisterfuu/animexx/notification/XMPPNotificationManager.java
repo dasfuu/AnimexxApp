@@ -19,6 +19,8 @@ import de.meisterfuu.animexx.xmpp.XMPPRoosterFragment;
  */
 public class XMPPNotificationManager extends BaseNotificationManager<XMPPNotification> {
 
+    public static String currentChat = null;
+
     public XMPPNotificationManager(Context pContext) {
         super(pContext);
     }

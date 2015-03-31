@@ -87,7 +87,6 @@ public class NewENSActivity extends AnimexxBaseActivityAB {
         if(extras != null && extras.containsKey("ENSDraftObject")){
             mDraftID = extras.getLong("ENSDraftObject");
             loadDraft();
-            return;
         } else if(extras != null && extras.containsKey("UserID")){
             long userid = extras.getLong("UserID");
             String username = extras.getString("UserName");
@@ -101,6 +100,7 @@ public class NewENSActivity extends AnimexxBaseActivityAB {
             recip_name.add(username);
             mENSDraft.setRecipients(recip);
             mENSDraft.setRecipients_name(recip_name);
+            fillViews();
         } else {
             mENSDraft = new ENSDraftObject();
             mENSDraft.setSubject("");
@@ -110,9 +110,10 @@ public class NewENSActivity extends AnimexxBaseActivityAB {
             ArrayList<String> recip_name = new ArrayList<String>();
             mENSDraft.setRecipients(recip);
             mENSDraft.setRecipients_name(recip_name);
+            fillViews();
         }
 
-        fillViews();
+
 
     }
 

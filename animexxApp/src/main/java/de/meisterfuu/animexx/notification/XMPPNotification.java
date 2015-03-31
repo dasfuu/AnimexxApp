@@ -79,12 +79,12 @@ public class XMPPNotification extends BaseNotification {
 
     @Override
     public boolean vibrate(Context pContext) {
-        return PreferenceManager.getDefaultSharedPreferences(pContext).getBoolean("notifications_new_message_vibrate", true);
+        return PreferenceManager.getDefaultSharedPreferences(pContext).getBoolean("notifications_new_xmpp_message_vibrate", true);
     }
 
     @Override
     public String getSoundUri(Context pContext) {
-        return PreferenceManager.getDefaultSharedPreferences(pContext).getString("notifications_new_message_ringtone", null);
+        return PreferenceManager.getDefaultSharedPreferences(pContext).getString("notifications_new_xmpp_message_ringtone", null);
     }
 
     @Override

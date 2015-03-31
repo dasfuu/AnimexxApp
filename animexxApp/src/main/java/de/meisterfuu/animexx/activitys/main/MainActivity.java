@@ -145,7 +145,28 @@ public class MainActivity extends ActionBarActivity {
             if (!mLastCode.isEmpty()) {
                 selectItem(mLastCode);
             } else {
-                selectItem("HOME");
+                String landing = PreferenceManager.getDefaultSharedPreferences(this).getString("landing_page", "Home");
+                switch (landing){
+                    case "Home":
+                        selectItem("HOME");
+                        break;
+                    case "ENS":
+                        selectItem("ENS");
+                        break;
+                    case "RPG":
+                        selectItem("RPG");
+                        break;
+                    case "Chat":
+                        selectItem("CHAT");
+                        break;
+                    case "Events":
+                        selectItem("EVENT");
+                        break;
+                    case "Kontakte":
+                        selectItem("CONTACTS");
+                        break;
+                }
+//                selectItem("HOME");
             }
         }
     }

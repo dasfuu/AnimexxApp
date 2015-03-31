@@ -1,6 +1,12 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <PreferenceCategory android:title="Allgemein" >
+        <ListPreference
+            android:key="landing_page"
+            android:title="@string/pref_home"
+            android:entries="@array/home_array"
+            android:entryValues="@array/home_array"
+            />
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="notifications_new_message"
@@ -22,6 +28,67 @@
             android:key="notifications_new_message_vibrate"
             android:title="@string/pref_title_vibrate" />
     </PreferenceCategory>
-
+    <PreferenceCategory android:title="ENS" >
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="notifications_new_ens_message"
+            android:summaryOff="ENS Benachrichtigungen sind aus."
+            android:summaryOn="ENS Benachrichtigungen sind an."
+            android:title="@string/pref_title_new_message_notifications" />
+        <RingtonePreference
+            android:defaultValue="content://settings/system/notification_sound"
+            android:dependency="notifications_new_ens_message"
+            android:key="notifications_new_ens_message_ringtone"
+            android:ringtoneType="notification"
+            android:showDefault="true"
+            android:showSilent="true"
+            android:summary="Wähle einen Benachrichtigungston"
+            android:title="@string/pref_title_ringtone" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:dependency="notifications_new_ens_message"
+            android:key="notifications_new_ens_message_vibrate"
+            android:title="@string/pref_title_vibrate" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="RPG" >
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="notifications_new_rpg_message"
+            android:summaryOff="RPG Benachrichtigungen sind aus."
+            android:summaryOn="RPG Benachrichtigungen sind an."
+            android:title="@string/pref_title_new_message_notifications" />
+        <RingtonePreference
+            android:defaultValue="content://settings/system/notification_sound"
+            android:dependency="notifications_new_rpg_message"
+            android:key="notifications_new_rpg_message_ringtone"
+            android:ringtoneType="notification"
+            android:showDefault="true"
+            android:showSilent="true"
+            android:summary="Wähle einen Benachrichtigungston"
+            android:title="@string/pref_title_ringtone" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:dependency="notifications_new_rpg_message"
+            android:key="notifications_new_rpg_message_vibrate"
+            android:title="@string/pref_title_vibrate" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="rpg_show_finished"
+            android:title="@string/pref_title_rpg_finished" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Chat" >
+        <RingtonePreference
+            android:defaultValue="content://settings/system/notification_sound"
+            android:key="notifications_new_xmpp_message_ringtone"
+            android:ringtoneType="notification"
+            android:showDefault="true"
+            android:showSilent="true"
+            android:summary="Wähle einen Benachrichtigungston"
+            android:title="@string/pref_title_ringtone" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="notifications_new_xmpp_message_vibrate"
+            android:title="@string/pref_title_vibrate" />
+    </PreferenceCategory>
 
 </PreferenceScreen>

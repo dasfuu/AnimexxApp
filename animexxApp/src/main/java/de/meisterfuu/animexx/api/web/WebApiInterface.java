@@ -455,14 +455,13 @@ public interface WebApiInterface {
     //RPG
     //-------------------------------
 
-    @POST("/rpg/meine_rpgs/?alles=1")
+    @POST("/rpg/meine_rpgs/?alles=1&kompakt=1")
     @FormUrlEncoded
     ReturnObject<List<RPGObject>> getRPGList(@Field("beendete") int pFinished, @Field("offset") long pOffset, @Field("limit") long pLimit);
 
-    @POST("/rpg/meine_rpgs/?alles=1")
+    @POST("/rpg/meine_rpgs/?alles=1&kompakt=1")
     @FormUrlEncoded
     void getRPGList(@Field("beendete") int pFinished, @Field("offset") long pOffset, @Field("limit") long pLimit, Callback<ReturnObject<List<RPGObject>>> pCallback);
-
 
     @POST("/rpg/erstelle_rpg/")
     @FormUrlEncoded
