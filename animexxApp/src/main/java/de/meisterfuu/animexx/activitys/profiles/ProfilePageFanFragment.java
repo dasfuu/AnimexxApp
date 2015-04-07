@@ -69,6 +69,10 @@ public class ProfilePageFanFragment extends Fragment {
             public void success(ReturnObject<ProfileBoxObject> o, Response response) {
                 mListView.showList();
                 ProfileBoxObject obj = (ProfileBoxObject) o.getObj();
+                if(obj == null){
+                    mListView.showError("Keine Einträge");
+                    return;
+                }
                 mAdapter.addAll(obj.getFanlist());
                 if(mAdapter.getCount() == 0){
                     mListView.showError("Keine Einträge");

@@ -124,6 +124,7 @@ public class RPGCharacterListAdapter extends BaseAdapter {
             holder.Subtitle.setText("");
         }
 
+        holder.Table.clear();
         if(chara.getProperties() != null) {
             for (ArrayList<String> row : chara.getProperties()) {
                 try {

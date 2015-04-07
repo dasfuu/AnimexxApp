@@ -75,6 +75,10 @@ public class ProfilePageEventFragment extends Fragment implements AdapterView.On
             public void success(ReturnObject<ProfileBoxObject> o, Response response) {
                 mListView.showList();
                 ProfileBoxObject obj = (ProfileBoxObject) o.getObj();
+                if(obj == null){
+                    mListView.showError("Keine Events");
+                    return;
+                }
                 mAdapter.addAll(obj.getEventsFuture());
                 mAdapter.addAll(obj.getEventsPast());
                 if(mAdapter.getCount() == 0){

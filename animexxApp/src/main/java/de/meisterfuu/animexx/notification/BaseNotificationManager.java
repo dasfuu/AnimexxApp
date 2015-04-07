@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -60,10 +61,11 @@ public abstract class BaseNotificationManager <X extends BaseNotification>{
 
     public boolean removeAllNotifications(){
         mList = null;
-        return sharedPreferences.edit().clear().commit();
+        return sharedPreferences.edit().remove(KEY).commit();
     }
 
     public boolean clearNotifications(){
+        Log.e("TAG", "clearNotifications()");
         if(removeAllNotifications()) {
             cancel(mContext);
             return true;

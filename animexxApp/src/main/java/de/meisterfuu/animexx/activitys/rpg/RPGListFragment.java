@@ -1,6 +1,5 @@
 package de.meisterfuu.animexx.activitys.rpg;
 
-import android.app.ListFragment;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -12,16 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -30,9 +21,9 @@ import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.activitys.AnimexxBaseFragment;
 import de.meisterfuu.animexx.activitys.main.MainActivity;
 import de.meisterfuu.animexx.adapter.RPGListAdapter;
-import de.meisterfuu.animexx.api.broker.ENSBroker;
 import de.meisterfuu.animexx.api.broker.RPGBroker;
 import de.meisterfuu.animexx.api.web.ReturnObject;
+import de.meisterfuu.animexx.notification.RPGNotificationManager;
 import de.meisterfuu.animexx.objects.rpg.RPGObject;
 import de.meisterfuu.animexx.utils.views.FeedbackListView;
 import retrofit.Callback;
@@ -89,6 +80,8 @@ public class RPGListFragment extends AnimexxBaseFragment implements AdapterView.
 
         config = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
         mAPI = new RPGBroker(this.getActivity());
+        RPGNotificationManager manager = new RPGNotificationManager(getActivity());
+        manager.clearNotifications();
         init();
 
         super.onResume();

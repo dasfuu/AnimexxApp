@@ -76,20 +76,23 @@ public class GcmIntentService extends IntentService {
 
                 // If it's a regular GCM message, do some work.
             } else if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
-                String url = extras.getString("link");
-                if(url != null && !url.isEmpty()){
-                    int hash = url.hashCode();
-                    int hash2 = (""+url).hashCode();
-                    Log.d("GCM", "Hash: "+hash+" "+hash2);
-                    for(Map.Entry<Integer, Long> entry: GcmIntentService.getDoubleMap().entrySet()){
-                        if( System.currentTimeMillis() - entry.getValue() < 30000){
-                            GcmIntentService.getDoubleMap().remove(entry.getKey());
+
+                synchronized (doubleMap){
+                    String url = extras.getString("link");
+                    if(url != null && !url.isEmpty()){
+                        int hash = url.hashCode();
+                        int hash2 = (""+url).hashCode();
+                        Log.d("GCM", "Hash: "+hash+" "+hash2);
+                        for(Map.Entry<Integer, Long> entry: GcmIntentService.getDoubleMap().entrySet()){
+                            if( System.currentTimeMillis() - entry.getValue() < 30000){
+                                GcmIntentService.getDoubleMap().remove(entry.getKey());
+                            }
                         }
+                        if(GcmIntentService.getDoubleMap().containsKey(hash)){
+                            return;
+                        }
+                        GcmIntentService.getDoubleMap().put(hash, System.currentTimeMillis());
                     }
-                    if(GcmIntentService.getDoubleMap().containsKey(hash)){
-                        return;
-                    }
-                    GcmIntentService.getDoubleMap().put(hash, System.currentTimeMillis());
                 }
 
                 Log.d("GCM", "Type: "+extras.getString("type"));

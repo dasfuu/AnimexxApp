@@ -2,6 +2,7 @@ package de.meisterfuu.animexx.objects.profile;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -116,6 +117,9 @@ public class ProfileBoxObject {
     }
 
     public List<EventBoxObject> getEventsFuture() {
+        if(eventsFuture == null){
+            return new ArrayList<>();
+        }
         return eventsFuture;
     }
 
@@ -124,6 +128,9 @@ public class ProfileBoxObject {
     }
 
     public List<EventBoxObject> getEventsPast() {
+        if(eventsPast == null){
+            return new ArrayList<>();
+        }
         return eventsPast;
     }
 
@@ -132,6 +139,9 @@ public class ProfileBoxObject {
     }
 
     public List<FanBoxObject> getFanlist() {
+        if(fanlist == null){
+            return new ArrayList<>();
+        }
         return fanlist;
     }
 

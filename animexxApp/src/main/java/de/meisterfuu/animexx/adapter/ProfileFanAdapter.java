@@ -105,6 +105,9 @@ public class ProfileFanAdapter extends BaseAdapter {
     }
 
     public void addAll(List<ProfileBoxObject.FanBoxObject> list) {
+        if(list == null){
+            return;
+        }
         mItems.addAll(list);
         this.notifyDataSetChanged();
     }

@@ -31,6 +31,8 @@ import de.meisterfuu.animexx.api.xmpp.ChatEvent;
 import de.meisterfuu.animexx.api.xmpp.RoosterEvent;
 import de.meisterfuu.animexx.api.xmpp.StatsuChangeEvent;
 import de.meisterfuu.animexx.api.xmpp.XMPPApi;
+import de.meisterfuu.animexx.notification.RPGNotificationManager;
+import de.meisterfuu.animexx.notification.XMPPNotificationManager;
 import de.meisterfuu.animexx.objects.xmpp.XMPPRoosterObject;
 import de.meisterfuu.animexx.utils.views.FeedbackListView;
 import retrofit.Callback;
@@ -86,6 +88,8 @@ public class XMPPRoosterFragment extends AnimexxBaseFragment implements AdapterV
     public void onResume() {
         super.onResume();
         mApi = new XMPPApi(this.getActivity());
+        XMPPNotificationManager manager = new XMPPNotificationManager(getActivity());
+        manager.clearNotifications();
         getRooster();
     }
 

@@ -2,6 +2,7 @@ package de.meisterfuu.animexx.objects;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -10,7 +11,7 @@ import java.util.List;
 public class KarotalerStatsObject {
 
     //	- kt_abholbar: Objekt-Array / Es ist möglich, dass mehrere KT-Buchungen abholbar sind, z.B. wenn neben den täglichen KTs noch Preise von Gewinnspielen dazu kommen. In solchen Fällen hat das Array mehr als einen Eintrag. Man kann sie nur gesammelt abholen, aber auf diese Weise lässt sich genauer aufschlüsseln, wie sich der abholbare Betrag zusammensetzt. Die Objekte des Arrays haben folgende Werte: kt (int), grund (string), datum_server u. datum_utc
-    @SerializedName("kt_guthaben")
+    @SerializedName("kt_abholbar")
     private List<KarotalerPickupObject> pickup;
 
     //	- kt_guthaben: int
@@ -18,6 +19,9 @@ public class KarotalerStatsObject {
     private long balance;
 
     public List<KarotalerPickupObject> getPickup() {
+        if(pickup == null){
+            return new ArrayList<>();
+        }
         return pickup;
     }
 

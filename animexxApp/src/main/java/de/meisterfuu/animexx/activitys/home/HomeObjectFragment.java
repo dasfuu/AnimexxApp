@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.melnykov.fab.FloatingActionButton;
 import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
@@ -21,6 +23,8 @@ import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.adapter.HomeContactAdapter;
 import de.meisterfuu.animexx.api.broker.HomeBroker;
 import de.meisterfuu.animexx.api.web.ReturnObject;
+import de.meisterfuu.animexx.api.web.WebAPI;
+import de.meisterfuu.animexx.objects.KarotalerStatsObject;
 import de.meisterfuu.animexx.objects.home.ContactHomeObject;
 import de.meisterfuu.animexx.utils.views.FeedbackListView;
 import retrofit.Callback;
@@ -57,6 +61,8 @@ public class HomeObjectFragment extends Fragment implements AbsListView.OnItemCl
     private boolean paused;
     private SwipeRefreshLayout mSwipeLayout;
 
+    private FrameLayout mKarotalerFrame;
+
     public static Fragment getInstance() {
         Fragment fragment = new HomeObjectFragment();
         return fragment;
@@ -88,6 +94,8 @@ public class HomeObjectFragment extends Fragment implements AbsListView.OnItemCl
         View view = inflater.inflate(R.layout.fragment_homeobject_list, container, false);
         mListView = (FeedbackListView) view.findViewById(android.R.id.list);
         mFloatButton = (FloatingActionButton) view.findViewById(R.id.home_float_new);
+        mKarotalerFrame = (FrameLayout) view.findViewById(R.id.karotalerFrame);
+        mKarotalerFrame.setVisibility(View.GONE);
 
         mAPI = new HomeBroker(this.getActivity());
 
@@ -150,6 +158,53 @@ public class HomeObjectFragment extends Fragment implements AbsListView.OnItemCl
             mSwipeLayout.setRefreshing(true);
             loadNew();
         }
+
+
+        //Todo: This is too dirty......
+        final WebAPI api = new WebAPI(getActivity());
+        mKarotalerFrame.setVisibility(View.GONE);
+
+        mKarotalerFrame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mKarotalerFrame.setVisibility(View.GONE);
+                api.getApi().getKarotaler(new Callback<ReturnObject<Integer>>() {
+                    @Override
+                    public void success(ReturnObject<Integer> integerReturnObject, Response response) {
+                        try{
+                            Toast.makeText(getActivity(), "Karotaler abgeholt.(Guthaben: "+integerReturnObject.getObj()+")", Toast.LENGTH_SHORT).show();
+                        } catch (Exception e){
+
+                        }
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+
+                    }
+                });
+            }
+        });
+
+        api.getApi().getKarotalerStats(new Callback<ReturnObject<KarotalerStatsObject>>() {
+            @Override
+            public void success(ReturnObject<KarotalerStatsObject> obj, Response response) {
+                try{
+                    if(obj.getObj().getPickup().size() > 0){
+                        mKarotalerFrame.setVisibility(View.VISIBLE);
+                    } else {
+                        mKarotalerFrame.setVisibility(View.GONE);
+                    }
+                } catch (Exception e){
+
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
     }
 
     @Override

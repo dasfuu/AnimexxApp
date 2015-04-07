@@ -42,8 +42,11 @@ public class PrivateCalHelper {
      * @param context
      * @return
      */
-    public static long getCalendar(Context context) {
+    public static long getCalendar(Context context, int counter) {
         Log.d("CalSyncDemo", "getCalendar Method...PRIVAT");
+        if(counter >= 3){
+            return -1;
+        }
 
         ContentResolver contentResolver = context.getContentResolver();
 
@@ -91,7 +94,7 @@ public class PrivateCalHelper {
                 Log.e(TAG, "getCalendar() failed", e);
                 return -1;
             }
-            return getCalendar(context);
+            return getCalendar(context, counter+1);
 
         } finally {
             if (cursor != null && !cursor.isClosed())
@@ -326,7 +329,7 @@ public class PrivateCalHelper {
             return;
         }
 
-        long calendarId = getCalendar(pContext);
+        long calendarId = getCalendar(pContext, 0);
         if (calendarId == -1) {
             Log.e("TAG", "Unable to create calendar");
             return;

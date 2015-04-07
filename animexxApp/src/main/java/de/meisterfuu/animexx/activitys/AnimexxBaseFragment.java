@@ -87,8 +87,13 @@ public class AnimexxBaseFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        mBus.getOtto().register(this);
-        mBus.getOtto().register(mBaseActivityListener);
+        try {
+            mBus.getOtto().register(this);
+            mBus.getOtto().register(mBaseActivityListener);
+        } catch (IllegalArgumentException e){
+
+        }
+
 
 
         /**
