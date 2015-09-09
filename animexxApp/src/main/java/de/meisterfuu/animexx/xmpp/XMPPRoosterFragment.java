@@ -95,6 +95,9 @@ public class XMPPRoosterFragment extends AnimexxBaseFragment implements AdapterV
 
     @Subscribe
     public void onStatusChange(StatsuChangeEvent event){
+        if(this.getActivity() == null){
+            return;
+        }
         Log.d("onStatusChange()", event.status.toString());
         Handler handler = new Handler();
         boolean shouldOnline = PreferenceManager.getDefaultSharedPreferences(this.getActivity()).getBoolean("xmpp_status", false);

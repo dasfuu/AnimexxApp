@@ -36,7 +36,7 @@ import de.meisterfuu.animexx.notification.RPGNotificationManager;
 import de.meisterfuu.animexx.objects.rpg.RPGDraftObject;
 import de.meisterfuu.animexx.objects.rpg.RPGObject;
 import de.meisterfuu.animexx.objects.rpg.RPGPostObject;
-import de.meisterfuu.animexx.services.GcmIntentService;
+import de.meisterfuu.animexx.services.gcm.AnimexxGcmListenerService;
 import de.meisterfuu.animexx.utils.views.FeedbackListView;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -112,7 +112,7 @@ public class RPGPostListActivity extends AnimexxBaseActivityAB implements PanelS
             @Override
             public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();
-                if (action.equals(GcmIntentService.NEW_POST)) {
+                if (action.equals(AnimexxGcmListenerService.NEW_POST)) {
                     refreshList();
                 }
             }
@@ -120,7 +120,7 @@ public class RPGPostListActivity extends AnimexxBaseActivityAB implements PanelS
 
 
         IntentFilter filter = new IntentFilter();
-        filter.addAction(GcmIntentService.NEW_POST);
+        filter.addAction(AnimexxGcmListenerService.NEW_POST);
         registerReceiver(mReceiver, filter);
 
         if (paused) {
@@ -301,10 +301,12 @@ public class RPGPostListActivity extends AnimexxBaseActivityAB implements PanelS
             @Override
             public void success(ReturnObject<Integer> integerReturnObject, Response response) {
                 dialog.cancel();
-                refreshList();
-                mSlidingLayout.collapsePanel();
-                mToggleLabel.setText("Neuer Post");
-                mEditPost.setText("");
+                if(integerReturnObject.getObj() != null && integerReturnObject.getObj().equals(1)){
+                    refreshList();
+                    mSlidingLayout.collapsePanel();
+                    mToggleLabel.setText("Neuer Post");
+                    mEditPost.setText("");
+                }
             }
 
             @Override

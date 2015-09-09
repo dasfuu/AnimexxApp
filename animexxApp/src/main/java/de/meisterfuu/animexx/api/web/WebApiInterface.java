@@ -1,6 +1,7 @@
 package de.meisterfuu.animexx.api.web;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import java.util.List;
 import java.util.Map;
@@ -10,6 +11,7 @@ import de.meisterfuu.animexx.objects.KarotalerStatsObject;
 import de.meisterfuu.animexx.objects.SingleValueObjects;
 import de.meisterfuu.animexx.objects.UploadedFile;
 import de.meisterfuu.animexx.objects.UserObject;
+import de.meisterfuu.animexx.objects.aidb.EANResultObject;
 import de.meisterfuu.animexx.objects.aidb.MangaObject;
 import de.meisterfuu.animexx.objects.contacts.ContactGroupObject;
 import de.meisterfuu.animexx.objects.ens.ENSCheckRecipientsObject;
@@ -705,33 +707,68 @@ public interface WebApiInterface {
     //-------------------------------
 
     @POST("/aidb/mangas/meine_detailliert/")
-    ReturnObject<JsonElement> getMangaOwned();
+    ReturnObject<JsonObject> getMangaOwned();
 
     @POST("/aidb/mangas/meine_detailliert/")
-    void getMangaOwned(Callback<ReturnObject<JsonElement>> pCallback);
+    void getMangaOwned(Callback<ReturnObject<JsonObject>> pCallback);
+
+    @POST("/aidb/mangas/meine/")
+    ReturnObject<JsonObject> getMangaOwnedSimple();
+
+    @POST("/aidb/mangas/meine/")
+    void getMangaOwnedSimple(Callback<ReturnObject<JsonObject>> pCallback);
+
+    @POST("/aidb/mangas/abo/")
+    ReturnObject<JsonObject> getAbos();
+
+    @POST("/aidb/mangas/abo/")
+    void getAbos(Callback<ReturnObject<JsonObject>> pCallback);
 
     @POST("/aidb/mangas/details/")
     @FormUrlEncoded
-    ReturnObject<MangaObject> getMangaDetail(@Field("id") String pMangaId);
+    ReturnObject<MangaObject> getMangaDetail(@Field("id") long pMangaId);
 
     @POST("/aidb/mangas/details/")
     @FormUrlEncoded
-    void getMangaDetail(@Field("id") String pMangaId, Callback<ReturnObject<MangaObject>> pCallback);
+    void getMangaDetail(@Field("id") long pMangaId, Callback<ReturnObject<MangaObject>> pCallback);
 
     @POST("/aidb/mangas/serie/")
     @FormUrlEncoded
-    ReturnObject<Object> getMangaSeriesDetail(@Field("serie") String pSeriesId);
+    ReturnObject<JsonObject> getMangaSeriesDetail(@Field("serie") long pSeriesId);
 
     @POST("/aidb/mangas/serie/")
     @FormUrlEncoded
-    void getMangaSeriesDetail(@Field("serie") String pSeriesId, Callback<ReturnObject<Object>> pCallback);
+    void getMangaSeriesDetail(@Field("serie") long pSeriesId, Callback<ReturnObject<JsonObject>> pCallback);
 
     @POST("/aidb/mangas/alle/")
-    ReturnObject<Object> getMangaAll();
+    ReturnObject<JsonObject> getMangaAll();
 
     @POST("/aidb/mangas/alle/")
-    void getMangaAll(Callback<ReturnObject<Object>> pCallback);
+    void getMangaAll(Callback<ReturnObject<JsonObject>> pCallback);
 
+    @POST("/aidb/mangas/meine_set/")
+    @FormUrlEncoded
+    ReturnObject<JsonObject> addManga(@Field("ids[]") List<Long> pMangaIds);
+
+    @POST("/aidb/mangas/meine_set/")
+    @FormUrlEncoded
+    void addManga(@Field("ids[]") List<Long> pMangaIds, Callback<ReturnObject<JsonObject>> pCallback);
+
+    @POST("/aidb/mangas/meine_unset/")
+    @FormUrlEncoded
+    ReturnObject<JsonObject> removeManga(@Field("ids[]") List<Long> pMangaIds);
+
+    @POST("/aidb/mangas/meine_unset/")
+    @FormUrlEncoded
+    void removeManga(@Field("ids[]") List<Long> pMangaIds, Callback<ReturnObject<JsonObject>> pCallback);
+
+    @POST("/aidb/ean_resolve/")
+    @FormUrlEncoded
+    ReturnObject<EANResultObject> eanResolve(@Field("ean") Long ean);
+
+    @POST("/aidb/ean_resolve/")
+    @FormUrlEncoded
+    void eanResolve(@Field("ean") Long ean, Callback<ReturnObject<EANResultObject>> pCallback);
 
     //-------------------------------
     //GCM
@@ -761,11 +798,11 @@ public interface WebApiInterface {
 
     @POST("/cloud2device/set_active_events/")
     @FormUrlEncoded
-    ReturnObject<Empty> setGCMEvents(@Field("events[]") List<String> pEventse);
+    ReturnObject<Integer> setGCMEvents(@Field("events[]") List<String> pEventse);
 
     @POST("/cloud2device/set_active_events/")
     @FormUrlEncoded
-    void setGCMEvents(@Field("events[]") List<String> pEvents, Callback<ReturnObject<Empty>> pCallback);
+    void setGCMEvents(@Field("events[]") List<String> pEvents, Callback<ReturnObject<Integer>> pCallback);
 
 
     //-------------------------------

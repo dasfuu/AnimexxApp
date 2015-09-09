@@ -70,8 +70,7 @@ public class ENSQueueService extends IntentService {
             Calendar cal = Calendar.getInstance();
             cal.add(Calendar.MINUTE, 1);
             Intent intent = ENSQueueService.getStartActionIntent(this);
-            PendingIntent pintent = PendingIntent
-                    .getService(this, 0, intent, 0);
+            PendingIntent pintent = PendingIntent.getService(this, 0, intent, 0);
 
             AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
             alarm.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pintent);

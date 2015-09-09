@@ -70,4 +70,9 @@ public class WebAPI implements ErrorHandler {
 
         return cause;
     }
+
+    public static void clear(){
+        sRApi = null;
+        mSigner = null;
+    }
 }

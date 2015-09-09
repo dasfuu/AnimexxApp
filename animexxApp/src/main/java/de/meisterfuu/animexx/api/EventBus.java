@@ -93,6 +93,10 @@ public class EventBus {
         }
     }
 
+    public void postProxyEvent(ApiEvent<?> event){
+        getOtto().post(new ApiEvent.ApiProxyEvent(event));
+    }
+
     public Bus getOtto() {
         return mOtto;
     }

@@ -71,6 +71,13 @@ public class MainDrawerAdapter extends BaseAdapter {
 
         temp = new DrawerObject();
         temp.setIconId(R.drawable.ens_flags_forwarded_blue);
+        temp.setTitle("Manga");
+        temp.setSubtitle("");
+        temp.setCode("MANGA");
+        this.addItem(temp);
+
+        temp = new DrawerObject();
+        temp.setIconId(R.drawable.ens_flags_forwarded_blue);
         temp.setTitle("Einstellungen");
         temp.setSubtitle("");
         temp.setCode("SETTINGS");

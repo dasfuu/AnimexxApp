@@ -4,6 +4,10 @@ import java.util.List;
 
 import de.meisterfuu.animexx.objects.UserObject;
 import de.meisterfuu.animexx.objects.UserSearchResultObject;
+import de.meisterfuu.animexx.objects.aidb.EANResultObject;
+import de.meisterfuu.animexx.objects.aidb.MangaObject;
+import de.meisterfuu.animexx.objects.aidb.MangaSeriesObject;
+import de.meisterfuu.animexx.objects.aidb.MyMangaObject;
 import de.meisterfuu.animexx.objects.ens.ENSFolderObject;
 import de.meisterfuu.animexx.objects.ens.ENSObject;
 import de.meisterfuu.animexx.objects.event.EventDescriptionObject;
@@ -70,6 +74,9 @@ public class ApiEvent<T> {
 
     }
 
+    public static class ErrorEvent extends ApiEvent<Object> {
+    }
+
     public static class ProfileEvent extends ApiEvent<ProfileObject> {
     }
 
@@ -132,4 +139,23 @@ public class ApiEvent<T> {
 
     public static class HomeEntryListEvent extends ApiEvent<List<BasicHomeObject>> {
     }
+
+    public static class MyMangaEvent extends ApiEvent<List<MyMangaObject>> {
+    }
+
+    public static class MangaEvent extends ApiEvent<MangaObject> {
+    }
+
+    public static class MangaSeriesEvent extends ApiEvent<MangaSeriesObject> {
+    }
+
+    public static class EANResultEvent extends ApiEvent<EANResultObject> {
+    }
+
+    public static class MangaAddedEvent extends ApiEvent<List<Long>> {
+    }
+
+    public static class MangaDeletedEvent extends ApiEvent<List<Long>> {
+    }
+
 }

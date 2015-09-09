@@ -196,5 +196,7 @@
     <string name="patio_footer">%1$d von %2$d</string>
     <string name="action_finished">Fertig</string>
     <string name="title_activity_web_dav_image">Bild wählen</string>
+    <string name="title_activity_manga_scan">Manga</string>
+    <string name="title_activity_manga_series">MangaSeriesActivity</string>
 
 </resources>

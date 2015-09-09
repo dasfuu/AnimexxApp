@@ -24,6 +24,7 @@ import de.meisterfuu.animexx.api.Self;
 import de.meisterfuu.animexx.api.broker.GCMBroker;
 import de.meisterfuu.animexx.api.web.ReturnObject;
 import de.meisterfuu.animexx.objects.SingleValueObjects;
+import de.meisterfuu.animexx.services.gcm.RegisterGCMIntentService;
 import de.meisterfuu.animexx.xmpp.XMPPService;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -103,7 +104,7 @@ public class LoginActivity extends Activity implements OnClickListener {
     }
 
     private void initGCM() {
-        //Check for gcm id
+        //Check for gcm ids and print and delete all
 //        new Thread(new Runnable() {
 //            @Override
 //            public void run() {
@@ -114,33 +115,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 //            }
 //        }).start();
 
-
-        if (gcm.getRegistrationId(this) == null) {
-            Log.e("Animexx Init", "GCM REG ID IS NULL");
-            //No? Get one and activate.
-            gcm.registerGCM(new Callback() {
-                @Override
-                public void success(Object o, Response response) {
-                    //Activate Events after registration
-                    gcm.activateGCMEvents(new Callback<ReturnObject<SingleValueObjects.Empty>>() {
-                        @Override
-                        public void success(final ReturnObject<SingleValueObjects.Empty> t, final Response response) {
-
-                        }
-
-                        @Override
-                        public void failure(final RetrofitError error) {
-
-                        }
-                    });
-                }
-
-                @Override
-                public void failure(RetrofitError error) {
-
-                }
-            });
-        }
+        RegisterGCMIntentService.register(this);
     }
 
     @Override

@@ -47,13 +47,18 @@ public class MyMangaObject {
         this.volumes = volumes;
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
+
     public static class Volume{
         @SerializedName("name")
         private String name;
         @SerializedName("id")
         private long mangaId;
         @SerializedName("band")
-        private String volume;
+        private int volume;
 
         public String getName() {
             return name;
@@ -71,12 +76,21 @@ public class MyMangaObject {
             this.mangaId = mangaId;
         }
 
-        public String getVolume() {
+        public int getVolume() {
             return volume;
         }
 
-        public void setVolume(String volume) {
+        public void setVolume(int volume) {
             this.volume = volume;
+        }
+
+        @Override
+        public String toString() {
+            return "Volume{" +
+                    "name='" + name + '\'' +
+                    ", mangaId=" + mangaId +
+                    ", volume='" + volume + '\'' +
+                    '}';
         }
     }
 

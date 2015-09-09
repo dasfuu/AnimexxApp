@@ -10,6 +10,10 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.android.gms.iid.InstanceID;
+
+import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,13 +31,12 @@ import retrofit.client.Response;
 public class GCMBroker extends BasicWebBroker {
 
 
-    ArrayList<String> EventCodes = new ArrayList<String>();
+    ArrayList<String> EventCodes = new ArrayList<>();
 
     String[] ev1 = new String[]{"XXEventENS", "XXEventGeburtstag", "XXEventGaestebuch"};
     String[] ev2 = new String[]{"XXEventVerrealkontaktet", "XXEventUsernameChange", "XXEventTwitterAnbindung", "XXEventSelbstbeschreibungErwaehnung", "XXEventEventsDabei"};
     String[] ev3 = new String[]{"XXEventSelbstbeschreibungAenderung", "XXEventSteckbriefVideoNeu", "XXEventMagDoujinshi", "XXEventMagWeblogeintrag", "XXEventMagEvent", "XXEventMagFanart", "XXEventMagBastelei", "XXEventMagFanfic", "XXEventMagFoto", "XXEventMagFotoreihe", "XXEventMagOekaki", "XXEventMagNews", "XXEventMagWettbewerb", "XXEventMagManga", "XXEventMagDVD", "XXEventMagArtbook", "XXEventMagCD", "XXEventMagGame", "XXEventMagAsia", "XXEventMagUmfrage", "XXEventMagCosplay", "XXEventMagJFashion", "XXEventMagForumThread", "XXEventMagForumPosting", "XXEventMagZirkelForumThread", "XXEventMagZirkelForumPosting", "XXEventMagEventVideo", "XXEventMagFanVideo", "XXEventMagWebshop", "XXEventMagAudiobook"};
     String[] ev4 = new String[]{"XXEventRPGAdminUebergabe", "XXEventRPGBewerbungAngenommen", "XXEventRPGBewerbungAbgelehnt", "XXEventRPGBewerbung", "XXEventRPGAbmeldung", "XXEventRPGPosting"};
-    private Object activeIds;
 
 
     //Init
@@ -42,8 +45,8 @@ public class GCMBroker extends BasicWebBroker {
         super(pContext);
 
         EventCodes.addAll(Arrays.asList(ev1));
-        EventCodes.addAll(Arrays.asList(ev2));
-        EventCodes.addAll(Arrays.asList(ev3));
+//        EventCodes.addAll(Arrays.asList(ev2));
+//        EventCodes.addAll(Arrays.asList(ev3));
         EventCodes.addAll(Arrays.asList(ev4));
     }
 
@@ -53,41 +56,32 @@ public class GCMBroker extends BasicWebBroker {
     /**
      * @param pCallback
      */
-    public void activateGCMEvents(final Callback<ReturnObject<SingleValueObjects.Empty>> pCallback) {
+    public void activateGCMEvents(final Callback<ReturnObject<Integer>> pCallback) {
         getWebApi().refresh(this.getContext());
         getWebApi().getApi().setGCMEvents(EventCodes, pCallback);
     }
 
-
-    public void registerGCM(final Callback pCallback) {
+    public void activateGCMEvents() throws RetrofitError {
         getWebApi().refresh(this.getContext());
-        final Handler hand = new Handler();
-        final Thread t = new Thread(new Runnable() {
+        getWebApi().getApi().setGCMEvents(EventCodes);
+    }
 
-            public void run() {
-                Looper.prepare();
-                GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(getContext());
-                try {
-                    String reg_id = gcm.register(KEYS.GCM_SENDER_ID);
-                    Log.e("Animexx GCM", "NEW ID: " + reg_id);
-                    saveGCM(reg_id);
 
-                    sentGCMID(reg_id);
-
-                    hand.post(new Runnable() {
-                        public void run() {
-                            if (pCallback != null) pCallback.success(null, null);
-                        }
-                    });
-
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-                Looper.loop();
-            }
-        });
-        t.start();
+    public boolean registerGCM() {
+        getWebApi().refresh(this.getContext());
+//                GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(getContext());
+//                String reg_id = gcm.register(KEYS.GCM_SENDER_ID);
+        try {
+            InstanceID iid = InstanceID.getInstance(getContext());
+            String token = iid.getToken(KEYS.GCM_SENDER_ID, GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
+            saveGCM(token);
+            sentGCMID(token);
+            Log.e("Animexx GCM", "Registered gcm token on server");
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     /**
@@ -113,8 +107,24 @@ public class GCMBroker extends BasicWebBroker {
         return registrationId;
     }
 
-    public void activateGCMEvents() throws RetrofitError {
-        getWebApi().getApi().setGCMEvents(EventCodes);
+    /**
+     * @param hash
+     */
+    public boolean compareRegistrationIdHash(String hash) {
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        String registrationId = prefs.getString("gcm_reg_id", "");
+
+//        String registrationIdHash = DigestUtils.md5Hex(registrationId);
+//        String registrationIdHash = new String(Hex.encodeHex(DigestUtils.md5(registrationId)));
+          String registrationIdHash =  registrationId.substring(6);
+
+        if (registrationIdHash.startsWith(hash)) {
+            Log.e("Animexx GCM", "VALID GCM MESSAGE");
+            return true;
+        } else {
+            Log.e("Animexx GCM", hash + "  " + registrationIdHash);
+        }
+        return false;
     }
 
     public void sentGCMID(String id) throws RetrofitError {

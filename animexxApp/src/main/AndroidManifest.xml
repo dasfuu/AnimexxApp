@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.meisterfuu.animexx"
-    android:versionCode="91"
-    android:versionName="2.0" >
+    android:versionCode="94"
+    android:versionName="2.1.2" >
 
     <uses-feature
         android:glEsVersion="0x00020000"
@@ -114,7 +114,8 @@
 
         <!-- GCM Receiver/Service -->
         <receiver
-            android:name=".receiver.GcmBroadcastReceiver"
+            android:name="com.google.android.gms.gcm.GcmReceiver"
+            android:exported="true"
             android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
@@ -122,8 +123,6 @@
                 <category android:name="de.meisterfuu.animexx" />
             </intent-filter>
         </receiver>
-
-        <service android:name=".services.GcmIntentService" />
 
         <activity
             android:name=".activitys.main.SettingsActivity"
@@ -256,9 +255,42 @@
             android:exported="false" >
         </service>
 
+        <service
+            android:name=".services.MangaFetchService"
+            android:exported="false" >
+        </service>
+
         <activity
             android:name=".activitys.share.WebDavImageActivity"
             android:label="@string/title_activity_web_dav_image" >
+        </activity>
+
+        <service
+            android:name=".services.gcm.RegisterGCMIntentService"
+            android:exported="false" >
+        </service>
+        <service
+            android:name=".services.gcm.GCMInstanceIDListenerService"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.google.android.gms.iid.InstanceID" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".services.gcm.AnimexxGcmListenerService"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
+        </service>
+
+        <activity
+            android:name=".activitys.aidb.manga.MangaScanActivity"
+            android:label="@string/title_activity_manga_scan" >
+        </activity>
+        <activity
+            android:name=".activitys.aidb.manga.MangaSeriesActivity"
+            android:label="@string/title_activity_manga_series" >
         </activity>
     </application>
 

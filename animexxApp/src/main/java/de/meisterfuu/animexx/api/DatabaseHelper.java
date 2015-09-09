@@ -12,6 +12,7 @@ import com.j256.ormlite.table.TableUtils;
 import java.sql.SQLException;
 import java.util.HashMap;
 
+import de.meisterfuu.animexx.objects.aidb.MangaDbObject;
 import de.meisterfuu.animexx.objects.ens.ENSDraftObject;
 import de.meisterfuu.animexx.objects.ens.ENSNotifyObject;
 import de.meisterfuu.animexx.objects.ens.ENSObject;
@@ -22,7 +23,7 @@ import de.meisterfuu.animexx.objects.xmpp.XMPPRoosterObject;
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private static final String DATABASE_NAME = "db.db";
-    private static final int DATABASE_VERSION = 5127;
+    private static final int DATABASE_VERSION = 5128;
 
     private HashMap<Class, RuntimeExceptionDao> daos = null;
 
@@ -112,6 +113,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return getDao(DatabaseTables.XMPPRoosterObject);
     }
 
+    public RuntimeExceptionDao<MangaDbObject, Long> getMangaDbDataDao() {
+        return getDao(DatabaseTables.MangaDbObject);
+    }
+
     public enum DatabaseTables {
 
         ENSObject(new DatabaseHelper.Classes(ENSObject.class, Long.class)),
@@ -119,7 +124,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         ENSNotifyObject(new DatabaseHelper.Classes(ENSNotifyObject.class, Long.class)),
         ENSQueueObject(new DatabaseHelper.Classes(ENSQueueObject.class, Long.class)),
         XMPPMessageObject(new DatabaseHelper.Classes(XMPPMessageObject.class, Long.class)),
-        XMPPRoosterObject(new DatabaseHelper.Classes(XMPPRoosterObject.class, String.class));
+        XMPPRoosterObject(new DatabaseHelper.Classes(XMPPRoosterObject.class, String.class)),
+        MangaDbObject(new DatabaseHelper.Classes(MangaDbObject.class, Long.class));
 
         private DatabaseHelper.Classes cl;
 

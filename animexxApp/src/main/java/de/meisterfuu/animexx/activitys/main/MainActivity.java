@@ -24,7 +24,10 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import de.meisterfuu.animexx.AnimexxDebugActivity;
 import de.meisterfuu.animexx.R;
+import de.meisterfuu.animexx.activitys.aidb.manga.MangaFragment;
+import de.meisterfuu.animexx.activitys.aidb.manga.MangaScanActivity;
 import de.meisterfuu.animexx.activitys.contacts.ContactFragment;
 import de.meisterfuu.animexx.activitys.ens.ENSFolderFragment;
 import de.meisterfuu.animexx.activitys.ens.FeedbackActivity;
@@ -315,6 +318,8 @@ public class MainActivity extends ActionBarActivity {
             selectChat();
         } else if (pCode.equals("HOME")) {
             selectHome();
+        } else if (pCode.equals("MANGA")) {
+            selectManga();
         } else if (pCode.equals("CONTACTS")) {
             selectContacts();
         } else if (pCode.equals("SETTINGS")) {
@@ -369,7 +374,7 @@ public class MainActivity extends ActionBarActivity {
 
     private void selectENS() {
 
-        loadFragment(ENSFolderFragment.getInstance(1, ENSBroker.TYPE_INBOX), "1_"+ENSBroker.TYPE_INBOX);
+        loadFragment(ENSFolderFragment.getInstance(1, ENSBroker.TYPE_INBOX), "1_" + ENSBroker.TYPE_INBOX);
         invalidateOptionsMenu();
 
         new ENSBroker(MainActivity.this).getFolderList(new Callback<ReturnObject<ENSFolderObject.ENSFolderObjectContainer>>() {
@@ -383,7 +388,7 @@ public class MainActivity extends ActionBarActivity {
                     public void onItemSelected(AdapterView<?> parent, View view, int itemPosition, long id) {
                         ENSFolderObject folder = spinnerAdapter.getItem(itemPosition);
                         Fragment fragment = ENSFolderFragment.getInstance(folder.getId(), folder.getType());
-                        loadFragment(fragment, folder.getId()+ "_" + folder.getType());
+                        loadFragment(fragment, folder.getId() + "_" + folder.getType());
                     }
 
                     @Override
@@ -410,6 +415,13 @@ public class MainActivity extends ActionBarActivity {
         this.setTitle("Kontakte");
         resetToolbar();
         loadFragment(ContactFragment.getInstance(), "Kontakte");
+        invalidateOptionsMenu();
+    }
+
+    private void selectManga() {
+        this.setTitle("Manga");
+        resetToolbar();
+        loadFragment(MangaFragment.getInstance(), "Manga");
         invalidateOptionsMenu();
     }
 

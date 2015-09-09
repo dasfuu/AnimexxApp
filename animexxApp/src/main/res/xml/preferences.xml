@@ -90,5 +90,9 @@
             android:key="notifications_new_xmpp_message_vibrate"
             android:title="@string/pref_title_vibrate" />
     </PreferenceCategory>
-
+    <PreferenceCategory android:title="Account" >
+        <Preference
+            android:key="pref_reset"
+            android:title="Benutzer wechseln/Ausloggen" />
+    </PreferenceCategory>
 </PreferenceScreen>
