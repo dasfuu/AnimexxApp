@@ -29,6 +29,6 @@ public class Constants {
     public static final String CONTENT_CALENDAR_AUTHORITY = CalendarContract.AUTHORITY;
 
     // Other
-    public static final String VERSION = "v2.0.0";
+    public static final String VERSION = "v2.2.0";
 
 }

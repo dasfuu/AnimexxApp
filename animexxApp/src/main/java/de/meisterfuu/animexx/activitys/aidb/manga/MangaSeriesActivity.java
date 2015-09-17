@@ -2,8 +2,10 @@ package de.meisterfuu.animexx.activitys.aidb.manga;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -13,12 +15,14 @@ import de.meisterfuu.animexx.R;
 import de.meisterfuu.animexx.activitys.AnimexxBaseActivityAB;
 import de.meisterfuu.animexx.adapter.SectionsPagerAdapter;
 import de.meisterfuu.animexx.api.ApiEvent;
+import de.meisterfuu.animexx.api.EventBus;
 import de.meisterfuu.animexx.api.broker.MangaBroker;
 import de.meisterfuu.animexx.objects.aidb.MangaSeriesObject;
 import de.meisterfuu.animexx.objects.aidb.MyMangaObject;
 import de.meisterfuu.animexx.services.MangaFetchService;
 
 public class MangaSeriesActivity extends AnimexxBaseActivityAB {
+
 
     public static void getInstance(Context pContext, long pMangaId) {
         Intent i = new Intent().setClass(pContext, MangaSeriesActivity.class);
@@ -37,6 +41,11 @@ public class MangaSeriesActivity extends AnimexxBaseActivityAB {
     private MangaSeriesObject mSeries;
     private MyMangaObject mMyManga;
 
+    private MangaVolumeListFragment ownFragment;
+    private MangaVolumeListFragment missingFragment;
+
+    private Handler handler;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +54,7 @@ public class MangaSeriesActivity extends AnimexxBaseActivityAB {
         Bundle extras = this.getIntent().getExtras();
         mID = extras.getLong("id");
         MangaFetchService.startAction(this, mID);
+        handler = new Handler();
 
         mApi = new MangaBroker(this.getApplicationContext());
 
@@ -70,14 +80,53 @@ public class MangaSeriesActivity extends AnimexxBaseActivityAB {
 
         //Create Volumes Tabs
 
-        mSectionsPagerAdapter.addFragment(new SectionsPagerAdapter.FragmentHolder("Im Besitz", "inPossession", MangaVolumeListFragment.newInstance(mID, MangaVolumeListFragment.MODE_OWN), idcount++));
-        mSectionsPagerAdapter.addFragment(new SectionsPagerAdapter.FragmentHolder("Fehlend", "missing", MangaVolumeListFragment.newInstance(mID, MangaVolumeListFragment.MODE_MISSING), idcount++));
+        ownFragment = MangaVolumeListFragment.newInstance(mID, MangaVolumeListFragment.MODE_OWN);
+        mSectionsPagerAdapter.addFragment(new SectionsPagerAdapter.FragmentHolder("Im Besitz", "inPossession", ownFragment, idcount++));
+        missingFragment = MangaVolumeListFragment.newInstance(mID, MangaVolumeListFragment.MODE_MISSING);
+        mSectionsPagerAdapter.addFragment(new SectionsPagerAdapter.FragmentHolder("Fehlend", "missing", missingFragment, idcount++));
         mSectionsPagerAdapter.addFragment(new SectionsPagerAdapter.FragmentHolder("Alle", "all", MangaVolumeListFragment.newInstance(mID, MangaVolumeListFragment.MODE_ALL), idcount++));
 
         mSectionsPagerAdapter.notifyDataSetChanged();
 
 //        mViewPager.setCurrentItem(1, false);
 
+    }
+
+    public long lastUpdate;
+
+    public void onChange(){
+        lastUpdate = System.currentTimeMillis();
+        handler.postDelayed(new DelayedDismiss(), 5000);
+    }
+
+    @Subscribe
+    public void onDelete(ApiEvent.MangaDeletedEvent event){
+        //EventBus.getBus().getOtto().post(new ApiEvent.MangaUpdateEvent());
+        onChange();
+    }
+
+    @Subscribe
+    public void onAdd(ApiEvent.MangaAddedEvent event){
+        //EventBus.getBus().getOtto().post(new ApiEvent.MangaUpdateEvent());
+        onChange();
+    }
+
+    private class DelayedDismiss implements Runnable {
+
+        long time;
+
+        public DelayedDismiss(){
+            time = System.currentTimeMillis();
+        }
+
+        @Override
+        public void run() {
+            if(time >= lastUpdate){
+                MangaFetchService.startAction(MangaSeriesActivity.this, mID);
+            } else {
+                Log.d("MangaFetchService", "Update dissmissed");
+            }
+        }
     }
 
 //    @Subscribe

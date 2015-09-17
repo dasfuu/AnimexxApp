@@ -45,10 +45,11 @@ public class MangaScanActivity extends AnimexxBaseActivityAB implements View.OnC
 
         button = (ImageView) findViewById(R.id.activity_manga_scan_button);
         status = (TextView) findViewById(R.id.activity_manga_scan_laststatus_text);
-        status.setText("");
-        setTitle("Manga hinzuf�gen");
+        status.setText("Berühre den Barcode, um einen Manga zu scannen und deiner Sammlung hinzuzufügen.");
+        setTitle("Manga hinzufügen");
 
         button.setOnClickListener(this);
+        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -62,7 +63,7 @@ public class MangaScanActivity extends AnimexxBaseActivityAB implements View.OnC
         }
         IntentIntegrator scanIntent = new IntentIntegrator(this);
         scanIntent.initiateScan(IntentIntegrator.PRODUCT_CODE_TYPES);
-        scanIntent.setTitle("Manga hinzuf�gen");
+        scanIntent.setTitle("Manga hinzufügen");
     }
 
     @Override

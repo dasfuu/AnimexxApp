@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.meisterfuu.animexx"
-    android:versionCode="94"
-    android:versionName="2.1.2" >
+    android:versionCode="95"
+    android:versionName="2.2" >
 
     <uses-feature
         android:glEsVersion="0x00020000"
@@ -286,11 +286,19 @@
 
         <activity
             android:name=".activitys.aidb.manga.MangaScanActivity"
-            android:label="@string/title_activity_manga_scan" >
+            android:label="@string/title_activity_manga_scan"
+            android:parentActivityName=".activitys.main.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.meisterfuu.animexx.activitys.main.MainActivity" />
         </activity>
         <activity
             android:name=".activitys.aidb.manga.MangaSeriesActivity"
-            android:label="@string/title_activity_manga_series" >
+            android:label="@string/title_activity_manga_series"
+            android:parentActivityName=".activitys.main.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.meisterfuu.animexx.activitys.main.MainActivity" />
         </activity>
     </application>
 

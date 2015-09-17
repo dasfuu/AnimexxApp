@@ -124,6 +124,22 @@ public class MangaBroker extends BasicWebBroker {
 
     }
 
+    public void addManga(final List<Long> pMangaIds) {
+
+        getWebApi().getApi().addManga(pMangaIds, new ErrorCallback<JsonObject>() {
+            @Override
+            public void onSuccess(ReturnObject<JsonObject> jsonElementReturnObject, Response response) {
+                EventBus.getBus().getOtto().post(new ApiEvent.MangaAddedEvent().setObj(pMangaIds));
+            }
+
+            @Override
+            public void onFailure(RetrofitError error, ReturnObject<JsonObject> jsonObjectReturnObject) {
+                EventBus.getBus().getOtto().post(new ApiEvent.ErrorEvent().setObj(null));
+            }
+
+        });
+    }
+
     public void removeManga(final List<Long> pMangaIds, final int pCallerID) {
 
         getWebApi().getApi().removeManga(pMangaIds, new ErrorCallback<JsonObject>() {
@@ -138,7 +154,23 @@ public class MangaBroker extends BasicWebBroker {
             }
 
         });
+    }
 
+
+    public void removeManga(final List<Long> pMangaIds) {
+
+        getWebApi().getApi().removeManga(pMangaIds, new ErrorCallback<JsonObject>() {
+            @Override
+            public void onSuccess(ReturnObject<JsonObject> jsonElementReturnObject, Response response) {
+                EventBus.getBus().getOtto().post(new ApiEvent.MangaDeletedEvent().setObj(pMangaIds));
+            }
+
+            @Override
+            public void onFailure(RetrofitError error, ReturnObject<JsonObject> jsonObjectReturnObject) {
+                EventBus.getBus().getOtto().post(new ApiEvent.ErrorEvent().setObj(null));
+            }
+
+        });
     }
 
     public void getMangaSeriesDetails(final long mangaId, final int pCallerID) {

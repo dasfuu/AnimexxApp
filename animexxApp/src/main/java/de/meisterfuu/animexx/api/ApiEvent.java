@@ -158,4 +158,6 @@ public class ApiEvent<T> {
     public static class MangaDeletedEvent extends ApiEvent<List<Long>> {
     }
 
+    public static class MangaUpdateEvent extends ApiEvent<Long> {
+    }
 }
